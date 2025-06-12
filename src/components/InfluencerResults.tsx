@@ -55,7 +55,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
 
       <div className="grid gap-6">
         {results.map((result, index) => (
-          <div key={result.influencer.id} data-testid="influencer-card" className="bg-white rounded-lg shadow-lg p-6">
+          <div key={`${result.influencer.handle}-${index}`} data-testid="influencer-card" className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
               {/* Profile Section */}
               <div className="flex-shrink-0 mb-6 lg:mb-0">
@@ -151,9 +151,9 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2">Content Niches</h4>
                       <div className="flex flex-wrap gap-2">
-                        {result.influencer.niche.map((niche, idx) => (
+                        {result.influencer.niche.map((niche, nicheIndex) => (
                           <span 
-                            key={idx}
+                            key={`${niche}-${nicheIndex}`}
                             className="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
                           >
                             {niche}
@@ -199,8 +199,8 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                 <div className="mt-6 p-4 bg-green-50 rounded-lg">
                   <h4 className="font-semibold text-gray-900 mb-2">Why This Match Works</h4>
                   <ul className="space-y-1">
-                    {result.matchReasons.map((reason, idx) => (
-                      <li key={idx} className="text-green-700 text-sm flex items-center">
+                    {result.matchReasons.map((reason, reasonIndex) => (
+                      <li key={`${reason}-${reasonIndex}`} className="text-green-700 text-sm flex items-center">
                         <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>

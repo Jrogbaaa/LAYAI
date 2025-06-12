@@ -125,4 +125,5 @@ export interface MatchCriteria {
   ageRange?: string;
   location?: string[];
   excludeInfluencers?: string[];
+  brandQuery?: string;
 } 

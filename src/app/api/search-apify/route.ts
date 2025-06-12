@@ -1,70 +1,84 @@
-import { NextResponse } from 'next/server';
-import { searchInfluencersWithApify, testApifyConnection, type ApifySearchParams } from '@/lib/apifyService';
+import { NextRequest, NextResponse } from 'next/server';
+import { searchInfluencersWithTwoTierDiscovery, type ApifySearchParams } from '@/lib/apifyService';
+import { searchMemory } from '@/lib/database';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { 
-      platforms, 
-      niches, 
-      minFollowers, 
-      maxFollowers, 
+      platforms = ['instagram'], 
+      niches = [], 
+      minFollowers = 0, 
+      maxFollowers = 10000000, 
       location, 
-      verified = false, 
-      maxResults = 50,
       gender,
-      ageRange,
-      strictLocationMatch = false
+      sessionId,
+      userId,
+      userQuery = '',
+      verified = false,
+      maxResults = 50
     } = body;
 
-    // Validate required fields
-    if (!platforms || !Array.isArray(platforms) || platforms.length === 0) {
-      return NextResponse.json(
-        { error: 'Platforms array is required' },
-        { status: 400 }
-      );
-    }
-
-    if (!niches || !Array.isArray(niches) || niches.length === 0) {
-      return NextResponse.json(
-        { error: 'Niches array is required' },
-        { status: 400 }
-      );
-    }
-
-    // Skip connection test to avoid memory limits
-    console.log('Proceeding with search (connection test disabled)');
+    console.log('🔍 Search request:', { platforms, niches, minFollowers, maxFollowers, location, gender });
 
     const searchParams: ApifySearchParams = {
       platforms,
       niches,
-      minFollowers: minFollowers || 1000,
-      maxFollowers: maxFollowers || 1000000,
+      minFollowers,
+      maxFollowers,
       location,
+      gender,
       verified,
       maxResults,
-      gender,
-      ageRange,
-      strictLocationMatch,
+      userQuery,
     };
 
-    console.log('Starting Apify search with params:', searchParams);
+    // Perform the search
+    const searchResults = await searchInfluencersWithTwoTierDiscovery(searchParams);
 
-    const results = await searchInfluencersWithApify(searchParams);
+    // Save search to memory for learning
+    const searchId = searchMemory.saveSearch({
+      userId,
+      sessionId: sessionId || `session_${Date.now()}`,
+      query: userQuery,
+      searchParams: {
+        platforms,
+        niches,
+        minFollowers,
+        maxFollowers,
+        location,
+        gender,
+        userQuery,
+      },
+      results: {
+        totalFound: searchResults.totalFound,
+        premiumResults: searchResults.premiumResults,
+        discoveryResults: searchResults.discoveryResults,
+      },
+    });
+
+    console.log(`💾 Saved search with ID: ${searchId}`);
 
     return NextResponse.json({
       success: true,
-      data: results,
-      count: results.length,
-      searchParams,
+      premiumResults: searchResults.premiumResults,
+      discoveryResults: searchResults.discoveryResults,
+      totalFound: searchResults.totalFound,
+      searchId, // Return searchId for feedback
+      metadata: {
+        totalFound: searchResults.totalFound,
+        premiumCount: searchResults.premiumResults.length,
+        discoveryCount: searchResults.discoveryResults.length,
+        searchParams: { platforms, niches, minFollowers, maxFollowers, location, gender },
+      }
     });
 
   } catch (error) {
-    console.error('Error in /api/search-apify:', error);
-    
+    console.error('Search error:', error);
     return NextResponse.json(
       { 
-        error: 'Failed to search influencers', 
+        success: false, 
+        error: 'Search failed', 
         details: error instanceof Error ? error.message : 'Unknown error' 
       },
       { status: 500 }
@@ -73,9 +87,9 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  return NextResponse.json({
-    success: true,
+    return NextResponse.json({
+      success: true,
     apifyConfigured: true,
-    message: 'Apify service ready (connection test disabled to avoid memory limits)',
+    message: 'Apify service ready with two-tier discovery system',
   });
 } 

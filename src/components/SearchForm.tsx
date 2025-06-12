@@ -24,6 +24,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
   const [gender, setGender] = useState<string>('');
   const [ageRange, setAgeRange] = useState<string>('');
   const [location, setLocation] = useState<string>('');
+  const [brandQuery, setBrandQuery] = useState<string>('');
 
   const platforms = ['Instagram', 'TikTok', 'YouTube', 'Twitter', 'Multi-Platform'];
   const niches = [
@@ -69,6 +70,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
       gender: gender || undefined,
       ageRange: ageRange || undefined,
       location: location ? [location] : undefined,
+      brandQuery: brandQuery || undefined,
     };
 
     onSearch(searchCriteria);
@@ -79,6 +81,24 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Find Your Perfect Influencer Match</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Brand Search */}
+        <div>
+          <label htmlFor="brand-query" className="block text-sm font-medium text-gray-900 mb-2">
+            Brand or Campaign Description
+          </label>
+          <input
+            id="brand-query"
+            type="text"
+            placeholder="e.g., 'Nike fitness campaign' or 'IKEA home decor collaboration' or 'sustainable fashion brand for Gen Z'"
+            value={brandQuery}
+            onChange={(e) => setBrandQuery(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            💡 Our AI will analyze your brand and find the most compatible influencers
+          </p>
+        </div>
+
         {/* Budget Range */}
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">

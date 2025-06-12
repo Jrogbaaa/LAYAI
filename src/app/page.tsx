@@ -1,167 +1,227 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SearchForm } from '@/components/SearchForm';
+import { Chatbot, Message } from '@/components/Chatbot';
 import { InfluencerResults } from '@/components/InfluencerResults';
+import { FeedbackPanel } from '@/components/FeedbackPanel';
 import { ProposalGenerator } from '@/components/ProposalGenerator';
 import { ProposalViewer } from '@/components/ProposalViewer';
 import { MatchCriteria, MatchResult } from '@/types/influencer';
 import { CampaignProposal } from '@/types/campaign';
 import { findInfluencerMatches } from '@/lib/matching';
 import { exportProposalToCSV, exportHibikiStyleCSV, exportProposalToPDF } from '@/utils/exportUtils';
+import { generateSessionId } from '@/lib/database';
+import DiscoveryGrid from '@/components/DiscoveryGrid';
 
 type PageView = 'search' | 'proposal-generator' | 'proposal-viewer';
 
+interface SearchResults {
+  premiumResults: ScrapedInfluencer[];
+  discoveryResults: BasicInfluencerProfile[];
+  totalFound: number;
+}
+
+interface ScrapedInfluencer {
+  id: string;
+  username: string;
+  fullName: string;
+  biography: string;
+  url: string;
+  followers: number;
+  following: number;
+  posts: number;
+  verified: boolean;
+  isPrivate: boolean;
+  platform: string;
+  category: string;
+  location: string;
+  email?: string;
+  engagementRate?: number;
+  brandCompatibilityScore?: number;
+}
+
+interface BasicInfluencerProfile {
+  username: string;
+  fullName: string;
+  followers: number;
+  platform: string;
+  niche: string;
+  profileUrl: string;
+  source: 'verified-discovery';
+}
+
 export default function Home() {
-  const [view, setView] = useState<PageView>('search');
+  const [currentView, setCurrentView] = useState<PageView>('search');
   const [matches, setMatches] = useState<MatchResult[]>([]);
   const [currentProposal, setCurrentProposal] = useState<CampaignProposal | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [premiumInfluencers, setPremiumInfluencers] = useState<ScrapedInfluencer[]>([]);
+  const [discoveryInfluencers, setDiscoveryInfluencers] = useState<BasicInfluencerProfile[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [totalFound, setTotalFound] = useState(0);
+  const [currentSearchId, setCurrentSearchId] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string>('');
 
+  // Initialize session on component mount
+  useEffect(() => {
+    const newSessionId = generateSessionId();
+    setSessionId(newSessionId);
+    console.log('🆔 Generated session ID:', newSessionId);
+  }, []);
 
-
-  const handleSearch = async (criteria: MatchCriteria) => {
-    setIsLoading(true);
+  const handleSendMessage = async (message: string, history: Message[]) => {
     try {
-      // First, try to get additional data from Apify if configured
-      let apifyResults: any[] = [];
-      
-      if (criteria.platform.length > 0 && criteria.niche.length > 0) {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message, history }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        if (data.type === 'search') {
+          console.log('🤖 AI parsed search query:', data.data);
+          await handleSearch(data.data);
+        }
+        return data;
+      } else {
+        console.error('Chatbot API error:', data.error);
+        return { type: 'chat', data: 'Sorry, something went wrong with the AI assistant.' };
+      }
+    } catch (error) {
+      console.error('Error sending message to chatbot API:', error);
+      return { type: 'chat', data: 'Sorry, I had trouble processing your request. Please try again.' };
+    }
+  };
+
+  const handleFeedbackSubmitted = (feedbackData: any) => {
+    console.log('📝 Feedback submitted:', feedbackData);
+    
+    // Show learning insights if available
+    if (feedbackData.learningInsights?.suggestedQueries?.length > 0) {
+      console.log('🧠 Learning insights:', feedbackData.learningInsights);
+    }
+  };
+
+  const renderMainContent = () => {
+    if (currentView === 'search') {
+      return (
+        <div>
+          <Chatbot onSendMessage={handleSendMessage} />
+          {hasSearched && (
+            loading ? (
+              <div className="text-center p-8">
+                <p className="text-lg font-semibold text-gray-700">🔍 AI is searching for influencers...</p>
+                <div className="mt-4 w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <p className="text-sm text-gray-500 mt-2">Using Serply web search + Apify data extraction</p>
+              </div>
+            ) : (
+              (premiumInfluencers.length > 0 || discoveryInfluencers.length > 0) ? (
+                <div className="mt-8">
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0">
+                        <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="text-sm font-medium text-green-800">
+                          ✨ Found {totalFound} influencers matching your criteria!
+                        </h3>
+                        <div className="mt-1 text-sm text-green-700">
+                          {premiumInfluencers.length} premium profiles with full analytics + {discoveryInfluencers.length} discovery matches
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Feedback Panel */}
+                  {currentSearchId && (
+                    <FeedbackPanel
+                      searchId={currentSearchId}
+                      sessionId={sessionId}
+                      onFeedbackSubmitted={handleFeedbackSubmitted}
+                    />
+                  )}
+                  
+                  <InfluencerResults results={convertToMatchResults(premiumInfluencers)} />
+                  <DiscoveryGrid discoveryInfluencers={discoveryInfluencers} />
+                </div>
+              ) : (
+                <div className="text-center p-8 mt-8">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                    <p className="text-lg font-semibold text-yellow-800">🤔 No influencers found for your criteria</p>
+                    <p className="text-yellow-700 mt-2">Try asking for different criteria like:</p>
+                    <ul className="text-sm text-yellow-600 mt-2 space-y-1">
+                      <li>• Different platforms (Instagram, TikTok, YouTube)</li>
+                      <li>• Broader follower ranges</li>
+                      <li>• Different niches or locations</li>
+                      <li>• Less specific requirements</li>
+                    </ul>
+                  </div>
+                </div>
+              )
+            )
+          )}
+        </div>
+      );
+    }
+    if (currentView === 'proposal-generator') {
+      return <ProposalGenerator matchResults={matches} onProposalGenerated={handleProposalGenerated} />;
+    }
+    if (currentView === 'proposal-viewer' && currentProposal) {
+      return <ProposalViewer proposal={currentProposal!} onExport={handleExport} onEdit={handleEditProposal} />;
+    }
+    return null;
+  };
+
+  const handleSearch = async (criteria: any) => {
+    setLoading(true);
+    setHasSearched(true);
+    setPremiumInfluencers([]);
+    setDiscoveryInfluencers([]);
+    setCurrentSearchId(null);
+    
         try {
-          const apifyResponse = await fetch('/api/search-apify', {
+      const response = await fetch('/api/search-apify', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              platforms: criteria.platform,
-              niches: criteria.niche,
-              minFollowers: criteria.followerRange.min,
-              maxFollowers: criteria.followerRange.max,
-              maxResults: 20,
-              location: criteria.location?.[0],
-              gender: criteria.gender,
-              ageRange: criteria.ageRange,
-              strictLocationMatch: false,
+              ...criteria,
+              sessionId,
+              userQuery: criteria.userQuery || '',
             }),
           });
 
-          if (apifyResponse.ok) {
-            const apifyData = await apifyResponse.json();
-            console.log('Apify API Response:', apifyData);
-            if (apifyData.success) {
-              apifyResults = apifyData.data;
-              console.log(`Found ${apifyResults.length} influencers via Apify:`, apifyResults);
-              if (apifyResults.length === 0) {
-                console.warn('Apify returned success=true but empty data array');
-              }
+      const data = await response.json();
+      
+      if (data.success) {
+        setPremiumInfluencers(data.premiumResults || []);
+        setDiscoveryInfluencers(data.discoveryResults || []);
+        setTotalFound(data.totalFound || 0);
+        setCurrentSearchId(data.searchId);
+        console.log(`Received ${data.premiumResults?.length || 0} premium results and ${data.discoveryResults?.length || 0} discovery results`);
+        console.log('🆔 Search ID for feedback:', data.searchId);
             } else {
-              console.log('Apify returned success: false', apifyData);
-            }
-          } else {
-            console.log('Apify search not available, using local data only');
-          }
-        } catch (apifyError) {
-          console.log('Apify search failed, using local data only:', apifyError);
+        console.error('Search failed:', data.error);
         }
-      }
-
-      // Local matching algorithm (now returns empty array since mock data removed)
-      const results = await findInfluencerMatches(criteria);
-      
-      // Use Apify results as primary data source since mock data has been removed
-      const enhancedResults = [...results];
-      
-      // Add Apify results that don't duplicate existing ones
-      console.log(`Processing ${apifyResults.length} Apify results for UI display`);
-      apifyResults.forEach((apifyInfluencer) => {
-        
-        const existsInLocal = results.some(result => 
-          result.influencer.handle.toLowerCase() === apifyInfluencer.username.toLowerCase() &&
-          result.influencer.platform.toLowerCase() === apifyInfluencer.platform.toLowerCase()
-        );
-        
-        if (!existsInLocal) {
-          try {
-            // Convert Apify result to MatchResult format
-            const matchResult = {
-             influencer: {
-               id: `apify-${apifyInfluencer.platform}-${apifyInfluencer.username}`,
-               name: apifyInfluencer.fullName || apifyInfluencer.username,
-               handle: apifyInfluencer.username,
-               platform: apifyInfluencer.platform as 'Instagram' | 'TikTok' | 'YouTube' | 'Twitter' | 'Multi-Platform',
-               followerCount: apifyInfluencer.followers,
-               engagementRate: apifyInfluencer.engagementRate || 2.5,
-               ageRange: '25-34',
-               gender: 'Other' as 'Male' | 'Female' | 'Non-Binary' | 'Other',
-               location: apifyInfluencer.location || 'Unknown',
-               niche: [apifyInfluencer.category],
-               contentStyle: ['Posts'],
-               pastCollaborations: [],
-               averageRate: apifyInfluencer.collaborationRate || 1000,
-               costLevel: 'Mid-Range' as 'Budget' | 'Mid-Range' | 'Premium' | 'Celebrity',
-               audienceDemographics: {
-                 ageGroups: {
-                   '13-17': 0,
-                   '18-24': 30,
-                   '25-34': 40,
-                   '35-44': 20,
-                   '45-54': 8,
-                   '55+': 2,
-                 },
-                 gender: {
-                   male: 50,
-                   female: 48,
-                   other: 2,
-                 },
-                 topLocations: [apifyInfluencer.location || 'Unknown'],
-                 interests: [apifyInfluencer.category],
-               },
-               recentPosts: [],
-               contactInfo: {
-                 email: apifyInfluencer.email,
-                 preferredContact: 'Email' as 'Email' | 'Phone' | 'DM' | 'Management',
-               },
-               isActive: true,
-               lastUpdated: new Date(),
-             },
-             matchScore: 85, // Default good match score for Apify results
-             matchReasons: [
-               'Real-time data from social media',
-               `Active in ${apifyInfluencer.category} niche`,
-               `${apifyInfluencer.followers.toLocaleString()} followers`,
-             ],
-             estimatedCost: apifyInfluencer.collaborationRate || 1000,
-             similarPastCampaigns: [],
-             potentialReach: Math.round(apifyInfluencer.followers * ((apifyInfluencer.engagementRate || 2.5) / 100)),
-             recommendations: ['Consider this influencer for authentic content'],
-            };
-            
-            enhancedResults.push(matchResult);
-          } catch (conversionError) {
-            console.error(`Error converting Apify result for ${apifyInfluencer.username}:`, conversionError);
-          }
-        }
-      });
-      
-      console.log(`Final enhanced results: ${enhancedResults.length} matches to display in UI`);
-      console.log('Enhanced results sample:', enhancedResults[0]?.influencer?.name);
-      console.log('About to call setMatches...');
-      setMatches(enhancedResults);
-      console.log('setMatches called successfully');
     } catch (error) {
-      console.error('Search failed with error:', error);
-      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
-      // Set empty results on error
-      setMatches([]);
+      console.error('Error searching influencers:', error);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   const handleProposalGenerated = (proposal: CampaignProposal) => {
     setCurrentProposal(proposal);
-    setView('proposal-viewer');
+    setCurrentView('proposal-viewer');
   };
 
   const handleExport = (format: 'csv' | 'pdf') => {
@@ -183,7 +243,7 @@ export default function Home() {
   };
 
   const handleEditProposal = () => {
-    setView('proposal-generator');
+    setCurrentView('proposal-generator');
   };
 
   const renderNavigation = () => (
@@ -196,9 +256,9 @@ export default function Home() {
             </h1>
             <div className="flex space-x-4">
               <button
-                onClick={() => setView('search')}
+                onClick={() => setCurrentView('search')}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  view === 'search'
+                  currentView === 'search'
                     ? 'bg-blue-100 text-blue-700'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
@@ -206,10 +266,10 @@ export default function Home() {
                 Search Influencers
               </button>
               <button
-                onClick={() => setView('proposal-generator')}
+                onClick={() => setCurrentView('proposal-generator')}
                 disabled={matches.length === 0}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  view === 'proposal-generator'
+                  currentView === 'proposal-generator'
                     ? 'bg-blue-100 text-blue-700'
                     : matches.length === 0
                     ? 'text-gray-300 cursor-not-allowed'
@@ -220,9 +280,9 @@ export default function Home() {
               </button>
               {currentProposal && (
                 <button
-                  onClick={() => setView('proposal-viewer')}
+                  onClick={() => setCurrentView('proposal-viewer')}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    view === 'proposal-viewer'
+                    currentView === 'proposal-viewer'
                       ? 'bg-blue-100 text-blue-700'
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
@@ -243,134 +303,78 @@ export default function Home() {
     </nav>
   );
 
+  // Convert ScrapedInfluencer to MatchResult for existing components
+  const convertToMatchResults = (influencers: ScrapedInfluencer[]): MatchResult[] => {
+    return influencers.map((influencer) => ({
+      influencer: {
+        id: influencer.id,
+        name: influencer.fullName || influencer.username,
+        handle: influencer.username,
+        platform: influencer.platform as 'Instagram' | 'TikTok' | 'YouTube' | 'Twitter' | 'Multi-Platform',
+        followerCount: influencer.followers,
+        engagementRate: (influencer.engagementRate || 2.5) / 100,
+        ageRange: '25-34',
+        gender: 'Other' as 'Male' | 'Female' | 'Non-Binary' | 'Other',
+        location: influencer.location || 'Unknown',
+        niche: [influencer.category || 'Lifestyle'],
+        contentStyle: ['Posts'],
+        pastCollaborations: [],
+        averageRate: 1000,
+        costLevel: 'Mid-Range' as 'Budget' | 'Mid-Range' | 'Premium' | 'Celebrity',
+        audienceDemographics: {
+          ageGroups: {
+            '13-17': 0,
+            '18-24': 30,
+            '25-34': 40,
+            '35-44': 20,
+            '45-54': 8,
+            '55+': 2,
+          },
+          gender: {
+            male: 50,
+            female: 48,
+            other: 2,
+          },
+          topLocations: [influencer.location || 'Unknown'],
+          interests: [influencer.category || 'Lifestyle'],
+        },
+        recentPosts: [],
+        contactInfo: {
+          email: influencer.email,
+          preferredContact: 'Email' as 'Email' | 'Phone' | 'DM' | 'Management',
+        },
+        isActive: true,
+        lastUpdated: new Date(),
+      },
+      matchScore: (influencer.brandCompatibilityScore || 85) / 100,
+      matchReasons: [
+        'Real-time data from social media',
+        `Active in ${influencer.category || 'lifestyle'} niche`,
+        `${influencer.followers.toLocaleString()} followers`,
+      ],
+      estimatedCost: 1000,
+      similarPastCampaigns: [],
+      potentialReach: Math.round(influencer.followers * ((influencer.engagementRate || 2.5) / 100)),
+      recommendations: ['Consider this influencer for authentic content'],
+    }));
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
+      {/* Hero Section */}
+      <div className="text-center py-16 px-4 bg-white shadow-lg rounded-xl max-w-4xl mx-auto">
+        <h1 className="text-5xl font-extrabold text-gray-900 leading-tight">
+          Find the <span className="text-blue-600">Perfect Influencer</span>
+                </h1>
+            <p className="mt-4 text-xl text-gray-600">
+          Our AI-powered platform helps you discover and match with influencers for your brand campaigns.
+            </p>
+      </div>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {renderNavigation()}
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        {view === 'search' && (
-          <div className="space-y-8">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Find Perfect Influencer Matches
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Search real-time influencer data from Instagram, TikTok, and other platforms using our Apify integration. 
-                Generate professional proposals in the style of top agencies like TSL and Hibiki.
-              </p>
-            </div>
-            
-            <SearchForm onSearch={handleSearch} isLoading={isLoading} />
-            
-
-            
-            {matches.length > 0 && (
-              <div data-testid="search-results">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900">
-                    Search Results ({matches.length} matches)
-                  </h3>
-                  <button
-                    onClick={() => setView('proposal-generator')}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors"
-                  >
-                    Create Proposal from Results
-                  </button>
-                </div>
-                <InfluencerResults results={matches} />
-              </div>
-            )}
-          </div>
-        )}
-
-        {view === 'proposal-generator' && (
-          <div className="space-y-8">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Generate Campaign Proposal
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Create professional campaign proposals in the style of leading agencies. 
-                Select talents, customize commitments, and export in multiple formats.
-              </p>
-            </div>
-            
-            {matches.length > 0 ? (
-              <ProposalGenerator 
-                matchResults={matches} 
-                onProposalGenerated={handleProposalGenerated}
-              />
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-500 mb-4">No search results available.</p>
-                <button
-                  onClick={() => setView('search')}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors"
-                >
-                  Start New Search
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {view === 'proposal-viewer' && currentProposal && (
-          <div className="space-y-8">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Campaign Proposal Preview
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Review your campaign proposal and export in professional formats 
-                compatible with industry standards.
-              </p>
-            </div>
-            
-            <ProposalViewer 
-              proposal={currentProposal}
-              onExport={handleExport}
-              onEdit={handleEditProposal}
-            />
-          </div>
-        )}
+        {renderMainContent()}
       </main>
-
-      {/* Help Section */}
-      <footer className="bg-white border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-3">How to Use</h3>
-              <ul className="text-sm text-gray-600 space-y-2">
-                <li>1. Search for influencers using our advanced filters</li>
-                <li>2. Review match scores and detailed analytics</li>
-                <li>3. Generate professional campaign proposals</li>
-                <li>4. Export in CSV or PDF formats</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-3">Export Formats</h3>
-              <ul className="text-sm text-gray-600 space-y-2">
-                <li>• Standard CSV (Orange/TSL style)</li>
-                <li>• Hibiki CSV (Luxury brand style)</li>
-                <li>• PDF Summary Report</li>
-                <li>• Detailed Analytics</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-3">Features</h3>
-              <ul className="text-sm text-gray-600 space-y-2">
-                <li>• AI-powered matching algorithm</li>
-                <li>• Detailed audience demographics</li>
-                <li>• Engagement rate analysis</li>
-                <li>• Cost estimation</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 } 
