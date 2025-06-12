@@ -283,47 +283,56 @@ function buildSearchQueries(platform: string, params: ApifySearchParams): string
   const { niches, location, gender, brandName, userQuery } = params;
   const queries = new Set<string>();
 
+  console.log(`🔍 Building search queries with params:`, { niches, location, gender, userQuery });
+
   const mainNiche = niches[0] || 'influencer';
   const platformName = platform.charAt(0).toUpperCase() + platform.slice(1);
   const genderTerm = gender ? `${gender} ` : '';
   const locationTerm = location ? `in ${location} ` : '';
 
-  // 1. Prioritize the most specific query: the user's explicit query or brand
-  if (userQuery && userQuery.length > 5) {
-     queries.add(`${userQuery} ${platformName} influencers ${locationTerm}`.trim());
-  } else if (brandName) {
-    queries.add(`top ${genderTerm}${mainNiche} ${platformName} influencers for ${brandName} ${locationTerm}`.trim());
+  // 1. PRIORITIZE the user's exact query first - this is the most important
+  if (userQuery && userQuery.length > 10) {
+    // Use the exact user query as the primary search
+    queries.add(`${userQuery} ${platformName}`);
+    queries.add(`${userQuery} ${platformName} profiles`);
+    
+    // Also add a cleaned version without redundant words
+    const cleanQuery = userQuery.replace(/find|search|show|get|look for|discover/gi, '').trim();
+    if (cleanQuery.length > 5) {
+      queries.add(`${cleanQuery} ${platformName} influencers`);
+    }
   }
 
-  // 2. Add specific gender + niche + location queries
-  queries.add(`best ${genderTerm}${mainNiche} influencers on ${platformName} ${locationTerm}`.replace(/\s+/g, ' ').trim());
-  
-  // 3. Add follower-specific queries
-  if (params.minFollowers >= 100000) {
-    queries.add(`top ${genderTerm}${mainNiche} ${platformName} influencers with over 100k followers ${locationTerm}`.trim());
+  // 2. Build specific targeted queries based on parsed parameters
+  if (gender && mainNiche && location) {
+    queries.add(`${genderTerm}${mainNiche} influencers ${locationTerm}${platformName}`);
+    queries.add(`top ${genderTerm}${mainNiche} ${platformName} influencers ${locationTerm}`);
   }
   
-  // 4. Add profile discovery queries
-  queries.add(`${genderTerm}${mainNiche} ${platformName} profiles ${locationTerm}list`.replace(/\s+/g, ' ').trim());
+  // 3. Add follower-specific queries with the exact criteria
+  if (params.minFollowers >= 100000 && params.maxFollowers <= 1000000) {
+    const followerRange = `${Math.floor(params.minFollowers/1000)}k-${Math.floor(params.maxFollowers/1000)}k`;
+    queries.add(`${genderTerm}${mainNiche} ${platformName} influencers ${followerRange} followers ${locationTerm}`.trim());
+  }
   
-  // 5. Add location-specific and niche-specific queries
+  // 4. Add location-specific queries with native language
   if (location?.toLowerCase().includes('spain')) {
     const spanishGender = gender === 'female' ? 'mujeres ' : gender === 'male' ? 'hombres ' : '';
-    queries.add(`mejores influencers ${spanishGender}de ${mainNiche} en España ${platformName}`);
-    queries.add(`influencers españoles ${genderTerm}${mainNiche} ${platformName}`);
+    queries.add(`influencers ${spanishGender}${mainNiche} España ${platformName}`);
+    queries.add(`mejores influencers de ${mainNiche} en España ${platformName}`);
     
-    // Add home/furniture specific Spanish queries if relevant
-    if (mainNiche === 'home' || mainNiche.includes('home') || mainNiche.includes('furniture')) {
-      queries.add(`influencers decoración hogar España ${genderTerm}${platformName}`);
-      queries.add(`influencers muebles diseño interior España ${platformName}`);
+    // Add fitness-specific Spanish queries
+    if (mainNiche === 'fitness') {
+      queries.add(`influencers fitness ${spanishGender}España ${platformName}`);
+      queries.add(`entrenadores personales ${spanishGender}España ${platformName}`);
     }
   }
   
-  // 6. Add niche-specific queries for home/furniture
-  if (mainNiche === 'home' || mainNiche.includes('home') || mainNiche.includes('furniture')) {
-    queries.add(`${genderTerm}home decor interior design influencers ${platformName} ${locationTerm}`.trim());
-    queries.add(`${genderTerm}furniture home styling influencers ${platformName} ${locationTerm}`.trim());
-    queries.add(`${genderTerm}DIY home improvement influencers ${platformName} ${locationTerm}`.trim());
+  // 5. Add niche-specific discovery queries
+  if (mainNiche === 'fitness') {
+    queries.add(`${genderTerm}fitness trainers ${platformName} ${locationTerm}`.trim());
+    queries.add(`${genderTerm}gym influencers ${platformName} ${locationTerm}`.trim());
+    queries.add(`${genderTerm}workout influencers ${platformName} ${locationTerm}`.trim());
   }
   
   // Return the top 6 most relevant queries for deeper search
@@ -969,7 +978,7 @@ export async function searchInfluencersWithTwoTierDiscovery(params: ApifySearchP
     console.log(`🔄 Creating discovery results from ${uniqueProfiles.length} unique profiles...`);
     const discoveryResults: BasicInfluencerProfile[] = uniqueProfiles.slice(0, 30) // Get more profiles to filter from
         .map((profile, index) => {
-            const username = profile.url.split('/').pop()?.split('?')[0] || `influencer_${index}`;
+            const username = profile.url.split('/').pop()?.split('?')[0]?.replace(/\.$/, '') || `influencer_${index}`;
             const detectedGender = detectGenderFromUsername(username);
             
             console.log(`   → Creating discovery profile: ${username} from ${profile.url} (gender: ${detectedGender})`);
@@ -979,7 +988,7 @@ export async function searchInfluencersWithTwoTierDiscovery(params: ApifySearchP
                 followers: estimateFollowersFromRange(params.minFollowers, params.maxFollowers),
                 platform: profile.platform,
                 niche: params.niches[0] || 'Lifestyle',
-                profileUrl: profile.url,
+                profileUrl: profile.url.replace(/\.$/, ''),
                 source: 'verified-discovery' as const,
                 detectedGender, // Add for filtering
                 estimatedLocation: estimateLocationFromProfile(username, params.location), // Add location estimation

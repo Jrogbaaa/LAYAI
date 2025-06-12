@@ -124,16 +124,16 @@ function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifyS
     niches.push('lifestyle');
   }
 
-  // Extract gender
+  // Extract gender (check female first to avoid "male" matching in "female")
   let gender: string | undefined;
-  if (lowerMessage.includes('men only') || lowerMessage.includes('male only') || 
-      lowerMessage.includes('men ') || lowerMessage.includes('male ') ||
-      lowerMessage.includes('guys') || lowerMessage.includes('boys')) {
-    gender = 'male';
-  } else if (lowerMessage.includes('women only') || lowerMessage.includes('female only') || 
-             lowerMessage.includes('women ') || lowerMessage.includes('female ') ||
-             lowerMessage.includes('girls') || lowerMessage.includes('ladies')) {
+  if (lowerMessage.includes('women only') || lowerMessage.includes('female only') || 
+      lowerMessage.includes('women ') || lowerMessage.includes('female ') ||
+      lowerMessage.includes('girls') || lowerMessage.includes('ladies')) {
     gender = 'female';
+  } else if (lowerMessage.includes('men only') || lowerMessage.includes('male only') || 
+             lowerMessage.includes('men ') || lowerMessage.includes(' male ') ||
+             lowerMessage.includes('guys') || lowerMessage.includes('boys')) {
+    gender = 'male';
   }
 
   // Extract age range
@@ -165,27 +165,45 @@ function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifyS
   let minFollowers = 1000;
   let maxFollowers = 1000000;
 
-  // Look for follower patterns
+  // Look for follower patterns (including comma-separated numbers)
   const followerPatterns = [
+    // Handle "between X and Y" patterns with commas
+    { pattern: /between\s+([\d,]+)\s+and\s+([\d,]+)/i, isRange: true },
+    { pattern: /([\d,]+)\s*-\s*([\d,]+)\s*followers/i, isRange: true },
+    { pattern: /([\d,]+)\s*to\s*([\d,]+)\s*followers/i, isRange: true },
+    
+    // Handle k/m patterns
     { pattern: /(\d+)k?\s*-\s*(\d+)k/i, multiplier1: 1000, multiplier2: 1000 },
     { pattern: /(\d+)k?\s*-\s*(\d+)m/i, multiplier1: 1000, multiplier2: 1000000 },
     { pattern: /(\d+)m?\s*-\s*(\d+)m/i, multiplier1: 1000000, multiplier2: 1000000 },
+    
+    // Handle minimum patterns
     { pattern: /over\s+(\d+)k/i, multiplier1: 1000, isMin: true },
     { pattern: /above\s+(\d+)k/i, multiplier1: 1000, isMin: true },
     { pattern: /more than\s+(\d+)k/i, multiplier1: 1000, isMin: true },
     { pattern: /(\d+)k\+/i, multiplier1: 1000, isMin: true },
     { pattern: /over\s+(\d+)m/i, multiplier1: 1000000, isMin: true },
     { pattern: /(\d+)m\+/i, multiplier1: 1000000, isMin: true },
+    
+    // Handle maximum patterns
     { pattern: /under\s+(\d+)k/i, multiplier1: 1000, isMax: true },
     { pattern: /less than\s+(\d+)k/i, multiplier1: 1000, isMax: true },
+    
+    // Handle single values
     { pattern: /(\d+)k/i, multiplier1: 1000, isSingle: true },
     { pattern: /(\d+)m/i, multiplier1: 1000000, isSingle: true }
   ];
 
-  for (const { pattern, multiplier1, multiplier2, isMin, isMax, isSingle } of followerPatterns) {
+  for (const { pattern, multiplier1, multiplier2, isMin, isMax, isSingle, isRange } of followerPatterns) {
     const match = lowerMessage.match(pattern);
     if (match) {
-      if (isMin) {
+      if (isRange) {
+        // Handle comma-separated numbers like "100,000" and "500,000"
+        const num1 = parseInt(match[1].replace(/,/g, ''));
+        const num2 = parseInt(match[2].replace(/,/g, ''));
+        minFollowers = Math.min(num1, num2);
+        maxFollowers = Math.max(num1, num2);
+      } else if (isMin) {
         minFollowers = parseInt(match[1]) * multiplier1;
         maxFollowers = 10000000; // 10M max
       } else if (isMax) {
@@ -206,10 +224,10 @@ function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifyS
   // Extract location with improved patterns
   let location: string | undefined;
   const locationPatterns = [
-    /in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+ages?|$|,|\.|!|\?)/i,
-    /from\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+ages?|$|,|\.|!|\?)/i,
-    /based in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+ages?|$|,|\.|!|\?)/i,
-    /located in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+ages?|$|,|\.|!|\?)/i
+    /in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
+    /from\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
+    /based in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
+    /located in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i
   ];
 
   for (const pattern of locationPatterns) {
@@ -246,6 +264,7 @@ function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifyS
     userQuery: message
   };
 
+  console.log('🔍 Parsed search parameters:', params);
   return { isSearch: true, params };
 }
 
@@ -254,7 +273,9 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { message } = body;
 
+    console.log('🔍 Chat API received message:', message);
     const parseResult = parseSearchQuery(message);
+    console.log('🔍 Parse result:', parseResult);
 
     if (!parseResult.isSearch) {
       return NextResponse.json({ 

@@ -1,76 +1,43 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Chatbot, Message } from '@/components/Chatbot';
+import { Chatbot } from '@/components/Chatbot';
 import { InfluencerResults } from '@/components/InfluencerResults';
-import { FeedbackPanel } from '@/components/FeedbackPanel';
 import { ProposalGenerator } from '@/components/ProposalGenerator';
 import { ProposalViewer } from '@/components/ProposalViewer';
-import { MatchCriteria, MatchResult } from '@/types/influencer';
-import { CampaignProposal } from '@/types/campaign';
-import { findInfluencerMatches } from '@/lib/matching';
-import { exportProposalToCSV, exportHibikiStyleCSV, exportProposalToPDF } from '@/utils/exportUtils';
-import { generateSessionId } from '@/lib/database';
+import { FeedbackPanel } from '@/components/FeedbackPanel';
 import DiscoveryGrid from '@/components/DiscoveryGrid';
+import CampaignManager from '@/components/CampaignManager';
+import LandingPage from '@/components/LandingPage';
+import { MatchResult } from '@/types/influencer';
+import { CampaignProposal } from '@/types/campaign';
+import { exportProposalToCSV, exportProposalToPDF, exportHibikiStyleCSV } from '@/utils/exportUtils';
+import { generateSessionId } from '@/lib/database';
 
-type PageView = 'search' | 'proposal-generator' | 'proposal-viewer';
+type PageView = 'landing' | 'chat' | 'generate' | 'view' | 'campaigns';
 
 interface SearchResults {
-  premiumResults: ScrapedInfluencer[];
-  discoveryResults: BasicInfluencerProfile[];
+  premiumResults: MatchResult[];
+  discoveryResults: any[];
   totalFound: number;
 }
 
-interface ScrapedInfluencer {
-  id: string;
-  username: string;
-  fullName: string;
-  biography: string;
-  url: string;
-  followers: number;
-  following: number;
-  posts: number;
-  verified: boolean;
-  isPrivate: boolean;
-  platform: string;
-  category: string;
-  location: string;
-  email?: string;
-  engagementRate?: number;
-  brandCompatibilityScore?: number;
-}
-
-interface BasicInfluencerProfile {
-  username: string;
-  fullName: string;
-  followers: number;
-  platform: string;
-  niche: string;
-  profileUrl: string;
-  source: 'verified-discovery';
-}
-
 export default function Home() {
-  const [currentView, setCurrentView] = useState<PageView>('search');
-  const [matches, setMatches] = useState<MatchResult[]>([]);
-  const [currentProposal, setCurrentProposal] = useState<CampaignProposal | null>(null);
+  const [currentView, setCurrentView] = useState<PageView>('landing');
+  const [searchResults, setSearchResults] = useState<SearchResults | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [premiumInfluencers, setPremiumInfluencers] = useState<ScrapedInfluencer[]>([]);
-  const [discoveryInfluencers, setDiscoveryInfluencers] = useState<BasicInfluencerProfile[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [totalFound, setTotalFound] = useState(0);
-  const [currentSearchId, setCurrentSearchId] = useState<string | null>(null);
+  const [currentProposal, setCurrentProposal] = useState<CampaignProposal | null>(null);
   const [sessionId, setSessionId] = useState<string>('');
+  const [currentSearchId, setCurrentSearchId] = useState<string | null>(null);
+  const [showSidebar, setShowSidebar] = useState(false);
 
-  // Initialize session on component mount
   useEffect(() => {
-    const newSessionId = generateSessionId();
-    setSessionId(newSessionId);
-    console.log('🆔 Generated session ID:', newSessionId);
+    setSessionId(generateSessionId());
   }, []);
 
-  const handleSendMessage = async (message: string, history: Message[]) => {
+  const handleSendMessage = async (message: string, history: any[]) => {
+    setIsLoading(true);
+    
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -82,229 +49,70 @@ export default function Home() {
 
       const data = await response.json();
 
-      if (data.success) {
-        if (data.type === 'search') {
-          console.log('🤖 AI parsed search query:', data.data);
-          await handleSearch(data.data);
-        }
-        return data;
-      } else {
-        console.error('Chatbot API error:', data.error);
-        return { type: 'chat', data: 'Sorry, something went wrong with the AI assistant.' };
-      }
-    } catch (error) {
-      console.error('Error sending message to chatbot API:', error);
-      return { type: 'chat', data: 'Sorry, I had trouble processing your request. Please try again.' };
-    }
-  };
+      if (data.type === 'search') {
+        const searchResponse = await fetch('/api/search-apify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            ...data.data,  // Spread the search parameters directly
+            sessionId: sessionId
+          }),
+        });
 
-  const handleFeedbackSubmitted = (feedbackData: any) => {
-    console.log('📝 Feedback submitted:', feedbackData);
-    
-    // Show learning insights if available
-    if (feedbackData.learningInsights?.suggestedQueries?.length > 0) {
-      console.log('🧠 Learning insights:', feedbackData.learningInsights);
-    }
-  };
-
-  const renderMainContent = () => {
-    if (currentView === 'search') {
-      return (
-        <div>
-          <Chatbot onSendMessage={handleSendMessage} />
-          {hasSearched && (
-            loading ? (
-              <div className="text-center p-8">
-                <p className="text-lg font-semibold text-gray-700">🔍 AI is searching for influencers...</p>
-                <div className="mt-4 w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                <p className="text-sm text-gray-500 mt-2">Using Serply web search + Apify data extraction</p>
-              </div>
-            ) : (
-              (premiumInfluencers.length > 0 || discoveryInfluencers.length > 0) ? (
-                <div className="mt-8">
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0">
-                        <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <div className="ml-3">
-                        <h3 className="text-sm font-medium text-green-800">
-                          ✨ Found {totalFound} influencers matching your criteria!
-                        </h3>
-                        <div className="mt-1 text-sm text-green-700">
-                          {premiumInfluencers.length} premium profiles with full analytics + {discoveryInfluencers.length} discovery matches
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Feedback Panel */}
-                  {currentSearchId && (
-                    <FeedbackPanel
-                      searchId={currentSearchId}
-                      sessionId={sessionId}
-                      onFeedbackSubmitted={handleFeedbackSubmitted}
-                    />
-                  )}
-                  
-                  <InfluencerResults results={convertToMatchResults(premiumInfluencers)} />
-                  <DiscoveryGrid discoveryInfluencers={discoveryInfluencers} />
-                </div>
-              ) : (
-                <div className="text-center p-8 mt-8">
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                    <p className="text-lg font-semibold text-yellow-800">🤔 No influencers found for your criteria</p>
-                    <p className="text-yellow-700 mt-2">Try asking for different criteria like:</p>
-                    <ul className="text-sm text-yellow-600 mt-2 space-y-1">
-                      <li>• Different platforms (Instagram, TikTok, YouTube)</li>
-                      <li>• Broader follower ranges</li>
-                      <li>• Different niches or locations</li>
-                      <li>• Less specific requirements</li>
-                    </ul>
-                  </div>
-                </div>
-              )
-            )
-          )}
-        </div>
-      );
-    }
-    if (currentView === 'proposal-generator') {
-      return <ProposalGenerator matchResults={matches} onProposalGenerated={handleProposalGenerated} />;
-    }
-    if (currentView === 'proposal-viewer' && currentProposal) {
-      return <ProposalViewer proposal={currentProposal!} onExport={handleExport} onEdit={handleEditProposal} />;
-    }
-    return null;
-  };
-
-  const handleSearch = async (criteria: any) => {
-    setLoading(true);
-    setHasSearched(true);
-    setPremiumInfluencers([]);
-    setDiscoveryInfluencers([]);
-    setCurrentSearchId(null);
-    
-        try {
-      const response = await fetch('/api/search-apify', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              ...criteria,
-              sessionId,
-              userQuery: criteria.userQuery || '',
-            }),
+        const searchData = await searchResponse.json();
+        
+        if (searchData.success) {
+          // Convert the results to MatchResult format
+          const convertedResults = convertToMatchResults(searchData.premiumResults || []);
+          console.log('Search results received:', {
+            premiumResults: searchData.premiumResults?.length || 0,
+            discoveryResults: searchData.discoveryResults?.length || 0,
+            totalFound: searchData.totalFound || 0
           });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        setPremiumInfluencers(data.premiumResults || []);
-        setDiscoveryInfluencers(data.discoveryResults || []);
-        setTotalFound(data.totalFound || 0);
-        setCurrentSearchId(data.searchId);
-        console.log(`Received ${data.premiumResults?.length || 0} premium results and ${data.discoveryResults?.length || 0} discovery results`);
-        console.log('🆔 Search ID for feedback:', data.searchId);
-            } else {
-        console.error('Search failed:', data.error);
-        }
-    } catch (error) {
-      console.error('Error searching influencers:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleProposalGenerated = (proposal: CampaignProposal) => {
-    setCurrentProposal(proposal);
-    setCurrentView('proposal-viewer');
-  };
-
-  const handleExport = (format: 'csv' | 'pdf') => {
-    if (!currentProposal) return;
-
-    if (format === 'csv') {
-      // Show both export options
-      const exportType = confirm(
-        'Choose export format:\nOK for Standard CSV\nCancel for Hibiki-style CSV'
-      );
-      if (exportType) {
-        exportProposalToCSV(currentProposal);
-      } else {
-        exportHibikiStyleCSV(currentProposal);
-      }
-    } else {
-      exportProposalToPDF(currentProposal);
-    }
-  };
-
-  const handleEditProposal = () => {
-    setCurrentView('proposal-generator');
-  };
-
-  const renderNavigation = () => (
-    <nav className="bg-white shadow-sm border-b border-gray-200 mb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-8">
-            <h1 className="text-xl font-bold text-gray-900">
-              Social Media Talent Matcher
-            </h1>
-            <div className="flex space-x-4">
-              <button
-                onClick={() => setCurrentView('search')}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  currentView === 'search'
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Search Influencers
-              </button>
-              <button
-                onClick={() => setCurrentView('proposal-generator')}
-                disabled={matches.length === 0}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  currentView === 'proposal-generator'
-                    ? 'bg-blue-100 text-blue-700'
-                    : matches.length === 0
-                    ? 'text-gray-300 cursor-not-allowed'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Generate Proposal
-              </button>
-              {currentProposal && (
-                <button
-                  onClick={() => setCurrentView('proposal-viewer')}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    currentView === 'proposal-viewer'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  View Proposal
-                </button>
-              )}
-            </div>
-          </div>
           
-          {matches.length > 0 && (
-            <div className="text-sm text-gray-600">
-              {matches.length} matches found
-            </div>
-          )}
-        </div>
-      </div>
-    </nav>
-  );
+          // Check if this is a follow-up search (if we already have results)
+          if (searchResults && searchResults.discoveryResults.length > 0) {
+            // Accumulate results - combine with existing results
+            const existingDiscoveryUrls = new Set(searchResults.discoveryResults.map(r => r.profileUrl));
+            const newDiscoveryResults = (searchData.discoveryResults || []).filter(
+              (result: any) => !existingDiscoveryUrls.has(result.profileUrl)
+            );
+            
+            setSearchResults({
+              premiumResults: [...searchResults.premiumResults, ...convertedResults],
+              discoveryResults: [...searchResults.discoveryResults, ...newDiscoveryResults],
+              totalFound: searchResults.totalFound + (searchData.totalFound || 0)
+            });
+            
+            console.log(`🔄 Follow-up search: Added ${newDiscoveryResults.length} new discovery results`);
+          } else {
+            // First search - set results normally
+            setSearchResults({
+              premiumResults: convertedResults,
+              discoveryResults: searchData.discoveryResults || [],
+              totalFound: searchData.totalFound || 0
+            });
+          }
+          
+          setCurrentSearchId(searchData.searchId);
+        }
+
+        return { type: 'search', data: searchData };
+      } else {
+        return { type: 'chat', data: data.response };
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Convert ScrapedInfluencer to MatchResult for existing components
-  const convertToMatchResults = (influencers: ScrapedInfluencer[]): MatchResult[] => {
+  const convertToMatchResults = (influencers: any[]): MatchResult[] => {
     return influencers.map((influencer) => ({
       influencer: {
         id: influencer.id,
@@ -359,22 +167,178 @@ export default function Home() {
     }));
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
-      {/* Hero Section */}
-      <div className="text-center py-16 px-4 bg-white shadow-lg rounded-xl max-w-4xl mx-auto">
-        <h1 className="text-5xl font-extrabold text-gray-900 leading-tight">
-          Find the <span className="text-blue-600">Perfect Influencer</span>
-                </h1>
-            <p className="mt-4 text-xl text-gray-600">
-          Our AI-powered platform helps you discover and match with influencers for your brand campaigns.
-            </p>
-      </div>
+  const handleGenerateProposal = (selectedInfluencers: MatchResult[]) => {
+    setCurrentView('generate');
+  };
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {renderNavigation()}
-        {renderMainContent()}
-      </main>
+  const handleProposalGenerated = (proposal: CampaignProposal) => {
+    setCurrentProposal(proposal);
+    setCurrentView('view');
+  };
+
+  const handleEditProposal = () => {
+    setCurrentView('generate');
+  };
+
+  const handleExport = (format: 'csv' | 'pdf' | 'hibiki') => {
+    if (!currentProposal) return;
+
+    switch (format) {
+      case 'csv':
+        exportProposalToCSV(currentProposal);
+        break;
+      case 'pdf':
+        exportProposalToPDF(currentProposal);
+        break;
+      case 'hibiki':
+        exportHibikiStyleCSV(currentProposal);
+        break;
+    }
+  };
+
+  const handleGetStarted = () => {
+    setCurrentView('chat');
+    setShowSidebar(true);
+  };
+
+  const handleClearResults = () => {
+    setSearchResults(null);
+    setCurrentSearchId(null);
+  };
+
+  const renderContent = () => {
+    switch (currentView) {
+      case 'landing':
+        return <LandingPage onGetStarted={handleGetStarted} />;
+      case 'chat':
+        return (
+          <div className="min-h-screen space-y-6 p-6">
+            <Chatbot onSendMessage={handleSendMessage} />
+            {searchResults && (
+              <>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Search Results ({searchResults.totalFound} total)
+                  </h2>
+                  <button
+                    onClick={handleClearResults}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  >
+                    🗑️ Clear Results
+                  </button>
+                </div>
+                <InfluencerResults 
+                  results={searchResults.premiumResults}
+                />
+                <DiscoveryGrid 
+                  discoveryInfluencers={searchResults.discoveryResults}
+                />
+                {currentSearchId && (
+                  <FeedbackPanel 
+                    searchId={currentSearchId}
+                    sessionId={sessionId} 
+                  />
+                )}
+              </>
+            )}
+          </div>
+        );
+      case 'generate':
+        return <ProposalGenerator matchResults={searchResults?.premiumResults || []} onProposalGenerated={handleProposalGenerated} />;
+      case 'view':
+        return currentProposal ? <ProposalViewer proposal={currentProposal} onExport={handleExport} onEdit={handleEditProposal} /> : <div>No proposal available</div>;
+      case 'campaigns':
+        return <CampaignManager />;
+      default:
+        return <Chatbot onSendMessage={handleSendMessage} />;
+    }
+  };
+
+  // If on landing page, don't show sidebar
+  if (currentView === 'landing') {
+    return renderContent();
+  }
+
+  return (
+    <div className="flex h-screen bg-gray-50">
+      {/* Left Sidebar - Only show after Get Started */}
+      {showSidebar && (
+        <div className="w-64 bg-white shadow-lg flex flex-col">
+          {/* Logo/Brand Section */}
+          <div className="p-6 border-b border-gray-200">
+            <h1 className="text-xl font-bold text-gray-800">LayAI</h1>
+            <p className="text-sm text-gray-600">Influencer Discovery</p>
+          </div>
+
+          {/* Navigation Menu */}
+          <nav className="flex-1 p-4">
+            <ul className="space-y-2">
+              <li>
+                <button
+                  onClick={() => setCurrentView('chat')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
+                    currentView === 'chat' 
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span>💬</span>
+                  Chat
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setCurrentView('generate')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
+                    currentView === 'generate' 
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span>📄</span>
+                  Generate Proposal
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setCurrentView('view')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
+                    currentView === 'view' 
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span>👁️</span>
+                  View Proposal
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setCurrentView('campaigns')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
+                    currentView === 'campaigns' 
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span>📊</span>
+                  Campaigns
+                </button>
+              </li>
+            </ul>
+          </nav>
+
+          {/* Footer */}
+          <div className="p-4 border-t border-gray-200">
+            <p className="text-xs text-gray-500">Version 1.0.0</p>
+          </div>
+        </div>
+      )}
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+        {renderContent()}
+      </div>
     </div>
   );
 } 

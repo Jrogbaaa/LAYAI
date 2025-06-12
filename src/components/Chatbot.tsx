@@ -15,7 +15,7 @@ interface ChatbotProps {
 export function Chatbot({ onSendMessage }: ChatbotProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "Hi! I'm your AI assistant for finding influencers. I can help you search for creators based on platform, niche, follower count, location, and more. Try asking me something like 'Find fashion influencers on Instagram with 10k-100k followers' or 'Show me tech YouTubers in California'.",
+      text: "Hi! I'm your AI assistant for finding influencers. I can help you search for creators based on platform, niche, follower count, location, and more. Try asking me something like 'Find fashion influencers on Instagram with 10k-100k followers' or 'Show me tech YouTubers in California'.\n\n💡 After I show results, you can ask follow-up questions like 'Can you also find beauty influencers?' or 'Show me male fitness creators too' to add more results!",
       sender: 'bot',
       type: 'chat'
     }
@@ -69,7 +69,7 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
   };
 
   return (
-    <div className="flex flex-col h-[600px] w-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl mb-8">
+    <div className="flex flex-col h-[700px] w-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl mb-8">
       <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-t-lg">
         <h3 className="text-lg font-semibold">AI Influencer Search Assistant</h3>
         <p className="text-sm opacity-90">Powered by OpenAI GPT-3.5 🤖</p>

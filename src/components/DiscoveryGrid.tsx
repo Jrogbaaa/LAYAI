@@ -15,6 +15,15 @@ interface DiscoveryGridProps {
 }
 
 const DiscoveryGrid: React.FC<DiscoveryGridProps> = ({ discoveryInfluencers }) => {
+  console.log('DiscoveryGrid received:', discoveryInfluencers?.length, 'influencers');
+  
+  if (!discoveryInfluencers || discoveryInfluencers.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">No discovery results found.</p>
+      </div>
+    );
+  }
   const formatFollowers = (count: number): string => {
     if (count >= 1000000) {
       return `${(count / 1000000).toFixed(1)}M`;
@@ -56,7 +65,17 @@ const DiscoveryGrid: React.FC<DiscoveryGridProps> = ({ discoveryInfluencers }) =
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="mb-8">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">
+          Discovery Results ({discoveryInfluencers.length} found)
+        </h2>
+        <p className="text-gray-600 mt-1">
+          Influencers discovered through web search - upgrade for detailed analytics
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {discoveryInfluencers.map((influencer, index) => (
         <div
           key={`${influencer.username}-${influencer.platform}-${index}`}
@@ -83,7 +102,7 @@ const DiscoveryGrid: React.FC<DiscoveryGridProps> = ({ discoveryInfluencers }) =
               <h3 className="font-bold text-gray-900 text-lg truncate">
                 {influencer.fullName}
               </h3>
-              <p className="text-gray-600 text-sm">@{influencer.username}</p>
+              <p className="text-gray-600 text-sm">@{influencer.username.replace(/\.$/, '')}</p>
             </div>
 
             <div className="space-y-2 mb-4">
@@ -102,7 +121,7 @@ const DiscoveryGrid: React.FC<DiscoveryGridProps> = ({ discoveryInfluencers }) =
             {/* Action Button */}
             <div className="flex space-x-2">
               <a
-                href={influencer.profileUrl}
+                href={influencer.profileUrl.replace(/\.$/, '')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-center py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-200"
@@ -112,8 +131,10 @@ const DiscoveryGrid: React.FC<DiscoveryGridProps> = ({ discoveryInfluencers }) =
               <button
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
                 onClick={() => {
+                  // Clean username and log
+                  const cleanUsername = influencer.username.replace(/\.$/, '');
+                  console.log('Add to contacts:', cleanUsername);
                   // TODO: Add to contacts or upgrade to premium analysis
-                  console.log('Add to contacts:', influencer.username);
                 }}
               >
                 Contact
@@ -128,7 +149,8 @@ const DiscoveryGrid: React.FC<DiscoveryGridProps> = ({ discoveryInfluencers }) =
             </div>
           </div>
         </div>
-      ))}
+              ))}
+      </div>
     </div>
   );
 };
