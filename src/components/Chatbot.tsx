@@ -43,11 +43,14 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
     setIsLoading(true);
 
     try {
+      console.log('🤖 Chatbot sending message:', currentInput);
       const response = await onSendMessage(currentInput, messages);
+      console.log('🤖 Chatbot received response:', response);
 
       if (response.type === 'chat') {
         const botMessage: Message = { text: response.data, sender: 'bot', type: 'chat' };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
+        console.log('💬 Added chat message to UI:', response.data);
       } else if (response.type === 'search') {
         const botMessage: Message = { 
           text: "🔍 Searching for influencers based on your criteria...", 
@@ -55,8 +58,10 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
           type: 'chat' 
         };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
+        console.log('🔍 Added search message to UI');
       }
     } catch (error) {
+      console.error('🤖 Chatbot error:', error);
       const errorMessage: Message = { 
         text: 'Sorry, something went wrong. Please try again.', 
         sender: 'bot', 

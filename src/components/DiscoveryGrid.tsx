@@ -124,21 +124,10 @@ const DiscoveryGrid: React.FC<DiscoveryGridProps> = ({ discoveryInfluencers }) =
                 href={influencer.profileUrl.replace(/\.$/, '')}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-center py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-200"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-200"
               >
                 View Profile
               </a>
-              <button
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-                onClick={() => {
-                  // Clean username and log
-                  const cleanUsername = influencer.username.replace(/\.$/, '');
-                  console.log('Add to contacts:', cleanUsername);
-                  // TODO: Add to contacts or upgrade to premium analysis
-                }}
-              >
-                Contact
-              </button>
             </div>
 
             {/* Upgrade hint */}

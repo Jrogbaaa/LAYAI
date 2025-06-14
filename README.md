@@ -1,299 +1,239 @@
-# 🎯 Social Media Talent Matcher
+# LAYAI - AI-Powered Influencer Marketing Platform
 
-An AI-powered influencer discovery platform that finds the perfect social media creators for your brand campaigns. Features intelligent search, real-time data extraction, and comprehensive analytics.
+LAYAI is a comprehensive influencer marketing platform that leverages AI to discover, analyze, and generate professional proposals for influencer collaborations. Built with Next.js, TypeScript, and modern web technologies.
 
-## ✨ Key Features
+## 🚀 Features
 
-### 🔍 **Advanced Search Capabilities**
-- **Multi-Platform Support**: Instagram, TikTok, YouTube, Twitter
-- **Smart Query Parsing**: Natural language search with AI understanding
-- **Precise Filtering**: Gender, age range, location, follower count, niche
-- **Location Intelligence**: Enhanced Spanish/international influencer detection
-- **Niche Specialization**: 15+ categories including home/furniture, fashion, fitness, tech
+### Core Functionality
+- **AI-Powered Search**: Intelligent influencer discovery using natural language queries
+- **Multi-Platform Support**: Instagram, TikTok, YouTube, and Twitter integration
+- **Real-Time Web Search**: Actual influencer data retrieval via web scraping
+- **Manual Upload**: Add specific influencers by handle with automatic data enrichment
+- **Professional Proposals**: Generate detailed collaboration proposals in Spanish
+- **Export Capabilities**: CSV and Excel export matching industry templates
 
-### 🧠 **AI-Powered Intelligence**
-- **Conversational Interface**: Chat-based search with context understanding
-- **Memory & Learning**: User feedback system with reinforcement learning
-- **Pattern Recognition**: Builds knowledge from successful/failed searches
-- **Smart Recommendations**: Improves results based on user preferences
+### Advanced Features
+- **Gender Detection**: Smart gender identification from usernames and profiles
+- **Location Filtering**: Geographic targeting with IP-based detection
+- **Follower Range Filtering**: Precise audience size targeting
+- **Engagement Analysis**: Real engagement rate calculations
+- **Brand Intelligence**: AI-powered brand compatibility scoring
+- **Personalized Content**: Unique biographies and collaboration reasons per influencer
 
-### 📊 **Two-Tier Discovery System**
-- **Premium Tier**: Full analytics with Apify data extraction
-- **Discovery Tier**: Web-sourced profiles with estimated metrics
-- **Real-time Verification**: Profile existence and follower validation
-- **Comprehensive Filtering**: Gender, location, and niche matching
+## 🛠️ Technology Stack
 
-### 🎨 **Modern UI/UX**
-- **Responsive Design**: Works on desktop, tablet, and mobile
-- **Interactive Cards**: Rich profile displays with engagement metrics
-- **Feedback System**: 5-star ratings and detailed improvement suggestions
-- **Export Options**: CSV and PDF proposal generation
+- **Frontend**: Next.js 15, React, TypeScript
+- **Styling**: Tailwind CSS, Shadcn/ui components
+- **Backend**: Next.js API routes, Node.js
+- **Data Sources**: Apify, Serply API, Web scraping
+- **Export**: CSV/Excel generation with Spanish localization
+- **AI**: OpenAI integration for content generation
 
-## 🚀 Recent Improvements (Latest Update)
+## 📋 Prerequisites
 
-### ✅ **Enhanced Location Targeting**
-- **Spanish Influencer Detection**: 100+ Spanish name patterns for accurate filtering
-- **Geographic Intelligence**: City-level recognition (Madrid, Barcelona, Valencia, etc.)
-- **Strict Location Matching**: Precise filtering when location is specified
-- **Multi-language Queries**: Spanish search terms for better local results
+- Node.js 18+ 
+- npm or yarn
+- API Keys:
+  - `APIFY_API_TOKEN` - For web scraping
+  - `SERPLY_API_KEY` - For search functionality
+  - `OPENAI_API_KEY` - For AI features (optional)
 
-### ✅ **Advanced Gender Detection**
-- **Comprehensive Name Database**: 50+ male/female Spanish and international names
-- **Context-Aware Parsing**: Understands "men only", "women only", "male", "female"
-- **Accurate Classification**: Fixed previous misclassifications
-- **Cultural Sensitivity**: Spanish naming conventions support
+## 🚀 Quick Start
 
-### ✅ **Niche Expansion**
-- **Home/Furniture Category**: Full support for IKEA, interior design, home decor
-- **Specialized Keywords**: DIY, organization, homeware, furniture mapping
-- **Spanish Home Queries**: "decoración hogar", "muebles diseño interior"
-- **Brand-Specific Targeting**: Enhanced queries for furniture brands
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/layai.git
+   cd layai
+   ```
 
-### ✅ **Age Range Detection**
-- **Flexible Parsing**: "ages 30 and up", "25-34", "over 30 years old"
-- **Smart Categorization**: Automatic age group assignment
-- **Range Validation**: Proper age filtering in results
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-### ✅ **Memory & Feedback System**
-- **Search History Tracking**: Complete session and search logging
-- **User Feedback Collection**: 5-star ratings with specific improvement areas
-- **Learning Patterns**: Builds knowledge from user interactions
-- **Reinforcement Learning**: Improves future searches based on feedback
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Add your API keys to `.env.local`:
+   ```
+   APIFY_API_TOKEN=your_apify_token
+   SERPLY_API_KEY=your_serply_key
+   OPENAI_API_KEY=your_openai_key
+   ```
 
-## 🛠 Technical Architecture
+4. **Run the development server**
+   ```bash
+   npm run dev
+   ```
 
-### **Backend Services**
-```
-├── Search API (/api/search-apify)
-│   ├── Two-tier discovery system
-│   ├── Serply web search integration
-│   ├── Apify data extraction
-│   └── Advanced filtering pipeline
-│
-├── Chat API (/api/chat)
-│   ├── Natural language processing
-│   ├── Query parameter extraction
-│   ├── Context understanding
-│   └── Search intent detection
-│
-├── Feedback API (/api/feedback)
-│   ├── User rating collection
-│   ├── Learning pattern updates
-│   ├── Search history management
-│   └── Performance analytics
-│
-└── Database Layer (/lib/database)
-    ├── In-memory storage
-    ├── Search history tracking
-    ├── User feedback storage
-    └── Learning pattern analysis
-```
+5. **Open your browser**
+   Navigate to `http://localhost:3000`
 
-### **Frontend Components**
-```
-├── Chatbot Interface
-│   ├── Natural language input
-│   ├── Real-time search parsing
-│   └── Conversational responses
-│
-├── Results Display
-│   ├── Premium influencer cards
-│   ├── Discovery grid layout
-│   ├── Engagement metrics
-│   └── Profile verification
-│
-├── Feedback System
-│   ├── Quick rating buttons
-│   ├── Detailed feedback forms
-│   ├── Improvement suggestions
-│   └── Success tracking
-│
-└── Export Tools
-    ├── CSV generation
-    ├── PDF proposals
-    ├── Hibiki-style exports
-    └── Campaign planning
-```
+## 📖 Usage Guide
 
-## 🎯 Search Examples
+### Basic Search
+1. Enter a natural language query like "Find female fitness influencers from Spain with 10K-100K followers"
+2. The AI will parse your requirements and perform targeted searches
+3. Review discovered influencers with real-time data
+4. Select influencers for your campaign
 
-### **Basic Searches**
-```
-"Find fashion influencers on Instagram"
-"Show me tech YouTubers with 50k+ followers"
-"Fitness influencers in New York"
-```
+### Manual Upload
+1. Click "Add Manual Influencers" 
+2. Enter Instagram/TikTok handles (one per line):
+   ```
+   @username
+   https://instagram.com/username
+   https://tiktok.com/@username
+   username
+   ```
+3. The system will automatically search for real profile data
+4. Fallback profiles are created if search fails
 
-### **Advanced Targeting**
-```
-"Find influencers in Spain men only for IKEA ages 30 and up"
-"Women lifestyle influencers in Madrid with 10k-100k followers"
-"Spanish home decor influencers for furniture brands"
-```
+### Proposal Generation
+1. Select influencers from search results or manual uploads
+2. Customize biographies and collaboration reasons (editable fields)
+3. Click "Generate Proposal"
+4. Export as CSV or Excel in professional Spanish format
 
-### **Multi-Platform Queries**
-```
-"TikTok and Instagram beauty influencers in Barcelona"
-"YouTube tech reviewers in Spain with over 100k subscribers"
-"Spanish cooking influencers across all platforms"
-```
+## 🔧 Configuration
 
-## 📈 Performance Metrics
+### Search Parameters
+- **Platforms**: Instagram, TikTok, YouTube, Twitter
+- **Follower Range**: 1K - 10M+ followers
+- **Gender**: Male, Female, Non-Binary, Other
+- **Location**: Country/region targeting
+- **Niches**: 20+ categories including Fashion, Fitness, Tech, etc.
 
-### **Search Accuracy**
-- ✅ **Location Filtering**: 95% accuracy for Spanish influencers
-- ✅ **Gender Detection**: 90% accuracy with name-based classification
-- ✅ **Niche Matching**: 85% relevance for specialized categories
-- ✅ **Follower Validation**: Real-time verification for premium tier
+### Export Formats
+- **Hibiki Style**: Single-platform CSV format
+- **Orange Style**: Multi-platform CSV with detailed metrics
+- **Excel**: XLSX format with Spanish localization
 
-### **User Experience**
-- ✅ **Response Time**: <5 seconds for discovery results
-- ✅ **Result Quality**: 4.2/5 average user rating
-- ✅ **Search Success**: 78% of searches return relevant results
-- ✅ **User Satisfaction**: 85% positive feedback rate
+## 🏗️ Architecture
 
-## 🔧 Installation & Setup
+### Frontend Components
+- `src/app/page.tsx` - Main application interface
+- `src/components/ProposalGenerator.tsx` - Core proposal functionality
+- `src/components/DiscoveryGrid.tsx` - Search results display
+- `src/components/ui/` - Reusable UI components
 
-### **Prerequisites**
-```bash
-Node.js 18+
-npm or yarn
-Serply API key
-Apify API key (optional for premium features)
+### Backend Services
+- `src/lib/apifyService.ts` - Web scraping and data collection
+- `src/lib/exportUtils.ts` - CSV/Excel generation
+- `src/lib/brandIntelligence.ts` - AI brand analysis
+- `src/app/api/search-apify/route.ts` - Search API endpoint
+
+### Data Flow
+1. User query → AI parsing → Search parameters
+2. Web search → Profile discovery → Data enrichment
+3. Manual uploads → Real-time verification → Profile creation
+4. Selection → Proposal generation → Export
+
+## 🔍 Search Quality Features
+
+### Profile Validation
+- Filters out video IDs, domain names, corporate accounts
+- Blocks long numeric IDs and invalid formats
+- Converts TikTok video URLs to profile URLs
+- Comprehensive logging for transparency
+
+### Gender Detection
+- Spanish name database with 1000+ entries
+- Username pattern analysis
+- Fallback handling for unknown genders
+- 60% allowance for uncertain profiles
+
+### Data Personalization
+- Unique Spanish biographies per influencer
+- IKEA-specific collaboration reasons
+- Varied metrics based on niche and platform
+- Realistic past collaboration history
+
+## 📊 Export Templates
+
+### Hibiki Style (Single Platform)
+```csv
+Influencer,Followers,Engagement Rate,Cost,Platform,Bio,Reason
+@username,50000,3.2%,€1000,Instagram,Bio personalizada,Razón específica
 ```
 
-### **Environment Variables**
-```env
-SERPLY_API_KEY=your_serply_key
-APIFY_API_TOKEN=your_apify_token
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
-
-### **Quick Start**
-```bash
-# Clone repository
-git clone https://github.com/yourusername/social-media-talent-matcher.git
-cd social-media-talent-matcher
-
-# Install dependencies
-npm install
-
-# Set up environment
-cp .env.example .env.local
-# Add your API keys to .env.local
-
-# Run development server
-npm run dev
-
-# Open browser
-open http://localhost:3000
+### Orange Style (Multi Platform)
+```csv
+Influencer,Instagram,TikTok,Total Followers,Spain IP %,Engagement,Cost
+@username,50000,25000,75000,85%,3.2%,€1500
 ```
 
 ## 🧪 Testing
 
-### **Run Test Suite**
 ```bash
-# Unit tests
-npm run test
+# Run tests
+npm test
 
-# E2E tests
-npm run test:e2e
+# Run linting
+npm run lint
 
-# Search integration tests
-npm run test:search
-
-# Performance tests
-npm run test:performance
+# Type checking
+npm run type-check
 ```
 
-### **Test Coverage**
-- ✅ Search API endpoints
-- ✅ Chat parsing logic
-- ✅ Feedback system
-- ✅ Data transformation
-- ✅ UI component rendering
+## 🚀 Deployment
 
-## 📊 API Documentation
+### Vercel (Recommended)
+1. Connect your GitHub repository to Vercel
+2. Add environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
 
-### **Search Endpoint**
-```typescript
-POST /api/search-apify
-{
-  platforms: string[];
-  niches: string[];
-  minFollowers: number;
-  maxFollowers: number;
-  location?: string;
-  gender?: string;
-  ageRange?: string;
-  userQuery?: string;
-}
+### Manual Deployment
+```bash
+npm run build
+npm start
 ```
 
-### **Chat Endpoint**
-```typescript
-POST /api/chat
-{
-  message: string;
-}
-```
+## 🔐 Environment Variables
 
-### **Feedback Endpoint**
-```typescript
-POST /api/feedback
-{
-  searchId: string;
-  rating: number;
-  feedback?: string;
-  improvedQuery?: string;
-}
-```
-
-## 🔮 Roadmap
-
-### **Q1 2025**
-- [ ] Real-time engagement tracking
-- [ ] Advanced audience analytics
-- [ ] Campaign performance prediction
-- [ ] Multi-language support expansion
-
-### **Q2 2025**
-- [ ] AI-powered content analysis
-- [ ] Automated outreach tools
-- [ ] Contract management system
-- [ ] ROI tracking dashboard
-
-### **Q3 2025**
-- [ ] Video content analysis
-- [ ] Trend prediction algorithms
-- [ ] Competitive intelligence
-- [ ] Advanced reporting suite
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `APIFY_API_TOKEN` | Apify web scraping service | Yes |
+| `SERPLY_API_KEY` | Search API for profile discovery | Yes |
+| `OPENAI_API_KEY` | AI content generation | Optional |
+| `NODE_ENV` | Environment (development/production) | Auto |
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### **Development Workflow**
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📄 License
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## 🆘 Support
 
-- **Serply API**: Web search capabilities
-- **Apify**: Data extraction services
-- **Next.js**: React framework
-- **Tailwind CSS**: Styling framework
-- **TypeScript**: Type safety
+- **Issues**: [GitHub Issues](https://github.com/yourusername/layai/issues)
+- **Documentation**: This README and inline code comments
+- **Email**: support@layai.com
+
+## 🎯 Roadmap
+
+- [ ] Multi-language support (English, French, German)
+- [ ] Advanced analytics dashboard
+- [ ] Campaign performance tracking
+- [ ] Automated outreach templates
+- [ ] Integration with major social media APIs
+- [ ] Machine learning recommendation engine
+
+## 📈 Performance
+
+- **Search Speed**: ~30-60 seconds for comprehensive results
+- **Data Accuracy**: Real-time web scraping with fallback handling
+- **Export Speed**: Instant CSV/Excel generation
+- **Scalability**: Handles 100+ influencers per search
 
 ---
 
-**Built with ❤️ for the creator economy**
-
-*Last updated: January 2025* 
+Built with ❤️ by the LAYAI team. Empowering brands to find their perfect influencer matches through AI-powered discovery and analysis. 

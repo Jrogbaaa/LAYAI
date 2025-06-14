@@ -15,11 +15,19 @@ export async function POST(request: NextRequest) {
       sessionId,
       userId,
       userQuery = '',
+      specificHandle,
       verified = false,
       maxResults = 50
     } = body;
 
-    console.log('🔍 Search request:', { platforms, niches, minFollowers, maxFollowers, location, gender });
+    console.log('🔍 Search request:', { platforms, niches, minFollowers, maxFollowers, location, gender, specificHandle });
+
+    // Enhance search query for specific handles
+    let enhancedQuery = userQuery;
+    if (specificHandle) {
+      enhancedQuery = `${specificHandle} ${platforms[0]} influencer profile followers engagement rate`;
+      console.log(`🎯 Searching for specific handle: ${specificHandle}`);
+    }
 
     const searchParams: ApifySearchParams = {
       platforms,
@@ -30,7 +38,8 @@ export async function POST(request: NextRequest) {
       gender,
       verified,
       maxResults,
-      userQuery,
+      userQuery: enhancedQuery,
+      specificHandle, // Pass through for targeted search
     };
 
     // Perform the search

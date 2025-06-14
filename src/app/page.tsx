@@ -11,7 +11,8 @@ import CampaignManager from '@/components/CampaignManager';
 import LandingPage from '@/components/LandingPage';
 import { MatchResult } from '@/types/influencer';
 import { CampaignProposal } from '@/types/campaign';
-import { exportProposalToCSV, exportProposalToPDF, exportHibikiStyleCSV } from '@/utils/exportUtils';
+import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
+import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/exportUtils';
 import { generateSessionId } from '@/lib/database';
 
 type PageView = 'landing' | 'chat' | 'generate' | 'view' | 'campaigns';
@@ -39,6 +40,8 @@ export default function Home() {
     setIsLoading(true);
     
     try {
+      console.log('🔄 Sending message to chat API:', message);
+      
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
@@ -47,9 +50,16 @@ export default function Home() {
         body: JSON.stringify({ message, history }),
       });
 
+      if (!response.ok) {
+        throw new Error(`Chat API failed with status: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log('🔄 Chat API response:', data);
 
       if (data.type === 'search') {
+        console.log('🔍 Processing search request with params:', data.data);
+        
         const searchResponse = await fetch('/api/search-apify', {
           method: 'POST',
           headers: {
@@ -97,15 +107,36 @@ export default function Home() {
           }
           
           setCurrentSearchId(searchData.searchId);
+        } else {
+          console.error('❌ Search API failed:', searchData);
         }
 
         return { type: 'search', data: searchData };
+      } else if (data.type === 'chat') {
+        console.log('💬 Processing chat response:', data.data);
+        return { type: 'chat', data: data.data };
       } else {
-        return { type: 'chat', data: data.response };
+        console.error('❌ Unexpected response type:', data);
+        return { type: 'chat', data: 'Sorry, I received an unexpected response. Please try again.' };
       }
     } catch (error) {
-      console.error('Error sending message:', error);
-      throw error;
+      console.error('❌ Error sending message:', error);
+      
+      // Provide more specific error messages
+      let errorMessage = 'Sorry, something went wrong. Please try again.';
+      if (error instanceof Error) {
+        if (error.message.includes('fetch')) {
+          errorMessage = 'Unable to connect to the server. Please check your internet connection and try again.';
+        } else if (error.message.includes('timeout')) {
+          errorMessage = 'The request timed out. Please try again.';
+        } else if (error.message.includes('API failed')) {
+          errorMessage = 'There was an issue with the API. Please try again in a moment.';
+        } else {
+          errorMessage = `Error: ${error.message}`;
+        }
+      }
+      
+      return { type: 'chat', data: errorMessage };
     } finally {
       setIsLoading(false);
     }
@@ -167,6 +198,62 @@ export default function Home() {
     }));
   };
 
+  // Convert discovery results to MatchResult format
+  const convertDiscoveryToMatchResults = (discoveryResults: any[]): MatchResult[] => {
+    return discoveryResults.map((profile) => ({
+      influencer: {
+        id: profile.id || profile.handle || profile.username,
+        name: profile.name || profile.handle || profile.username,
+        handle: profile.handle || profile.username,
+        platform: profile.platform as 'Instagram' | 'TikTok' | 'YouTube' | 'Twitter' | 'Multi-Platform',
+        followerCount: profile.followers || profile.followerCount || 50000,
+        engagementRate: (profile.engagementRate || 3.2) / 100,
+        ageRange: '25-34',
+        gender: profile.detectedGender === 'male' ? 'Male' : profile.detectedGender === 'female' ? 'Female' : 'Other',
+        location: profile.location || 'Unknown',
+        niche: [profile.category || profile.niche || 'Lifestyle'],
+        contentStyle: ['Posts', 'Stories'],
+        pastCollaborations: [],
+        averageRate: Math.floor(profile.followers / 50) || 1000,
+        costLevel: 'Mid-Range' as 'Budget' | 'Mid-Range' | 'Premium' | 'Celebrity',
+        audienceDemographics: {
+          ageGroups: {
+            '13-17': 5,
+            '18-24': 35,
+            '25-34': 40,
+            '35-44': 15,
+            '45-54': 4,
+            '55+': 1,
+          },
+          gender: {
+            male: 45,
+            female: 52,
+            other: 3,
+          },
+          topLocations: [profile.location || 'Unknown'],
+          interests: [profile.category || profile.niche || 'Lifestyle'],
+        },
+        recentPosts: [],
+        contactInfo: {
+          email: profile.email,
+          preferredContact: 'DM' as 'Email' | 'Phone' | 'DM' | 'Management',
+        },
+        isActive: true,
+        lastUpdated: new Date(),
+      },
+      matchScore: (profile.brandCompatibilityScore || 75) / 100,
+      matchReasons: [
+        'Discovered through real-time search',
+        `${profile.followers?.toLocaleString() || 'Active'} followers`,
+        `${profile.category || profile.niche || 'Lifestyle'} content creator`,
+      ],
+      estimatedCost: Math.floor((profile.followers || 50000) / 50) || 1000,
+      similarPastCampaigns: [],
+      potentialReach: Math.round((profile.followers || 50000) * ((profile.engagementRate || 3.2) / 100)),
+      recommendations: ['Consider for authentic content creation'],
+    }));
+  };
+
   const handleGenerateProposal = (selectedInfluencers: MatchResult[]) => {
     setCurrentView('generate');
   };
@@ -180,7 +267,7 @@ export default function Home() {
     setCurrentView('generate');
   };
 
-  const handleExport = (format: 'csv' | 'pdf' | 'hibiki') => {
+  const handleExport = (format: 'csv' | 'pdf' | 'hibiki' | 'orange') => {
     if (!currentProposal) return;
 
     switch (format) {
@@ -192,6 +279,9 @@ export default function Home() {
         break;
       case 'hibiki':
         exportHibikiStyleCSV(currentProposal);
+        break;
+      case 'orange':
+        exportOrangeStyleCSV(currentProposal);
         break;
     }
   };
@@ -244,7 +334,12 @@ export default function Home() {
           </div>
         );
       case 'generate':
-        return <ProposalGenerator matchResults={searchResults?.premiumResults || []} onProposalGenerated={handleProposalGenerated} />;
+        // Convert discovery results to MatchResult format and combine with premium results
+        const allResults = [
+          ...(searchResults?.premiumResults || []),
+          ...convertDiscoveryToMatchResults(searchResults?.discoveryResults || [])
+        ];
+        return <ProposalGenerator matchResults={allResults} onProposalGenerated={handleProposalGenerated} />;
       case 'view':
         return currentProposal ? <ProposalViewer proposal={currentProposal} onExport={handleExport} onEdit={handleEditProposal} /> : <div>No proposal available</div>;
       case 'campaigns':

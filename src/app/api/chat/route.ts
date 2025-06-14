@@ -167,12 +167,25 @@ function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifyS
 
   // Look for follower patterns (including comma-separated numbers)
   const followerPatterns = [
+    // Handle "no more than" patterns
+    { pattern: /no more than\s+([\d,]+)/i, isMax: true },
+    { pattern: /not more than\s+([\d,]+)/i, isMax: true },
+    { pattern: /maximum of\s+([\d,]+)/i, isMax: true },
+    { pattern: /max\s+([\d,]+)/i, isMax: true },
+    
     // Handle "between X and Y" patterns with commas
     { pattern: /between\s+([\d,]+)\s+and\s+([\d,]+)/i, isRange: true },
     { pattern: /([\d,]+)\s*-\s*([\d,]+)\s*followers/i, isRange: true },
     { pattern: /([\d,]+)\s*to\s*([\d,]+)\s*followers/i, isRange: true },
     
-    // Handle k/m patterns
+    // Handle k/m patterns for maximums
+    { pattern: /no more than\s+(\d+)k/i, multiplier1: 1000, isMax: true },
+    { pattern: /under\s+(\d+)k/i, multiplier1: 1000, isMax: true },
+    { pattern: /below\s+(\d+)k/i, multiplier1: 1000, isMax: true },
+    { pattern: /no more than\s+(\d+)m/i, multiplier1: 1000000, isMax: true },
+    { pattern: /under\s+(\d+)m/i, multiplier1: 1000000, isMax: true },
+    
+    // Handle k/m patterns for ranges
     { pattern: /(\d+)k?\s*-\s*(\d+)k/i, multiplier1: 1000, multiplier2: 1000 },
     { pattern: /(\d+)k?\s*-\s*(\d+)m/i, multiplier1: 1000, multiplier2: 1000000 },
     { pattern: /(\d+)m?\s*-\s*(\d+)m/i, multiplier1: 1000000, multiplier2: 1000000 },
@@ -184,10 +197,6 @@ function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifyS
     { pattern: /(\d+)k\+/i, multiplier1: 1000, isMin: true },
     { pattern: /over\s+(\d+)m/i, multiplier1: 1000000, isMin: true },
     { pattern: /(\d+)m\+/i, multiplier1: 1000000, isMin: true },
-    
-    // Handle maximum patterns
-    { pattern: /under\s+(\d+)k/i, multiplier1: 1000, isMax: true },
-    { pattern: /less than\s+(\d+)k/i, multiplier1: 1000, isMax: true },
     
     // Handle single values
     { pattern: /(\d+)k/i, multiplier1: 1000, isSingle: true },
@@ -203,17 +212,22 @@ function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifyS
         const num2 = parseInt(match[2].replace(/,/g, ''));
         minFollowers = Math.min(num1, num2);
         maxFollowers = Math.max(num1, num2);
-      } else if (isMin) {
+      } else if (isMin && multiplier1) {
         minFollowers = parseInt(match[1]) * multiplier1;
         maxFollowers = 10000000; // 10M max
       } else if (isMax) {
         minFollowers = 1000;
-        maxFollowers = parseInt(match[1]) * multiplier1;
-      } else if (isSingle) {
+        if (multiplier1) {
+          maxFollowers = parseInt(match[1]) * multiplier1;
+        } else {
+          // Handle comma-separated numbers for max patterns
+          maxFollowers = parseInt(match[1].replace(/,/g, ''));
+        }
+      } else if (isSingle && multiplier1) {
         const count = parseInt(match[1]) * multiplier1;
         minFollowers = Math.max(1000, count * 0.5);
         maxFollowers = count * 2;
-      } else if (multiplier2) {
+      } else if (multiplier1 && multiplier2) {
         minFollowers = parseInt(match[1]) * multiplier1;
         maxFollowers = parseInt(match[2]) * multiplier2;
       }

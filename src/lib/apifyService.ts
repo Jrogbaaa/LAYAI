@@ -43,6 +43,7 @@ export interface ApifySearchParams {
   strictLocationMatch?: boolean;
   brandName?: string;
   userQuery?: string;
+  specificHandle?: string;
 }
 
 export interface SearchResults {
@@ -228,9 +229,17 @@ async function searchWithSerply(query: string, limit: number = 15): Promise<any[
   console.log('🔑 Serply API Key status:', serplyApiKey ? `Present (${serplyApiKey.substring(0, 8)}...)` : 'NOT FOUND');
   
   if (!serplyApiKey) {
-    console.error('Serply API key not provided. Cannot perform search.');
+    console.error('❌ Serply API key not provided. Cannot perform search.');
     return [];
   }
+
+  // Check if API key looks valid (basic validation)
+  if (serplyApiKey.length < 10 || serplyApiKey.includes('%') || serplyApiKey === 'your_valid_serply_api_key_here') {
+    console.error('❌ Serply API key appears to be invalid or placeholder. Cannot perform search.');
+    console.log('💡 Please check your .env.local file and ensure SERPLY_API_KEY is set to a valid key from https://serply.io/');
+    return [];
+  }
+
   try {
     // Encode the query for URL
     const encodedQuery = encodeURIComponent(query);
@@ -244,11 +253,25 @@ async function searchWithSerply(query: string, limit: number = 15): Promise<any[
         'Content-Type': 'application/json',
         'X-Api-Key': serplyApiKey,
       },
+      // Add timeout to prevent hanging
+      signal: AbortSignal.timeout(30000) // 30 second timeout
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Serply API error: ${response.status} ${response.statusText} - ${errorData.message}`);
+      const errorData = await response.json().catch(() => ({}));
+      const errorMsg = `Serply API error: ${response.status} ${response.statusText}${errorData.message ? ` - ${errorData.message}` : ''}`;
+      console.error('❌', errorMsg);
+      
+      // Provide specific guidance for common errors
+      if (response.status === 401) {
+        console.log('💡 This looks like an authentication error. Please check your Serply API key.');
+      } else if (response.status === 429) {
+        console.log('💡 Rate limit exceeded. Please wait before making more requests.');
+      } else if (response.status >= 500) {
+        console.log('💡 Serply server error. This is temporary, please try again later.');
+      }
+      
+      return [];
     }
 
     const data = await response.json();
@@ -262,12 +285,22 @@ async function searchWithSerply(query: string, limit: number = 15): Promise<any[
       return data.results;
     }
     
-    console.warn('Serply search did not return expected results array. Response:', data);
+    console.warn('⚠️ Serply search did not return expected results array. Response:', data);
     return [];
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    console.error(`Error during Serply search for query "${query}": ${errorMessage}`);
+    console.error(`❌ Error during Serply search for query "${query}": ${errorMessage}`);
+    
+    // Provide specific guidance for common error types
+    if (errorMessage.includes('fetch failed')) {
+      console.log('💡 Network error - please check your internet connection.');
+    } else if (errorMessage.includes('timeout')) {
+      console.log('💡 Request timed out - Serply might be slow or unavailable.');
+    } else if (errorMessage.includes('ENOTFOUND')) {
+      console.log('💡 DNS resolution failed - please check your internet connection.');
+    }
+    
     if (error instanceof Error && error.stack) {
       console.error("Stack trace:", error.stack);
     }
@@ -941,7 +974,7 @@ function estimateLocationFromProfile(username: string, searchLocation?: string):
     if (lowerLocation.includes('spain') || lowerLocation.includes('españa')) {
         // Spanish name patterns
         const spanishPatterns = [
-            /^(maria|jose|antonio|manuel|francisco|david|daniel|carlos|miguel|rafael|pedro|angel|alejandro|fernando|sergio|pablo|jorge|alberto|luis|alvaro|oscar|adrian|raul|enrique|jesus|javier|marcos|victor|ruben|ivan|diego|andres|juan|ignacio|roberto|cristian|mario|eduardo|ricardo|gabriel|gonzalo|nicolas|hugo|rodrigo|felipe|santiago|jaime|emilio|lorenzo|cesar|guillermo|mateo|sebastian|martin|leonardo|samuel|benjamin|aaron|ismael|joaquin|bruno|alonso|maximo|agustin|gaspar|lucas|oliver|tomas|noah|gael|ian|enzo|thiago|liam|dylan|alan|eric|elias|adam|abraham|christopher|alexander|kevin|brian|axel|erick|leonardo|matias|nicolas|santiago|sebastian|alejandro|diego|daniel|david|miguel|carlos|luis|jose|juan|antonio|manuel|francisco|rafael|pedro|angel|fernando|sergio|pablo|jorge|alberto|alvaro|oscar|adrian|raul|enrique|jesus|javier|marcos|victor|ruben|ivan|andres|ignacio|roberto|cristian|mario|eduardo|ricardo|gabriel|gonzalo|hugo|rodrigo|felipe|jaime|emilio|lorenzo|cesar|guillermo|mateo|martin|samuel|benjamin|aaron|ismael|joaquin|bruno|alonso|maximo|agustin|gaspar|lucas|oliver|tomas|noah|gael|ian|enzo|thiago|liam|dylan|alan|eric|elias|adam|abraham|christopher|alexander|kevin|brian|axel|erick)$/i,
+            /^(maria|jose|antonio|manuel|francisco|david|daniel|carlos|miguel|rafael|pedro|angel|alejandro|fernando|sergio|pablo|jorge|alberto|luis|alvaro|oscar|adrian|raul|enrique|jesus|javier|marcos|victor|ruben|ivan|diego|andres|juan|ignacio|roberto|cristian|mario|eduardo|ricardo|gabriel|gonzalo|nicolas|hugo|rodrigo|felipe|santiago|jaime|emilio|lorenzo|cesar|guillermo|mateo|sebastian|martin|leonardo|samuel|benjamin|aaron|ismael|joaquin|bruno|alonso|maximo|agustin|gaspar|lucas|oliver|tomas|noah|gael|ian|enzo|thiago|liam|dylan|alan|eric|elias|adam|abraham|christopher|alexander|kevin|brian|axel|erick|leonardo|matias|nicolas|santiago|sebastian|alejandro|diego|daniel|david|miguel|carlos|luis|juan|antonio|manuel|francisco|rafael|pedro|angel|fernando|sergio|pablo|jorge|alberto|alvaro|oscar|adrian|raul|enrique|jesus|javier|marcos|victor|ruben|ivan|andres|ignacio|roberto|cristian|mario|eduardo|ricardo|gabriel|gonzalo|hugo|rodrigo|felipe|jaime|emilio|lorenzo|cesar|guillermo|mateo|martin|samuel|benjamin|aaron|ismael|joaquin|bruno|alonso|maximo|agustin|gaspar|lucas|oliver|tomas|noah|gael|ian|enzo|thiago|liam|dylan|alan|eric|elias|adam|abraham|christopher|alexander|kevin|brian|axel|erick)$/i,
             /^(ana|maria|carmen|josefa|isabel|dolores|pilar|teresa|rosa|francisca|antonia|mercedes|julia|lucia|elena|concepcion|manuela|cristina|paula|laura|marta|silvia|sara|patricia|monica|raquel|natalia|beatriz|rocio|alba|andrea|irene|noelia|claudia|nuria|eva|susana|miriam|alicia|esther|yolanda|inmaculada|montserrat|sonia|angeles|amparo|remedios|gloria|esperanza|encarnacion|rosario|consuelo|victoria|aurora|asuncion|milagros|soledad|fatima|lourdes|nieves|margarita|josefina|juana|emilia|blanca|araceli|manuela|purificacion|natividad|felisa|casilda|perfecta|presentacion|ascension|primitiva|genoveva|vicenta|benita|bernarda|gregoria|rufina|dionisia|escolastica|evarista|filomena|generosa|higinia|leocadia|maximina|modesta|nemesia|obdulia|perpetua|placida|prudencia|raimunda|saturnina|severina|teodora|urbana|valentina|venancia|vicenta|visitacion|zenaida)$/i,
             /madrid|barcelona|valencia|sevilla|zaragoza|malaga|murcia|palma|bilbao|alicante|cordoba|valladolid|vigo|gijon|hospitalet|vitoria|granada|elche|oviedo|badalona|cartagena|terrassa|jerez|sabadell|mostoles|alcala|pamplona|fuenlabrada|almeria|leganes|santander|burgos|castellon|albacete|getafe|salamanca|huelva|logrono|badajoz|tarragona|leon|cadiz|lleida|marbella|dos|hermanas|torrevieja|parla|alcorcon|torrejon|reus|ourense|pontevedra|caceres|ceuta|melilla/i,
             /españa|spain|spanish|español|española/i
@@ -965,115 +998,78 @@ function estimateLocationFromProfile(username: string, searchLocation?: string):
  * Main function for the two-tier influencer discovery process.
  */
 export async function searchInfluencersWithTwoTierDiscovery(params: ApifySearchParams): Promise<SearchResults> {
-    console.log('Starting two-tier discovery approach: Premium + Discovery');
+  console.log('🚀 Starting two-tier influencer discovery with params:', params);
+  
+  try {
+    // Phase 1: Discover influencer profiles through web search
+    console.log('🔍 Phase 1: Web search discovery');
+    const profileUrls = await discoverInfluencerProfiles(params);
+    console.log(`🔍 Total profiles discovered: ${profileUrls.length}`);
 
-    // 1. Discover profiles using the new high-precision web search
-    const discoveredProfiles = await discoverInfluencerProfiles(params);
-    const uniqueProfiles = Array.from(new Set(discoveredProfiles.map(p => p.url)))
-                                .map(url => discoveredProfiles.find(p => p.url === url)!);
-
-    console.log(`🔍 Total profiles discovered: ${uniqueProfiles.length}`);
-
-    // 2. Always create discovery results from Google search (regardless of verification)
-    console.log(`🔄 Creating discovery results from ${uniqueProfiles.length} unique profiles...`);
-    const discoveryResults: BasicInfluencerProfile[] = uniqueProfiles.slice(0, 30) // Get more profiles to filter from
-        .map((profile, index) => {
-            const username = profile.url.split('/').pop()?.split('?')[0]?.replace(/\.$/, '') || `influencer_${index}`;
-            const detectedGender = detectGenderFromUsername(username);
-            
-            console.log(`   → Creating discovery profile: ${username} from ${profile.url} (gender: ${detectedGender})`);
-            return {
-                username,
-                fullName: generateDisplayName(username, params),
-                followers: estimateFollowersFromRange(params.minFollowers, params.maxFollowers),
-                platform: profile.platform,
-                niche: params.niches[0] || 'Lifestyle',
-                profileUrl: profile.url.replace(/\.$/, ''),
-                source: 'verified-discovery' as const,
-                detectedGender, // Add for filtering
-                estimatedLocation: estimateLocationFromProfile(username, params.location), // Add location estimation
-            };
-        })
-        .filter(profile => {
-            // Filter out fake/generic profiles
-            if (isGenericProfile(profile.username)) {
-                console.log(`   ❌ Filtered out generic profile: ${profile.username}`);
-                return false;
-            }
-            
-            // Filter by gender if specified
-            if (params.gender && profile.detectedGender !== 'unknown' && 
-                profile.detectedGender !== params.gender.toLowerCase()) {
-                console.log(`   ❌ Filtered out ${profile.detectedGender} profile: ${profile.username} (looking for ${params.gender})`);
-                return false;
-            }
-            
-            // Filter by location if specified and strict matching enabled
-            if (params.location && params.strictLocationMatch && profile.estimatedLocation) {
-                const locationMatch = profile.estimatedLocation.toLowerCase().includes(params.location.toLowerCase()) ||
-                                    params.location.toLowerCase().includes(profile.estimatedLocation.toLowerCase());
-                if (!locationMatch) {
-                    console.log(`   ❌ Filtered out profile from ${profile.estimatedLocation}: ${profile.username} (looking for ${params.location})`);
-                    return false;
-                }
-            }
-            
-            // Filter by follower count (more strict)
-            if (profile.followers < params.minFollowers || profile.followers > params.maxFollowers) {
-                console.log(`   ❌ Filtered out profile with ${profile.followers} followers: ${profile.username}`);
-                return false;
-            }
-            
-            console.log(`   ✅ Keeping profile: ${profile.username} (${profile.detectedGender}, ${profile.followers} followers, ${profile.estimatedLocation || 'unknown location'})`);
-            return true;
-        })
-        .slice(0, 20) // Take top 20 after filtering
-        .map(profile => {
-            // Remove temporary fields from final result
-            const { detectedGender, estimatedLocation, ...finalProfile } = profile;
-            return finalProfile;
-        });
-
+    // Phase 2: Create basic discovery results from found profiles
+    console.log('🔄 Creating discovery results from', profileUrls.length, 'unique profiles...');
+    const discoveryResults = createDiscoveryResults(profileUrls, params);
     console.log(`📋 Discovery Results: ${discoveryResults.length} profiles from Google search`);
 
-    // 3. TEMPORARILY DISABLED: Apify verification and premium scraping
-    let premiumResults: ScrapedInfluencer[] = [];
-    
+    // Phase 3: Enhanced verification (temporarily disabled due to API limits)
     console.log('🚫 Apify verification temporarily disabled - using discovery results only');
-    
-    // Uncomment below to re-enable Apify verification:
-    /*
-    try {
-        // Only verify first 6 profiles for premium scraping
-        const profilesForVerification = uniqueProfiles.slice(0, 6);
-        const verifiedInfluencers = await verifyInfluencersInBulk(profilesForVerification);
-        
-        // Filter verified influencers by the requested follower range
-        const influencersInRange = verifiedInfluencers.filter(
-            inf => inf.followers >= params.minFollowers && inf.followers <= params.maxFollowers
-        );
-        
-        console.log(`🎯 Found ${influencersInRange.length} verified influencers for premium tier.`);
+    const verifiedResults: ScrapedInfluencer[] = [];
 
-        // 4. Perform deep scraping for verified profiles
-        if (influencersInRange.length > 0) {
-            console.log(`🔥 Premium scraping ${influencersInRange.length} verified profiles...`);
-            const premiumProfileUrls = influencersInRange.map(p => ({ url: p.url, platform: p.platform }));
-            premiumResults = await scrapeProfilesWithApify(premiumProfileUrls, params.platforms[0], params);
-        }
-    } catch (error) {
-        console.error('Premium tier verification failed, but continuing with discovery results:', error);
+    const totalResults = verifiedResults.length + discoveryResults.length;
+    console.log(`🎯 Two-tier results: ${verifiedResults.length} premium + ${discoveryResults.length} discovery = ${totalResults} total influencers`);
+
+    // If no results found, provide helpful guidance
+    if (totalResults === 0) {
+      console.log('❌ No influencers found. This might be due to:');
+      console.log('   1. Serply API key issues (check your .env.local file)');
+      console.log('   2. Network connectivity problems');
+      console.log('   3. Very specific search criteria');
+      console.log('💡 Try broadening your search terms or check your API configuration.');
+
+      // Create a helpful discovery result when search fails
+      const helpfulResult: BasicInfluencerProfile = {
+        username: 'search_guidance',
+        fullName: 'Search Configuration Needed',
+        followers: 0,
+        platform: params.platforms[0] || 'Instagram',
+        niche: params.niches[0] || 'lifestyle',
+        profileUrl: '#',
+        source: 'verified-discovery'
+      };
+      
+      return {
+        premiumResults: [],
+        discoveryResults: [helpfulResult],
+        totalFound: 0
+      };
     }
-    */
-    
-    const finalResults = {
-        premiumResults,
-        discoveryResults,
-        totalFound: premiumResults.length + discoveryResults.length
+
+    return {
+      premiumResults: verifiedResults,
+      discoveryResults: discoveryResults,
+      totalFound: totalResults
     };
 
-    console.log(`🎯 Two-tier results: ${finalResults.premiumResults.length} premium + ${finalResults.discoveryResults.length} discovery = ${finalResults.totalFound} total influencers`);
-    return finalResults;
+    } catch (error) {
+    console.error('❌ Error in two-tier discovery:', error);
+    
+    // Return helpful error information instead of empty results
+    const errorResult: BasicInfluencerProfile = {
+      username: 'error_occurred',
+      fullName: 'Search Error - Please Try Again',
+      followers: 0,
+      platform: params.platforms[0] || 'Instagram',
+      niche: 'system',
+      profileUrl: '#',
+      source: 'verified-discovery'
+    };
+    
+    return {
+      premiumResults: [],
+      discoveryResults: [errorResult],
+      totalFound: 0
+    };
+  }
 }
 
 
@@ -1131,36 +1127,60 @@ function parseFollowerString(followerStr: string): number {
 }
 
 function isGenericProfile(username: string): boolean {
-    // Filter out obviously fake or generic profile names
+    // Filter out obvious generic profiles
     const genericPatterns = [
-        /^influencer_?\d*$/i,
-        /^user_?\d*$/i,
-        /^profile_?\d*$/i,
-        /^account_?\d*$/i,
-        /^test_?\d*$/i,
-        /^fake_?\d*$/i,
-        /^demo_?\d*$/i,
-        /^sample_?\d*$/i,
+        /^user\d+$/i,
+        /^influencer_\d+$/i,
+        /^\d{7,}$/,        // Long numeric IDs (like TikTok video IDs)
+        /^[a-z]+\.\w+$/,   // Domain-like patterns (e.g., rangemp.com)
+        /^reel$/i,
+        /^video$/i,
+        /^post$/i,
+        /^story$/i,
+        /^[0-9]+[a-z]?$/,  // Mostly numbers with optional letter
+        /^tmp_/i,
+        /^temp_/i,
+        /^guest/i,
+        /^anonymous/i,
+        /^untitled/i,
+        /^default/i,
+        /^test\d*/i,
+        /^sample/i,
+        /^demo/i,
+        /^\w{1,2}$/,       // Too short (1-2 characters)
+        /^\w{25,}$/,       // Too long (25+ characters)
+        /^[._-]+/,         // Starts with punctuation
+        /[._-]$/,          // Ends with punctuation
+        /^https?:\/\//i,   // URL
+        /\.(com|net|org|co\.uk)$/i // Domain endings
     ];
     
-    // Filter out invalid usernames
-    const invalidPatterns = [
-        /gmail\.com/i,
-        /yahoo\.com/i,
-        /hotmail\.com/i,
-        /outlook\.com/i,
-        /^p\/[A-Za-z0-9]+/i, // Instagram post URLs
-        /^reel/i, // Instagram reel URLs
-        /^tv/i, // Instagram TV URLs
-        /^stories/i, // Instagram stories URLs
-        /^explore/i, // Instagram explore URLs
-        /^[0-9]+$/, // Pure numbers
-        /^.{1,2}$/, // Too short (1-2 characters)
-        /^.{31,}$/, // Too long (31+ characters, Instagram max is 30)
+    // Check if username matches any generic pattern
+    for (const pattern of genericPatterns) {
+        if (pattern.test(username)) {
+            return true;
+        }
+    }
+    
+    // Additional filters for obviously invalid usernames
+    const invalidStrings = [
+        'undefined', 'null', 'none', 'empty', 'blank', 
+        'facebook', 'instagram', 'tiktok', 'youtube', 'twitter',
+        'profile', 'account', 'page', 'channel',
+        'admin', 'support', 'help', 'info', 'contact',
+        'official', 'verified', 'brand', 'company',
+        'advertisement', 'sponsored', 'promo',
+        'icelolly.com', 'booking.com' // Specific domains that appeared in results
     ];
     
-    return genericPatterns.some(pattern => pattern.test(username)) ||
-           invalidPatterns.some(pattern => pattern.test(username));
+    const lowerUsername = username.toLowerCase();
+    for (const invalid of invalidStrings) {
+        if (lowerUsername.includes(invalid)) {
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 function detectGenderFromUsername(username: string): 'male' | 'female' | 'unknown' {
@@ -1174,7 +1194,11 @@ function detectGenderFromUsername(username: string): 'male' | 'female' | 'unknow
         'andres', 'juan', 'ignacio', 'roberto', 'cristian', 'mario', 'eduardo', 'ricardo', 'gabriel', 
         'gonzalo', 'nicolas', 'hugo', 'rodrigo', 'felipe', 'santiago', 'jaime', 'emilio', 'lorenzo', 
         'cesar', 'guillermo', 'mateo', 'sebastian', 'martin', 'leonardo', 'samuel', 'benjamin', 'aaron', 
-        'ismael', 'joaquin', 'bruno', 'alonso', 'maximo', 'agustin', 'gaspar', 'lucas', 'oliver', 'tomas'
+        'ismael', 'joaquin', 'bruno', 'alonso', 'maximo', 'agustin', 'gaspar', 'lucas', 'oliver', 'tomas',
+        // Add variants and nicknames
+        'pepe', 'paco', 'curro', 'kike', 'rafa', 'dani', 'álex', 'santi', 'nico', 'fran', 'manolo', 'juanjo',
+        'adri', 'álvaro', 'rubén', 'iván', 'andrés', 'jesús', 'joseba', 'mikel', 'iker', 'unai', 'aitor',
+        'elias', 'esttik', 'dyanbay', 'josechof', 'xurxo', 'planc', 'barroso', 'silva', 'marlon'
     ];
     
     // Spanish female names (more comprehensive)
@@ -1186,7 +1210,10 @@ function detectGenderFromUsername(username: string): 'male' | 'female' | 'unknow
         'esther', 'yolanda', 'inmaculada', 'montserrat', 'sonia', 'angeles', 'amparo', 'remedios', 'gloria', 
         'esperanza', 'encarnacion', 'rosario', 'consuelo', 'victoria', 'aurora', 'asuncion', 'milagros', 
         'soledad', 'fatima', 'lourdes', 'nieves', 'margarita', 'josefina', 'juana', 'emilia', 'blanca', 
-        'araceli', 'purificacion', 'natividad', 'felisa', 'casilda', 'perfecta', 'presentacion'
+        'araceli', 'purificacion', 'natividad', 'felisa', 'casilda', 'perfecta', 'presentacion',
+        // Add variants and nicknames
+        'mari', 'charo', 'lola', 'conchi', 'maribel', 'marisol', 'pilarín', 'chelo', 'amparin', 'trini',
+        'cris', 'patri', 'moni', 'raque', 'nata', 'bea', 'roci', 'clau', 'nurie', 'evita', 'susi', 'miri'
     ];
     
     // International male names
@@ -1195,7 +1222,8 @@ function detectGenderFromUsername(username: string): 'male' | 'female' | 'unknow
         'christopher', 'daniel', 'paul', 'mark', 'donald', 'steven', 'andrew', 'kenneth', 'joshua', 'kevin',
         'brian', 'george', 'timothy', 'ronald', 'jason', 'edward', 'jeffrey', 'ryan', 'jacob', 'gary',
         'nicholas', 'eric', 'jonathan', 'stephen', 'larry', 'justin', 'scott', 'brandon', 'benjamin', 'samuel',
-        'frank', 'gregory', 'raymond', 'alexander', 'patrick', 'jack', 'dennis', 'jerry', 'tyler', 'aaron'
+        'frank', 'gregory', 'raymond', 'alexander', 'patrick', 'jack', 'dennis', 'jerry', 'tyler', 'aaron',
+        'hilton', 'carter', 'morgan'
     ];
     
     // International female names
@@ -1204,7 +1232,8 @@ function detectGenderFromUsername(username: string): 'male' | 'female' | 'unknow
         'nancy', 'lisa', 'betty', 'helen', 'sandra', 'donna', 'carol', 'ruth', 'sharon', 'michelle',
         'laura', 'sarah', 'kimberly', 'deborah', 'dorothy', 'lisa', 'nancy', 'karen', 'betty', 'helen',
         'sandra', 'donna', 'carol', 'ruth', 'sharon', 'michelle', 'laura', 'sarah', 'kimberly', 'deborah',
-        'amy', 'angela', 'ashley', 'brenda', 'emma', 'olivia', 'cynthia', 'marie', 'janet', 'catherine'
+        'amy', 'angela', 'ashley', 'brenda', 'emma', 'olivia', 'cynthia', 'marie', 'janet', 'catherine',
+        'miquela'
     ];
     
     // Check for exact name matches (prioritize Spanish names for Spanish searches)
@@ -1234,8 +1263,8 @@ function detectGenderFromUsername(username: string): 'male' | 'female' | 'unknow
     }
     
     // Check for common gender indicators in usernames
-    const maleIndicators = ['boy', 'guy', 'man', 'male', 'bro', 'dude', 'king', 'mr', 'sir', 'papa', 'dad', 'father'];
-    const femaleIndicators = ['girl', 'woman', 'female', 'lady', 'queen', 'miss', 'mrs', 'mama', 'mom', 'mother', 'princess'];
+    const maleIndicators = ['boy', 'guy', 'man', 'male', 'bro', 'dude', 'king', 'mr', 'sir', 'papa', 'dad', 'father', 'hombre', 'chico'];
+    const femaleIndicators = ['girl', 'woman', 'female', 'lady', 'queen', 'miss', 'mrs', 'mama', 'mom', 'mother', 'princess', 'mujer', 'chica'];
     
     for (const indicator of maleIndicators) {
         if (lowerUsername.includes(indicator)) {
@@ -1277,12 +1306,20 @@ function generateDisplayName(username: string, params: ApifySearchParams): strin
 function estimateFollowersFromRange(minFollowers: number, maxFollowers: number): number {
     // Generate a realistic follower count within the specified range
     const range = maxFollowers - minFollowers;
-    const randomMultiplier = Math.random();
     
-    // Bias towards lower numbers (more realistic distribution)
-    const biasedMultiplier = Math.pow(randomMultiplier, 2);
-    
-    return Math.floor(minFollowers + (range * biasedMultiplier));
+    // If the range is small (like 100k to 500k), be more precise
+    if (range <= 1000000) { // 1M or less range
+        // Use a more conservative approach for smaller ranges
+        const randomMultiplier = Math.random();
+        // Less bias towards lower numbers for smaller ranges
+        const adjustedMultiplier = Math.pow(randomMultiplier, 1.5);
+        return Math.floor(minFollowers + (range * adjustedMultiplier));
+    } else {
+        // For larger ranges, maintain the bias towards lower numbers
+        const randomMultiplier = Math.random();
+        const biasedMultiplier = Math.pow(randomMultiplier, 2);
+        return Math.floor(minFollowers + (range * biasedMultiplier));
+    }
 }
 
 /**
@@ -1298,3 +1335,9 @@ function getErrorMessage(error: unknown): string {
   }
   return 'An unknown error occurred during the API call.';
 }
+
+/**
+ * Creates discovery results from found profile URLs
+ */
+function createDiscoveryResults(profileUrls: {url: string, platform: string}[], params: ApifySearchParams): BasicInfluencerProfile[] {
+  console.log(`

@@ -1,10 +1,11 @@
 'use client';
 
 import { CampaignProposal, ProposalTalent } from '@/types/campaign';
+import { exportHibikiStyleCSV, exportOrangeStyleCSV, exportToExcel, ExportOptions } from '@/lib/exportUtils';
 
 interface ProposalViewerProps {
   proposal: CampaignProposal;
-  onExport: (format: 'csv' | 'pdf') => void;
+  onExport: (format: 'csv' | 'pdf' | 'hibiki' | 'orange') => void;
   onEdit: () => void;
 }
 
@@ -28,6 +29,35 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
   const getTotalBudget = (): number => {
     return [...proposal.confirmedTalents, ...proposal.unconfirmedTalents]
       .reduce((sum, talent) => sum + talent.fee, 0);
+  };
+
+  // Enhanced export functions
+  const handleExportHibikiCSV = () => {
+    exportHibikiStyleCSV(proposal, { 
+      format: 'hibiki', 
+      includeUnconfirmed: true 
+    });
+  };
+
+  const handleExportOrangeCSV = () => {
+    exportOrangeStyleCSV(proposal, { 
+      format: 'orange', 
+      includeUnconfirmed: true 
+    });
+  };
+
+  const handleExportHibikiExcel = () => {
+    exportToExcel(proposal, 'hibiki', { 
+      format: 'hibiki', 
+      includeUnconfirmed: true 
+    });
+  };
+
+  const handleExportOrangeExcel = () => {
+    exportToExcel(proposal, 'orange', { 
+      format: 'orange', 
+      includeUnconfirmed: true 
+    });
   };
 
   const TalentCard: React.FC<{ talent: ProposalTalent; isConfirmed: boolean }> = ({
@@ -235,6 +265,18 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
             className="bg-red-600 text-white px-4 py-2 rounded-md font-medium hover:bg-red-700 transition-colors"
           >
             Export as PDF
+          </button>
+          <button
+            onClick={() => onExport('hibiki')}
+            className="bg-purple-600 text-white px-4 py-2 rounded-md font-medium hover:bg-purple-700 transition-colors"
+          >
+            Export as Hibiki CSV
+          </button>
+          <button
+            onClick={() => onExport('orange')}
+            className="bg-orange-600 text-white px-4 py-2 rounded-md font-medium hover:bg-orange-700 transition-colors"
+          >
+            Export as Orange CSV
           </button>
           <button
             onClick={onEdit}
