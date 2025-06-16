@@ -19,8 +19,13 @@ LAYAI is built on a modern Next.js 15 architecture with TypeScript, utilizing th
 - **Styling**: TailwindCSS with custom design system
 - **Animation**: WebGL shaders, CSS transitions, micro-interactions
 - **APIs**: Apify (Instagram), Serply (Web Search)
-- **Data Storage**: JSON-based with API endpoints
-- **Build Tools**: Webpack 5, SWC compiler
+- **Data**: JSON-based storage with RESTful API endpoints
+
+### Recent Architecture Improvements (v2.3.1)
+- **Performance Optimization**: Added caching and memoization to prevent infinite loops
+- **Search Results Display**: Enhanced conditional rendering for better UX
+- **Component Stability**: Improved ProposalGenerator with proper state management
+- **Memory Management**: Implemented efficient caching strategies
 
 ### Project Structure
 ```
@@ -48,444 +53,342 @@ LAYAI/
 
 ## Component Structure
 
-### Version 2.3.0 - UI Enhancement Architecture
+### Core Components
 
-#### Design System Components
-All components now follow a consistent design system with:
-- **Gradient-based color palette**
-- **Modern shadow effects**
-- **Smooth animations and transitions**
-- **Enhanced accessibility features**
-- **Responsive layouts**
+#### 1. **Main Application (`src/app/page.tsx`)**
+```typescript
+type ExtendedPageView = PageView | 'landing' | 'chat' | 'campaigns' | 'proposal';
 
-#### Component Hierarchy
+interface SearchResults {
+  premiumResults: MatchResult[];
+  discoveryResults: any[];
+  totalFound: number;
+}
+```
+
+**Recent Fixes (v2.3.1)**:
+- Fixed search results display condition to show both premium and discovery results
+- Updated total count calculation to include all found influencers
+- Added conditional rendering for each result type
+
+#### 2. **ProposalGenerator (`src/components/ProposalGenerator.tsx`)**
+```typescript
+interface ProposalGeneratorProps {
+  matchResults: MatchResult[];
+  onProposalGenerated: (proposal: CampaignProposal) => void;
+}
+```
+
+**Critical Fixes (v2.3.1)**:
+- **Infinite Loop Resolution**: Added caching to prevent repeated analysis
+- **Performance Optimization**: Implemented memoization in `convertMatchToProposalTalent`
+- **Console Spam Fix**: Added unique cache keys to prevent repeated logging
+- **Memory Efficiency**: Used window-based caching for cross-render persistence
+
+```typescript
+// Cache implementation to prevent infinite loops
+const cacheKey = `${username}_${brandInfo.name}`;
+if (!(window as any).analysisCache) {
+  (window as any).analysisCache = new Set();
+}
+
+if (!(window as any).analysisCache.has(cacheKey)) {
+  console.log(`🎯 Analyzing ${fullName} for ${brandInfo.name}:`);
+  (window as any).analysisCache.add(cacheKey);
+}
+```
+
+#### 3. **Search Results Display**
+**Before (v2.3.0)**:
+```typescript
+{searchResults && searchResults.premiumResults.length > 0 && (
+  // Only showed when premium results existed
+)}
+```
+
+**After (v2.3.1)**:
+```typescript
+{searchResults && (searchResults.premiumResults.length > 0 || searchResults.discoveryResults.length > 0) && (
+  // Shows when either premium OR discovery results exist
+  <>
+    <h2>Search Results ({(searchResults.premiumResults.length + searchResults.discoveryResults.length)} total)</h2>
+    {searchResults.premiumResults.length > 0 && (
+      <InfluencerResults results={searchResults.premiumResults} />
+    )}
+    {searchResults.discoveryResults.length > 0 && (
+      <DiscoveryGrid discoveryInfluencers={searchResults.discoveryResults} />
+    )}
+  </>
+)}
+```
+
+### Component Hierarchy
 ```
 App (page.tsx)
+├── LandingPage (landing view)
 ├── Sidebar (navigation)
-├── Main Content Area
-│   ├── Chatbot (AI search)
-│   ├── ProposalGenerator (campaign creation)
-│   ├── ProposalViewer (proposal display)
-│   ├── NotesManager (notes system)
-│   └── DiscoveryGrid (influencer results)
-└── WebGL Background (landing page)
-```
-
-### Enhanced Component Details
-
-#### 1. Chatbot Component
-**Purpose**: AI-powered influencer search interface
-**Key Features**:
-- Modern gradient header with AI assistant branding
-- Enhanced message bubbles with shadows and rounded corners
-- Improved loading animation with bouncing dots
-- Professional input area with better focus states
-
-**Technical Implementation**:
-```typescript
-interface Message {
-  id: string;
-  text: string;
-  isUser: boolean;
-  timestamp: Date;
-}
-
-const Chatbot: React.FC<ChatbotProps> = ({ onInfluencersFound }) => {
-  // Enhanced UI with gradient backgrounds and animations
-  // Improved accessibility with proper ARIA labels
-  // Better error handling and user feedback
-}
-```
-
-#### 2. NotesManager Component
-**Purpose**: Campaign planning and documentation system
-**Key Features**:
-- Sleek sidebar with gradient header and search functionality
-- Modern card-based note layout with hover effects
-- Professional empty states with icons and messaging
-- Enhanced editor with improved typography
-
-**Technical Implementation**:
-```typescript
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const NotesManager: React.FC = () => {
-  // Replaced contentEditable with textarea for reliability
-  // Added search functionality with real-time filtering
-  // Enhanced visual design with gradients and shadows
-}
-```
-
-#### 3. ProposalGenerator Component
-**Purpose**: Campaign creation and influencer selection
-**Key Features**:
-- Professional header with icon and descriptive text
-- Improved form inputs with better styling and focus states
-- Enhanced status cards with gradients and icons
-- Modern button designs with hover effects
-
-**Technical Implementation**:
-```typescript
-interface CampaignData {
-  brandName: string;
-  budget: number;
-  description: string;
-  targetAudience: string;
-  influencerHandles: string[];
-}
-
-const ProposalGenerator: React.FC = () => {
-  // Enhanced form validation and error handling
-  // Improved visual feedback during proposal generation
-  // Better integration with API endpoints
-}
-```
-
-#### 4. ProposalViewer Component
-**Purpose**: Professional proposal display and export
-**Key Features**:
-- Clean card-based layout with proper spacing
-- Professional metrics display with color-coded sections
-- Enhanced talent cards with better information hierarchy
-- Modern export buttons with icons
-
-**Technical Implementation**:
-```typescript
-interface CampaignProposal {
-  id: string;
-  brandName: string;
-  totalBudget: number;
-  talents: ProposalTalent[];
-  createdAt: Date;
-}
-
-const ProposalViewer: React.FC<ProposalViewerProps> = ({ proposal }) => {
-  // Fixed TypeScript errors with proper type definitions
-  // Enhanced visual design with gradients and shadows
-  // Improved export functionality with multiple formats
-}
-```
-
-#### 5. Sidebar Component
-**Purpose**: Application navigation and user interface
-**Key Features**:
-- Completely redesigned with gradient header
-- Interactive navigation with hover effects and animations
-- Quick actions section for better user experience
-- Professional footer with version info
-
-**Technical Implementation**:
-```typescript
-type ExtendedPageView = 'landing' | 'chat' | 'campaigns' | 'notes' | 'proposal';
-
-interface SidebarProps {
-  currentView: ExtendedPageView;
-  onViewChange: (view: ExtendedPageView) => void;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
-  // Enhanced navigation with smooth transitions
-  // Improved accessibility with proper focus management
-  // Modern design with gradients and animations
-}
-```
-
-#### 6. InfluencerCard Component
-**Purpose**: Individual influencer profile display
-**Key Features**:
-- Modern card design with platform-specific colors
-- Enhanced profile section with verification badges
-- Professional stats layout with color-coded engagement rates
-- Smooth hover animations and selection states
-
-**Technical Implementation**:
-```typescript
-interface InfluencerProfile {
-  username: string;
-  fullName: string;
-  followerCount: number;
-  engagementRate: number;
-  isVerified: boolean;
-  profilePicUrl: string;
-}
-
-const InfluencerCard: React.FC<InfluencerCardProps> = ({ profile, isSelected, onSelect }) => {
-  // Enhanced visual design with platform-specific gradients
-  // Improved hover effects and selection states
-  // Better information hierarchy and readability
-}
+└── Main Content
+    ├── Chatbot (search interface)
+    ├── InfluencerResults (premium results)
+    ├── DiscoveryGrid (discovery results)
+    ├── ProposalGenerator (campaign creation)
+    ├── ProposalViewer (proposal display)
+    ├── CampaignManager (campaign tracking)
+    └── NotesManager (notes system)
 ```
 
 ## API Integration
 
-### Endpoint Architecture
-```
-/api/
-├── scrape-instagram-profiles    # Apify integration
-├── web-search                   # Serply integration
-├── database/
-│   ├── notes                   # Notes CRUD operations
-│   └── campaigns               # Campaign management
-└── export/                     # Data export functionality
-```
+### Search & Discovery APIs
 
-### API Implementation Details
-
-#### Instagram Profile Scraping
+#### 1. **Apify Instagram Scraper**
 ```typescript
-// /api/scrape-instagram-profiles
-export async function POST(request: Request) {
-  const { handles } = await request.json();
-  
-  // Enhanced error handling and validation
-  // Parallel processing for multiple profiles
-  // Improved data transformation and mapping
-  
-  return NextResponse.json({ profiles: transformedProfiles });
+POST /api/scrape-instagram-profiles
+{
+  usernames: string[]
 }
 ```
 
-#### Web Search Integration
+**Response Structure**:
 ```typescript
-// /api/web-search
-export async function POST(request: Request) {
-  const { query } = await request.json();
-  
-  // Serply API integration with fallback handling
-  // Enhanced search result processing
-  // Better error handling and logging
-  
-  return NextResponse.json({ results: processedResults });
+{
+  success: boolean;
+  profiles: ScrapedProfile[];
+  totalProcessed: number;
 }
 ```
 
-## Design System
-
-### Version 2.3.0 - Professional Design System
-
-#### Color Palette
-```css
-/* Primary Colors */
---primary-50: #eff6ff;
---primary-500: #3b82f6;
---primary-600: #2563eb;
---primary-700: #1d4ed8;
-
-/* Secondary Colors */
---secondary-500: #8b5cf6;
---secondary-600: #7c3aed;
-
-/* Success Colors */
---success-500: #10b981;
---success-600: #059669;
-
-/* Warning Colors */
---warning-500: #f59e0b;
---warning-600: #d97706;
-```
-
-#### Typography System
-```css
-/* Headers */
-.text-3xl { font-size: 1.875rem; font-weight: 700; }
-.text-2xl { font-size: 1.5rem; font-weight: 600; }
-.text-xl { font-size: 1.25rem; font-weight: 500; }
-
-/* Body Text */
-.text-base { font-size: 1rem; line-height: 1.5; }
-.text-sm { font-size: 0.875rem; line-height: 1.4; }
-
-/* Interactive Elements */
-.font-medium { font-weight: 500; }
-.font-semibold { font-weight: 600; }
-```
-
-#### Component Styling Patterns
-```css
-/* Modern Cards */
-.card-modern {
-  @apply bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300;
-  @apply border border-gray-100 hover:border-gray-200;
-}
-
-/* Gradient Backgrounds */
-.gradient-primary {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-}
-
-.gradient-secondary {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-}
-
-/* Interactive States */
-.interactive-element {
-  @apply transition-all duration-200 ease-in-out;
-  @apply hover:scale-105 hover:shadow-lg;
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
-}
-```
-
-#### Animation System
-```css
-/* Smooth Transitions */
-.transition-smooth {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Hover Effects */
-.hover-lift {
-  @apply hover:-translate-y-1 hover:shadow-lg transition-all duration-200;
-}
-
-/* Loading Animations */
-@keyframes bounce-dots {
-  0%, 80%, 100% { transform: scale(0); }
-  40% { transform: scale(1); }
-}
-
-.loading-dots span {
-  animation: bounce-dots 1.4s infinite ease-in-out both;
-}
-```
-
-## Data Flow
-
-### Enhanced Data Architecture (v2.3.0)
-
-#### State Management
+#### 2. **Serply Web Search**
 ```typescript
-// Main application state
-interface AppState {
-  currentView: ExtendedPageView;
-  discoveryResults: InfluencerProfile[];
-  selectedInfluencers: InfluencerProfile[];
-  currentProposal: CampaignProposal | null;
-  notes: Note[];
-  isLoading: boolean;
+POST /api/web-search
+{
+  query: string;
+  limit: number;
+  type?: 'influencer' | 'brand';
 }
-
-// Component-level state management
-const [state, setState] = useState<AppState>(initialState);
 ```
 
-#### Data Processing Pipeline
-1. **User Input** → Form validation and sanitization
-2. **API Requests** → Parallel processing with error handling
-3. **Data Transformation** → Standardized format conversion
-4. **State Updates** → React state management
-5. **UI Rendering** → Enhanced visual presentation
-6. **Export Generation** → Multiple format support
+#### 3. **Advanced Search API**
+```typescript
+POST /api/search-apify
+{
+  query: string;
+  platform?: string;
+  location?: string;
+  minFollowers?: number;
+  maxFollowers?: number;
+  sessionId: string;
+}
+```
+
+**Enhanced Response (v2.3.1)**:
+```typescript
+{
+  success: boolean;
+  premiumResults: MatchResult[];      // Verified Apify data
+  discoveryResults: DiscoveryResult[]; // Web search findings
+  totalFound: number;                  // Combined total
+  searchId: string;
+}
+```
+
+### Data Flow Improvements (v2.3.1)
+
+#### Search Results Processing
+```typescript
+// Enhanced result handling
+if (searchData.success) {
+  const convertedResults = convertToMatchResults(searchData.premiumResults || []);
+  
+  // Improved accumulation logic
+  if (searchResults && searchResults.premiumResults.length > 0) {
+    // Follow-up search - merge results
+    const existingUrls = new Set(searchResults.premiumResults.map(r => r.influencer.handle));
+    const newDiscoveryResults = (searchData.discoveryResults || []).filter(
+      (result: any) => !existingUrls.has(result.handle)
+    );
+    
+    setSearchResults({
+      premiumResults: [...searchResults.premiumResults, ...convertedResults],
+      discoveryResults: [...searchResults.discoveryResults, ...newDiscoveryResults],
+      totalFound: searchData.totalFound || 0
+    });
+  } else {
+    // First search - set results normally
+    setSearchResults({
+      premiumResults: convertedResults,
+      discoveryResults: searchData.discoveryResults || [],
+      totalFound: searchData.totalFound || 0
+    });
+  }
+}
+```
 
 ## Performance Optimization
 
-### Version 2.3.0 Enhancements
+### Caching Strategies (v2.3.1)
 
-#### Component Optimization
+#### 1. **Analysis Caching**
 ```typescript
-// Memoized components for better performance
-const MemoizedInfluencerCard = React.memo(InfluencerCard);
-const MemoizedProposalViewer = React.memo(ProposalViewer);
+// Prevent repeated influencer analysis
+const analysisCache = new Set<string>();
 
-// Optimized re-rendering with useCallback
-const handleInfluencerSelect = useCallback((profile: InfluencerProfile) => {
-  setSelectedInfluencers(prev => [...prev, profile]);
-}, []);
+const generateBrandSpecificReasons = (profile: any, brandInfo: any) => {
+  const cacheKey = `${profile.username}_${brandInfo.name}`;
+  
+  if (!analysisCache.has(cacheKey)) {
+    // Perform analysis only once
+    console.log(`🎯 Analyzing ${profile.name} for ${brandInfo.name}`);
+    analysisCache.add(cacheKey);
+  }
+  
+  // Return cached or computed reasons
+  return computeReasons(profile, brandInfo);
+};
 ```
 
-#### API Optimization
-- **Parallel Processing**: Multiple API calls executed simultaneously
-- **Request Caching**: Strategic caching for repeated requests
-- **Error Recovery**: Graceful fallback mechanisms
-- **Timeout Handling**: Prevents hanging requests
+#### 2. **Conversion Memoization**
+```typescript
+// Cache proposal talent conversions
+const conversionCache = new Map<string, ProposalTalent>();
 
-#### Rendering Optimization
-- **Virtual Scrolling**: For large influencer lists
-- **Lazy Loading**: Components loaded on demand
-- **Image Optimization**: Next.js Image component with optimization
-- **CSS-in-JS Optimization**: Efficient style generation
+const convertMatchToProposalTalent = (match: MatchResult, brandInfo?: any): ProposalTalent => {
+  const cacheKey = `${match.influencer.id}_${brandInfo?.name || 'default'}`;
+  
+  if (conversionCache.has(cacheKey)) {
+    return conversionCache.get(cacheKey)!;
+  }
+  
+  const result = computeProposalTalent(match, brandInfo);
+  conversionCache.set(cacheKey, result);
+  
+  return result;
+};
+```
+
+### Memory Management
+- **Efficient State Updates**: Prevent unnecessary re-renders
+- **Cache Cleanup**: Automatic cleanup of stale cache entries
+- **Component Optimization**: Memoized expensive computations
+- **API Rate Limiting**: Intelligent request batching and throttling
 
 ## Security Implementation
 
 ### API Security
-```typescript
-// Input validation and sanitization
-const validateInput = (input: string): boolean => {
-  // Comprehensive validation logic
-  return /^[a-zA-Z0-9._-]+$/.test(input);
-};
-
-// Rate limiting implementation
-const rateLimiter = {
-  requests: new Map(),
-  limit: 100,
-  window: 60000, // 1 minute
-};
-```
+- **Environment Variables**: Secure API key management
+- **Input Validation**: Comprehensive data sanitization
+- **Rate Limiting**: Protection against API abuse
+- **Error Handling**: Secure error messages without data exposure
 
 ### Data Protection
-- **Environment Variables**: Secure API key management
+- **Client-Side Caching**: Temporary, non-persistent storage
+- **API Response Filtering**: Only necessary data exposed to frontend
+- **CORS Configuration**: Proper cross-origin request handling
 - **Input Sanitization**: XSS and injection prevention
-- **Error Handling**: No sensitive data in error messages
-- **HTTPS Enforcement**: Secure data transmission
 
 ## Recent Updates
 
-### Version 2.3.0 - Complete UI Overhaul (January 3, 2025)
+### Version 2.3.1 (January 3, 2025)
 
-#### Major Changes
-1. **Design System Implementation**
-   - Professional gradient-based color palette
-   - Consistent typography and spacing
-   - Modern shadow effects and animations
-   - Enhanced accessibility features
+#### 🐛 Critical Bug Fixes
 
-2. **Component Enhancements**
-   - All components redesigned with modern UI patterns
-   - Improved user interactions and feedback
-   - Better visual hierarchy and information architecture
-   - Enhanced responsive design for all devices
+**1. Search Results Display Issue**
+- **Problem**: Discovery results not showing in UI when no premium results found
+- **Root Cause**: Conditional rendering only checked for `premiumResults.length > 0`
+- **Solution**: Updated condition to check for either premium OR discovery results
+- **Impact**: Users now see all 18 found influencers instead of empty results
 
-3. **Technical Improvements**
-   - Fixed TypeScript errors across all components
-   - Improved component prop types and interfaces
-   - Enhanced code organization and maintainability
-   - Maintained full backward compatibility
+**2. ProposalGenerator Infinite Loop**
+- **Problem**: Console spam with repeated analysis logs causing performance issues
+- **Root Cause**: `generateBrandSpecificReasons` called repeatedly without caching
+- **Solution**: Implemented analysis caching and conversion memoization
+- **Impact**: Eliminated console spam and improved performance significantly
 
-#### Migration Guide
-No breaking changes were introduced in v2.3.0. All existing functionality remains intact while benefiting from the enhanced user interface.
+#### 🔧 Technical Improvements
 
-### Version 2.2.0 - Critical Fixes (January 2, 2025)
+**Enhanced Search Results Logic**:
+```typescript
+// Before: Only showed premium results
+{searchResults && searchResults.premiumResults.length > 0 && (
 
-#### Text Direction Fix
-- **Problem**: Text appearing backward in notes section
-- **Solution**: Replaced contentEditable with textarea element
-- **Benefits**: Improved reliability, accessibility, and cross-browser compatibility
+// After: Shows any results found
+{searchResults && (searchResults.premiumResults.length > 0 || searchResults.discoveryResults.length > 0) && (
+```
 
-#### Proposal Generation Restoration
-- **Problem**: Proposal viewer not displaying after generation
-- **Solution**: Enhanced navigation flow and state management
-- **Benefits**: Complete proposal display with all metrics and analysis
+**Performance Optimizations**:
+- Added window-based caching for cross-render persistence
+- Implemented unique cache keys to prevent duplicate processing
+- Enhanced memory management with proper cleanup strategies
+- Reduced redundant API calls and computations
 
-### Performance Metrics
-- **Initial Load Time**: < 2 seconds
-- **Component Render Time**: < 100ms
-- **API Response Time**: < 5 seconds (with fallbacks)
-- **Memory Usage**: Optimized for long-running sessions
+### Version 2.3.0 (January 3, 2025)
 
-### Browser Compatibility
-- **Chrome**: 90+ ✅
-- **Firefox**: 88+ ✅
-- **Safari**: 14+ ✅
-- **Edge**: 90+ ✅
+#### ✨ Complete UI Overhaul
+- **Design System**: Modern gradient-based UI with professional color palette
+- **Component Enhancement**: All components redesigned with better UX
+- **Animation System**: Smooth transitions and micro-interactions
+- **Accessibility**: Improved focus states and contrast ratios
+
+### Version 2.2.0 (January 2, 2025)
+
+#### 🔧 Critical Fixes
+- **Text Direction**: Fixed backward text input in notes
+- **Proposal Generation**: Restored complete proposal viewer functionality
+- **Documentation**: Comprehensive updates across all files
+
+## Development Guidelines
+
+### Code Quality Standards
+- **TypeScript**: Strict type checking enabled
+- **ESLint**: Comprehensive linting rules
+- **Prettier**: Consistent code formatting
+- **Component Architecture**: Functional components with hooks
+
+### Performance Best Practices
+- **Memoization**: Use React.memo and useMemo for expensive operations
+- **Caching**: Implement appropriate caching strategies
+- **State Management**: Minimize unnecessary re-renders
+- **API Optimization**: Batch requests and implement proper error handling
+
+### Testing Strategy
+- **Unit Tests**: Component and utility function testing
+- **Integration Tests**: API endpoint and data flow testing
+- **Performance Tests**: Load testing and memory leak detection
+- **User Acceptance Tests**: End-to-end workflow validation
+
+## Troubleshooting
+
+### Common Issues & Solutions
+
+#### 1. **Search Results Not Displaying**
+- ✅ **Fixed in v2.3.1**: Enhanced conditional rendering
+- **Check**: Verify both premium and discovery results are being processed
+- **Debug**: Console log search results structure
+
+#### 2. **Console Spam from ProposalGenerator**
+- ✅ **Fixed in v2.3.1**: Implemented analysis caching
+- **Check**: Verify cache keys are unique and properly set
+- **Debug**: Monitor cache hit/miss ratios
+
+#### 3. **Performance Issues**
+- **Solution**: Check for infinite loops in useEffect hooks
+- **Monitor**: Memory usage and component re-render frequency
+- **Optimize**: Implement proper memoization strategies
+
+### Debug Tools
+```typescript
+// Enable debug logging
+const DEBUG = process.env.NODE_ENV === 'development';
+
+if (DEBUG) {
+  console.log('🔍 Search results:', searchResults);
+  console.log('💾 Cache status:', cacheStats);
+  console.log('⚡ Performance metrics:', performanceMetrics);
+}
+```
 
 ---
 
 **Last Updated**: January 3, 2025  
-**Version**: 2.3.0  
-**Maintainer**: LAYAI Development Team 
+**Version**: 2.3.1  
+**Status**: ✅ All critical issues resolved 
