@@ -2,15 +2,59 @@
 
 All notable changes to LAYAI will be documented in this file.
 
+## [2.2.0] - 2024-12-19
+
+### 🐛 Critical Bug Fixes
+
+#### Text Input Direction Fix - RESOLVED ✅
+- **Fixed**: Text appearing backward when typing (e.g., "hey" showing as "yeh")
+- **Solution**: Replaced problematic contentEditable div with standard textarea
+- **Improved**: Simplified text input handling with reliable direction control
+- **Enhanced**: Better accessibility and cross-browser compatibility
+- **Removed**: Complex JavaScript text manipulation logic that was causing issues
+
+#### Notes Manager Improvements
+- **Replaced**: ContentEditable with textarea for better text input control
+- **Added**: Proper `dir="ltr"` attribute and CSS styling
+- **Fixed**: TypeScript errors and cleaned up unused functions
+- **Enhanced**: Text input reliability across all browsers
+
+### 🎯 Proposal Generation Enhancements
+
+#### Proposal Viewer Flow - RESTORED ✅
+- **Fixed**: Proposal generation now properly shows ProposalViewer after clicking "Generate Proposal"
+- **Added**: New 'proposal' view state for proper navigation
+- **Enhanced**: Back navigation from proposal viewer to generator
+- **Restored**: Full biography, metrics, and "why they fit well" analysis display
+- **Improved**: Sidebar navigation highlighting for proposal-related views
+
+#### Enhanced User Experience
+- **Added**: Proper navigation between proposal generator and viewer
+- **Improved**: Export functionality fully working from proposal viewer
+- **Enhanced**: Complete proposal display with all detailed information
+
+### 🎨 UI/UX Improvements
+
+#### CSS Architecture
+- **Added**: Aggressive CSS rules with maximum specificity for text direction
+- **Enhanced**: Global input field styling with proper text direction
+- **Improved**: Force-ltr-text class for comprehensive text control
+- **Added**: Safety measures to prevent text transforms that could flip text
+
+#### Component Improvements
+- **Simplified**: Notes Manager with cleaner, more reliable code
+- **Enhanced**: Textarea styling to match previous contentEditable appearance
+- **Improved**: Cross-browser text input consistency
+
 ## [2.1.0] - 2024-12-19
 
 ### 🐛 Critical Bug Fixes
 
-#### Text Input Direction Fix
-- **Fixed**: Text appearing backward when typing (e.g., "hey" showing as "yeh")
-- **Added**: Global CSS rules to enforce left-to-right text direction
+#### Text Input Direction Fix (Initial Attempt)
+- **Attempted**: Global CSS rules to enforce left-to-right text direction
+- **Added**: `direction: ltr !important` for all elements
 - **Enhanced**: Input field styling with explicit text alignment
-- **Improved**: Unicode bidirectional text handling
+- **Note**: This approach was later replaced with textarea solution in v2.2.0
 
 #### CSS Improvements
 - **Added**: `direction: ltr !important` for all elements

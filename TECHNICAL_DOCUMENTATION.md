@@ -13,6 +13,64 @@ LAYAI is built as a modern Next.js application with a focus on AI-powered influe
 - **Animation**: WebGL-based fluid simulation
 - **Data Storage**: JSON-based with API endpoints
 
+## Recent Major Updates (v2.2.0)
+
+### Text Input Architecture Overhaul
+
+#### Problem Solved
+- **Issue**: Text appearing backward when typing (contentEditable direction issues)
+- **Root Cause**: Browser-specific contentEditable behavior with text direction
+- **Impact**: Critical usability issue affecting notes management
+
+#### Solution Implemented
+```typescript
+// Before: Problematic contentEditable
+<div
+  contentEditable
+  dangerouslySetInnerHTML={{ __html: content }}
+  // Complex event handling required
+/>
+
+// After: Reliable textarea
+<textarea
+  value={content}
+  onChange={handleChange}
+  dir="ltr"
+  className="force-ltr-text"
+  // Simple, predictable behavior
+/>
+```
+
+#### Technical Benefits
+- **Reliability**: Textareas have consistent cross-browser text direction handling
+- **Simplicity**: Removed 80+ lines of complex JavaScript text manipulation
+- **Accessibility**: Better screen reader support and keyboard navigation
+- **Maintainability**: Cleaner, more predictable codebase
+
+### Proposal Generation Flow Enhancement
+
+#### Navigation State Management
+```typescript
+type PageView = 'landing' | 'chat' | 'generate' | 'proposal' | 'campaigns' | 'notes';
+
+// Enhanced proposal flow
+const handleProposalGenerated = (proposal: CampaignProposal) => {
+  setCurrentProposal(proposal);
+  setCurrentView('proposal'); // New dedicated view
+};
+```
+
+#### Component Architecture
+```
+ProposalGenerator → ProposalViewer
+     ↓                    ↓
+  Select talents      View complete
+  Fill details        proposal with:
+  Generate           - Full biographies
+                     - Brand analysis
+                     - Export options
+```
+
 ## System Architecture
 
 ### Frontend Architecture
@@ -21,417 +79,279 @@ LAYAI is built as a modern Next.js application with a focus on AI-powered influe
 src/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API Routes
-│   │   ├── database/      # Data management endpoints
-│   │   └── scrape-instagram-profiles/ # Instagram scraping
-│   ├── globals.css        # Global styles and fixes
-│   └── layout.tsx         # Root layout
-├── components/            # React components
-│   ├── ui/               # Reusable UI components
-│   │   ├── splash-cursor.tsx    # WebGL animation
-│   │   ├── enhanced-button.tsx  # Enhanced button system
-│   │   └── enhanced-card.tsx    # Modern card components
-│   ├── LandingPage.tsx   # Main landing page
-│   ├── ProposalGenerator.tsx # Campaign proposal system
-│   ├── NotesManager.tsx  # Notes management system
-│   └── CampaignManager.tsx # Campaign tracking
-└── lib/                  # Utility functions
+│   │   ├── chat/          # AI chat processing
+│   │   ├── search-apify/  # Instagram scraping
+│   │   ├── web-search/    # Brand research
+│   │   └── database/      # Data persistence
+│   ├── globals.css        # Enhanced CSS with text direction fixes
+│   └── page.tsx          # Main application with improved navigation
+├── components/            # React Components
+│   ├── Chatbot.tsx       # AI conversation interface
+│   ├── ProposalGenerator.tsx  # Campaign proposal creation
+│   ├── ProposalViewer.tsx     # Enhanced proposal display
+│   ├── NotesManager.tsx       # Fixed text input component
+│   └── ui/               # Reusable UI components
+├── lib/                  # Utility functions
+├── types/               # TypeScript definitions
+└── utils/              # Helper functions
 ```
 
 ### API Integration Layer
 
-#### External APIs
-1. **Apify Instagram Scraper**
-   - Real-time profile data extraction
-   - Follower counts, engagement rates, verification status
-   - Comprehensive profile information
+#### Enhanced Data Flow
+```
+User Input → AI Processing → Multi-API Integration → Enhanced Results
 
-2. **Serply Web Search**
-   - Brand research and analysis
-   - Contextual information gathering
-   - Intelligent fallback systems
+1. Chat API: Natural language processing
+2. Apify API: Real-time Instagram scraping
+3. Serply API: Brand research and context
+4. Enhancement Layer: Data enrichment and analysis
+```
 
-#### Internal APIs
-- `/api/database/campaigns` - Campaign management
-- `/api/database/notes` - Notes system
-- `/api/scrape-instagram-profiles` - Instagram data processing
-
-## Recent Critical Fixes
-
-### Text Direction Issue (v2.1.0)
-
-#### Problem
-Users experienced text appearing backward when typing (e.g., "hey" showing as "yeh"). This was caused by CSS conflicts affecting text direction and unicode bidirectional handling.
-
-#### Root Cause Analysis
-- CSS transforms potentially flipping text horizontally
-- Missing or conflicting `direction` properties
-- Unicode bidirectional text handling issues
-- Browser-specific rendering inconsistencies
-
-#### Solution Implementation
-
-**Global CSS Fix in `globals.css`:**
-```css
-/* Fix for text appearing backward */
-* {
-  direction: ltr !important;
-  unicode-bidi: normal !important;
+#### Error Handling & Fallbacks
+```typescript
+// Robust API integration with fallbacks
+try {
+  const apifyData = await scrapeInstagramProfiles(handles);
+  const brandData = await researchBrand(brandName);
+  const enhancedData = await enhanceWithContext(apifyData, brandData);
+  return enhancedData;
+} catch (error) {
+  // Graceful degradation with partial data
+  return fallbackData;
 }
+```
 
-input, textarea, [contenteditable] {
+## Component Deep Dive
+
+### NotesManager Component (v2.2.0 Update)
+
+#### Before: Complex ContentEditable
+```typescript
+// Problematic implementation
+const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+  // 50+ lines of text manipulation logic
+  // Browser-specific workarounds
+  // Complex cursor positioning
+  // Unreliable text direction handling
+};
+```
+
+#### After: Simple Textarea
+```typescript
+// Clean, reliable implementation
+const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  if (selectedNote) {
+    updateSelectedNote('content', e.target.value);
+  }
+};
+```
+
+#### CSS Architecture Enhancement
+```css
+/* Maximum specificity text direction control */
+.force-ltr-text,
+.force-ltr-text *,
+[contenteditable].force-ltr-text,
+[contenteditable].force-ltr-text * {
   direction: ltr !important;
   text-align: left !important;
   unicode-bidi: normal !important;
+  writing-mode: horizontal-tb !important;
   transform: none !important;
 }
 ```
 
-#### Technical Details
-- **`direction: ltr !important`**: Forces left-to-right text direction
-- **`unicode-bidi: normal !important`**: Prevents bidirectional text issues
-- **`text-align: left !important`**: Ensures proper text alignment
-- **`transform: none !important`**: Prevents horizontal flipping transforms
+### ProposalViewer Component Enhancement
 
-### WebGL Animation System
-
-#### Implementation
-The splash cursor uses sophisticated WebGL shaders for fluid simulation:
-
-**Vertex Shader:**
-```glsl
-attribute vec2 a_position;
-void main() {
-  gl_Position = vec4(a_position, 0.0, 1.0);
+#### Complete Data Display
+```typescript
+interface ProposalTalent {
+  // Enhanced with full context
+  biography: string;           // Personalized biography
+  whyThisInfluencer: string;  // Brand compatibility analysis
+  metrics: {
+    credibilityScore: number;
+    spainImpressionsPercentage: number;
+    storyImpressions: number;
+    reelImpressions: number;
+    interactions: number;
+  };
+  pastCollaborations: string[];
 }
 ```
-
-**Fragment Shader Features:**
-- HSV to RGB color conversion
-- Fractal Brownian Motion (FBM) for organic patterns
-- Multi-layer color blending
-- Mouse interaction response
-- Edge fading for seamless integration
-
-#### Performance Optimizations
-- Efficient shader compilation and caching
-- Optimized vertex buffer management
-- 60fps rendering with requestAnimationFrame
-- Memory-efficient resource cleanup
-
-## Data Processing Pipeline
-
-### Instagram Profile Processing
-
-#### Step 1: Data Extraction
-```typescript
-// Apify Instagram Scraper integration
-const apifyResponse = await fetch('https://api.apify.com/v2/acts/apify~instagram-profile-scraper/runs', {
-  method: 'POST',
-  headers: {
-    'Authorization': `Bearer ${process.env.APIFY_API_TOKEN}`,
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    startUrls: profiles.map(handle => ({ url: `https://instagram.com/${handle}` })),
-    resultsLimit: profiles.length,
-  }),
-});
-```
-
-#### Step 2: Data Transformation
-```typescript
-const transformedProfile = {
-  username: profile.username,
-  fullName: profile.fullName,
-  biography: profile.biography,
-  followersCount: profile.followersCount,
-  isVerified: profile.isVerified,
-  postsCount: profile.postsCount,
-  // Enhanced fields
-  engagementRate: calculateEngagementRate(profile),
-  category: detectCategory(profile),
-  location: extractLocation(profile),
-};
-```
-
-#### Step 3: Celebrity Recognition
-```typescript
-const generatePersonalizedBiography = (profile) => {
-  // Celebrity-specific analysis
-  if (username.toLowerCase().includes('cristiano')) {
-    return `Cristiano Ronaldo is a Portuguese professional footballer and global sports icon with ${(followers/1000000).toFixed(1)}M followers...`;
-  }
-  
-  // Generic biography generation
-  return enhancedBio;
-};
-```
-
-### Brand Research Integration
-
-#### Serply API Implementation
-```typescript
-const searchBrand = async (brandName: string) => {
-  try {
-    const response = await fetch(`https://api.serply.io/v1/search/q=${encodeURIComponent(brandName)}`, {
-      headers: {
-        'X-API-KEY': process.env.SERPLY_API_KEY!,
-        'X-User-Agent': 'desktop',
-        'X-Proxy-Location': 'US',
-      },
-      signal: AbortSignal.timeout(30000), // 30-second timeout
-    });
-    
-    return await response.json();
-  } catch (error) {
-    // Intelligent fallback system
-    return getFallbackBrandData(brandName);
-  }
-};
-```
-
-## Component Architecture
-
-### Enhanced UI Components
-
-#### Button System (`enhanced-button.tsx`)
-- **Variants**: Primary, secondary, ghost, glass, gradient
-- **Ripple Effects**: Material Design-inspired interactions
-- **Loading States**: Built-in spinner and disabled states
-- **Accessibility**: Focus rings and ARIA attributes
-
-#### Card System (`enhanced-card.tsx`)
-- **Glass Morphism**: Translucent design with backdrop blur
-- **Hover Effects**: Subtle animations and elevation changes
-- **Flexible Layout**: Header, content, footer components
-- **Progress Cards**: Visual progress indicators
-
-### Notes Management System
-
-#### ContentEditable Implementation
-```typescript
-<div
-  ref={contentRef}
-  contentEditable
-  onInput={handleContentChange}
-  dangerouslySetInnerHTML={{ __html: selectedNote.content || '' }}
-  className="min-h-full outline-none text-gray-900 leading-relaxed"
-  style={{
-    fontSize: '16px',
-    lineHeight: '1.6',
-    fontFamily: 'system-ui, -apple-system, sans-serif',
-    direction: 'ltr',
-    textAlign: 'left',
-    unicodeBidi: 'normal'
-  }}
-/>
-```
-
-#### Features
-- **Real-time Saving**: Auto-save with debouncing
-- **Rich Text Support**: HTML content with proper sanitization
-- **Search & Filter**: Client-side search functionality
-- **Responsive Design**: Mobile-optimized interface
-
-## Error Handling & Reliability
-
-### API Timeout Protection
-```typescript
-const controller = new AbortController();
-const timeoutId = setTimeout(() => controller.abort(), 30000);
-
-try {
-  const response = await fetch(url, {
-    signal: controller.signal,
-    // ... other options
-  });
-} catch (error) {
-  if (error.name === 'AbortError') {
-    console.log('Request timed out');
-    return fallbackData;
-  }
-  throw error;
-} finally {
-  clearTimeout(timeoutId);
-}
-```
-
-### Intelligent Fallback Systems
-- **API Failures**: Curated data when external services fail
-- **Network Issues**: Cached responses and offline functionality
-- **Rate Limiting**: Exponential backoff and retry logic
-- **Data Validation**: Comprehensive input sanitization
 
 ## Performance Optimizations
 
-### Parallel Processing
-```typescript
-// Concurrent API calls for multiple influencers
-const profilePromises = handles.map(handle => 
-  processInfluencerProfile(handle, brandName)
-);
+### Code Simplification Impact
+- **Reduced Bundle Size**: Removed complex text manipulation libraries
+- **Improved Rendering**: Textarea vs contentEditable performance
+- **Memory Usage**: Eliminated event listener overhead
+- **CPU Usage**: Reduced text processing complexity
 
-const results = await Promise.allSettled(profilePromises);
+### API Efficiency
+```typescript
+// Parallel API calls for better performance
+const [brandData, influencerData] = await Promise.all([
+  researchBrand(brandName),
+  scrapeInfluencerProfiles(handles)
+]);
 ```
 
-### Memory Management
-- **Efficient Data Structures**: Optimized profile data handling
-- **Resource Cleanup**: Proper cleanup of WebGL resources
-- **Garbage Collection**: Minimized memory leaks
-- **Lazy Loading**: Components loaded on demand
+## Security Considerations
 
-## Security Implementation
-
-### Environment Variable Management
+### Input Sanitization
 ```typescript
-// Secure API key handling
-const apiKey = process.env.APIFY_API_TOKEN;
-if (!apiKey) {
-  throw new Error('APIFY_API_TOKEN is required');
-}
+// Safe text handling with textarea
+const sanitizedContent = DOMPurify.sanitize(textareaValue);
+// No innerHTML injection risks
 ```
 
-### Data Validation
-```typescript
-// Input sanitization
-const sanitizeInput = (input: string): string => {
-  return input
-    .trim()
-    .replace(/[<>]/g, '') // Remove potential HTML
-    .substring(0, 1000); // Limit length
-};
-```
-
-### CORS and Security Headers
-```typescript
-// API route security
-export async function POST(request: Request) {
-  // Validate request origin
-  const origin = request.headers.get('origin');
-  if (!isValidOrigin(origin)) {
-    return new Response('Forbidden', { status: 403 });
-  }
-  
-  // Process request...
-}
-```
+### API Security
+- Environment variable protection
+- Rate limiting implementation
+- Error message sanitization
+- CORS configuration
 
 ## Testing Strategy
 
-### Unit Tests
-- Component rendering tests
-- Utility function validation
-- API integration mocking
-- Error handling verification
+### Component Testing
+```typescript
+// Simplified testing with textarea
+test('text input works correctly', () => {
+  render(<NotesManager />);
+  const textarea = screen.getByRole('textbox');
+  fireEvent.change(textarea, { target: { value: 'test text' } });
+  expect(textarea.value).toBe('test text');
+  // No complex contentEditable testing required
+});
+```
 
-### Integration Tests
-- End-to-end user workflows
-- API endpoint testing
-- Database operations
+### Integration Testing
+- API endpoint validation
+- Proposal generation flow
+- Export functionality
 - Cross-browser compatibility
 
-### Performance Tests
-- WebGL animation performance
-- API response time monitoring
-- Memory usage profiling
-- Load testing scenarios
+## Deployment Architecture
 
-## Deployment & DevOps
-
-### Build Process
-```bash
-# Production build
-npm run build
-
-# Type checking
-npm run type-check
-
-# Linting
-npm run lint
-
-# Testing
-npm run test
+### Production Environment
+```yaml
+# Vercel deployment configuration
+build:
+  command: npm run build
+  environment:
+    - APIFY_API_TOKEN
+    - SERPLY_API_KEY
+    
+runtime: nodejs18.x
+regions: [iad1, sfo1]
 ```
 
 ### Environment Configuration
-```env
-# Production environment variables
-APIFY_API_TOKEN=prod_token_here
-SERPLY_API_KEY=prod_key_here
-NODE_ENV=production
+```bash
+# Required environment variables
+APIFY_API_TOKEN=your_apify_token
+SERPLY_API_KEY=your_serply_key
+
+# Optional enhancements
+NEXT_PUBLIC_APP_ENV=production
+NEXT_PUBLIC_API_URL=https://api.layai.com
 ```
 
-### Monitoring & Logging
-- **Error Tracking**: Comprehensive error logging
-- **Performance Monitoring**: API response time tracking
-- **User Analytics**: Usage pattern analysis
-- **Health Checks**: System status monitoring
+## Monitoring & Analytics
 
-## Future Enhancements
-
-### Planned Features
-1. **Multi-Platform Support**: TikTok and YouTube integration
-2. **Advanced Analytics**: Machine learning insights
-3. **Real-time Collaboration**: Multi-user campaign management
-4. **Mobile App**: React Native implementation
-
-### Technical Improvements
-1. **Database Migration**: Move to PostgreSQL/MongoDB
-2. **Caching Layer**: Redis implementation
-3. **Microservices**: API service separation
-4. **GraphQL**: Enhanced data fetching
-
-## Troubleshooting Guide
-
-### Common Issues
-
-#### Text Direction Problems
-- **Symptoms**: Text appearing backward or right-to-left
-- **Solution**: Ensure latest CSS fixes are applied
-- **Prevention**: Test text input across different browsers
-
-#### API Timeouts
-- **Symptoms**: Long loading times or failed requests
-- **Solution**: Check network connectivity and API keys
-- **Prevention**: Implement proper timeout handling
-
-#### WebGL Issues
-- **Symptoms**: Animation not displaying or poor performance
-- **Solution**: Check browser WebGL support
-- **Prevention**: Implement WebGL capability detection
-
-### Debug Mode
+### Error Tracking
 ```typescript
-// Enable debug logging
-const DEBUG = process.env.NODE_ENV === 'development';
-
-if (DEBUG) {
-  console.log('Debug info:', debugData);
+// Enhanced error handling
+try {
+  await processProposal(data);
+} catch (error) {
+  console.error('Proposal generation failed:', error);
+  // Send to monitoring service
+  trackError('proposal_generation', error);
 }
 ```
 
-## Contributing Guidelines
+### Performance Metrics
+- Component render times
+- API response times
+- User interaction tracking
+- Error rate monitoring
 
-### Code Standards
-- **TypeScript**: Strict mode enabled
-- **ESLint**: Airbnb configuration
-- **Prettier**: Consistent code formatting
-- **Husky**: Pre-commit hooks
+## Future Architecture Considerations
 
-### Pull Request Process
-1. Fork repository
-2. Create feature branch
-3. Implement changes with tests
-4. Update documentation
-5. Submit pull request
+### Scalability Improvements
+- Database integration (PostgreSQL/MongoDB)
+- Redis caching layer
+- CDN implementation
+- Microservices architecture
 
-### Testing Requirements
-- Unit tests for new functions
-- Integration tests for API changes
-- Cross-browser testing for UI changes
-- Performance testing for optimizations
+### Feature Enhancements
+- Real-time collaboration
+- Advanced analytics dashboard
+- Multi-tenant architecture
+- Mobile app development
+
+## Development Guidelines
+
+### Code Quality Standards
+```typescript
+// TypeScript strict mode
+"strict": true,
+"noImplicitAny": true,
+"strictNullChecks": true
+
+// ESLint configuration
+"extends": [
+  "next/core-web-vitals",
+  "@typescript-eslint/recommended"
+]
+```
+
+### Component Development
+1. **Simplicity First**: Choose simple, reliable solutions over complex ones
+2. **TypeScript**: Full type coverage for all components
+3. **Testing**: Unit tests for all critical functionality
+4. **Accessibility**: WCAG 2.1 compliance
+5. **Performance**: Optimize for Core Web Vitals
+
+## Troubleshooting Guide
+
+### Common Issues & Solutions
+
+#### Text Direction Problems
+- **Status**: ✅ RESOLVED in v2.2.0
+- **Solution**: Textarea replacement with proper CSS
+- **Prevention**: Use standard HTML form elements when possible
+
+#### Proposal Generation Issues
+- **Status**: ✅ RESOLVED in v2.2.0
+- **Solution**: Proper state management and navigation
+- **Prevention**: Clear component lifecycle management
+
+#### API Integration Problems
+- **Diagnosis**: Check environment variables and API credits
+- **Solution**: Implement proper error handling and fallbacks
+- **Prevention**: Regular API health monitoring
+
+## Version History & Migration
+
+### v2.2.0 Migration Notes
+- **Breaking Changes**: None (backward compatible)
+- **Database**: No schema changes required
+- **Environment**: No new variables required
+- **Dependencies**: No major updates required
+
+### Upgrade Path
+1. Pull latest code: `git pull origin main`
+2. Install dependencies: `npm install`
+3. Restart development server: `npm run dev`
+4. Test critical functionality
+5. Deploy to production
 
 ---
 
-**Last Updated**: December 19, 2024
-**Version**: 2.1.0 
+**Last Updated**: December 19, 2024  
+**Version**: 2.2.0  
+**Maintainer**: LAYAI Development Team 

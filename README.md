@@ -10,10 +10,23 @@ An intelligent platform for discovering, analyzing, and managing influencer mark
 - **Personalized Campaign Proposals**: Unique, data-driven proposals for each influencer
 - **Celebrity Recognition**: Specialized analysis for major influencers (Cristiano Ronaldo, Taylor Swift, etc.)
 - **Professional CSV Export**: IKEA-format export for client presentations
-- **Multi-language Support**: Spanish and English interface
-- **Beautiful UI**: Modern design with WebGL fluid simulation
-- **Notes Management**: Built-in note-taking system with rich text editing
-- **Campaign Tracking**: Comprehensive campaign management and analytics
+- **Multi-language Support**: Spanish and English proposal generation
+- **Notes Management**: Integrated note-taking system with reliable text input
+- **Campaign Management**: Comprehensive campaign tracking and organization
+
+## ✅ Recent Major Fixes (v2.2.0)
+
+### 🎯 **Text Direction Issue - COMPLETELY RESOLVED**
+- ✅ **Fixed**: Text no longer appears backward when typing (hey → yeh issue)
+- ✅ **Solution**: Replaced contentEditable with reliable textarea component
+- ✅ **Enhanced**: Cross-browser compatibility and accessibility
+- ✅ **Improved**: Simplified and more maintainable code architecture
+
+### 🎯 **Proposal Generation - FULLY RESTORED**
+- ✅ **Fixed**: "Generate Proposal" now shows complete ProposalViewer
+- ✅ **Restored**: Full biography, metrics, and brand compatibility analysis
+- ✅ **Enhanced**: Proper navigation between generator and viewer
+- ✅ **Improved**: Export functionality working perfectly
 
 ## 🛠 Tech Stack
 
@@ -252,6 +265,55 @@ For support, email support@layai.com or create an issue in this repository.
 - **Improved**: Cross-browser compatibility
 - **Added**: Comprehensive input field styling
 - **Updated**: Documentation with latest features
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+For support, email support@layai.com or create an issue in this repository.
+
+## 📈 Recent Updates (v2.2.0)
+
+- **Fixed**: Text direction issue
+- **Restored**: Proposal generation
+- **Enhanced**: Cross-browser compatibility
+- **Improved**: Simplified code architecture
+
+## 🚀 What's Next
+
+- Enhanced analytics dashboard
+- More social media platform integrations
+- Advanced filtering and sorting options
+- Collaboration features for teams
+- API rate limiting and optimization
+
+## 📝 Version History
+
+- **v2.2.0** (Current) - Text direction fix & proposal generation restoration
+- **v2.1.0** - Initial text direction improvements
+- **v2.0.0** - Major UI overhaul and API integrations
+- **v1.0.0** - Initial release
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Apify for Instagram scraping capabilities
+- Serply for web search functionality
+- Shadcn/ui for beautiful UI components
+- Next.js team for the amazing framework
 
 ---
 
