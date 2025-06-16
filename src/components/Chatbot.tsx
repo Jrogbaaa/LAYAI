@@ -25,7 +25,6 @@ export function Chatbot({ onSendMessage, onDirectSearch }: ChatbotProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [manualHandles, setManualHandles] = useState('');
   const [isProcessingHandles, setIsProcessingHandles] = useState(false);
-  const [showManualInput, setShowManualInput] = useState(false);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -103,7 +102,6 @@ export function Chatbot({ onSendMessage, onDirectSearch }: ChatbotProps) {
       
       // Clear the input
       setManualHandles('');
-      setShowManualInput(false);
       
       const successMessage: Message = { 
         text: `✅ Successfully processed ${handles.length} Instagram profile${handles.length !== 1 ? 's' : ''}! Check the results below.`, 
@@ -167,51 +165,45 @@ export function Chatbot({ onSendMessage, onDirectSearch }: ChatbotProps) {
       </div>
       
       <div className="border-t bg-gray-50 rounded-b-lg">
-        {/* Manual Handle Input Section */}
-        {showManualInput && (
-          <div className="p-4 border-b border-gray-200 bg-blue-50">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-              📱 Direct Instagram Handle Search
-              <span className="text-xs text-gray-500 font-normal">(Bypass AI - Search Specific Profiles)</span>
-            </h4>
-            <div className="space-y-3">
-              <textarea
-                value={manualHandles}
-                onChange={(e) => setManualHandles(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
-                rows={3}
-                placeholder={`@cristiano\n@therock\n@taylorswift\nhttps://instagram.com/username`}
-                disabled={isProcessingHandles}
-              />
-              <div className="flex items-center gap-2">
+        {/* Manual Handle Input Section - Always visible */}
+        <div className="p-4 border-b border-gray-200 bg-blue-50">
+          <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+            📱 Direct Instagram Handle Search
+            <span className="text-xs text-gray-500 font-normal">(Search Specific Profiles)</span>
+          </h4>
+          <div className="space-y-3">
+            <textarea
+              value={manualHandles}
+              onChange={(e) => setManualHandles(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
+              rows={3}
+              placeholder={`@cristiano\n@therock\n@taylorswift\nhttps://instagram.com/username`}
+              disabled={isProcessingHandles}
+            />
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleDirectSearch}
+                disabled={!manualHandles.trim() || isProcessingHandles}
+                className="px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {isProcessingHandles ? 'Searching...' : 'Search Profiles'}
+              </button>
+              {manualHandles.trim() && (
                 <button
-                  onClick={handleDirectSearch}
-                  disabled={!manualHandles.trim() || isProcessingHandles}
-                  className="px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {isProcessingHandles ? 'Searching...' : 'Search Profiles'}
-                </button>
-                <button
-                  onClick={() => setShowManualInput(false)}
+                  onClick={() => setManualHandles('')}
                   className="px-4 py-2 text-gray-600 text-sm hover:text-gray-800 transition-colors"
                 >
-                  Cancel
+                  Clear
                 </button>
-              </div>
+              )}
             </div>
           </div>
-        )}
+        </div>
 
         {/* Main Chat Input */}
         <div className="p-4">
           <div className="flex items-center gap-2 mb-2">
-            <button
-              onClick={() => setShowManualInput(!showManualInput)}
-              className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors flex items-center gap-1"
-            >
-              📱 {showManualInput ? 'Hide' : 'Search'} Specific Handles
-            </button>
-            <span className="text-xs text-gray-500">or use AI chat below</span>
+            <span className="text-xs text-gray-500">💬 Or ask AI to find influencers for you:</span>
           </div>
           <div className="flex space-x-2">
             <input
