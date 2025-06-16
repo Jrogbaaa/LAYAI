@@ -7,18 +7,19 @@ LAYAI is a comprehensive influencer marketing platform that leverages AI to disc
 ### Core Functionality
 - **AI-Powered Search**: Intelligent influencer discovery using natural language queries
 - **Multi-Platform Support**: Instagram, TikTok, YouTube, and Twitter integration
-- **Real-Time Web Search**: Actual influencer data retrieval via web scraping
+- **Real Instagram Data**: Authentic profile data via Apify Instagram Profile Scraper
 - **Manual Upload**: Add specific influencers by handle with automatic data enrichment
 - **Professional Proposals**: Generate detailed collaboration proposals in Spanish
 - **Export Capabilities**: CSV and Excel export matching industry templates
+- **Colorful Landing Page**: Interactive particle animation with mouse responsiveness
 
 ### Advanced Features
-- **Gender Detection**: Smart gender identification from usernames and profiles
-- **Location Filtering**: Geographic targeting with IP-based detection
-- **Follower Range Filtering**: Precise audience size targeting
-- **Engagement Analysis**: Real engagement rate calculations
-- **Brand Intelligence**: AI-powered brand compatibility scoring
-- **Personalized Content**: Unique biographies and collaboration reasons per influencer
+- **Brand Intelligence**: Automated brand research and industry-specific matching
+- **SocialBlade Integration**: Enhanced analytics with verified statistics and rankings
+- **Personalized Content**: Unique Spanish biographies and brand-specific match reasons
+- **Multi-Step Enhancement**: 5-step process from brand research to personalized proposals
+- **Graceful Fallbacks**: System continues working even when APIs are unavailable
+- **Real-Time Validation**: Profile verification and data quality assurance
 
 ## 🛠️ Technology Stack
 
@@ -34,9 +35,35 @@ LAYAI is a comprehensive influencer marketing platform that leverages AI to disc
 - Node.js 18+ 
 - npm or yarn
 - API Keys:
-  - `APIFY_API_TOKEN` - For web scraping
-  - `SERPLY_API_KEY` - For search functionality
-  - `OPENAI_API_KEY` - For AI features (optional)
+  - `APIFY_API_TOKEN` - For Instagram profile scraping (Required)
+  - `SERPLY_API_KEY` - For brand research (Required)
+  - `FIRECRAWL_API_KEY` - For web scraping (Required)
+  - `SOCIALBLADE_CLIENT_ID` & `SOCIALBLADE_TOKEN` - For enhanced analytics (Optional)
+  - Firebase configuration variables (Required)
+
+## ⚠️ Current Status & Known Issues
+
+### Working Features ✅
+- **Landing Page Animation**: Beautiful interactive particle system
+- **Real Instagram Data**: Apify integration providing authentic profiles
+- **Brand Research**: Automated brand intelligence and analysis
+- **Personalized Proposals**: Brand-specific match reasons and biographies
+- **Professional Export**: CSV/Excel with Spanish localization
+
+### Known Issues 🔧
+- **SocialBlade API**: Currently returning 402 errors (payment/quota exceeded)
+  - System gracefully falls back to Apify data
+  - All functionality remains operational
+- **Web Search API**: Serply occasionally returns 405 errors
+  - Brand research may fail intermittently
+  - System uses fallback brand analysis
+
+### Impact
+The system is fully functional even with these API issues. You'll still get:
+- Real Instagram profile data via Apify
+- Personalized brand-specific analysis
+- Professional Spanish proposals
+- Complete export functionality
 
 ## 🚀 Quick Start
 

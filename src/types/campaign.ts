@@ -2,16 +2,37 @@ export interface CampaignProposal {
   id: string;
   client: string;
   campaignName: string;
-  budget: number;
-  currency: string;
-  talentRequirements: string;
+  brandName: string;
+  totalBudget: number;
+  currency: 'EUR' | 'USD';
+  talents: ProposalTalent[];
   createdAt: Date;
-  status: 'draft' | 'sent' | 'approved' | 'rejected';
-  confirmedTalents: ProposalTalent[];
-  unconfirmedTalents: ProposalTalent[];
+  brandResearch?: any;
 }
 
 export interface ProposalTalent {
+  id: string;
+  name: string;
+  handle: string;
+  platform: string;
+  followers: number;
+  engagementRate: number;
+  estimatedFee: number;
+  commitment: string;
+  biography: string;
+  whyThisInfluencer: string;
+  metrics: {
+    credibilityScore: number;
+    spainImpressionsPercentage: number;
+    storyImpressions: number;
+    reelImpressions: number;
+    interactions: number;
+  };
+  pastCollaborations: string[];
+}
+
+// Legacy types for backward compatibility
+export interface LegacyProposalTalent {
   id: string;
   name: string;
   category: string;

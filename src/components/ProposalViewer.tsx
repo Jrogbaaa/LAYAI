@@ -1,7 +1,7 @@
 'use client';
 
 import { CampaignProposal, ProposalTalent } from '@/types/campaign';
-import { exportHibikiStyleCSV, exportOrangeStyleCSV, exportToExcel, ExportOptions } from '@/lib/exportUtils';
+import { exportHibikiStyleCSV, exportOrangeStyleCSV, exportToExcel, ExportOptions } from '@/lib/newExportUtils';
 
 interface ProposalViewerProps {
   proposal: CampaignProposal;
@@ -27,8 +27,7 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
   };
 
   const getTotalBudget = (): number => {
-    return [...proposal.confirmedTalents, ...proposal.unconfirmedTalents]
-      .reduce((sum, talent) => sum + talent.fee, 0);
+    return proposal.talents.reduce((sum, talent) => sum + talent.estimatedFee, 0);
   };
 
   // Enhanced export functions
@@ -60,34 +59,27 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
     });
   };
 
-  const TalentCard: React.FC<{ talent: ProposalTalent; isConfirmed: boolean }> = ({
-    talent,
-    isConfirmed
-  }) => (
-    <div className={`border rounded-lg p-4 ${isConfirmed ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
+  const TalentCard: React.FC<{ talent: ProposalTalent }> = ({ talent }) => (
+    <div className="border rounded-lg p-4 bg-gray-50 border-gray-200">
       <div className="flex justify-between items-start mb-3">
         <div>
           <h4 className="text-lg font-semibold text-gray-900">{talent.name}</h4>
-          <p className="text-sm text-gray-600">{talent.category}</p>
+          <p className="text-sm text-gray-600">@{talent.handle} • {talent.platform}</p>
           <a 
-            href={talent.url} 
+            href={`https://www.instagram.com/${talent.handle}`} 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-sm text-blue-600 hover:underline"
           >
-            {talent.url}
+            View Profile
           </a>
         </div>
         <div className="text-right">
           <div className="text-lg font-bold text-green-600">
-            {formatCurrency(talent.fee)}
+            {formatCurrency(talent.estimatedFee)}
           </div>
-          <div className={`text-xs px-2 py-1 rounded-full ${
-            isConfirmed 
-              ? 'bg-green-100 text-green-800' 
-              : 'bg-yellow-100 text-yellow-800'
-          }`}>
-            {isConfirmed ? 'Confirmed' : 'To Confirm'}
+          <div className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800">
+            {formatNumber(talent.followers)} followers
           </div>
         </div>
       </div>
@@ -99,7 +91,7 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
         </div>
         <div>
           <h5 className="font-medium text-gray-700 mb-2">Why This Match</h5>
-          <p className="text-sm text-gray-600">{talent.reasonWhy}</p>
+          <p className="text-sm text-gray-600">{talent.whyThisInfluencer}</p>
         </div>
       </div>
 
@@ -110,23 +102,23 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
 
       <div className="grid md:grid-cols-3 gap-4">
         <div>
-          <h5 className="font-medium text-gray-700 mb-2">Instagram Metrics</h5>
+          <h5 className="font-medium text-gray-700 mb-2">Metrics</h5>
           <div className="space-y-1 text-sm">
             <div className="flex justify-between">
               <span>Followers:</span>
-              <span className="font-medium">{formatNumber(talent.instagramFollowers)}</span>
+              <span className="font-medium">{formatNumber(talent.followers)}</span>
             </div>
             <div className="flex justify-between">
               <span>ER:</span>
-              <span className="font-medium">{formatPercentage(talent.instagramER)}</span>
+              <span className="font-medium">{formatPercentage(talent.engagementRate * 100)}</span>
             </div>
             <div className="flex justify-between">
               <span>Credibility:</span>
-              <span className="font-medium">{formatPercentage(talent.instagramCredibility)}</span>
+              <span className="font-medium">{formatPercentage(talent.metrics.credibilityScore)}</span>
             </div>
             <div className="flex justify-between">
               <span>Spain IP:</span>
-              <span className="font-medium">{formatPercentage(talent.instagramSpainIP)}</span>
+              <span className="font-medium">{formatPercentage(talent.metrics.spainImpressionsPercentage)}</span>
             </div>
           </div>
         </div>
@@ -136,33 +128,29 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
           <div className="space-y-1 text-sm">
             <div className="flex justify-between">
               <span>Stories:</span>
-              <span className="font-medium">{formatNumber(talent.instagramStoryImpressions)}</span>
+              <span className="font-medium">{formatNumber(talent.metrics.storyImpressions)}</span>
             </div>
             <div className="flex justify-between">
               <span>Reels:</span>
-              <span className="font-medium">{formatNumber(talent.instagramReelImpressions)}</span>
+              <span className="font-medium">{formatNumber(talent.metrics.reelImpressions)}</span>
             </div>
             <div className="flex justify-between">
-              <span>Total Est:</span>
-              <span className="font-medium text-green-600">{formatNumber(talent.estimatedTotalImpressions)}</span>
+              <span>Interactions:</span>
+              <span className="font-medium text-green-600">{formatNumber(talent.metrics.interactions)}</span>
             </div>
           </div>
         </div>
 
         <div>
-          <h5 className="font-medium text-gray-700 mb-2">Demographics</h5>
+          <h5 className="font-medium text-gray-700 mb-2">Platform</h5>
           <div className="space-y-1 text-sm">
             <div className="flex justify-between">
-              <span>Male:</span>
-              <span className="font-medium">{formatPercentage(talent.instagramGenderSplit.male)}</span>
+              <span>Platform:</span>
+              <span className="font-medium">{talent.platform}</span>
             </div>
             <div className="flex justify-between">
-              <span>Female:</span>
-              <span className="font-medium">{formatPercentage(talent.instagramGenderSplit.female)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>25-34:</span>
-              <span className="font-medium">{formatPercentage(talent.instagramAgeDistribution['25-34'])}</span>
+              <span>Handle:</span>
+              <span className="font-medium">@{talent.handle}</span>
             </div>
           </div>
         </div>
@@ -183,13 +171,6 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
           </div>
         </div>
       )}
-
-      {talent.comments && (
-        <div className="mt-4">
-          <h5 className="font-medium text-gray-700 mb-2">Comments</h5>
-          <p className="text-sm text-orange-600 font-medium">{talent.comments}</p>
-        </div>
-      )}
     </div>
   );
 
@@ -206,7 +187,7 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
           </div>
           <div className="text-right">
             <div className="text-2xl font-bold text-green-600">
-              {formatCurrency(proposal.budget)}
+              {formatCurrency(proposal.totalBudget)}
             </div>
             <div className="text-sm text-gray-500">
               Total Budget
@@ -220,33 +201,25 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
             <div className="font-medium">{proposal.createdAt.toLocaleDateString()}</div>
           </div>
           <div>
-            <span className="text-gray-500">Status:</span>
-            <div className={`font-medium ${
-              proposal.status === 'approved' ? 'text-green-600' :
-              proposal.status === 'rejected' ? 'text-red-600' :
-              'text-yellow-600'
-            }`}>
-              {proposal.status.charAt(0).toUpperCase() + proposal.status.slice(1)}
-            </div>
+            <span className="text-gray-500">Brand:</span>
+            <div className="font-medium text-blue-600">{proposal.brandName}</div>
           </div>
           <div>
             <span className="text-gray-500">Total Talents:</span>
-            <div className="font-medium">
-              {proposal.confirmedTalents.length + proposal.unconfirmedTalents.length}
-            </div>
+            <div className="font-medium">{proposal.talents.length}</div>
           </div>
           <div>
-            <span className="text-gray-500">Estimated Cost:</span>
-            <div className="font-medium text-green-600">
-              {formatCurrency(getTotalBudget())}
-            </div>
+            <span className="text-gray-500">Currency:</span>
+            <div className="font-medium">{proposal.currency}</div>
           </div>
         </div>
 
-        {proposal.talentRequirements && (
-          <div className="mt-4">
-            <span className="text-sm text-gray-500">Requirements:</span>
-            <p className="text-sm font-medium">{proposal.talentRequirements}</p>
+        {proposal.brandResearch && (
+          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+            <span className="text-blue-700 font-medium">Brand Research:</span>
+            <div className="text-blue-600 text-sm mt-1">
+              Industry: {proposal.brandResearch.industry} | Values: {proposal.brandResearch.values?.join(', ')} | Target: {proposal.brandResearch.targetAudience}
+            </div>
           </div>
         )}
       </div>
@@ -287,29 +260,15 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
         </div>
       </div>
 
-      {/* Confirmed Talents */}
-      {proposal.confirmedTalents.length > 0 && (
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
-            Confirmed Talents ({proposal.confirmedTalents.length})
-          </h2>
-          <div className="space-y-6">
-            {proposal.confirmedTalents.map((talent) => (
-              <TalentCard key={talent.id} talent={talent} isConfirmed={true} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Unconfirmed Talents */}
-      {proposal.unconfirmedTalents.length > 0 && (
+      {/* All Talents */}
+      {proposal.talents.length > 0 && (
         <div className="p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">
-            Talents to Confirm ({proposal.unconfirmedTalents.length})
+            Selected Talents ({proposal.talents.length})
           </h2>
           <div className="space-y-6">
-            {proposal.unconfirmedTalents.map((talent) => (
-              <TalentCard key={talent.id} talent={talent} isConfirmed={false} />
+            {proposal.talents.map((talent) => (
+              <TalentCard key={talent.id} talent={talent} />
             ))}
           </div>
         </div>
@@ -321,8 +280,7 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
           <div>
             <div className="text-2xl font-bold text-blue-600">
               {formatNumber(
-                [...proposal.confirmedTalents, ...proposal.unconfirmedTalents]
-                  .reduce((sum, talent) => sum + talent.instagramFollowers, 0)
+                proposal.talents.reduce((sum, talent) => sum + talent.followers, 0)
               )}
             </div>
             <div className="text-sm text-gray-600">Total Followers</div>
@@ -330,8 +288,7 @@ export const ProposalViewer: React.FC<ProposalViewerProps> = ({
           <div>
             <div className="text-2xl font-bold text-green-600">
               {formatNumber(
-                [...proposal.confirmedTalents, ...proposal.unconfirmedTalents]
-                  .reduce((sum, talent) => sum + talent.estimatedTotalImpressions, 0)
+                proposal.talents.reduce((sum, talent) => sum + talent.metrics.storyImpressions + talent.metrics.reelImpressions, 0)
               )}
             </div>
             <div className="text-sm text-gray-600">Estimated Impressions</div>

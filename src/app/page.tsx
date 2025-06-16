@@ -12,7 +12,7 @@ import LandingPage from '@/components/LandingPage';
 import { MatchResult } from '@/types/influencer';
 import { CampaignProposal } from '@/types/campaign';
 import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
-import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/exportUtils';
+import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/newExportUtils';
 import { generateSessionId } from '@/lib/database';
 
 type PageView = 'landing' | 'chat' | 'generate' | 'view' | 'campaigns';

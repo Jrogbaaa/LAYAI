@@ -1340,4 +1340,46 @@ function getErrorMessage(error: unknown): string {
  * Creates discovery results from found profile URLs
  */
 function createDiscoveryResults(profileUrls: {url: string, platform: string}[], params: ApifySearchParams): BasicInfluencerProfile[] {
-  console.log(`
+  console.log('Creating discovery results from', profileUrls.length, 'profile URLs');
+  
+  return profileUrls.map((profileData, index) => {
+    const username = extractUsernameFromUrl(profileData.url, profileData.platform);
+    const estimatedFollowers = estimateFollowersFromRange(params.minFollowers, params.maxFollowers);
+    const detectedNiche = detectNicheFromProfile(username, params.niches);
+    
+    return {
+      username,
+      fullName: generateDisplayName(username, params),
+      followers: estimatedFollowers,
+      platform: profileData.platform,
+      niche: detectedNiche,
+      profileUrl: profileData.url,
+      source: 'verified-discovery' as const
+    };
+  });
+}
+
+function extractUsernameFromUrl(url: string, platform: string): string {
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    
+    // Remove leading/trailing slashes and get the username part
+    const parts = pathname.split('/').filter(part => part.length > 0);
+    
+    if (platform.toLowerCase() === 'instagram') {
+      // For Instagram: typically /username/ or /p/postid/ format
+      return parts[0] || 'unknown';
+    } else if (platform.toLowerCase() === 'tiktok') {
+      // For TikTok: typically /@username format
+      const usernamePart = parts.find(part => part.startsWith('@'));
+      return usernamePart ? usernamePart.substring(1) : parts[0] || 'unknown';
+    }
+    
+    // Default: use first path segment
+    return parts[0] || 'unknown';
+  } catch (error) {
+    console.error('Error extracting username from URL:', url, error);
+    return 'unknown';
+  }
+}

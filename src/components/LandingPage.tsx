@@ -20,7 +20,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
   }, []);
 
   return (
-    <div className="relative w-full h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden flex items-center justify-center">
+    <div className="relative w-full h-screen overflow-hidden flex items-center justify-center">
       {/* Fluid Animation Background */}
       <SplashCursor />
       
@@ -29,7 +29,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
         {/* Animated "Buenas Clara" Text - Darker cursive */}
         <div className="mb-20">
           <h1 
-            className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-none transition-all duration-[4000ms] ease-in-out text-gray-800 ${
+            className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-none transition-all duration-[4000ms] ease-in-out text-white ${
               isVisible 
                 ? 'opacity-100 transform translate-y-0 scale-100' 
                 : 'opacity-0 transform translate-y-16 scale-95'
@@ -55,7 +55,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
         >
           <button 
             onClick={onGetStarted}
-            className="group relative px-16 py-6 bg-white/80 backdrop-blur-sm text-gray-800 font-medium text-lg rounded-full border border-gray-300 hover:bg-white hover:border-gray-400 transition-all duration-500 transform hover:scale-105 hover:shadow-lg"
+            className="group relative px-16 py-6 bg-white/90 backdrop-blur-sm text-gray-800 font-medium text-lg rounded-full border border-white/50 hover:bg-white hover:border-white transition-all duration-500 transform hover:scale-105 hover:shadow-xl"
           >
             <span className="relative z-10">Get Started</span>
             <div className="absolute inset-0 bg-gradient-to-r from-gray-100/20 to-gray-200/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
