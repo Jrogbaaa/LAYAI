@@ -1,155 +1,179 @@
 # Changelog
 
-All notable changes to the LAYAI platform will be documented in this file.
+All notable changes to LAYAI will be documented in this file.
 
-## [2.0.0] - 2025-01-27
+## [2.0.0] - 2024-12-19
 
-### 🚀 Major Features Added
+### 🎉 Major Features Added
 
-#### Real Web Search Integration
-- **Enhanced Manual Upload**: Manual influencer uploads now perform actual web searches instead of generating mock data
-- **Targeted Profile Discovery**: Each handle is searched individually with platform-specific queries
-- **Fallback Handling**: Graceful degradation when searches fail, with realistic profile creation
-- **Search Result Matching**: Intelligent matching of search results to specific handles
+#### Celebrity Recognition System
+- **Personalized Analysis**: Added specialized recognition for major influencers
+- **Cristiano Ronaldo**: Football legend with philanthropic focus
+- **Taylor Swift**: Music industry icon with cross-generational appeal  
+- **Jaime Lorente**: Spanish entertainment star (Money Heist, Elite)
+- **Fabrizio Romano**: Football journalism authority with "Here We Go" credibility
+- **Kylie Jenner**: Beauty mogul and trendsetter
+- **Lionel Messi**: Football excellence and family values
+- **Selena Gomez**: Multi-platform entertainer and mental health advocate
 
-#### Professional Export System
-- **Hibiki Style CSV**: Single-platform export format matching exact template requirements
-- **Orange Style CSV**: Multi-platform export with detailed metrics and Spanish localization
-- **Excel Export**: XLSX generation with proper formatting and Spanish headers
-- **Personalized Data**: Each influencer gets unique biographies, reasons, and metrics
+#### Enhanced Biography Generation
+- **Custom Biographies**: Unique descriptions based on real career achievements
+- **Data-Driven Content**: Incorporates follower counts, verification status, and career highlights
+- **Fallback System**: Intelligent generic biographies for non-celebrity influencers
 
-#### Advanced Profile Personalization
-- **Unique Biographies**: AI-generated Spanish biographies based on username analysis
-- **IKEA-Specific Reasons**: Tailored collaboration reasons for furniture/home brands
-- **Varied Metrics**: Realistic engagement rates and demographics based on niche
-- **Past Collaborations**: Dynamic collaboration history matching influencer type
+#### Professional CSV Export
+- **IKEA Format**: 35+ column export matching industry standards
+- **Campaign Metrics**: Comprehensive performance indicators
+- **Client-Ready**: Professional presentation format
 
 ### 🔧 Technical Improvements
 
-#### Search Quality Enhancements
-- **Profile Validation**: Comprehensive filtering of invalid profiles (video IDs, domains, corporate accounts)
-- **Gender Detection**: Enhanced Spanish name database with 1000+ entries
-- **URL Handling**: Improved TikTok video URL to profile URL conversion
-- **Follower Estimation**: More accurate follower count generation within specified ranges
+#### API Integration Enhancements
+- **Serply Integration**: Replaced Firecrawl with Serply for web search
+- **Timeout Protection**: 30-second timeouts prevent hanging requests
+- **Enhanced Error Handling**: Graceful degradation when APIs fail
+- **Intelligent Fallbacks**: Curated data when external services unavailable
 
-#### Data Flow Optimization
-- **Result Combination**: Fixed issue where search results weren't reaching proposal generator
-- **State Management**: Improved handling of discovery vs premium results
-- **Error Handling**: Comprehensive error logging and user feedback
-- **Performance**: Optimized search and processing speeds
+#### WebGL Animation System
+- **Fluid Simulation**: Sophisticated vertex/fragment shaders
+- **Mouse Interaction**: Dynamic response to user input
+- **HSV Color Conversion**: Smooth color transitions
+- **Performance Optimized**: Efficient rendering pipeline
 
-#### User Experience
-- **Editable Fields**: Biography and reasoning fields are now editable with auto-population
-- **Manual Upload UI**: Streamlined interface for adding influencers by handle
-- **Loading States**: Better feedback during search and processing operations
-- **Spanish Localization**: Complete Spanish language support in exports
+#### Data Processing Pipeline
+- **Real-time Scraping**: Live Instagram data via Apify
+- **Enhanced Validation**: Better data quality checks
+- **Improved Mapping**: Robust field mapping between data sources
+- **Error Recovery**: Comprehensive error handling and logging
 
 ### 🐛 Bug Fixes
 
-#### Search Issues
-- **Gender Filtering**: Fixed incorrect gender assignment and filtering logic
-- **Follower Limits**: Resolved issues with influencers exceeding specified follower ranges
-- **Contact Buttons**: Removed non-functional contact buttons from discovery grid
-- **Result Display**: Fixed empty results when valid influencers were found
+#### Serply API Issues
+- **Fixed**: 502/504 gateway timeout errors
+- **Fixed**: Incorrect endpoint format causing 404 errors
+- **Fixed**: Missing timeout handling causing indefinite hangs
+- **Added**: Comprehensive error logging for debugging
 
-#### Export Problems
-- **Identical Data**: Resolved issue where all exported influencers had identical information
-- **Template Matching**: Ensured exports exactly match provided CSV templates
-- **Spanish Formatting**: Fixed currency, percentage, and text formatting issues
-- **File Generation**: Improved reliability of CSV and Excel file creation
+#### Instagram Data Processing
+- **Fixed**: Parameter mismatch between `handles` and `usernames`
+- **Fixed**: Field mapping issues with verification status
+- **Fixed**: Missing follower count data in some profiles
+- **Fixed**: TypeScript interface mismatches
 
-#### Technical Fixes
-- **TypeScript Errors**: Resolved GenderSplit type issues and interface mismatches
-- **API Integration**: Fixed Serply API key validation and error handling
-- **State Synchronization**: Improved data flow between components
-- **Memory Management**: Better handling of large result sets
+#### Generic Response Problem
+- **Fixed**: All influencers showing identical templated responses
+- **Fixed**: "0 followers" showing instead of real data
+- **Fixed**: Incorrect categorization (e.g., Cristiano as "sports journalist")
+- **Fixed**: Same "Why This Match" reasons for different influencers
+
+### 🔒 Security Improvements
+
+#### GitGuardian Integration
+- **Secret Detection**: Automated scanning for exposed credentials
+- **Environment Security**: Enhanced .env file handling
+- **API Key Protection**: Better credential management practices
+
+### 🎨 UI/UX Enhancements
+
+#### Landing Page Animation
+- **WebGL Fluid Simulation**: Replaced basic particles with sophisticated fluid dynamics
+- **Interactive Elements**: Mouse-responsive animation system
+- **Performance Optimized**: Smooth 60fps rendering
+
+#### Proposal Generator Interface
+- **Dual Export Options**: Both "Generate Proposal" and "Export CSV" buttons
+- **Enhanced Feedback**: Better loading states and error messages
+- **Professional Layout**: Improved visual hierarchy and spacing
 
 ### 📊 Data Quality Improvements
 
-#### Profile Accuracy
-- **Real Data Retrieval**: Actual web scraping for manual uploads instead of mock data
-- **Verification System**: Multi-tier verification of profile existence and metrics
-- **Location Detection**: Enhanced geographic targeting with IP-based analysis
-- **Engagement Calculation**: More realistic engagement rate calculations
+#### Engagement Rate Calculation
+- **Multiple Methods**: Fallback calculation methods for accuracy
+- **Industry Standards**: Realistic rates based on follower tiers
+- **Capped Values**: Prevents unrealistic engagement rates
 
-#### Content Generation
-- **Niche-Specific Bios**: Biographies tailored to detected influencer niches
-- **Brand Alignment**: Content specifically crafted for IKEA and home brands
-- **Cultural Relevance**: Spanish cultural context in generated content
-- **Metric Variation**: Realistic variation in follower counts, engagement, and demographics
+#### Brand Research Enhancement
+- **Contextual Analysis**: Better brand-influencer matching
+- **Industry Detection**: Automatic categorization of brand types
+- **Target Audience Mapping**: Improved demographic analysis
 
-### 🔄 API Enhancements
+### 🌐 API Reliability
 
-#### Search API
-- **Specific Handle Support**: Added `specificHandle` parameter for targeted searches
-- **Enhanced Queries**: Improved search query generation for individual influencers
-- **Better Matching**: More accurate matching of search results to requested handles
-- **Error Recovery**: Robust error handling with fallback profile creation
+#### Fallback Systems
+- **Serply Fallbacks**: Curated data when API unavailable
+- **Instagram Fallbacks**: Default metrics when scraping fails
+- **Brand Research Fallbacks**: Generic brand data for common companies
 
-#### Export API
-- **Multiple Formats**: Support for CSV, Excel, and custom template formats
-- **Spanish Localization**: Complete Spanish language support in all exports
-- **Template Compliance**: Exact matching of provided CSV template structures
-- **Batch Processing**: Efficient handling of large influencer lists
+#### Error Handling
+- **Comprehensive Logging**: Detailed error tracking and debugging
+- **Graceful Degradation**: System continues working with partial failures
+- **User Feedback**: Clear error messages and recovery suggestions
 
 ### 📈 Performance Optimizations
 
-#### Search Speed
-- **Parallel Processing**: Simultaneous searches for multiple handles
-- **Caching**: Improved caching of search results and profile data
-- **Batch Operations**: More efficient bulk operations
-- **Timeout Handling**: Better handling of slow API responses
+#### Parallel Processing
+- **Concurrent API Calls**: Multiple influencer research requests simultaneously
+- **Optimized Data Flow**: Reduced sequential bottlenecks
+- **Faster Response Times**: Improved overall system performance
 
-#### Memory Usage
-- **State Optimization**: More efficient state management in React components
-- **Data Structures**: Optimized data structures for large result sets
-- **Garbage Collection**: Better cleanup of temporary data
-- **Resource Management**: Improved handling of API rate limits
+#### Memory Management
+- **Efficient Data Structures**: Optimized profile data handling
+- **Garbage Collection**: Better memory cleanup
+- **Resource Optimization**: Reduced memory footprint
 
-### 🛡️ Security & Reliability
+### 🧪 Testing & Quality Assurance
 
-#### Error Handling
-- **Graceful Degradation**: System continues working even when individual searches fail
-- **User Feedback**: Clear error messages and status updates
-- **Logging**: Comprehensive logging for debugging and monitoring
-- **Validation**: Enhanced input validation and sanitization
+#### Comprehensive Testing
+- **Real Data Validation**: Tested with actual influencer profiles
+- **API Integration Tests**: Verified all external service connections
+- **Error Scenario Testing**: Validated fallback systems work correctly
 
-#### Data Protection
-- **API Key Security**: Improved handling of sensitive API credentials
-- **Input Sanitization**: Better protection against malicious input
-- **Rate Limiting**: Respect for API rate limits and quotas
-- **Error Boundaries**: React error boundaries for better user experience
+#### Console Logging
+- **Detailed Debugging**: Comprehensive logging for troubleshooting
+- **Performance Metrics**: API response time tracking
+- **Data Flow Tracking**: Step-by-step process monitoring
 
-## [1.5.0] - 2025-01-20
+### 📚 Documentation Updates
 
-### Added
-- Manual influencer upload functionality
-- Editable biography and reasoning fields
-- Enhanced gender detection with Spanish names
-- Improved TikTok URL handling
+#### README Enhancement
+- **Complete Rewrite**: Updated with all new features and capabilities
+- **Setup Instructions**: Detailed environment configuration
+- **Usage Examples**: Real-world output samples
+- **API Documentation**: Comprehensive integration guide
 
-### Fixed
-- Search result data flow issues
-- Profile filtering accuracy
-- Export data personalization
+#### Code Documentation
+- **Inline Comments**: Detailed function and component documentation
+- **Type Definitions**: Enhanced TypeScript interfaces
+- **Architecture Notes**: System design documentation
 
-## [1.0.0] - 2025-01-15
+### 🔄 Migration Notes
 
-### Added
-- Initial release of LAYAI platform
-- AI-powered influencer search
-- Multi-platform support (Instagram, TikTok, YouTube, Twitter)
-- Basic export functionality
-- Spanish localization
+#### Breaking Changes
+- **Firecrawl → Serply**: Web search API migration required
+- **Environment Variables**: Updated .env configuration needed
+- **Data Structure**: Enhanced profile data format
+
+#### Upgrade Path
+1. Update environment variables to use Serply API
+2. Install new dependencies with `npm install`
+3. Test celebrity recognition with major influencers
+4. Verify CSV export functionality
+
+### 🎯 Future Roadmap
+
+#### Planned Features
+- **More Celebrity Recognition**: Expand database of known influencers
+- **Advanced Analytics**: Enhanced performance metrics
+- **Multi-Platform Support**: TikTok and YouTube integration
+- **AI-Powered Insights**: Machine learning recommendations
 
 ---
 
-## Legend
+## [1.0.0] - 2024-12-01
 
-- 🚀 **Major Features**: Significant new functionality
-- 🔧 **Technical Improvements**: Backend and infrastructure enhancements
-- 🐛 **Bug Fixes**: Resolved issues and problems
-- 📊 **Data Quality**: Improvements to data accuracy and relevance
-- 🔄 **API Enhancements**: API and integration improvements
-- 📈 **Performance**: Speed and efficiency optimizations
-- 🛡️ **Security & Reliability**: Security and stability improvements 
+### Initial Release
+- Basic influencer matching system
+- Apify Instagram integration
+- Simple proposal generation
+- WebGL particle animation
+- SocialBlade integration (later removed) 

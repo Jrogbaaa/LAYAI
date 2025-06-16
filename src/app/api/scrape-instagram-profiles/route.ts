@@ -9,19 +9,22 @@ const apifyClient = new ApifyClient({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { handles } = body;
+    const { handles, usernames } = body;
+    
+    // Support both 'handles' and 'usernames' for backward compatibility
+    const inputHandles = handles || usernames;
 
-    if (!handles || !Array.isArray(handles) || handles.length === 0) {
+    if (!inputHandles || !Array.isArray(inputHandles) || inputHandles.length === 0) {
       return NextResponse.json(
-        { success: false, error: 'No handles provided' },
+        { success: false, error: 'No handles or usernames provided' },
         { status: 400 }
       );
     }
 
-    console.log(`🎯 Scraping ${handles.length} Instagram profiles:`, handles);
+    console.log(`🎯 Scraping ${inputHandles.length} Instagram profiles:`, inputHandles);
 
     // Clean and validate handles
-    const cleanHandles = handles.map(handle => {
+    const cleanHandles = inputHandles.map((handle: string) => {
       let cleanHandle = handle.trim();
       
       // Remove @ symbol if present
@@ -34,7 +37,7 @@ export async function POST(request: NextRequest) {
       }
       
       return cleanHandle;
-    }).filter(handle => handle.length > 0);
+    }).filter((handle: string) => handle.length > 0);
 
     console.log(`📝 Cleaned handles:`, cleanHandles);
 

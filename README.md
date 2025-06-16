@@ -1,76 +1,55 @@
-# LAYAI - AI-Powered Influencer Marketing Platform
+# LAYAI - AI-Powered Influencer Campaign Management
 
-LAYAI is a comprehensive influencer marketing platform that leverages AI to discover, analyze, and generate professional proposals for influencer collaborations. Built with Next.js, TypeScript, and modern web technologies.
+An intelligent platform for discovering, analyzing, and managing influencer marketing campaigns with real-time data integration and personalized analysis.
 
-## 🚀 Features
+## 🚀 Key Features
 
-### Core Functionality
-- **AI-Powered Search**: Intelligent influencer discovery using natural language queries
-- **Multi-Platform Support**: Instagram, TikTok, YouTube, and Twitter integration
-- **Real Instagram Data**: Authentic profile data via Apify Instagram Profile Scraper
-- **Manual Upload**: Add specific influencers by handle with automatic data enrichment
-- **Professional Proposals**: Generate detailed collaboration proposals in Spanish
-- **Export Capabilities**: CSV and Excel export matching industry templates
-- **Colorful Landing Page**: Interactive particle animation with mouse responsiveness
+- **Smart Influencer Discovery**: AI-powered matching with personalized analysis for major celebrities
+- **Real-time Profile Scraping**: Live Instagram data via Apify integration
+- **Enhanced Web Research**: Intelligent brand and influencer research with fallback systems
+- **Personalized Campaign Proposals**: Unique, data-driven proposals for each influencer
+- **Celebrity Recognition**: Specialized analysis for major influencers (Cristiano Ronaldo, Taylor Swift, etc.)
+- **Professional CSV Export**: IKEA-format export for client presentations
+- **Multi-language Support**: Spanish and English interface
+- **Beautiful UI**: Modern design with WebGL fluid simulation
 
-### Advanced Features
-- **Brand Intelligence**: Automated brand research and industry-specific matching
-- **SocialBlade Integration**: Enhanced analytics with verified statistics and rankings
-- **Personalized Content**: Unique Spanish biographies and brand-specific match reasons
-- **Multi-Step Enhancement**: 5-step process from brand research to personalized proposals
-- **Graceful Fallbacks**: System continues working even when APIs are unavailable
-- **Real-Time Validation**: Profile verification and data quality assurance
+## 🛠 Tech Stack
 
-## 🛠️ Technology Stack
-
-- **Frontend**: Next.js 15, React, TypeScript
-- **Styling**: Tailwind CSS, Shadcn/ui components
-- **Backend**: Next.js API routes, Node.js
-- **Data Sources**: Apify, Serply API, Web scraping
-- **Export**: CSV/Excel generation with Spanish localization
-- **AI**: OpenAI integration for content generation
+- **Frontend**: Next.js 15, React, TypeScript, TailwindCSS
+- **Backend**: Next.js API Routes, Node.js
+- **Data Sources**: Apify (Instagram scraping), Serply (web search)
+- **Styling**: TailwindCSS, Shadcn/ui components
+- **Animation**: WebGL fluid simulation with mouse interaction
 
 ## 📋 Prerequisites
 
-- Node.js 18+ 
-- npm or yarn
-- API Keys:
-  - `APIFY_API_TOKEN` - For Instagram profile scraping (Required)
-  - `SERPLY_API_KEY` - For brand research (Required)
-  - `FIRECRAWL_API_KEY` - For web scraping (Required)
-  - `SOCIALBLADE_CLIENT_ID` & `SOCIALBLADE_TOKEN` - For enhanced analytics (Optional)
-  - Firebase configuration variables (Required)
+- Node.js 18+ and npm
+- Apify account and API token
+- Serply API key for enhanced web search
 
-## ⚠️ Current Status & Known Issues
+## 🔧 Environment Setup
 
-### Working Features ✅
-- **Landing Page Animation**: Beautiful interactive particle system
-- **Real Instagram Data**: Apify integration providing authentic profiles
-- **Brand Research**: Automated brand intelligence and analysis
-- **Personalized Proposals**: Brand-specific match reasons and biographies
-- **Professional Export**: CSV/Excel with Spanish localization
+Create a `.env.local` file in the root directory:
 
-### Known Issues 🔧
-- **SocialBlade API**: Currently returning 402 errors (payment/quota exceeded)
-  - System gracefully falls back to Apify data
-  - All functionality remains operational
-- **Web Search API**: Serply occasionally returns 405 errors
-  - Brand research may fail intermittently
-  - System uses fallback brand analysis
+```env
+# Required - Apify Integration
+APIFY_API_TOKEN=your_apify_token_here
 
-### Impact
-The system is fully functional even with these API issues. You'll still get:
-- Real Instagram profile data via Apify
-- Personalized brand-specific analysis
-- Professional Spanish proposals
-- Complete export functionality
+# Required - Web Search Integration
+SERPLY_API_KEY=your_serply_key_here
+```
 
-## 🚀 Quick Start
+### Getting API Keys
+
+1. **Apify**: Sign up at [apify.com](https://apify.com) and get your API token from the console
+2. **Serply**: Get your API key from [serply.io](https://serply.io) for web search functionality
+
+## 🚀 Installation & Setup
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/layai.git
-   cd layai
+   git clone https://github.com/yourusername/LAYAI.git
+   cd LAYAI
    ```
 
 2. **Install dependencies**
@@ -81,13 +60,7 @@ The system is fully functional even with these API issues. You'll still get:
 3. **Set up environment variables**
    ```bash
    cp .env.example .env.local
-   ```
-   
-   Add your API keys to `.env.local`:
-   ```
-   APIFY_API_TOKEN=your_apify_token
-   SERPLY_API_KEY=your_serply_key
-   OPENAI_API_KEY=your_openai_key
+   # Edit .env.local with your API keys
    ```
 
 4. **Run the development server**
@@ -96,136 +69,104 @@ The system is fully functional even with these API issues. You'll still get:
    ```
 
 5. **Open your browser**
-   Navigate to `http://localhost:3000`
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-## 📖 Usage Guide
+## 📖 How It Works
 
-### Basic Search
-1. Enter a natural language query like "Find female fitness influencers from Spain with 10K-100K followers"
-2. The AI will parse your requirements and perform targeted searches
-3. Review discovered influencers with real-time data
-4. Select influencers for your campaign
+### Enhanced Data Processing Pipeline
 
-### Manual Upload
-1. Click "Add Manual Influencers" 
-2. Enter Instagram/TikTok handles (one per line):
-   ```
-   @username
-   https://instagram.com/username
-   https://tiktok.com/@username
-   username
-   ```
-3. The system will automatically search for real profile data
-4. Fallback profiles are created if search fails
+#### Step 1: Brand Research
+- Automated web search via Serply API to understand brand values and target audience
+- Intelligent fallback system when API is unavailable
+- Contextual analysis for better influencer matching
 
-### Proposal Generation
-1. Select influencers from search results or manual uploads
-2. Customize biographies and collaboration reasons (editable fields)
-3. Click "Generate Proposal"
-4. Export as CSV or Excel in professional Spanish format
+#### Step 2: Instagram Profile Scraping
+- Real-time data extraction via Apify's Instagram scraper
+- Comprehensive profile data including followers, engagement, bio, and verification status
+- Enhanced error handling and data validation
 
-## 🔧 Configuration
+#### Step 3: Personalized Analysis
+- **Celebrity Recognition**: Specialized analysis for major influencers
+- **Custom Biographies**: Unique descriptions based on real career achievements
+- **Brand-Specific Matching**: Tailored reasons why each influencer fits the brand
+- **Professional Metrics**: Accurate engagement rates and performance indicators
 
-### Search Parameters
-- **Platforms**: Instagram, TikTok, YouTube, Twitter
-- **Follower Range**: 1K - 10M+ followers
-- **Gender**: Male, Female, Non-Binary, Other
-- **Location**: Country/region targeting
-- **Niches**: 20+ categories including Fashion, Fitness, Tech, etc.
+### Celebrity Recognition System
 
-### Export Formats
-- **Hibiki Style**: Single-platform CSV format
-- **Orange Style**: Multi-platform CSV with detailed metrics
-- **Excel**: XLSX format with Spanish localization
+The platform provides specialized analysis for major influencers:
 
-## 🏗️ Architecture
+- **Cristiano Ronaldo**: Football legend analysis with philanthropic focus
+- **Taylor Swift**: Music industry icon with cross-generational appeal
+- **Jaime Lorente**: Spanish entertainment star (Money Heist, Elite)
+- **Fabrizio Romano**: Football journalism authority
+- **Kylie Jenner**: Beauty mogul and trendsetter
+- **Lionel Messi**: Football excellence and family values
+- **Selena Gomez**: Multi-platform entertainer and mental health advocate
 
-### Frontend Components
-- `src/app/page.tsx` - Main application interface
-- `src/components/ProposalGenerator.tsx` - Core proposal functionality
-- `src/components/DiscoveryGrid.tsx` - Search results display
-- `src/components/ui/` - Reusable UI components
+## 🎯 Usage
 
-### Backend Services
-- `src/lib/apifyService.ts` - Web scraping and data collection
-- `src/lib/exportUtils.ts` - CSV/Excel generation
-- `src/lib/brandIntelligence.ts` - AI brand analysis
-- `src/app/api/search-apify/route.ts` - Search API endpoint
+1. **Start a Campaign**: Click "Get Started" on the landing page
+2. **Enter Campaign Details**: Fill in brand name, budget, and requirements
+3. **Add Influencers**: Paste Instagram handles (one per line)
+4. **Review Enhanced Profiles**: See personalized analysis with real data
+5. **Generate Proposal**: Create professional campaign proposals
+6. **Export to CSV**: Download IKEA-format spreadsheet for client presentations
 
-### Data Flow
-1. User query → AI parsing → Search parameters
-2. Web search → Profile discovery → Data enrichment
-3. Manual uploads → Real-time verification → Profile creation
-4. Selection → Proposal generation → Export
+## 🔍 Example Output
 
-## 🔍 Search Quality Features
+### Cristiano Ronaldo Analysis
+```
+Biography: "Cristiano Ronaldo is a Portuguese professional footballer and global sports icon with 658M followers. Five-time Ballon d'Or winner known for his athletic excellence, philanthropic efforts, and massive business ventures."
 
-### Profile Validation
-- Filters out video IDs, domain names, corporate accounts
-- Blocks long numeric IDs and invalid formats
-- Converts TikTok video URLs to profile URLs
-- Comprehensive logging for transparency
-
-### Gender Detection
-- Spanish name database with 1000+ entries
-- Username pattern analysis
-- Fallback handling for unknown genders
-- 60% allowance for uncertain profiles
-
-### Data Personalization
-- Unique Spanish biographies per influencer
-- IKEA-specific collaboration reasons
-- Varied metrics based on niche and platform
-- Realistic past collaboration history
-
-## 📊 Export Templates
-
-### Hibiki Style (Single Platform)
-```csv
-Influencer,Followers,Engagement Rate,Cost,Platform,Bio,Reason
-@username,50000,3.2%,€1000,Instagram,Bio personalizada,Razón específica
+Why This Match:
+- "Global football icon with unmatched influence - perfect ambassador for Coca-Cola's worldwide reach"
+- "Philanthropic efforts and business ventures align with Coca-Cola's values of making a positive impact"
+- "Massive social media presence extends far beyond football, ideal for Coca-Cola's diverse audience"
 ```
 
-### Orange Style (Multi Platform)
-```csv
-Influencer,Instagram,TikTok,Total Followers,Spain IP %,Engagement,Cost
-@username,50000,25000,75000,85%,3.2%,€1500
+### Taylor Swift Analysis
 ```
+Biography: "Taylor Swift is a Grammy-winning singer-songwriter and global music icon with 281M followers. Known for record-breaking album releases, storytelling mastery, and unprecedented fan loyalty."
+
+Why This Match:
+- "Global music icon with record-breaking album releases - perfect for Coca-Cola's worldwide brand recognition"
+- "Swiftie fanbase loyalty and cultural influence create unmatched brand advocacy for Coca-Cola"
+- "Cross-generational appeal and storytelling mastery align with Coca-Cola's timeless brand values"
+```
+
+## 🛡️ Error Handling & Reliability
+
+- **API Timeout Protection**: 30-second timeouts prevent hanging requests
+- **Intelligent Fallbacks**: Curated data when external APIs fail
+- **Enhanced Logging**: Comprehensive error tracking and debugging
+- **Graceful Degradation**: System continues working even with partial API failures
 
 ## 🧪 Testing
 
+Run the test suite:
 ```bash
-# Run tests
 npm test
-
-# Run linting
-npm run lint
-
-# Type checking
-npm run type-check
 ```
 
-## 🚀 Deployment
-
-### Vercel (Recommended)
-1. Connect your GitHub repository to Vercel
-2. Add environment variables in Vercel dashboard
-3. Deploy automatically on push to main branch
-
-### Manual Deployment
+Run E2E tests:
 ```bash
-npm run build
-npm start
+npm run test:e2e
 ```
 
-## 🔐 Environment Variables
+## 🚨 Security Notes
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `APIFY_API_TOKEN` | Apify web scraping service | Yes |
-| `SERPLY_API_KEY` | Search API for profile discovery | Yes |
-| `OPENAI_API_KEY` | AI content generation | Optional |
-| `NODE_ENV` | Environment (development/production) | Auto |
+- **Never commit API keys** to version control
+- Use environment variables for all sensitive data
+- Regularly rotate API tokens
+- Monitor API usage and costs
+- GitGuardian integration for secret detection
+
+## 📊 Export Features
+
+- **Professional CSV Export**: IKEA-format with 35+ columns
+- **Campaign Metrics**: Detailed performance indicators
+- **Client-Ready Format**: Professional presentation structure
+- **Comprehensive Data**: All influencer and campaign information
 
 ## 🤝 Contributing
 
@@ -235,32 +176,14 @@ npm start
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/layai/issues)
-- **Documentation**: This README and inline code comments
-- **Email**: support@layai.com
-
-## 🎯 Roadmap
-
-- [ ] Multi-language support (English, French, German)
-- [ ] Advanced analytics dashboard
-- [ ] Campaign performance tracking
-- [ ] Automated outreach templates
-- [ ] Integration with major social media APIs
-- [ ] Machine learning recommendation engine
-
-## 📈 Performance
-
-- **Search Speed**: ~30-60 seconds for comprehensive results
-- **Data Accuracy**: Real-time web scraping with fallback handling
-- **Export Speed**: Instant CSV/Excel generation
-- **Scalability**: Handles 100+ influencers per search
+For support, email support@layai.com or create an issue in this repository.
 
 ---
 
-Built with ❤️ by the LAYAI team. Empowering brands to find their perfect influencer matches through AI-powered discovery and analysis. 
+**Built with ❤️ for the influencer marketing community** 
