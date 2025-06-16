@@ -16,7 +16,7 @@ import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
 import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/newExportUtils';
 import { generateSessionId } from '@/lib/database';
 
-type PageView = 'landing' | 'chat' | 'generate' | 'campaigns' | 'notes';
+type PageView = 'landing' | 'chat' | 'generate' | 'proposal' | 'campaigns' | 'notes';
 
 interface SearchResults {
   premiumResults: MatchResult[];
@@ -261,7 +261,7 @@ export default function Home() {
 
   const handleProposalGenerated = (proposal: CampaignProposal) => {
     setCurrentProposal(proposal);
-    setCurrentView('generate');
+    setCurrentView('proposal');
   };
 
   const handleEditProposal = () => {
@@ -341,7 +341,28 @@ export default function Home() {
           ...convertDiscoveryToMatchResults(searchResults?.discoveryResults || [])
         ];
         return <ProposalGenerator matchResults={allResults} onProposalGenerated={handleProposalGenerated} />;
-
+      case 'proposal':
+        return currentProposal ? (
+          <div className="min-h-screen p-6">
+            <div className="mb-6">
+              <button
+                onClick={() => setCurrentView('generate')}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+              >
+                ← Back to Generator
+              </button>
+            </div>
+            <ProposalViewer 
+              proposal={currentProposal} 
+              onExport={handleExport}
+              onEdit={handleEditProposal}
+            />
+          </div>
+        ) : (
+          <div className="min-h-screen flex items-center justify-center">
+            <p className="text-gray-500">No proposal to display</p>
+          </div>
+        );
       case 'campaigns':
         return <CampaignManager />;
       case 'notes':
@@ -387,7 +408,7 @@ export default function Home() {
                 <button
                   onClick={() => setCurrentView('generate')}
                   className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
-                    currentView === 'generate' 
+                    currentView === 'generate' || currentView === 'proposal'
                       ? 'bg-blue-50 text-blue-700 border border-blue-200' 
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}

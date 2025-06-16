@@ -144,8 +144,30 @@ const NotesManager: React.FC = () => {
 
   const handleContentChange = () => {
     if (contentRef.current && selectedNote) {
-      updateSelectedNote('content', contentRef.current.innerHTML);
+      // Force text direction and prevent any reversal
+      const element = contentRef.current;
+      element.style.direction = 'ltr';
+      element.style.textAlign = 'left';
+      element.style.unicodeBidi = 'normal';
+      element.style.writingMode = 'horizontal-tb';
+      
+      updateSelectedNote('content', element.innerHTML);
     }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Prevent any keyboard shortcuts that might affect text direction
+    if (e.ctrlKey || e.metaKey) {
+      if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+      }
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const text = e.clipboardData.getData('text/plain');
+    document.execCommand('insertText', false, text);
   };
 
   const filteredNotes = notes.filter(note =>
@@ -290,24 +312,33 @@ const NotesManager: React.FC = () => {
                 ref={contentRef}
                 contentEditable
                 onInput={handleContentChange}
+                onKeyDown={handleKeyDown}
+                onPaste={handlePaste}
                 dangerouslySetInnerHTML={{ __html: selectedNote.content || '' }}
-                className="min-h-full outline-none text-gray-900 leading-relaxed"
+                className="min-h-full outline-none text-gray-900 leading-relaxed force-ltr-text"
                 style={{
                   fontSize: '16px',
                   lineHeight: '1.6',
                   fontFamily: 'system-ui, -apple-system, sans-serif',
                   direction: 'ltr',
                   textAlign: 'left',
-                  unicodeBidi: 'normal'
+                  unicodeBidi: 'normal',
+                  writingMode: 'horizontal-tb',
+                  transform: 'none',
+                  color: '#111827',
+                  backgroundColor: '#ffffff'
                 }}
+                dir="ltr"
               />
               {(!selectedNote.content || selectedNote.content.trim() === '') && (
                 <div 
-                  className="absolute top-6 left-6 text-gray-400 pointer-events-none"
+                  className="absolute top-6 left-6 text-gray-400 pointer-events-none force-ltr-text"
                   style={{
                     fontSize: '16px',
                     lineHeight: '1.6',
-                    fontFamily: 'system-ui, -apple-system, sans-serif'
+                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                    direction: 'ltr',
+                    textAlign: 'left'
                   }}
                 >
                   Start writing...

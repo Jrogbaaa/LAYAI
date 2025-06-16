@@ -250,4 +250,52 @@ input::placeholder, textarea::placeholder {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Force left-to-right text direction with maximum specificity */
+.force-ltr-text,
+.force-ltr-text *,
+[contenteditable].force-ltr-text,
+[contenteditable].force-ltr-text * {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: normal !important;
+  writing-mode: horizontal-tb !important;
+  transform: none !important;
+  color: #111827 !important;
+  background-color: transparent !important;
+}
+
+/* Ensure input fields have proper text direction and color */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
+[contenteditable] {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: normal !important;
+  writing-mode: horizontal-tb !important;
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+}
+
+/* Placeholder text styling */
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important;
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* Additional safety for all text elements */
+* {
+  direction: ltr !important;
+  unicode-bidi: normal !important;
+}
+
+/* Prevent any transforms that could flip text */
+*:not(.allow-transform) {
+  transform: none !important;
 } 
