@@ -314,11 +314,11 @@ export default function Home() {
         return (
           <div className="min-h-screen space-y-6 p-6">
             <Chatbot onSendMessage={handleSendMessage} />
-            {searchResults && searchResults.premiumResults.length > 0 && (
+            {searchResults && (searchResults.premiumResults.length > 0 || searchResults.discoveryResults.length > 0) && (
               <>
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-semibold text-gray-800">
-                    Search Results ({searchResults.premiumResults.length} total)
+                    Search Results ({(searchResults.premiumResults.length + searchResults.discoveryResults.length)} total)
                   </h2>
                   <button
                     onClick={handleClearResults}
@@ -327,12 +327,16 @@ export default function Home() {
                     🗑️ Clear Results
                   </button>
                 </div>
-                <InfluencerResults 
-                  results={searchResults.premiumResults}
-                />
-                <DiscoveryGrid 
-                  discoveryInfluencers={searchResults.discoveryResults}
-                />
+                {searchResults.premiumResults.length > 0 && (
+                  <InfluencerResults 
+                    results={searchResults.premiumResults}
+                  />
+                )}
+                {searchResults.discoveryResults.length > 0 && (
+                  <DiscoveryGrid 
+                    discoveryInfluencers={searchResults.discoveryResults}
+                  />
+                )}
                 {currentSearchId && (
                   <FeedbackPanel 
                     searchId={currentSearchId}
