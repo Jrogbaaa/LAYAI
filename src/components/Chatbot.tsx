@@ -17,12 +17,12 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
     {
       text: "Hi! I'm your AI assistant for finding influencers. Ask me to find creators based on criteria like:\n\n🔍 'Find fashion influencers on Instagram with 10k-100k followers'\n🎯 'Show me tech YouTubers in California'\n💄 'Find beauty influencers with high engagement rates'\n\n💡 After I show results, you can ask follow-up questions to add more results!",
       sender: 'bot',
-      type: 'chat'
-    }
+      type: 'chat',
+    },
   ]);
-  const [input, setInput] = useState('');
+  const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<null | HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -33,108 +33,129 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
   }, [messages]);
 
   const handleSendMessage = async () => {
-    if (input.trim() === '' || isLoading) return;
+    if (!inputMessage.trim() || isLoading) return;
 
-    const userMessage: Message = { text: input, sender: 'user', type: 'chat' };
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
-    
-    const currentInput = input;
-    setInput('');
+    const userMessage: Message = {
+      text: inputMessage,
+      sender: 'user',
+      type: 'chat',
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputMessage('');
     setIsLoading(true);
 
     try {
-      console.log('🤖 Chatbot sending message:', currentInput);
-      const response = await onSendMessage(currentInput, messages);
-      console.log('🤖 Chatbot received response:', response);
-
-      if (response.type === 'chat') {
-        const botMessage: Message = { text: response.data, sender: 'bot', type: 'chat' };
-        setMessages((prevMessages) => [...prevMessages, botMessage]);
-        console.log('💬 Added chat message to UI:', response.data);
-      } else if (response.type === 'search') {
-        const botMessage: Message = { 
-          text: "🔍 Searching for influencers based on your criteria...", 
-          sender: 'bot', 
-          type: 'chat' 
+      const response = await onSendMessage(inputMessage, messages);
+      
+      let botResponse: Message;
+      if (response.type === 'search') {
+        botResponse = {
+          text: `🔍 I found ${response.data.totalFound || 0} influencers matching your criteria! Check the results below.`,
+          sender: 'bot',
+          type: 'search',
         };
-        setMessages((prevMessages) => [...prevMessages, botMessage]);
-        console.log('🔍 Added search message to UI');
+      } else {
+        botResponse = {
+          text: response.data || 'I received your message. How can I help you find influencers?',
+          sender: 'bot',
+          type: 'chat',
+        };
       }
+
+      setMessages(prev => [...prev, botResponse]);
     } catch (error) {
-      console.error('🤖 Chatbot error:', error);
-      const errorMessage: Message = { 
-        text: 'Sorry, something went wrong. Please try again.', 
-        sender: 'bot', 
-        type: 'chat' 
+      const errorMessage: Message = {
+        text: 'Sorry, I encountered an error. Please try again.',
+        sender: 'bot',
+        type: 'chat',
       };
-      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
-    <div className="flex flex-col h-[700px] w-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl mb-8">
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-t-lg">
-        <h3 className="text-lg font-semibold">AI Influencer Search Assistant</h3>
-        <p className="text-sm opacity-90">Powered by OpenAI GPT-3.5 🤖</p>
+    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <span className="text-white text-lg">🤖</span>
+          </div>
+          <div>
+            <h2 className="text-white font-semibold text-lg">AI Influencer Assistant</h2>
+            <p className="text-blue-100 text-sm">Find the perfect creators for your campaigns</p>
+          </div>
+        </div>
       </div>
-      
-      <div className="flex-1 p-4 overflow-y-auto">
-        {messages.map((msg, index) => (
+
+      {/* Messages */}
+      <div className="h-96 overflow-y-auto p-6 space-y-4 bg-gray-50/50">
+        {messages.map((message, index) => (
           <div
             key={index}
-            className={`flex mb-4 ${
-              msg.sender === 'user' ? 'justify-end' : 'justify-start'
-            }`}
+            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`rounded-lg px-4 py-2 max-w-[80%] ${
-                msg.sender === 'user'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-800 border'
+              className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
+                message.sender === 'user'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
+                  : 'bg-white text-gray-800 border border-gray-200'
               }`}
             >
-              {msg.text}
+              <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
             </div>
           </div>
         ))}
         
         {isLoading && (
-          <div className="flex justify-start mb-4">
-            <div className="bg-gray-100 text-gray-800 border rounded-lg px-4 py-2">
+          <div className="flex justify-start">
+            <div className="bg-white text-gray-800 border border-gray-200 px-4 py-3 rounded-2xl shadow-sm">
               <div className="flex items-center space-x-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
-                <span>Thinking...</span>
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
+                <span className="text-sm text-gray-600">Thinking...</span>
               </div>
             </div>
           </div>
         )}
-        
         <div ref={messagesEndRef} />
       </div>
-      
-      {/* Chat Input */}
-      <div className="border-t bg-gray-50 rounded-b-lg p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs text-gray-500">💬 Ask AI to find influencers for you:</span>
-        </div>
-        <div className="flex space-x-2">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-            className="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
-            placeholder="Ask me to find influencers... (e.g., 'Find fitness influencers with 50k+ followers')"
-            disabled={isLoading}
-          />
+
+      {/* Input */}
+      <div className="p-6 bg-white border-t border-gray-100">
+        <div className="flex space-x-3">
+          <div className="flex-1 relative">
+            <textarea
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask me to find influencers..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm bg-gray-50 focus:bg-white transition-colors"
+              rows={2}
+              disabled={isLoading}
+            />
+          </div>
           <button
             onClick={handleSendMessage}
-            disabled={isLoading || input.trim() === ''}
-            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            disabled={!inputMessage.trim() || isLoading}
+            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            Send
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
           </button>
         </div>
       </div>

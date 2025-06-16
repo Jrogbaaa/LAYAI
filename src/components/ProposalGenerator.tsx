@@ -819,68 +819,76 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Generate Campaign Proposal</h2>
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+        <div className="flex items-center space-x-4 mb-8">
+          <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
+            <span className="text-white text-xl">📄</span>
+          </div>
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900">Generate Campaign Proposal</h2>
+            <p className="text-gray-600 mt-1">Create professional influencer campaign proposals with AI-powered insights</p>
+          </div>
+        </div>
         
         {/* Campaign Information */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700">
               Brand Name *
             </label>
             <input
               type="text"
               value={campaignData.brandName}
               onChange={(e) => setCampaignData(prev => ({ ...prev, brandName: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
               placeholder="e.g., Nike, IKEA, Coca-Cola"
               required
             />
           </div>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700">
               Campaign Name *
             </label>
             <input
               type="text"
               value={campaignData.campaignName}
               onChange={(e) => setCampaignData(prev => ({ ...prev, campaignName: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
               placeholder="e.g., Summer Collection 2024"
               required
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700">
               Client
             </label>
             <input
               type="text"
               value={campaignData.client}
               onChange={(e) => setCampaignData(prev => ({ ...prev, client: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
               placeholder="Client name"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700">
               Budget
             </label>
-            <div className="flex">
+            <div className="flex rounded-xl overflow-hidden border border-gray-300 focus-within:ring-2 focus-within:ring-blue-500">
               <input
                 type="text"
                 value={campaignData.budget}
                 onChange={(e) => setCampaignData(prev => ({ ...prev, budget: e.target.value }))}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-4 py-3 focus:outline-none bg-gray-50 focus:bg-white transition-colors"
                 placeholder="50000"
               />
               <select
                 value={campaignData.currency}
                 onChange={(e) => setCampaignData(prev => ({ ...prev, currency: e.target.value }))}
-                className="px-3 py-2 border border-gray-300 border-l-0 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-3 bg-gray-100 border-l border-gray-300 focus:outline-none focus:bg-white transition-colors"
               >
                 <option value="EUR">EUR</option>
                 <option value="USD">USD</option>
@@ -891,109 +899,135 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
 
         {/* Brand Research Status */}
         {brandResearchData && (
-          <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
-            <h3 className="font-semibold text-green-800 mb-2">✅ Brand Research Completed</h3>
-            <p className="text-green-700 text-sm">
-              Industry: {brandResearchData.industry} | Values: {brandResearchData.values.join(', ')} | 
-              Target: {brandResearchData.targetAudience}
-            </p>
+          <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-green-800">Brand Research Complete</h3>
+            </div>
+            <div className="text-green-700 text-sm">
+              <p><strong>Industry:</strong> {brandResearchData.industry}</p>
+              <p><strong>Values:</strong> {brandResearchData.values?.join(', ')}</p>
+              <p><strong>Target Audience:</strong> {brandResearchData.targetAudience}</p>
+            </div>
           </div>
         )}
 
-        {/* Manual Influencer Upload */}
-        <div className="mb-8 p-6 bg-gray-50 rounded-lg border">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Add Instagram Influencers
-          </h3>
-          <p className="text-sm text-gray-600 mb-4">
-            Enter Instagram handles to get real profile data via Apify scraping. 
-            The system will research your brand and create personalized match reasons.
+        {/* Manual Upload Section */}
+        <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm">📱</span>
+            </div>
+            <h3 className="text-lg font-semibold text-blue-900">Add Instagram Influencers</h3>
+          </div>
+          <p className="text-blue-700 text-sm mb-4">
+            Enter Instagram handles (without @) separated by commas. We'll fetch real-time data and generate personalized analysis.
           </p>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Instagram Handles
-              </label>
-              <textarea
-                value={manualHandles}
-                onChange={(e) => setManualHandles(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                rows={4}
-                placeholder={`@cristiano\n@therock\n@taylorswift\nhttps://instagram.com/username`}
-              />
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={handleManualUpload}
-                disabled={!manualHandles.trim() || !campaignData.brandName.trim() || isProcessingManual}
-                className="bg-green-600 text-white px-4 py-2 rounded-md font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {isProcessingManual ? 'Processing...' : 'Scrape & Analyze'}
-              </button>
-              
-              {manualInfluencers.length > 0 && (
-                <span className="text-sm text-green-600">
-                  ✅ {manualInfluencers.length} influencer{manualInfluencers.length !== 1 ? 's' : ''} analyzed
-                </span>
+          <div className="flex space-x-3">
+            <textarea
+              value={manualHandles}
+              onChange={(e) => setManualHandles(e.target.value)}
+              placeholder="cristiano, therock, kyliejenner, selenagomez"
+              className="flex-1 px-4 py-3 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white resize-none"
+              rows={3}
+            />
+            <button
+              onClick={handleManualUpload}
+              disabled={isProcessingManual || !manualHandles.trim()}
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
+            >
+              {isProcessingManual ? (
+                <div className="flex items-center space-x-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>Processing...</span>
+                </div>
+              ) : (
+                'Add Influencers'
               )}
-            </div>
+            </button>
           </div>
         </div>
 
-        {/* Talent Selection */}
         <div className="mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Select Talents for Proposal ({selectedTalents.size} selected)
-          </h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold text-gray-900">
+              Select Talents for Proposal ({selectedTalents.size} selected)
+            </h3>
+            {selectedTalents.size > 0 && (
+              <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+                {selectedTalents.size} talent{selectedTalents.size !== 1 ? 's' : ''} selected
+              </div>
+            )}
+          </div>
           
           {allInfluencers.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">
-              Add Instagram handles above to see influencer profiles here.
-            </p>
+            <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
+              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">👥</span>
+              </div>
+              <h4 className="text-lg font-medium text-gray-900 mb-2">No influencers added yet</h4>
+              <p className="text-gray-600 mb-4">Add Instagram handles above to see influencer profiles here.</p>
+            </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {allInfluencers.map((result, index) => (
-                <div key={`${result.influencer.handle}-${index}`} className="border border-gray-200 rounded-lg p-4">
+                <div key={`${result.influencer.handle}-${index}`} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
                   <div className="flex items-start space-x-4">
-                    <input
-                      type="checkbox"
-                      checked={selectedTalents.has(result.influencer.id)}
-                      onChange={() => handleTalentSelection(result.influencer.id)}
-                      className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
+                    <div className="flex-shrink-0 pt-1">
+                      <input
+                        type="checkbox"
+                        checked={selectedTalents.has(result.influencer.id)}
+                        onChange={() => handleTalentSelection(result.influencer.id)}
+                        className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                    </div>
                     
                     <div className="flex-grow">
-                      <div className="flex justify-between items-start">
+                      <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h4 className="font-bold text-gray-900">
+                          <h4 className="text-xl font-bold text-gray-900">
                             {result.influencer.name}
                           </h4>
-                          <p className="text-gray-600">@{result.influencer.handle}</p>
-                          <p className="text-sm text-gray-500">
-                            {result.influencer.followerCount.toLocaleString()} followers • 
-                            {(result.influencer.engagementRate * 100).toFixed(1)}% ER • 
-                            {result.influencer.platform}
-                          </p>
+                          <p className="text-gray-600 font-medium">@{result.influencer.handle}</p>
+                          <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                            <span className="bg-gray-100 px-3 py-1 rounded-full">
+                              {result.influencer.followerCount.toLocaleString()} followers
+                            </span>
+                            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                              {(result.influencer.engagementRate * 100).toFixed(1)}% ER
+                            </span>
+                            <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
+                              {result.influencer.platform}
+                            </span>
+                          </div>
                         </div>
                         <div className="text-right">
-                          <span className="text-lg font-bold text-green-600">
+                          <div className="text-2xl font-bold text-green-600">
                             €{result.influencer.averageRate.toLocaleString()}
-                          </span>
+                          </div>
+                          <div className="text-sm text-gray-500">Estimated fee</div>
                         </div>
                       </div>
                       
                       {/* Match Reasons */}
-                      <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-                        <h5 className="font-semibold text-blue-900 mb-2">
+                      <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                        <h5 className="font-semibold text-blue-900 mb-3 flex items-center">
+                          <span className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mr-2">
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </span>
                           Why Perfect for {campaignData.brandName || 'This Brand'}
                         </h5>
-                        <ul className="space-y-1">
+                        <ul className="space-y-2">
                           {result.matchReasons.map((reason, reasonIndex) => (
                             <li key={reasonIndex} className="text-blue-800 text-sm flex items-start">
-                              <span className="text-blue-500 mr-2">•</span>
-                              {reason}
+                              <span className="text-blue-500 mr-2 mt-1">•</span>
+                              <span className="leading-relaxed">{reason}</span>
                             </li>
                           ))}
                         </ul>
@@ -1007,21 +1041,31 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
         </div>
 
         {/* Generate Proposal & Export Buttons */}
-        <div className="flex justify-center space-x-4">
+        <div className="flex justify-center space-x-4 pt-6 border-t border-gray-200">
           <button
             onClick={generateProposal}
             disabled={selectedTalents.size === 0}
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            Generate Proposal ({selectedTalents.size} talents)
+            <div className="flex items-center space-x-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span>Generate Proposal ({selectedTalents.size} talents)</span>
+            </div>
           </button>
           
           <button
             onClick={exportToCSV}
             disabled={selectedTalents.size === 0}
-            className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            Export CSV ({selectedTalents.size} talents)
+            <div className="flex items-center space-x-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span>Export CSV ({selectedTalents.size} talents)</span>
+            </div>
           </button>
         </div>
       </div>

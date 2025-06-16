@@ -15,8 +15,9 @@ import { CampaignProposal } from '@/types/campaign';
 import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
 import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/newExportUtils';
 import { generateSessionId } from '@/lib/database';
+import Sidebar, { PageView } from '@/components/Sidebar';
 
-type PageView = 'landing' | 'chat' | 'generate' | 'proposal' | 'campaigns' | 'notes';
+type ExtendedPageView = PageView | 'landing' | 'chat' | 'campaigns';
 
 interface SearchResults {
   premiumResults: MatchResult[];
@@ -25,7 +26,7 @@ interface SearchResults {
 }
 
 export default function Home() {
-  const [currentView, setCurrentView] = useState<PageView>('landing');
+  const [currentView, setCurrentView] = useState<ExtendedPageView>('landing');
   const [searchResults, setSearchResults] = useState<SearchResults | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentProposal, setCurrentProposal] = useState<CampaignProposal | null>(null);
@@ -84,24 +85,24 @@ export default function Home() {
           });
           
           // Check if this is a follow-up search (if we already have results)
-          if (searchResults && searchResults.discoveryResults.length > 0) {
+          if (searchResults && searchResults.premiumResults.length > 0) {
             // Accumulate results - combine with existing results
-            const existingDiscoveryUrls = new Set(searchResults.discoveryResults.map(r => r.profileUrl));
+            const existingDiscoveryUrls = new Set(searchResults.premiumResults.map(r => r.influencer.handle));
             const newDiscoveryResults = (searchData.discoveryResults || []).filter(
-              (result: any) => !existingDiscoveryUrls.has(result.profileUrl)
+              (result: any) => !existingDiscoveryUrls.has(result.handle)
             );
             
             setSearchResults({
-              premiumResults: [...searchResults.premiumResults, ...convertedResults],
-              discoveryResults: [...searchResults.discoveryResults, ...newDiscoveryResults],
-              totalFound: searchResults.totalFound + (searchData.totalFound || 0)
+              premiumResults: [...searchResults.premiumResults, ...convertedResults, ...newDiscoveryResults],
+              discoveryResults: searchData.discoveryResults || [],
+              totalFound: searchData.totalFound || 0
             });
             
             console.log(`🔄 Follow-up search: Added ${newDiscoveryResults.length} new discovery results`);
           } else {
             // First search - set results normally
             setSearchResults({
-              premiumResults: convertedResults,
+              premiumResults: [...convertedResults, ...searchData.premiumResults || []],
               discoveryResults: searchData.discoveryResults || [],
               totalFound: searchData.totalFound || 0
             });
@@ -297,6 +298,14 @@ export default function Home() {
     setCurrentSearchId(null);
   };
 
+  const handleSidebarViewChange = (view: PageView) => {
+    if (view === 'search') {
+      setCurrentView('chat');
+    } else {
+      setCurrentView(view);
+    }
+  };
+
   const renderContent = () => {
     switch (currentView) {
       case 'landing':
@@ -305,11 +314,11 @@ export default function Home() {
         return (
           <div className="min-h-screen space-y-6 p-6">
             <Chatbot onSendMessage={handleSendMessage} />
-            {searchResults && (
+            {searchResults && searchResults.premiumResults.length > 0 && (
               <>
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-semibold text-gray-800">
-                    Search Results ({searchResults.totalFound} total)
+                    Search Results ({searchResults.premiumResults.length} total)
                   </h2>
                   <button
                     onClick={handleClearResults}
@@ -337,7 +346,7 @@ export default function Home() {
       case 'generate':
         // Convert discovery results to MatchResult format and combine with premium results
         const allResults = [
-          ...(searchResults?.premiumResults || []),
+          ...searchResults?.premiumResults || [],
           ...convertDiscoveryToMatchResults(searchResults?.discoveryResults || [])
         ];
         return <ProposalGenerator matchResults={allResults} onProposalGenerated={handleProposalGenerated} />;
@@ -378,86 +387,15 @@ export default function Home() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Left Sidebar - Only show after Get Started */}
-      {showSidebar && (
-        <div className="w-64 bg-white shadow-lg flex flex-col">
-          {/* Logo/Brand Section */}
-          <div className="p-6 border-b border-gray-200">
-            <h1 className="text-xl font-bold text-gray-800">LayAI</h1>
-            <p className="text-sm text-gray-600">Influencer Discovery</p>
-          </div>
-
-          {/* Navigation Menu */}
-          <nav className="flex-1 p-4">
-            <ul className="space-y-2">
-              <li>
-                <button
-                  onClick={() => setCurrentView('chat')}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
-                    currentView === 'chat' 
-                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <span>💬</span>
-                  Chat
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setCurrentView('generate')}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
-                    currentView === 'generate' || currentView === 'proposal'
-                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <span>📄</span>
-                  Generate Proposal
-                </button>
-              </li>
-
-              <li>
-                <button
-                  onClick={() => setCurrentView('campaigns')}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
-                    currentView === 'campaigns' 
-                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <span>📊</span>
-                  Campaigns
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setCurrentView('notes')}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
-                    currentView === 'notes' 
-                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <span>📝</span>
-                  Notes
-                </button>
-              </li>
-            </ul>
-          </nav>
-
-          {/* Footer */}
-          <div className="p-4 border-t border-gray-200">
-            <p className="text-xs text-gray-500">Version 1.0.0</p>
-          </div>
-        </div>
-      )}
-
-      {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <Sidebar 
+        currentView={currentView === 'chat' ? 'search' : currentView as PageView} 
+        onViewChange={handleSidebarViewChange} 
+      />
+      
+      <main className="flex-1 overflow-auto">
         {renderContent()}
-      </div>
+      </main>
     </div>
   );
 } 
