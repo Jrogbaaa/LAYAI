@@ -1,12 +1,24 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ 
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
+
+const spaceGrotesk = Space_Grotesk({ 
+  subsets: ['latin'],
+  variable: '--font-space-grotesk',
+});
 
 export const metadata: Metadata = {
-  title: 'LAYAI - Social Media Talent Matcher',
-  description: 'AI-powered influencer matching platform for brand campaigns',
+  title: 'LAYAI - AI-Powered Influencer Discovery',
+  description: 'Discover, match, and collaborate with the perfect influencers using advanced AI technology. Transform your brand campaigns with data-driven influencer partnerships.',
+  keywords: 'AI influencer marketing, influencer discovery, brand campaigns, social media marketing',
+  authors: [{ name: 'LAYAI Team' }],
+  viewport: 'width=device-width, initial-scale=1',
+  robots: 'index, follow',
 };
 
 export default function RootLayout({
@@ -14,11 +26,24 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const htmlClasses = `${inter.variable} ${spaceGrotesk.variable}`;
+  
   return (
-    <html lang="en">
+    <html lang="en" className={htmlClasses}>
       <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-          {children}
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+          {/* Subtle background pattern */}
+          <div 
+            className="absolute inset-0 opacity-50" 
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239CA3AF' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+            }}
+          ></div>
+          
+          {/* Main content */}
+          <div className="relative z-10">
+            {children}
+          </div>
         </div>
       </body>
     </html>

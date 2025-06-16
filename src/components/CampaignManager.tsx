@@ -140,7 +140,7 @@ const CampaignManager: React.FC = () => {
     if (field === 'status' || field === 'priority') {
       const dropdownId = `${field}-${campaignId}`;
       setOpenDropdown(openDropdown === dropdownId ? null : dropdownId);
-    } else if (['name', 'budget', 'influencerCount'].includes(field)) {
+    } else if (['name', 'budget', 'influencerCount', 'timeline'].includes(field)) {
       setEditingCell({ campaignId, field });
       setTempValue(currentValue.toString());
     } else if (field === 'notes') {
@@ -159,6 +159,13 @@ const CampaignManager: React.FC = () => {
     
     if (field === 'budget' || field === 'influencerCount') {
       value = parseInt(tempValue) || 0;
+    } else if (field === 'timeline') {
+      // For timeline, we just store the text as entered
+      // In a real app, you might want to parse this and update startDate/endDate
+      // For now, we'll just store it as notes or ignore it since it's display-only
+      setEditingCell(null);
+      setTempValue('');
+      return;
     }
     
     updateCampaign(campaignId, field as keyof Campaign, value);
@@ -220,9 +227,9 @@ const CampaignManager: React.FC = () => {
   };
 
   const formatBudget = (budget: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-EU', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'EUR',
       minimumFractionDigits: 0,
     }).format(budget);
   };
@@ -230,9 +237,17 @@ const CampaignManager: React.FC = () => {
   const formatDateRange = (startDate: string, endDate: string) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
-    const startStr = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const endStr = end.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    return `${startStr} - ${endStr}`;
+    const startMonth = start.toLocaleDateString('en-US', { month: 'short' });
+    const endMonth = end.toLocaleDateString('en-US', { month: 'short' });
+    const startDay = start.getDate();
+    const endDay = end.getDate();
+    
+    // If same month, show "Jun 16-30", otherwise "Jun 16 - Jul 30"
+    if (startMonth === endMonth) {
+      return `${startMonth} ${startDay}-${endDay}`;
+    } else {
+      return `${startMonth} ${startDay} - ${endMonth} ${endDay}`;
+    }
   };
 
   const getProgressPercentage = (status: Campaign['status'], startDate: string, endDate: string) => {
@@ -268,7 +283,7 @@ const CampaignManager: React.FC = () => {
         </div>
         
         {isOpen && (
-          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-[100] min-w-[120px]">
+          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-[200] min-w-[120px]">
             {statuses.map((status) => (
               <button
                 key={status}
@@ -306,7 +321,7 @@ const CampaignManager: React.FC = () => {
         </div>
         
         {isOpen && (
-          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-[100] min-w-[120px]">
+          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-[200] min-w-[120px]">
             {priorities.map((priority) => (
               <button
                 key={priority}
@@ -343,7 +358,10 @@ const CampaignManager: React.FC = () => {
               {campaigns.length} campaigns • {campaigns.filter(c => c.status === 'Active').length} active
             </span>
           </div>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+          <button 
+            onClick={createCampaign}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
             + Add Campaign
           </button>
         </div>
@@ -351,9 +369,9 @@ const CampaignManager: React.FC = () => {
 
       {/* Spreadsheet Table */}
       <div className="p-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-visible">
           {/* Table Structure */}
-          <table className="w-full">
+          <table className="w-full" style={{ position: 'relative', zIndex: 1 }}>
             {/* Header Row */}
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
@@ -384,8 +402,12 @@ const CampaignManager: React.FC = () => {
 
             {/* Body Rows */}
             <tbody className="divide-y divide-gray-200">
-              {campaigns.map((campaign) => (
-                <tr key={campaign.id} className="hover:bg-gray-50 transition-colors">
+              {campaigns.map((campaign, index) => (
+                <tr 
+                  key={campaign.id} 
+                  className="hover:bg-gray-50 transition-colors relative"
+                  style={{ zIndex: campaigns.length - index + 10 }}
+                >
                   {/* Checkbox Cell */}
                   <td className="px-4 py-4">
                     <input
@@ -446,52 +468,69 @@ const CampaignManager: React.FC = () => {
                   </td>
 
                   {/* Status Cell */}
-                  <td className="px-4 py-4 h-16">
+                  <td className="px-4 py-4 h-16 relative">
                     <StatusCell campaign={campaign} />
                   </td>
 
                   {/* Priority Cell */}
-                  <td className="px-4 py-4 h-16">
+                  <td className="px-4 py-4 h-16 relative">
                     <PriorityCell campaign={campaign} />
                   </td>
 
                   {/* Timeline Cell */}
                   <td className="px-4 py-4">
-                    <div className="space-y-2">
-                      <div className="flex flex-col space-y-1">
-                        <div className="flex items-center space-x-2 text-xs text-gray-500">
-                          <span>Start:</span>
-                          <input
-                            type="date"
-                            value={campaign.startDate}
-                            onChange={(e) => updateCampaign(campaign.id, 'startDate', e.target.value)}
-                            className="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                          />
-                        </div>
-                        <div className="flex items-center space-x-2 text-xs text-gray-500">
-                          <span>End:</span>
-                          <input
-                            type="date"
-                            value={campaign.endDate}
-                            onChange={(e) => updateCampaign(campaign.id, 'endDate', e.target.value)}
-                            className="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                          />
-                        </div>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full ${
-                            campaign.status === 'Completed' ? 'bg-green-500' :
-                            campaign.status === 'Active' ? 'bg-blue-500' :
-                            campaign.status === 'Planning' ? 'bg-orange-500' :
-                            'bg-gray-400'
-                          }`}
-                          style={{ 
-                            width: `${getProgressPercentage(campaign.status, campaign.startDate, campaign.endDate)}%`
+                    {editingCell?.campaignId === campaign.id && editingCell?.field === 'timeline' ? (
+                      <div className="space-y-2">
+                        <input
+                          type="text"
+                          value={tempValue}
+                          onChange={(e) => setTempValue(e.target.value)}
+                          onBlur={handleSave}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSave();
+                            if (e.key === 'Escape') handleCancel();
                           }}
-                        ></div>
+                          placeholder="Jun 16-30"
+                          className="w-full px-2 py-1 border border-blue-500 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium bg-white text-gray-900"
+                          autoFocus
+                        />
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className={`h-2 rounded-full ${
+                              campaign.status === 'Completed' ? 'bg-green-500' :
+                              campaign.status === 'Active' ? 'bg-blue-500' :
+                              campaign.status === 'Planning' ? 'bg-orange-500' :
+                              'bg-gray-400'
+                            }`}
+                            style={{ 
+                              width: `${getProgressPercentage(campaign.status, campaign.startDate, campaign.endDate)}%`
+                            }}
+                          ></div>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <div
+                          onClick={() => handleCellClick(campaign.id, 'timeline', formatDateRange(campaign.startDate, campaign.endDate))}
+                          className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded text-sm font-medium text-gray-900"
+                        >
+                          {formatDateRange(campaign.startDate, campaign.endDate)}
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className={`h-2 rounded-full ${
+                              campaign.status === 'Completed' ? 'bg-green-500' :
+                              campaign.status === 'Active' ? 'bg-blue-500' :
+                              campaign.status === 'Planning' ? 'bg-orange-500' :
+                              'bg-gray-400'
+                            }`}
+                            style={{ 
+                              width: `${getProgressPercentage(campaign.status, campaign.startDate, campaign.endDate)}%`
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    )}
                   </td>
 
                   {/* Budget Cell */}
@@ -546,7 +585,7 @@ const CampaignManager: React.FC = () => {
                   </td>
 
                   {/* Notes Cell */}
-                  <td className="px-4 py-4">
+                  <td className="px-4 py-4 relative">
                     <div 
                       onClick={() => handleCellClick(campaign.id, 'notes', campaign.notes)}
                       className="cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
@@ -559,8 +598,10 @@ const CampaignManager: React.FC = () => {
                             </svg>
                             Notes
                           </div>
-                          <div className="text-sm text-gray-700 line-clamp-2">
-                            {campaign.notes.length > 60 ? `${campaign.notes.substring(0, 60)}...` : campaign.notes}
+                          <div className="text-sm text-gray-700">
+                            {campaign.notes.length > 20 
+                              ? `${campaign.notes.substring(0, 20)}...` 
+                              : campaign.notes}
                           </div>
                         </div>
                       ) : (

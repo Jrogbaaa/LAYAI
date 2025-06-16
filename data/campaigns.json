@@ -1,19 +1,19 @@
 [
   {
-    "id": "campaign_1750079543334",
-    "name": "IKEA",
+    "id": "campaign_1750080910003",
+    "name": "New Campaign",
     "owner": "Clara",
-    "status": "Planning",
+    "status": "Active",
     "priority": "Medium",
     "startDate": "2025-06-16",
     "endDate": "2025-06-30",
-    "budget": 10000,
+    "budget": 1000000,
     "influencerCount": 3,
     "platform": [
       "Instagram"
     ],
-    "notes": "hey there \n",
-    "createdAt": "2025-06-16T13:12:23.334Z",
-    "updatedAt": "2025-06-16T13:15:10.947Z"
+    "notes": "Hey\n",
+    "createdAt": "2025-06-16T13:35:10.004Z",
+    "updatedAt": "2025-06-16T13:46:31.923Z"
   }
 ]

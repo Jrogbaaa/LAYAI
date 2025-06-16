@@ -16,7 +16,6 @@ const NotesManager: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const contentRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
 
   // Load notes on component mount
@@ -142,11 +141,7 @@ const NotesManager: React.FC = () => {
     } : null);
   };
 
-  const handleContentChange = () => {
-    if (contentRef.current && selectedNote) {
-      updateSelectedNote('content', contentRef.current.innerHTML);
-    }
-  };
+
 
   const filteredNotes = notes.filter(note =>
     note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -286,18 +281,19 @@ const NotesManager: React.FC = () => {
 
             {/* Editor Content */}
             <div className="flex-1 bg-white p-6">
-                             <div
-                 ref={contentRef}
-                 contentEditable
-                 onInput={handleContentChange}
-                 dangerouslySetInnerHTML={{ __html: selectedNote.content || '<p style="color: #9ca3af;">Start writing...</p>' }}
-                 className="min-h-full outline-none text-gray-900 leading-relaxed"
-                 style={{
-                   fontSize: '16px',
-                   lineHeight: '1.6',
-                   fontFamily: 'system-ui, -apple-system, sans-serif'
-                 }}
-               />
+              <textarea
+                value={selectedNote.content.replace(/<[^>]*>/g, '')}
+                onChange={(e) => updateSelectedNote('content', e.target.value)}
+                placeholder="Start writing..."
+                className="w-full h-full resize-none outline-none text-gray-900 leading-relaxed border-none"
+                style={{
+                  fontSize: '16px',
+                  lineHeight: '1.6',
+                  fontFamily: 'system-ui, -apple-system, sans-serif',
+                  direction: 'ltr',
+                  textAlign: 'left'
+                }}
+              />
             </div>
           </>
         ) : (
