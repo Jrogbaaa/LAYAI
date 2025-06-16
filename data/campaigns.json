@@ -1,0 +1,19 @@
+[
+  {
+    "id": "campaign_1750079543334",
+    "name": "IKEA",
+    "owner": "Clara",
+    "status": "Planning",
+    "priority": "Medium",
+    "startDate": "2025-06-16",
+    "endDate": "2025-06-30",
+    "budget": 10000,
+    "influencerCount": 3,
+    "platform": [
+      "Instagram"
+    ],
+    "notes": "hey there \n",
+    "createdAt": "2025-06-16T13:12:23.334Z",
+    "updatedAt": "2025-06-16T13:15:10.947Z"
+  }
+]

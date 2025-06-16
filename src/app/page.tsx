@@ -16,7 +16,7 @@ import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
 import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/newExportUtils';
 import { generateSessionId } from '@/lib/database';
 
-type PageView = 'landing' | 'chat' | 'generate' | 'view' | 'campaigns' | 'notes';
+type PageView = 'landing' | 'chat' | 'generate' | 'campaigns' | 'notes';
 
 interface SearchResults {
   premiumResults: MatchResult[];
@@ -261,7 +261,7 @@ export default function Home() {
 
   const handleProposalGenerated = (proposal: CampaignProposal) => {
     setCurrentProposal(proposal);
-    setCurrentView('view');
+    setCurrentView('generate');
   };
 
   const handleEditProposal = () => {
@@ -341,8 +341,7 @@ export default function Home() {
           ...convertDiscoveryToMatchResults(searchResults?.discoveryResults || [])
         ];
         return <ProposalGenerator matchResults={allResults} onProposalGenerated={handleProposalGenerated} />;
-      case 'view':
-        return currentProposal ? <ProposalViewer proposal={currentProposal} onExport={handleExport} onEdit={handleEditProposal} /> : <div>No proposal available</div>;
+
       case 'campaigns':
         return <CampaignManager />;
       case 'notes':
@@ -397,19 +396,7 @@ export default function Home() {
                   Generate Proposal
                 </button>
               </li>
-              <li>
-                <button
-                  onClick={() => setCurrentView('view')}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
-                    currentView === 'view' 
-                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <span>👁️</span>
-                  View Proposal
-                </button>
-              </li>
+
               <li>
                 <button
                   onClick={() => setCurrentView('campaigns')}

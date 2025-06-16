@@ -140,7 +140,7 @@ const CampaignManager: React.FC = () => {
     if (field === 'status' || field === 'priority') {
       const dropdownId = `${field}-${campaignId}`;
       setOpenDropdown(openDropdown === dropdownId ? null : dropdownId);
-    } else if (['name', 'budget', 'startDate', 'endDate', 'influencerCount'].includes(field)) {
+    } else if (['name', 'budget', 'influencerCount'].includes(field)) {
       setEditingCell({ campaignId, field });
       setTempValue(currentValue.toString());
     } else if (field === 'notes') {
@@ -268,7 +268,7 @@ const CampaignManager: React.FC = () => {
         </div>
         
         {isOpen && (
-          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[120px]">
+          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-[100] min-w-[120px]">
             {statuses.map((status) => (
               <button
                 key={status}
@@ -306,7 +306,7 @@ const CampaignManager: React.FC = () => {
         </div>
         
         {isOpen && (
-          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[120px]">
+          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-[100] min-w-[120px]">
             {priorities.map((priority) => (
               <button
                 key={priority}
@@ -457,43 +457,40 @@ const CampaignManager: React.FC = () => {
 
                   {/* Timeline Cell */}
                   <td className="px-4 py-4">
-                    <div>
-                      {editingCell?.campaignId === campaign.id && (editingCell?.field === 'startDate' || editingCell?.field === 'endDate') ? (
-                        <input
-                          type="date"
-                          value={tempValue}
-                          onChange={(e) => setTempValue(e.target.value)}
-                          onBlur={handleSave}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleSave();
-                            if (e.key === 'Escape') handleCancel();
-                          }}
-                          className="w-full px-2 py-1 border border-blue-500 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white text-gray-900"
-                          autoFocus
-                        />
-                      ) : (
-                        <div className="space-y-2">
-                          <div 
-                            onClick={() => handleCellClick(campaign.id, 'startDate', campaign.startDate)}
-                            className="text-sm text-gray-900 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-                          >
-                            {formatDateRange(campaign.startDate, campaign.endDate)}
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className={`h-2 rounded-full ${
-                                campaign.status === 'Completed' ? 'bg-green-500' :
-                                campaign.status === 'Active' ? 'bg-blue-500' :
-                                campaign.status === 'Planning' ? 'bg-orange-500' :
-                                'bg-gray-400'
-                              }`}
-                              style={{ 
-                                width: `${getProgressPercentage(campaign.status, campaign.startDate, campaign.endDate)}%`
-                              }}
-                            ></div>
-                          </div>
+                    <div className="space-y-2">
+                      <div className="flex flex-col space-y-1">
+                        <div className="flex items-center space-x-2 text-xs text-gray-500">
+                          <span>Start:</span>
+                          <input
+                            type="date"
+                            value={campaign.startDate}
+                            onChange={(e) => updateCampaign(campaign.id, 'startDate', e.target.value)}
+                            className="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                          />
                         </div>
-                      )}
+                        <div className="flex items-center space-x-2 text-xs text-gray-500">
+                          <span>End:</span>
+                          <input
+                            type="date"
+                            value={campaign.endDate}
+                            onChange={(e) => updateCampaign(campaign.id, 'endDate', e.target.value)}
+                            className="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                          />
+                        </div>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full ${
+                            campaign.status === 'Completed' ? 'bg-green-500' :
+                            campaign.status === 'Active' ? 'bg-blue-500' :
+                            campaign.status === 'Planning' ? 'bg-orange-500' :
+                            'bg-gray-400'
+                          }`}
+                          style={{ 
+                            width: `${getProgressPercentage(campaign.status, campaign.startDate, campaign.endDate)}%`
+                          }}
+                        ></div>
+                      </div>
                     </div>
                   </td>
 
@@ -550,15 +547,31 @@ const CampaignManager: React.FC = () => {
 
                   {/* Notes Cell */}
                   <td className="px-4 py-4">
-                    <button
+                    <div 
                       onClick={() => handleCellClick(campaign.id, 'notes', campaign.notes)}
-                      className="flex items-center space-x-1 text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                      className="cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                      <span>{campaign.notes ? 'Edit' : 'Add'} Notes</span>
-                    </button>
+                      {campaign.notes ? (
+                        <div className="space-y-1">
+                          <div className="text-xs text-gray-500 flex items-center">
+                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            Notes
+                          </div>
+                          <div className="text-sm text-gray-700 line-clamp-2">
+                            {campaign.notes.length > 60 ? `${campaign.notes.substring(0, 60)}...` : campaign.notes}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center space-x-1 text-sm text-gray-400">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                          </svg>
+                          <span>Add Notes</span>
+                        </div>
+                      )}
+                    </div>
                   </td>
 
                   {/* Actions Cell */}
