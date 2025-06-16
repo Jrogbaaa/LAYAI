@@ -46,7 +46,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
             }`}
           >
             <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-blue-300 bg-clip-text text-transparent mb-4">
-              LAYAI
+              buenas clara
             </h1>
             <div className="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-400 mx-auto rounded-full"></div>
           </div>

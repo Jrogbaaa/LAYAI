@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type PageView = 'search' | 'generate' | 'notes' | 'proposal';
+export type PageView = 'search' | 'generate' | 'notes';
 
 interface SidebarProps {
   currentView: PageView;
@@ -22,13 +22,6 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
       icon: '📄',
       description: 'Create campaign proposals',
       gradient: 'from-purple-500 to-purple-600'
-    },
-    {
-      id: 'proposal' as PageView,
-      label: 'View Proposal',
-      icon: '📊',
-      description: 'Review generated proposals',
-      gradient: 'from-green-500 to-green-600'
     },
     {
       id: 'notes' as PageView,
@@ -63,8 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
       <nav className="flex-1 p-6">
         <div className="space-y-3">
           {menuItems.map((item) => {
-            const isActive = currentView === item.id || 
-              (currentView === 'proposal' && item.id === 'generate');
+            const isActive = currentView === item.id;
             
             return (
               <button
@@ -149,7 +141,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
           {/* Version Info */}
           <div className="text-center">
             <p className="text-xs text-gray-500">
-              Version 2.2.0 • Built with ❤️
+              Version 2.3.0 • Built with ❤️
             </p>
             <div className="flex items-center justify-center space-x-2 mt-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
