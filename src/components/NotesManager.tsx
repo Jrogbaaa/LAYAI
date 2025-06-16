@@ -16,7 +16,7 @@ const NotesManager: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const contentRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLTextAreaElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
 
   // Load notes on component mount
@@ -142,33 +142,13 @@ const NotesManager: React.FC = () => {
     } : null);
   };
 
-  const handleContentChange = () => {
-    if (contentRef.current && selectedNote) {
-      // Force text direction and prevent any reversal
-      const element = contentRef.current;
-      element.style.direction = 'ltr';
-      element.style.textAlign = 'left';
-      element.style.unicodeBidi = 'normal';
-      element.style.writingMode = 'horizontal-tb';
-      
-      updateSelectedNote('content', element.innerHTML);
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (selectedNote) {
+      updateSelectedNote('content', e.target.value);
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Prevent any keyboard shortcuts that might affect text direction
-    if (e.ctrlKey || e.metaKey) {
-      if (e.key === 'r' || e.key === 'R') {
-        e.preventDefault();
-      }
-    }
-  };
 
-  const handlePaste = (e: React.ClipboardEvent) => {
-    e.preventDefault();
-    const text = e.clipboardData.getData('text/plain');
-    document.execCommand('insertText', false, text);
-  };
 
   const filteredNotes = notes.filter(note =>
     note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -308,14 +288,12 @@ const NotesManager: React.FC = () => {
 
             {/* Editor Content */}
             <div className="flex-1 bg-white p-6 relative">
-              <div
+              <textarea
                 ref={contentRef}
-                contentEditable
-                onInput={handleContentChange}
-                onKeyDown={handleKeyDown}
-                onPaste={handlePaste}
-                dangerouslySetInnerHTML={{ __html: selectedNote.content || '' }}
-                className="min-h-full outline-none text-gray-900 leading-relaxed force-ltr-text"
+                value={selectedNote.content || ''}
+                onChange={handleContentChange}
+                placeholder="Start writing..."
+                className="w-full h-full min-h-full resize-none outline-none text-gray-900 leading-relaxed border-none bg-transparent force-ltr-text"
                 style={{
                   fontSize: '16px',
                   lineHeight: '1.6',
@@ -326,24 +304,11 @@ const NotesManager: React.FC = () => {
                   writingMode: 'horizontal-tb',
                   transform: 'none',
                   color: '#111827',
-                  backgroundColor: '#ffffff'
+                  backgroundColor: 'transparent'
                 }}
                 dir="ltr"
+                spellCheck="false"
               />
-              {(!selectedNote.content || selectedNote.content.trim() === '') && (
-                <div 
-                  className="absolute top-6 left-6 text-gray-400 pointer-events-none force-ltr-text"
-                  style={{
-                    fontSize: '16px',
-                    lineHeight: '1.6',
-                    fontFamily: 'system-ui, -apple-system, sans-serif',
-                    direction: 'ltr',
-                    textAlign: 'left'
-                  }}
-                >
-                  Start writing...
-                </div>
-              )}
             </div>
           </>
         ) : (
