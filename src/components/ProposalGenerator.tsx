@@ -292,6 +292,9 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
     const location = profile.location || profile.city || '';
     const fullName = profile.fullName || profile.name || profile.username || 'influencer';
 
+    // Create a unique cache key to prevent infinite loops
+    const cacheKey = `${username}_${brandInfo.name}`;
+    
     // Enhanced content analysis using web research + Instagram bio
     let contentToAnalyze = bio;
     let webResearchInfo = '';
@@ -300,9 +303,17 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
       contentToAnalyze = `${bio} ${webResearchInfo}`.toLowerCase();
     }
 
-    console.log(`🎯 Analyzing ${fullName} for ${brandInfo.name}:`);
-    console.log(`📝 Bio: "${bio}"`);
-    console.log(`🔍 Web Research: "${webResearchInfo}"`);
+    // Only log once per unique influencer-brand combination using a module-level cache
+    if (!(window as any).analysisCache) {
+      (window as any).analysisCache = new Set();
+    }
+    
+    if (!(window as any).analysisCache.has(cacheKey)) {
+      console.log(`🎯 Analyzing ${fullName} for ${brandInfo.name}:`);
+      console.log(`📝 Bio: "${bio}"`);
+      console.log(`🔍 Web Research: "${webResearchInfo}"`);
+      (window as any).analysisCache.add(cacheKey);
+    }
 
     // SPECIFIC INFLUENCER ANALYSIS - Unique for each person
     
@@ -675,7 +686,28 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
 
     const metrics = generateVariedMetrics(influencer);
     
-    return {
+    // Create cache key to prevent infinite loops
+    const cacheKey = `${influencer.id}_${brandInfo?.name || 'default'}`;
+    
+    // Initialize conversion cache if it doesn't exist
+    if (!(window as any).conversionCache) {
+      (window as any).conversionCache = new Map();
+    }
+    
+    // Check if we've already processed this influencer-brand combination
+    if ((window as any).conversionCache.has(cacheKey)) {
+      return (window as any).conversionCache.get(cacheKey);
+    }
+    
+    // Generate biography and reasons only once
+    const biography = customBiographies[influencer.id] || 
+      (match.influencer as any).personalizedBio || 
+      generatePersonalizedBiography((match.influencer as any).originalProfile || influencer, brandInfo);
+      
+    const whyThisInfluencer = customReasons[influencer.id] || 
+      generateBrandSpecificReasons((match.influencer as any).originalProfile || influencer, brandInfo).join('. ');
+    
+    const result: ProposalTalent = {
       id: influencer.id,
       name: influencer.name,
       handle: influencer.handle,
@@ -684,8 +716,8 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
       engagementRate: metrics.adjustedER,
       estimatedFee: influencer.averageRate,
       commitment: customCommitments[influencer.id] || '1 post + 3 stories',
-      biography: customBiographies[influencer.id] || (match.influencer as any).personalizedBio || generatePersonalizedBiography((match.influencer as any).originalProfile || influencer, brandInfo),
-      whyThisInfluencer: customReasons[influencer.id] || generateBrandSpecificReasons((match.influencer as any).originalProfile || influencer, brandInfo).join('. '),
+      biography,
+      whyThisInfluencer,
       metrics: {
         credibilityScore: metrics.credibility,
         spainImpressionsPercentage: metrics.spainIP,
@@ -695,6 +727,11 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
       },
       pastCollaborations: [],
     };
+    
+    // Cache the result to prevent recomputation
+    (window as any).conversionCache.set(cacheKey, result);
+    
+    return result;
   };
 
   const generateProposal = () => {
