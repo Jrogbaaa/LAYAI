@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type PageView = 'search' | 'generate' | 'notes';
+export type PageView = 'search' | 'generate' | 'notes' | 'campaigns';
 
 interface SidebarProps {
   currentView: PageView;
@@ -22,6 +22,13 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
       icon: '📄',
       description: 'Create campaign proposals',
       gradient: 'from-purple-500 to-purple-600'
+    },
+    {
+      id: 'campaigns' as PageView,
+      label: 'Campaigns',
+      icon: '🎯',
+      description: 'Manage your campaigns',
+      gradient: 'from-green-500 to-green-600'
     },
     {
       id: 'notes' as PageView,

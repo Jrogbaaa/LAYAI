@@ -17,7 +17,7 @@ import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/newExportUtils
 import { generateSessionId } from '@/lib/database';
 import Sidebar, { PageView } from '@/components/Sidebar';
 
-type ExtendedPageView = PageView | 'landing' | 'chat' | 'campaigns';
+type ExtendedPageView = PageView | 'landing' | 'chat' | 'campaigns' | 'proposal';
 
 interface SearchResults {
   premiumResults: MatchResult[];
@@ -260,6 +260,11 @@ export default function Home() {
     setCurrentView('generate');
   };
 
+  const handleProposalGenerated = (proposal: CampaignProposal) => {
+    setCurrentProposal(proposal);
+    setCurrentView('proposal');
+  };
+
   const handleEditProposal = () => {
     setCurrentView('generate');
   };
@@ -344,7 +349,29 @@ export default function Home() {
           ...searchResults?.premiumResults || [],
           ...convertDiscoveryToMatchResults(searchResults?.discoveryResults || [])
         ];
-        return <ProposalGenerator matchResults={allResults} />;
+        return <ProposalGenerator matchResults={allResults} onProposalGenerated={handleProposalGenerated} />;
+      case 'proposal':
+        return currentProposal ? (
+          <div className="min-h-screen p-6">
+            <div className="mb-6">
+              <button
+                onClick={() => setCurrentView('generate')}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+              >
+                ← Back to Generator
+              </button>
+            </div>
+            <ProposalViewer 
+              proposal={currentProposal} 
+              onExport={handleExport}
+              onEdit={handleEditProposal}
+            />
+          </div>
+        ) : (
+          <div className="min-h-screen flex items-center justify-center">
+            <p className="text-gray-500">No proposal to display</p>
+          </div>
+        );
       case 'campaigns':
         return <CampaignManager />;
       case 'notes':

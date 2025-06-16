@@ -6,7 +6,7 @@ import { MatchResult } from '@/types/influencer';
 
 interface ProposalGeneratorProps {
   matchResults: MatchResult[];
-  onProposalGenerated?: (proposal: CampaignProposal) => void;
+  onProposalGenerated: (proposal: CampaignProposal) => void;
 }
 
 export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
@@ -722,7 +722,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
       brandResearch: brandResearchData,
     };
 
-    onProposalGenerated?.(proposal);
+    onProposalGenerated(proposal);
   };
 
   // Export to CSV function (IKEA format)
