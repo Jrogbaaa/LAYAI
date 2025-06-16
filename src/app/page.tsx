@@ -342,6 +342,64 @@ export default function Home() {
     setCurrentSearchId(null);
   };
 
+  const handleDirectSearch = async (handles: string[]) => {
+    setIsLoading(true);
+    
+    try {
+      console.log('🔍 Direct handle search:', handles);
+      
+      // Use the existing Instagram scraping API
+      const response = await fetch('/api/scrape-instagram-profiles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          handles: handles,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Instagram scraping failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.success && data.profiles?.length) {
+        const convertedResults = convertToMatchResults(data.profiles);
+        console.log('Direct search results:', {
+          profiles: data.profiles.length,
+          converted: convertedResults.length
+        });
+        
+        // Merge with existing results if any
+        if (searchResults) {
+          setSearchResults({
+            premiumResults: [...searchResults.premiumResults, ...convertedResults],
+            discoveryResults: searchResults.discoveryResults,
+            totalFound: searchResults.totalFound + convertedResults.length
+          });
+        } else {
+          setSearchResults({
+            premiumResults: convertedResults,
+            discoveryResults: [],
+            totalFound: convertedResults.length
+          });
+        }
+        
+        setCurrentSearchId(`direct_${Date.now()}`);
+      } else {
+        console.error('❌ Direct search failed:', data);
+        throw new Error(data.error || 'No profiles found');
+      }
+    } catch (error) {
+      console.error('❌ Direct search error:', error);
+      throw error; // Re-throw to let chatbot handle the error message
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleNavigation = (viewId: string) => {
     // Prevent page scrolling when changing tabs
     setCurrentView(viewId as PageView);
@@ -394,7 +452,10 @@ export default function Home() {
             {/* Main content area */}
             <div className="flex-1 overflow-auto">
               <div className="p-6 space-y-6">
-                <Chatbot onSendMessage={handleSendMessage} />
+                <Chatbot 
+                  onSendMessage={handleSendMessage} 
+                  onDirectSearch={handleDirectSearch}
+                />
                 
                 {searchResults && (
                   <div className="space-y-6">
