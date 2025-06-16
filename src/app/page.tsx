@@ -8,6 +8,7 @@ import { ProposalViewer } from '@/components/ProposalViewer';
 import { FeedbackPanel } from '@/components/FeedbackPanel';
 import DiscoveryGrid from '@/components/DiscoveryGrid';
 import CampaignManager from '@/components/CampaignManager';
+import NotesManager from '@/components/NotesManager';
 import LandingPage from '@/components/LandingPage';
 import { MatchResult } from '@/types/influencer';
 import { CampaignProposal } from '@/types/campaign';
@@ -15,7 +16,7 @@ import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
 import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/newExportUtils';
 import { generateSessionId } from '@/lib/database';
 
-type PageView = 'landing' | 'chat' | 'generate' | 'view' | 'campaigns';
+type PageView = 'landing' | 'chat' | 'generate' | 'view' | 'campaigns' | 'notes';
 
 interface SearchResults {
   premiumResults: MatchResult[];
@@ -344,6 +345,8 @@ export default function Home() {
         return currentProposal ? <ProposalViewer proposal={currentProposal} onExport={handleExport} onEdit={handleEditProposal} /> : <div>No proposal available</div>;
       case 'campaigns':
         return <CampaignManager />;
+      case 'notes':
+        return <NotesManager />;
       default:
         return <Chatbot onSendMessage={handleSendMessage} />;
     }
@@ -418,6 +421,19 @@ export default function Home() {
                 >
                   <span>📊</span>
                   Campaigns
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setCurrentView('notes')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
+                    currentView === 'notes' 
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span>📝</span>
+                  Notes
                 </button>
               </li>
             </ul>

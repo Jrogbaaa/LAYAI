@@ -455,7 +455,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
     if (!manualHandles.trim()) return;
 
     setIsProcessingManual(true);
-    
+
     try {
       const handles = manualHandles
         .split('\n')
@@ -567,39 +567,39 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
           id: profile.username || profile.handle || Math.random().toString(),
           name: profile.fullName || profile.name || profile.username || 'Unknown',
           handle: profile.username || profile.handle || '',
-          platform: 'Instagram' as const,
+            platform: 'Instagram' as const,
           followerCount,
           engagementRate,
-          ageRange: '25-34',
-          gender: 'Other' as const,
+            ageRange: '25-34',
+            gender: 'Other' as const,
           location: profile.location || profile.city || '',
           niche: [profile.category || detectCategory(profile)],
-          contentStyle: ['Posts', 'Stories'],
-          pastCollaborations: [],
+            contentStyle: ['Posts', 'Stories'],
+            pastCollaborations: [],
           averageRate: calculateCollaborationRate(followerCount),
           costLevel: followerCount > 1000000 ? 'Celebrity' : 
                     followerCount > 100000 ? 'Premium' : 
                     followerCount > 10000 ? 'Mid-Range' : 'Budget',
-          audienceDemographics: {
-            ageGroups: {
-              '13-17': 5,
-              '18-24': 30,
-              '25-34': 40,
-              '35-44': 20,
-              '45-54': 4,
-              '55+': 1,
-            },
-            gender: { male: 45, female: 52, other: 3 },
-            topLocations: [profile.location || 'España'],
+            audienceDemographics: {
+              ageGroups: {
+                '13-17': 5,
+                '18-24': 30,
+                '25-34': 40,
+                '35-44': 20,
+                '45-54': 4,
+                '55+': 1,
+              },
+              gender: { male: 45, female: 52, other: 3 },
+              topLocations: [profile.location || 'España'],
             interests: [profile.category || detectCategory(profile)],
-          },
-          recentPosts: [],
-          contactInfo: {
-            email: profile.email || `${profile.username}@example.com`,
-            preferredContact: 'DM' as const,
-          },
-          isActive: true,
-          lastUpdated: new Date(),
+            },
+            recentPosts: [],
+            contactInfo: {
+              email: profile.email || `${profile.username}@example.com`,
+              preferredContact: 'DM' as const,
+            },
+            isActive: true,
+            lastUpdated: new Date(),
           // Store the enhanced data for later use
           personalizedBio: profile.personalizedBio,
           originalProfile: profile, // Store original profile data for reference
