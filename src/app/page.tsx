@@ -10,16 +10,11 @@ import DiscoveryGrid from '@/components/DiscoveryGrid';
 import CampaignManager from '@/components/CampaignManager';
 import NotesManager from '@/components/NotesManager';
 import LandingPage from '@/components/LandingPage';
-import AdaptiveSidebar, { SidebarItem } from '@/components/ui/adaptive-sidebar';
-import { Button } from '@/components/ui/enhanced-button';
-import { Card, CardHeader, CardContent, ProgressCard } from '@/components/ui/enhanced-card';
-import SmartTooltip, { useContextualHelp } from '@/components/ui/smart-tooltip';
 import { MatchResult } from '@/types/influencer';
 import { CampaignProposal } from '@/types/campaign';
 import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
 import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/newExportUtils';
 import { generateSessionId } from '@/lib/database';
-import { cn } from '@/lib/utils';
 
 type PageView = 'landing' | 'chat' | 'generate' | 'campaigns' | 'notes';
 
@@ -37,56 +32,10 @@ export default function Home() {
   const [sessionId, setSessionId] = useState<string>('');
   const [currentSearchId, setCurrentSearchId] = useState<string | null>(null);
   const [showSidebar, setShowSidebar] = useState(false);
-  const [userLevel, setUserLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-
-  // Contextual help for the current view
-  const { shouldShowHelp, helpContent, setShouldShowHelp } = useContextualHelp(
-    currentView === 'chat' ? 'influencer-selection' : 
-    currentView === 'generate' ? 'proposal-generation' : 'campaign-creation',
-    userLevel
-  );
 
   useEffect(() => {
     setSessionId(generateSessionId());
-    
-    // Simulate user level detection (in real app, this would come from user data)
-    const detectedLevel = localStorage.getItem('userLevel') as any || 'beginner';
-    setUserLevel(detectedLevel);
   }, []);
-
-  // Define sidebar navigation items
-  const sidebarItems: SidebarItem[] = [
-    {
-      id: 'chat',
-      label: 'AI Discovery',
-      icon: '🤖',
-      tooltip: 'Chat with AI to discover influencers',
-      count: searchResults?.totalFound || undefined
-    },
-    {
-      id: 'generate',
-      label: 'Create Proposal',
-      icon: '📋',
-      tooltip: searchResults?.premiumResults?.length 
-        ? 'Generate campaign proposals' 
-        : 'Find influencers first to create proposals',
-      disabled: false // Always allow access to proposal tab
-    },
-    {
-      id: 'campaigns',
-      label: 'Campaigns',
-      icon: '📊',
-      tooltip: 'Manage your campaigns',
-      isNew: userLevel === 'beginner'
-    },
-    {
-      id: 'notes',
-      label: 'Notes',
-      icon: '📝',
-      tooltip: 'Your campaign notes and ideas'
-    }
-  ];
 
   const handleSendMessage = async (message: string, history: any[]) => {
     setIsLoading(true);
@@ -118,7 +67,7 @@ export default function Home() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ 
-            ...data.data,
+            ...data.data,  // Spread the search parameters directly
             sessionId: sessionId
           }),
         });
@@ -126,6 +75,7 @@ export default function Home() {
         const searchData = await searchResponse.json();
         
         if (searchData.success) {
+          // Convert the results to MatchResult format
           const convertedResults = convertToMatchResults(searchData.premiumResults || []);
           console.log('Search results received:', {
             premiumResults: searchData.premiumResults?.length || 0,
@@ -133,7 +83,9 @@ export default function Home() {
             totalFound: searchData.totalFound || 0
           });
           
+          // Check if this is a follow-up search (if we already have results)
           if (searchResults && searchResults.discoveryResults.length > 0) {
+            // Accumulate results - combine with existing results
             const existingDiscoveryUrls = new Set(searchResults.discoveryResults.map(r => r.profileUrl));
             const newDiscoveryResults = (searchData.discoveryResults || []).filter(
               (result: any) => !existingDiscoveryUrls.has(result.profileUrl)
@@ -147,6 +99,7 @@ export default function Home() {
             
             console.log(`🔄 Follow-up search: Added ${newDiscoveryResults.length} new discovery results`);
           } else {
+            // First search - set results normally
             setSearchResults({
               premiumResults: convertedResults,
               discoveryResults: searchData.discoveryResults || [],
@@ -170,6 +123,7 @@ export default function Home() {
     } catch (error) {
       console.error('❌ Error sending message:', error);
       
+      // Provide more specific error messages
       let errorMessage = 'Sorry, something went wrong. Please try again.';
       if (error instanceof Error) {
         if (error.message.includes('fetch')) {
@@ -245,36 +199,37 @@ export default function Home() {
     }));
   };
 
+  // Convert discovery results to MatchResult format
   const convertDiscoveryToMatchResults = (discoveryResults: any[]): MatchResult[] => {
-    return discoveryResults.map((profile: any) => ({
+    return discoveryResults.map((profile) => ({
       influencer: {
-        id: profile.id || profile.username || Math.random().toString(),
-        name: profile.fullName || profile.displayName || profile.username,
-        handle: profile.username,
+        id: profile.id || profile.handle || profile.username,
+        name: profile.name || profile.handle || profile.username,
+        handle: profile.handle || profile.username,
         platform: profile.platform as 'Instagram' | 'TikTok' | 'YouTube' | 'Twitter' | 'Multi-Platform',
-        followerCount: profile.followers || 0,
+        followerCount: profile.followers || profile.followerCount || 50000,
         engagementRate: (profile.engagementRate || 3.2) / 100,
         ageRange: '25-34',
-        gender: 'Other' as 'Male' | 'Female' | 'Non-Binary' | 'Other',
+        gender: profile.detectedGender === 'male' ? 'Male' : profile.detectedGender === 'female' ? 'Female' : 'Other',
         location: profile.location || 'Unknown',
         niche: [profile.category || profile.niche || 'Lifestyle'],
-        contentStyle: ['Posts'],
+        contentStyle: ['Posts', 'Stories'],
         pastCollaborations: [],
-        averageRate: Math.floor((profile.followers || 50000) / 50) || 1000,
+        averageRate: Math.floor(profile.followers / 50) || 1000,
         costLevel: 'Mid-Range' as 'Budget' | 'Mid-Range' | 'Premium' | 'Celebrity',
         audienceDemographics: {
           ageGroups: {
-            '13-17': 0,
-            '18-24': 30,
+            '13-17': 5,
+            '18-24': 35,
             '25-34': 40,
-            '35-44': 20,
-            '45-54': 8,
-            '55+': 2,
+            '35-44': 15,
+            '45-54': 4,
+            '55+': 1,
           },
           gender: {
-            male: 50,
-            female: 48,
-            other: 2,
+            male: 45,
+            female: 52,
+            other: 3,
           },
           topLocations: [profile.location || 'Unknown'],
           interests: [profile.category || profile.niche || 'Lifestyle'],
@@ -282,7 +237,7 @@ export default function Home() {
         recentPosts: [],
         contactInfo: {
           email: profile.email,
-          preferredContact: 'Email' as 'Email' | 'Phone' | 'DM' | 'Management',
+          preferredContact: 'DM' as 'Email' | 'Phone' | 'DM' | 'Management',
         },
         isActive: true,
         lastUpdated: new Date(),
@@ -342,305 +297,145 @@ export default function Home() {
     setCurrentSearchId(null);
   };
 
-  const handleDirectSearch = async (handles: string[]) => {
-    setIsLoading(true);
-    
-    try {
-      console.log('🔍 Direct handle search:', handles);
-      
-      // Use the existing Instagram scraping API
-      const response = await fetch('/api/scrape-instagram-profiles', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          handles: handles,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Instagram scraping failed: ${response.status}`);
-      }
-
-      const data = await response.json();
-      
-      if (data.success && data.profiles?.length) {
-        const convertedResults = convertToMatchResults(data.profiles);
-        console.log('Direct search results:', {
-          profiles: data.profiles.length,
-          converted: convertedResults.length
-        });
-        
-        // Merge with existing results if any
-        if (searchResults) {
-          setSearchResults({
-            premiumResults: [...searchResults.premiumResults, ...convertedResults],
-            discoveryResults: searchResults.discoveryResults,
-            totalFound: searchResults.totalFound + convertedResults.length
-          });
-        } else {
-          setSearchResults({
-            premiumResults: convertedResults,
-            discoveryResults: [],
-            totalFound: convertedResults.length
-          });
-        }
-        
-        setCurrentSearchId(`direct_${Date.now()}`);
-      } else {
-        console.error('❌ Direct search failed:', data);
-        throw new Error(data.error || 'No profiles found');
-      }
-    } catch (error) {
-      console.error('❌ Direct search error:', error);
-      throw error; // Re-throw to let chatbot handle the error message
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleNavigation = (viewId: string) => {
-    // Prevent page scrolling when changing tabs
-    setCurrentView(viewId as PageView);
-  };
-
   const renderContent = () => {
     switch (currentView) {
       case 'landing':
         return <LandingPage onGetStarted={handleGetStarted} />;
       case 'chat':
         return (
-          <div className="h-full flex flex-col">
-            {/* Header with contextual help */}
-            <div className="flex-shrink-0 p-6 border-b border-gray-200/50">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900 mb-2">AI Discovery Chat</h1>
-                  <p className="text-gray-600">Describe your ideal influencer and let AI find perfect matches</p>
+          <div className="min-h-screen space-y-6 p-6">
+            <Chatbot onSendMessage={handleSendMessage} />
+            {searchResults && (
+              <>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Search Results ({searchResults.totalFound} total)
+                  </h2>
+                  <button
+                    onClick={handleClearResults}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  >
+                    🗑️ Clear Results
+                  </button>
                 </div>
-                
-                {searchResults && (
-                  <div className="flex items-center gap-3">
-                    <SmartTooltip 
-                      content="Clear current search results and start fresh"
-                      position="bottom"
-                    >
-                      <Button
-                        variant="secondary"
-                        onClick={handleClearResults}
-                        leftIcon="🗑️"
-                      >
-                        Clear Results
-                      </Button>
-                    </SmartTooltip>
-                  </div>
-                )}
-              </div>
-              
-              {/* Progress indicator for search */}
-              {isLoading && (
-                <ProgressCard
-                  progress={75}
-                  title="Analyzing Requirements"
-                  description="AI is processing your request and searching for matching influencers..."
-                  className="mt-4"
+                <InfluencerResults 
+                  results={searchResults.premiumResults}
                 />
-              )}
-            </div>
-
-            {/* Main content area */}
-            <div className="flex-1 overflow-auto">
-              <div className="p-6 space-y-6">
-                <Chatbot 
-                  onSendMessage={handleSendMessage} 
-                  onDirectSearch={handleDirectSearch}
+                <DiscoveryGrid 
+                  discoveryInfluencers={searchResults.discoveryResults}
                 />
-                
-                {searchResults && (
-                  <div className="space-y-6">
-                    <Card variant="glass" hover>
-                      <CardHeader 
-                        icon="🎯"
-                        action={
-                          <span className="text-sm text-gray-500">
-                            {searchResults.totalFound} total found
-                          </span>
-                        }
-                      >
-                        <h2 className="text-xl font-semibold text-gray-900">
-                          Premium Matches
-                        </h2>
-                        <p className="text-gray-600 text-sm">
-                          High-quality influencers with detailed analytics
-                        </p>
-                      </CardHeader>
-                      <CardContent>
-                        <InfluencerResults results={searchResults.premiumResults} />
-                      </CardContent>
-                    </Card>
-
-                    <Card variant="glass" hover>
-                      <CardHeader 
-                        icon="🔍"
-                        action={
-                          <span className="text-sm text-gray-500">
-                            {searchResults.discoveryResults.length} discovered
-                          </span>
-                        }
-                      >
-                        <h2 className="text-xl font-semibold text-gray-900">
-                          Discovery Results
-                        </h2>
-                        <p className="text-gray-600 text-sm">
-                          Additional influencers found through real-time search
-                        </p>
-                      </CardHeader>
-                      <CardContent>
-                        <DiscoveryGrid discoveryInfluencers={searchResults.discoveryResults} />
-                      </CardContent>
-                    </Card>
-
-                    {currentSearchId && (
-                      <Card variant="default">
-                        <CardHeader icon="💬">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            Feedback
-                          </h3>
-                          <p className="text-gray-600 text-sm">
-                            Help us improve by rating these results
-                          </p>
-                        </CardHeader>
-                        <CardContent>
-                          <FeedbackPanel 
-                            searchId={currentSearchId}
-                            sessionId={sessionId} 
-                          />
-                        </CardContent>
-                      </Card>
-                    )}
-                  </div>
+                {currentSearchId && (
+                  <FeedbackPanel 
+                    searchId={currentSearchId}
+                    sessionId={sessionId} 
+                  />
                 )}
-              </div>
-            </div>
+              </>
+            )}
           </div>
         );
       case 'generate':
+        // Convert discovery results to MatchResult format and combine with premium results
         const allResults = [
           ...(searchResults?.premiumResults || []),
           ...convertDiscoveryToMatchResults(searchResults?.discoveryResults || [])
         ];
-        
-        // If no search results, show empty state with guidance
-        if (allResults.length === 0) {
-          return (
-            <div className="h-full flex items-center justify-center p-6">
-              <Card variant="glass" className="max-w-md text-center">
-                <CardHeader icon="🔍">
-                  <h2 className="text-xl font-semibold text-gray-900">
-                    No Influencers Found
-                  </h2>
-                  <p className="text-gray-600">
-                    Start by discovering influencers in the AI Discovery tab first
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="text-sm text-gray-500">
-                      <p>To create a proposal, you need to:</p>
-                      <ol className="list-decimal list-inside mt-2 space-y-1">
-                        <li>Use AI Discovery to find influencers</li>
-                        <li>Review and select your matches</li>
-                        <li>Return here to generate proposals</li>
-                      </ol>
-                    </div>
-                    <Button
-                      variant="primary"
-                      onClick={() => setCurrentView('chat')}
-                      leftIcon="🤖"
-                      className="w-full"
-                    >
-                      Start AI Discovery
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          );
-        }
-        
-        return (
-          <div className="h-full">
-            <ProposalGenerator matchResults={allResults} onProposalGenerated={handleProposalGenerated} />
-          </div>
-        );
+        return <ProposalGenerator matchResults={allResults} onProposalGenerated={handleProposalGenerated} />;
+
       case 'campaigns':
-        return (
-          <div className="h-full">
-            <CampaignManager />
-          </div>
-        );
+        return <CampaignManager />;
       case 'notes':
-        return (
-          <div className="h-full">
-            <NotesManager />
-          </div>
-        );
+        return <NotesManager />;
       default:
         return <Chatbot onSendMessage={handleSendMessage} />;
     }
   };
 
-  // Landing page doesn't need sidebar
+  // If on landing page, don't show sidebar
   if (currentView === 'landing') {
     return renderContent();
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Enhanced Adaptive Sidebar */}
+    <div className="flex h-screen bg-gray-50">
+      {/* Left Sidebar - Only show after Get Started */}
       {showSidebar && (
-        <div className={cn(
-          'transition-all duration-300 ease-in-out',
-          sidebarCollapsed ? 'w-16' : 'w-64'
-        )}>
-          <AdaptiveSidebar
-            items={sidebarItems}
-            currentView={currentView}
-            onNavigate={handleNavigation}
-            userLevel={userLevel}
-            onToggle={setSidebarCollapsed}
-            className="h-full"
-          />
+        <div className="w-64 bg-white shadow-lg flex flex-col">
+          {/* Logo/Brand Section */}
+          <div className="p-6 border-b border-gray-200">
+            <h1 className="text-xl font-bold text-gray-800">LayAI</h1>
+            <p className="text-sm text-gray-600">Influencer Discovery</p>
+          </div>
+
+          {/* Navigation Menu */}
+          <nav className="flex-1 p-4">
+            <ul className="space-y-2">
+              <li>
+                <button
+                  onClick={() => setCurrentView('chat')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
+                    currentView === 'chat' 
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span>💬</span>
+                  Chat
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setCurrentView('generate')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
+                    currentView === 'generate' 
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span>📄</span>
+                  Generate Proposal
+                </button>
+              </li>
+
+              <li>
+                <button
+                  onClick={() => setCurrentView('campaigns')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
+                    currentView === 'campaigns' 
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span>📊</span>
+                  Campaigns
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setCurrentView('notes')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
+                    currentView === 'notes' 
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span>📝</span>
+                  Notes
+                </button>
+              </li>
+            </ul>
+          </nav>
+
+          {/* Footer */}
+          <div className="p-4 border-t border-gray-200">
+            <p className="text-xs text-gray-500">Version 1.0.0</p>
+          </div>
         </div>
       )}
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Contextual Help Banner */}
-        {shouldShowHelp && showSidebar && (
-          <div className="flex-shrink-0 bg-blue-50 border-b border-blue-200 px-6 py-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-blue-600">💡</span>
-                <p className="text-sm text-blue-800">{helpContent}</p>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShouldShowHelp(false)}
-                className="text-blue-600 hover:text-blue-800"
-              >
-                ×
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Main content */}
-        <div className="flex-1 overflow-auto">
-          {renderContent()}
-        </div>
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+        {renderContent()}
       </div>
     </div>
   );

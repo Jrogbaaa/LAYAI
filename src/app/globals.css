@@ -48,6 +48,19 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
 }
 
+/* Fix for text appearing backward */
+* {
+  direction: ltr !important;
+  unicode-bidi: normal !important;
+}
+
+input, textarea, [contenteditable] {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: normal !important;
+  transform: none !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

@@ -494,20 +494,20 @@ const CampaignManager: React.FC = () => {
                           className="w-full px-2 py-1 border border-blue-500 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium bg-white text-gray-900"
                           autoFocus
                         />
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className={`h-2 rounded-full ${
-                              campaign.status === 'Completed' ? 'bg-green-500' :
-                              campaign.status === 'Active' ? 'bg-blue-500' :
-                              campaign.status === 'Planning' ? 'bg-orange-500' :
-                              'bg-gray-400'
-                            }`}
-                            style={{ 
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full ${
+                            campaign.status === 'Completed' ? 'bg-green-500' :
+                            campaign.status === 'Active' ? 'bg-blue-500' :
+                            campaign.status === 'Planning' ? 'bg-orange-500' :
+                            'bg-gray-400'
+                          }`}
+                          style={{ 
                               width: `${getProgressPercentage(campaign.status, campaign.startDate, campaign.endDate)}%`
-                            }}
-                          ></div>
-                        </div>
+                          }}
+                        ></div>
                       </div>
+                    </div>
                     ) : (
                       <div className="space-y-2">
                         <div
@@ -578,8 +578,8 @@ const CampaignManager: React.FC = () => {
                         onClick={() => handleCellClick(campaign.id, 'influencerCount', campaign.influencerCount)}
                         className="text-center cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
                       >
-                        <span className="text-sm font-medium text-gray-900">{campaign.influencerCount}</span>
-                        <div className="text-xs text-gray-500">influencers</div>
+                      <span className="text-sm font-medium text-gray-900">{campaign.influencerCount}</span>
+                      <div className="text-xs text-gray-500">influencers</div>
                       </div>
                     )}
                   </td>
@@ -651,7 +651,7 @@ const CampaignManager: React.FC = () => {
 
         {/* Summary Bar */}
         {campaigns.length > 0 && (
-          <div className="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
           <div className="grid grid-cols-4 gap-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-900">{campaigns.length}</div>

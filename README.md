@@ -1,306 +1,258 @@
-# LAYAI - AI-Powered Influencer Discovery Platform 🚀
+# LAYAI - AI-Powered Influencer Campaign Management
 
-> **Transform your brand campaigns with intelligent influencer matching, real-time analytics, and data-driven insights**
+An intelligent platform for discovering, analyzing, and managing influencer marketing campaigns with real-time data integration and personalized analysis.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.3.3-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19.0.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.14-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+## 🚀 Key Features
 
-## ✨ What's New - Major UI Overhaul 2.0
+- **Smart Influencer Discovery**: AI-powered matching with personalized analysis for major celebrities
+- **Real-time Profile Scraping**: Live Instagram data via Apify integration
+- **Enhanced Web Research**: Intelligent brand and influencer research with fallback systems
+- **Personalized Campaign Proposals**: Unique, data-driven proposals for each influencer
+- **Celebrity Recognition**: Specialized analysis for major influencers (Cristiano Ronaldo, Taylor Swift, etc.)
+- **Professional CSV Export**: IKEA-format export for client presentations
+- **Multi-language Support**: Spanish and English interface
+- **Beautiful UI**: Modern design with WebGL fluid simulation
+- **Notes Management**: Built-in note-taking system with rich text editing
+- **Campaign Tracking**: Comprehensive campaign management and analytics
 
-LAYAI has been completely transformed with a modern, AI-driven interface that adapts to your needs and optimizes for conversion. Our latest update introduces cutting-edge UI/UX principles for an unparalleled user experience.
+## 🛠 Tech Stack
 
-### 🎨 **Modern Design System**
-- **Glass Morphism Effects**: Beautiful translucent cards with backdrop blur
-- **Enhanced Typography**: Premium Space Grotesk + optimized Inter fonts
-- **Micro-animations**: Smooth float, pulse-glow, slide-up animations
-- **Design Tokens**: Centralized CSS variables for consistent styling
+- **Frontend**: Next.js 15, React, TypeScript, TailwindCSS
+- **Backend**: Next.js API Routes, Node.js
+- **Data Sources**: Apify (Instagram scraping), Serply (web search)
+- **Styling**: TailwindCSS, Shadcn/ui components, Custom CSS architecture
+- **Animation**: WebGL fluid simulation with mouse interaction
+- **Database**: JSON-based data storage with API endpoints
 
-### 🤖 **AI-Driven Interactive Elements**
-- **Smart Tooltips**: Context-aware help that appears when you need guidance
-- **Adaptive Navigation**: Interface reorders based on your usage patterns
-- **Progressive Disclosure**: Advanced features revealed as you gain experience
-- **Contextual Help System**: Tailored guidance for beginner/intermediate/advanced users
+## 📋 Prerequisites
 
-### 🎯 **Conversion-Optimized Features**
-- **Enhanced Landing Page**: Trust signals, social proof, compelling CTAs
-- **Strategic Button Placement**: "Start Free Discovery" with trust indicators
-- **Progress Indicators**: Visual feedback during AI processing
-- **Reduced Friction**: Smart tooltips eliminate confusion points
+- Node.js 18+ and npm
+- Apify account and API token
+- Serply API key for enhanced web search
 
-## 🌟 Key Features
+## 🔧 Environment Setup
 
-### 🔍 **AI-Powered Discovery**
-- **Natural Language Search**: Describe your ideal influencer in plain English
-- **Real-time Matching**: Advanced algorithms find perfect brand-influencer fits
-- **Multi-platform Support**: Instagram, TikTok, YouTube, Twitter integration
-- **Smart Filtering**: Advanced demographics, engagement, and niche targeting
+Create a `.env.local` file in the root directory:
 
-### 📊 **Advanced Analytics Dashboard**
-- **Performance Metrics**: Real-time engagement rates and audience insights
-- **ROI Tracking**: Campaign performance and conversion analytics
-- **Audience Demographics**: Detailed breakdowns by age, location, interests
-- **Competitive Analysis**: Market trends and competitor insights
+```env
+# Required - Apify Integration
+APIFY_API_TOKEN=your_apify_token_here
 
-### 📝 **Campaign Management**
-- **Proposal Generator**: AI-assisted campaign proposal creation
-- **Template Library**: Pre-built templates for different industries
-- **Collaboration Tools**: Share proposals and track negotiations
-- **Export Options**: CSV, PDF, and custom format exports
+# Required - Web Search Integration
+SERPLY_API_KEY=your_serply_key_here
+```
 
-### 🎨 **Modern User Experience**
-- **Adaptive Interface**: Personalizes based on your usage patterns
-- **Contextual Help**: Smart tooltips and guidance when you need it
-- **Glass Morphism Design**: Modern, elegant visual aesthetics
-- **Responsive Design**: Perfect experience across all devices
+### Getting API Keys
 
-## 🚀 Quick Start
+1. **Apify**: Sign up at [apify.com](https://apify.com) and get your API token from the console
+2. **Serply**: Get your API key from [serply.io](https://serply.io) for web search functionality
 
-### Prerequisites
-
-- Node.js 18.0 or later
-- npm or yarn package manager
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-
-### Installation
+## 🚀 Installation & Setup
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/layai.git
-   cd layai
+   git clone https://github.com/yourusername/LAYAI.git
+   cd LAYAI
    ```
 
 2. **Install dependencies**
    ```bash
    npm install
-   # or
-   yarn install
    ```
 
 3. **Set up environment variables**
    ```bash
    cp .env.example .env.local
-   ```
-   
-   Configure your environment variables:
-   ```env
-   NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_firebase_project_id
-   APIFY_API_TOKEN=your_apify_api_token
+   # Edit .env.local with your API keys
    ```
 
-4. **Start the development server**
+4. **Run the development server**
    ```bash
    npm run dev
-   # or
-   yarn dev
    ```
 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
-## 🎯 How to Use
+## 📖 How It Works
 
-### 1. **AI Discovery Chat**
-- Start by describing your ideal influencer campaign
-- Use natural language: "Find fashion influencers in NYC with 50k+ followers"
-- AI will process your request and find matching influencers
+### Enhanced Data Processing Pipeline
 
-### 2. **Review Results**
-- **Premium Matches**: High-quality influencers with detailed analytics
-- **Discovery Results**: Additional influencers found through real-time search
-- Use filters to refine your search results
+#### Step 1: Brand Research
+- Automated web search via Serply API to understand brand values and target audience
+- Intelligent fallback system when API is unavailable
+- Contextual analysis for better influencer matching
 
-### 3. **Generate Proposals**
-- Select influencers you're interested in
-- Use our AI-powered proposal generator
-- Customize templates for your specific campaign needs
+#### Step 2: Instagram Profile Scraping
+- Real-time data extraction via Apify's Instagram scraper
+- Comprehensive profile data including followers, engagement, bio, and verification status
+- Enhanced error handling and data validation
 
-### 4. **Manage Campaigns**
-- Track ongoing campaigns and negotiations
-- Monitor performance metrics and ROI
-- Export data in multiple formats
+#### Step 3: Personalized Analysis
+- **Celebrity Recognition**: Specialized analysis for major influencers
+- **Custom Biographies**: Unique descriptions based on real career achievements
+- **Brand-Specific Matching**: Tailored reasons why each influencer fits the brand
+- **Professional Metrics**: Accurate engagement rates and performance indicators
 
-## 🛠️ Technology Stack
+### Celebrity Recognition System
 
-### **Frontend**
-- **Next.js 15.3.3**: React framework with App Router
-- **React 19.0.0**: Latest React with concurrent features
-- **TypeScript 5.7.2**: Type-safe development
-- **Tailwind CSS 3.4.14**: Utility-first CSS framework
+The platform provides specialized analysis for major influencers:
 
-### **UI/UX**
+- **Cristiano Ronaldo**: Football legend analysis with philanthropic focus
+- **Taylor Swift**: Music industry icon with cross-generational appeal
+- **Jaime Lorente**: Spanish entertainment star (Money Heist, Elite)
+- **Fabrizio Romano**: Football journalism authority
+- **Kylie Jenner**: Beauty mogul and trendsetter
+- **Lionel Messi**: Football excellence and family values
+- **Selena Gomez**: Multi-platform entertainer and mental health advocate
+
+## 🎯 Usage
+
+1. **Start a Campaign**: Click "Get Started" on the landing page
+2. **Enter Campaign Details**: Fill in brand name, budget, and requirements
+3. **Add Influencers**: Paste Instagram handles (one per line)
+4. **Review Enhanced Profiles**: See personalized analysis with real data
+5. **Generate Proposal**: Create professional campaign proposals
+6. **Export to CSV**: Download IKEA-format spreadsheet for client presentations
+7. **Manage Notes**: Use the built-in notes system for campaign planning
+8. **Track Campaigns**: Monitor campaign progress and performance
+
+## 🔍 Example Output
+
+### Cristiano Ronaldo Analysis
+```
+Biography: "Cristiano Ronaldo is a Portuguese professional footballer and global sports icon with 658M followers. Five-time Ballon d'Or winner known for his athletic excellence, philanthropic efforts, and massive business ventures."
+
+Why This Match:
+- "Global football icon with unmatched influence - perfect ambassador for Coca-Cola's worldwide reach"
+- "Philanthropic efforts and business ventures align with Coca-Cola's values of making a positive impact"
+- "Massive social media presence extends far beyond football, ideal for Coca-Cola's diverse audience"
+```
+
+### Taylor Swift Analysis
+```
+Biography: "Taylor Swift is a Grammy-winning singer-songwriter and global music icon with 281M followers. Known for record-breaking album releases, storytelling mastery, and unprecedented fan loyalty."
+
+Why This Match:
+- "Global music icon with record-breaking album releases - perfect for Coca-Cola's worldwide brand recognition"
+- "Swiftie fanbase loyalty and cultural influence create unmatched brand advocacy for Coca-Cola"
+- "Cross-generational appeal and storytelling mastery align with Coca-Cola's timeless brand values"
+```
+
+## 🛡️ Error Handling & Reliability
+
+- **API Timeout Protection**: 30-second timeouts prevent hanging requests
+- **Intelligent Fallbacks**: Curated data when external APIs fail
+- **Enhanced Logging**: Comprehensive error tracking and debugging
+- **Graceful Degradation**: System continues working even with partial API failures
+- **Text Direction Fix**: Resolved backward text input issues across all browsers
+- **Cross-browser Compatibility**: Consistent experience across different browsers
+
+## 🎨 UI/UX Features
+
+### Modern Design System
+- **WebGL Fluid Animation**: Sophisticated background animation with mouse interaction
 - **Glass Morphism**: Modern translucent design elements
-- **Custom Animations**: Smooth micro-interactions
-- **Responsive Design**: Mobile-first approach
-- **Accessibility**: WCAG 2.1 compliant
+- **Responsive Layout**: Optimized for all device sizes
+- **Accessibility**: WCAG compliant with proper focus management
+- **Text Direction**: Fixed text input issues with proper LTR handling
 
-### **Backend Integration**
-- **Apify**: Web scraping and data collection
-- **Firebase**: Real-time database and authentication
-- **RESTful APIs**: Clean, documented endpoints
+### Notes Management System
+- **Rich Text Editing**: ContentEditable with proper styling
+- **Real-time Saving**: Auto-save functionality
+- **Search & Filter**: Find notes quickly
+- **Professional Interface**: Clean, distraction-free writing environment
 
-### **Development Tools**
-- **ESLint**: Code linting and quality
-- **Jest**: Unit testing framework
-- **Playwright**: End-to-end testing
-- **TypeScript**: Static type checking
-
-## 📁 Project Structure
-
-```
-layai/
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── api/               # API routes
-│   │   ├── globals.css        # Enhanced global styles
-│   │   ├── layout.tsx         # Root layout with modern design
-│   │   └── page.tsx           # Main application page
-│   ├── components/            # React components
-│   │   ├── ui/               # Enhanced UI components
-│   │   │   ├── enhanced-button.tsx      # Modern button with interactions
-│   │   │   ├── enhanced-card.tsx        # Glass morphism cards
-│   │   │   ├── smart-tooltip.tsx        # AI-driven contextual help
-│   │   │   ├── adaptive-sidebar.tsx     # Personalized navigation
-│   │   │   └── splash-cursor.tsx        # Animated background
-│   │   ├── Chatbot.tsx        # AI chat interface
-│   │   ├── InfluencerResults.tsx       # Search results display
-│   │   ├── ProposalGenerator.tsx       # Campaign proposal creation
-│   │   ├── CampaignManager.tsx         # Campaign management
-│   │   └── LandingPage.tsx    # Enhanced landing page
-│   ├── lib/                   # Utility libraries
-│   ├── types/                 # TypeScript type definitions
-│   └── utils/                 # Helper functions
-├── tests/                     # Test files
-├── docs/                      # Documentation
-└── public/                    # Static assets
-```
-
-## 🎨 Design System
-
-### **Color Palette**
-```css
-/* Primary Colors */
---primary-50: 240 249 255;
---primary-500: 59 130 246;
---primary-600: 37 99 235;
-
-/* Glass Morphism */
---surface-glass: rgba(255, 255, 255, 0.7);
---surface-glass-dark: rgba(255, 255, 255, 0.1);
-
-/* Shadows */
---shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
---shadow-glow: 0 0 20px rgba(59, 130, 246, 0.1);
-```
-
-### **Typography**
-- **Space Grotesk**: Modern geometric sans-serif for headings
-- **Inter**: Optimized for readability in body text
-- **Responsive scaling**: Fluid typography across all screen sizes
-
-### **Components**
-- **Enhanced Buttons**: Multiple variants with ripple effects
-- **Smart Cards**: Glass morphism with hover animations
-- **Adaptive Navigation**: Personalizes based on usage patterns
-- **Contextual Tooltips**: AI-driven help system
+### Campaign Management
+- **Visual Dashboard**: Overview of all campaigns
+- **Progress Tracking**: Campaign status and timeline management
+- **Editable Fields**: Inline editing for quick updates
+- **Export Options**: Multiple format support
 
 ## 🧪 Testing
 
-### **Run Tests**
+Run the test suite:
 ```bash
-# Unit tests
-npm run test
+npm test
+```
 
-# E2E tests
+Run E2E tests:
+```bash
 npm run test:e2e
-
-# Test coverage
-npm run test:coverage
-
-# All tests
-npm run test:all
 ```
 
-### **Test Structure**
-- **Unit Tests**: Component and utility function testing
-- **Integration Tests**: API endpoint and data flow testing
-- **E2E Tests**: Complete user journey testing
-- **Visual Tests**: UI component screenshot testing
-
-## 📊 Performance
-
-### **Core Web Vitals**
-- **LCP (Largest Contentful Paint)**: < 2.5s
-- **FID (First Input Delay)**: < 100ms
-- **CLS (Cumulative Layout Shift)**: < 0.1
-
-### **Optimization Features**
-- **Image Optimization**: Next.js automatic image optimization
-- **Code Splitting**: Dynamic imports for better performance
-- **Caching**: Intelligent caching strategies
-- **Compression**: Gzip/Brotli compression enabled
-
-## 🚀 Deployment
-
-### **Vercel (Recommended)**
+Run specific test suites:
 ```bash
-npm install -g vercel
-vercel
+npm run test:unit
+npm run test:integration
 ```
 
-### **Docker**
-```bash
-docker build -t layai .
-docker run -p 3000:3000 layai
-```
+## 🚨 Security Notes
 
-### **Environment Variables**
-Ensure all environment variables are configured in your deployment platform.
+- **Never commit API keys** to version control
+- Use environment variables for all sensitive data
+- Regularly rotate API tokens
+- Monitor API usage and costs
+- GitGuardian integration for secret detection
+- Secure data handling with proper validation
+
+## 📊 Export Features
+
+- **Professional CSV Export**: IKEA-format with 35+ columns
+- **Campaign Metrics**: Detailed performance indicators
+- **Client-Ready Format**: Professional presentation structure
+- **Comprehensive Data**: All influencer and campaign information
+- **Multiple Formats**: CSV, JSON, and custom formats
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+#### Text Appearing Backward
+- **Fixed in v2.1.0**: Global CSS rules prevent text reversal
+- **Solution**: Update to latest version or add `direction: ltr !important` to CSS
+
+#### API Timeouts
+- **Check**: Internet connection and API key validity
+- **Fallback**: System uses curated data when APIs fail
+- **Monitoring**: Check console logs for detailed error information
+
+#### Missing Data
+- **Cause**: API rate limits or temporary service issues
+- **Solution**: System automatically retries with fallback data
+- **Manual**: Refresh the page or try again later
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### **Development Workflow**
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes and add tests
-4. Commit your changes: `git commit -m 'Add amazing feature'`
-5. Push to the branch: `git push origin feature/amazing-feature`
-6. Open a Pull Request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### **Code Standards**
+### Development Guidelines
 - Follow TypeScript best practices
-- Use ESLint and Prettier for code formatting
-- Write comprehensive tests for new features
-- Follow semantic commit conventions
+- Add tests for new features
+- Update documentation
+- Ensure cross-browser compatibility
+- Test text input functionality
 
 ## 📄 License
 
-This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
-- **Documentation**: [docs/](docs/)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/layai/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/layai/discussions)
+For support, email support@layai.com or create an issue in this repository.
 
-## 🙏 Acknowledgments
+## 📈 Recent Updates (v2.1.0)
 
-- **Next.js Team**: For the amazing React framework
-- **Tailwind CSS**: For the utility-first CSS framework
-- **Vercel**: For deployment and hosting platform
-- **Open Source Community**: For the incredible ecosystem
+- **Fixed**: Critical text direction bug causing backward text input
+- **Enhanced**: Global CSS architecture for better text handling
+- **Improved**: Cross-browser compatibility
+- **Added**: Comprehensive input field styling
+- **Updated**: Documentation with latest features
 
 ---
 
-<div align="center">
-
-**Built with ❤️ by the LAYAI Team**
-
-[Website](https://layai.com) • [Documentation](docs/) • [API Reference](API_DOCUMENTATION.md)
-
-</div> 
+**Built with ❤️ for the influencer marketing community** 

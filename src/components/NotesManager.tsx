@@ -16,6 +16,7 @@ const NotesManager: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const contentRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
 
   // Load notes on component mount
@@ -141,7 +142,11 @@ const NotesManager: React.FC = () => {
     } : null);
   };
 
-
+  const handleContentChange = () => {
+    if (contentRef.current && selectedNote) {
+      updateSelectedNote('content', contentRef.current.innerHTML);
+    }
+  };
 
   const filteredNotes = notes.filter(note =>
     note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -280,20 +285,34 @@ const NotesManager: React.FC = () => {
             </div>
 
             {/* Editor Content */}
-            <div className="flex-1 bg-white p-6">
-              <textarea
-                value={selectedNote.content.replace(/<[^>]*>/g, '')}
-                onChange={(e) => updateSelectedNote('content', e.target.value)}
-                placeholder="Start writing..."
-                className="w-full h-full resize-none outline-none text-gray-900 leading-relaxed border-none"
+            <div className="flex-1 bg-white p-6 relative">
+              <div
+                ref={contentRef}
+                contentEditable
+                onInput={handleContentChange}
+                dangerouslySetInnerHTML={{ __html: selectedNote.content || '' }}
+                className="min-h-full outline-none text-gray-900 leading-relaxed"
                 style={{
                   fontSize: '16px',
                   lineHeight: '1.6',
                   fontFamily: 'system-ui, -apple-system, sans-serif',
                   direction: 'ltr',
-                  textAlign: 'left'
+                  textAlign: 'left',
+                  unicodeBidi: 'normal'
                 }}
               />
+              {(!selectedNote.content || selectedNote.content.trim() === '') && (
+                <div 
+                  className="absolute top-6 left-6 text-gray-400 pointer-events-none"
+                  style={{
+                    fontSize: '16px',
+                    lineHeight: '1.6',
+                    fontFamily: 'system-ui, -apple-system, sans-serif'
+                  }}
+                >
+                  Start writing...
+                </div>
+              )}
             </div>
           </>
         ) : (

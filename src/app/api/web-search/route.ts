@@ -38,38 +38,38 @@ export async function POST(request: NextRequest) {
 
       const searchResponse = await fetch(searchUrl, {
         method: 'GET',
-        headers: {
-          'X-API-KEY': serplyApiKey,
+      headers: {
+        'X-API-KEY': serplyApiKey,
           'User-Agent': 'LAYAI/1.0',
-        },
+      },
         signal: AbortSignal.timeout(30000), // 30 second timeout
       });
 
       console.log(`📡 Serply API response status: ${searchResponse.status}`);
 
-      if (!searchResponse.ok) {
+    if (!searchResponse.ok) {
         throw new Error(`Serply API error: ${searchResponse.status} ${searchResponse.statusText}`);
-      }
+    }
 
-      const searchData = await searchResponse.json();
+    const searchData = await searchResponse.json();
       console.log(`✅ Serply API response received:`, JSON.stringify(searchData, null, 2));
-      
-      if (searchData.results && searchData.results.length > 0) {
+    
+    if (searchData.results && searchData.results.length > 0) {
         const results = searchData.results.slice(0, limit).map((result: any) => ({
-          title: result.title || '',
-          description: result.description || result.snippet || '',
-          url: result.link || result.url || '',
+        title: result.title || '',
+        description: result.description || result.snippet || '',
+        url: result.link || result.url || '',
           domain: result.cite?.domain || new URL(result.link || result.url || 'https://example.com').hostname,
-        }));
+      }));
 
         console.log(`✅ Successfully processed ${results.length} Serply results`);
-        
-        return NextResponse.json({
-          success: true,
-          results,
+      
+      return NextResponse.json({
+        success: true,
+        results,
           source: 'serply'
-        });
-      } else {
+      });
+    } else {
         throw new Error('No results found in Serply response');
       }
 
