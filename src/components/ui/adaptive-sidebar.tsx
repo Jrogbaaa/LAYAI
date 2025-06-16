@@ -120,7 +120,12 @@ const AdaptiveSidebar: React.FC<AdaptiveSidebarProps> = ({
               return (
                 <button
                   key={itemId}
-                  onClick={() => handleNavigation(itemId)}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleNavigation(itemId);
+                  }}
                   className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
                 >
                   <span className="text-xs">{item.icon}</span>
@@ -223,10 +228,19 @@ const NavigationItem: React.FC<NavigationItemProps> = ({
   const hasSubItems = item.subItems && item.subItems.length > 0;
   const showUsageBadge = userLevel === 'advanced' && usageCount > 5;
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!item.disabled) {
+      onClick();
+    }
+  };
+
   const buttonContent = (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       disabled={item.disabled}
+      type="button"
       className={cn(
         'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group relative',
         isActive 

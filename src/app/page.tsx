@@ -68,8 +68,10 @@ export default function Home() {
       id: 'generate',
       label: 'Create Proposal',
       icon: '📋',
-      tooltip: 'Generate campaign proposals',
-      disabled: !searchResults?.premiumResults?.length
+      tooltip: searchResults?.premiumResults?.length 
+        ? 'Generate campaign proposals' 
+        : 'Find influencers first to create proposals',
+      disabled: false // Always allow access to proposal tab
     },
     {
       id: 'campaigns',
@@ -341,6 +343,7 @@ export default function Home() {
   };
 
   const handleNavigation = (viewId: string) => {
+    // Prevent page scrolling when changing tabs
     setCurrentView(viewId as PageView);
   };
 
@@ -466,6 +469,45 @@ export default function Home() {
           ...(searchResults?.premiumResults || []),
           ...convertDiscoveryToMatchResults(searchResults?.discoveryResults || [])
         ];
+        
+        // If no search results, show empty state with guidance
+        if (allResults.length === 0) {
+          return (
+            <div className="h-full flex items-center justify-center p-6">
+              <Card variant="glass" className="max-w-md text-center">
+                <CardHeader icon="🔍">
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    No Influencers Found
+                  </h2>
+                  <p className="text-gray-600">
+                    Start by discovering influencers in the AI Discovery tab first
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="text-sm text-gray-500">
+                      <p>To create a proposal, you need to:</p>
+                      <ol className="list-decimal list-inside mt-2 space-y-1">
+                        <li>Use AI Discovery to find influencers</li>
+                        <li>Review and select your matches</li>
+                        <li>Return here to generate proposals</li>
+                      </ol>
+                    </div>
+                    <Button
+                      variant="primary"
+                      onClick={() => setCurrentView('chat')}
+                      leftIcon="🤖"
+                      className="w-full"
+                    >
+                      Start AI Discovery
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          );
+        }
+        
         return (
           <div className="h-full">
             <ProposalGenerator matchResults={allResults} onProposalGenerated={handleProposalGenerated} />
