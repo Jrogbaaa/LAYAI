@@ -2,6 +2,118 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.0] - 2025-01-16
+
+### 🧠 Major: Firebase Memory Integration & Learning System
+
+#### Added
+- **Firebase Memory Integration**: Complete persistent memory system replacing volatile in-memory storage
+  - `SearchMemoryStore` now saves all searches, feedback, and learning patterns to Firebase
+  - Campaign-aware memory tracking with status integration
+  - User feedback permanently stored and analyzed for continuous improvement
+  
+- **Memory & Learning Dashboard**: New sidebar tab with real-time insights
+  - Memory system status and statistics
+  - Active campaign tracking and insights
+  - Recent search activity monitoring
+  - Learning insights and performance metrics
+  
+- **Enhanced Campaign Integration**:
+  - `CampaignManager` now notifies memory system when campaign statuses change
+  - Search history linked to specific campaigns (Planning/Active/Completed/Paused)
+  - Campaign-specific learning and optimization
+  
+- **Improved Proposal Generator**:
+  - Added campaign context awareness (campaignId, campaignStatus props)
+  - Campaign context indicator in UI when available
+  - Enhanced Instagram influencer input handling (comma AND newline separation)
+
+#### Enhanced
+- **Search Memory System**: 
+  - Persistent Firebase storage for all search history
+  - Campaign status tracking and learning
+  - Enhanced feedback loop for "insufficient response" learning
+  - Real-time learning insights generation
+
+- **User Feedback Learning**:
+  - Feedback now permanently stored in Firebase
+  - Campaign-specific feedback analysis
+  - Continuous improvement based on user preferences
+  - Better match scoring based on historical feedback
+
+#### Fixed
+- **Instagram Influencer Input**: Fixed separation logic to support both comma and newline separation
+- **Memory Persistence**: Eliminated volatile memory loss on server restarts
+- **Campaign Status Tracking**: Proper integration between campaigns and memory system
+
+#### Technical
+- Enhanced `src/lib/database.ts` with Firebase integration
+- New `src/components/MemoryDashboard.tsx` component
+- Updated `src/app/api/campaign-insights/route.ts` for campaign insights
+- Enhanced `src/app/api/search-apify/route.ts` with campaign context
+- Updated `src/app/api/feedback/route.ts` for Firebase persistence
+
+## [2.3.0] - 2025-01-15
+
+### 🎨 UI/UX Enhancements & Instagram Scraping
+
+#### Added
+- **Enhanced Landing Page**: Beautiful gradient design with professional animations
+- **Real-time Instagram Scraping**: Apify integration for live influencer data
+- **Multi-tier Search Results**: Premium verified + Discovery results
+- **Advanced Proposal Generation**: AI-powered with brand research integration
+
+#### Enhanced
+- **Search Experience**: Improved chatbot with better context understanding
+- **Results Display**: Two-tier system with premium and discovery influencers
+- **Export Options**: Multiple CSV formats (Hibiki, Orange styles)
+
+## [2.2.0] - 2025-01-14
+
+### 🚀 Core Platform Features
+
+#### Added
+- **Campaign Management**: Full CRUD operations for campaign tracking
+- **Notes System**: Persistent note-taking with Firebase integration
+- **Feedback System**: User feedback collection and analysis
+- **Sidebar Navigation**: Intuitive navigation between platform features
+
+#### Enhanced
+- **Database Integration**: Firebase Firestore for all data persistence
+- **Search Functionality**: Advanced filtering and matching algorithms
+- **Export Capabilities**: Professional proposal and CSV export options
+
+## [2.1.0] - 2025-01-13
+
+### 🔍 Search & Discovery
+
+#### Added
+- **Influencer Search**: Advanced search with multiple platforms
+- **Match Scoring**: AI-powered compatibility scoring
+- **Real-time Data**: Live social media metrics integration
+- **Discovery Grid**: Visual influencer discovery interface
+
+## [2.0.0] - 2025-01-12
+
+### 🎯 Initial Release
+
+#### Added
+- **Core Platform**: LAYAI influencer marketing platform foundation
+- **AI Integration**: ChatGPT-powered search and recommendations
+- **Multi-platform Support**: Instagram, TikTok, YouTube integration
+- **Professional UI**: Modern, responsive design with Tailwind CSS
+
+---
+
+## Legend
+- 🧠 Memory & Learning
+- 🎨 UI/UX
+- 🚀 Features
+- 🔍 Search & Discovery
+- 🎯 Core Platform
+- 🔧 Technical
+- 🐛 Bug Fixes
+
 ## [2.3.1] - 2025-01-03
 
 ### 🔧 Bug Fixes
@@ -23,61 +135,6 @@ All notable changes to this project will be documented in this file.
 - Fixed console spam from generateBrandSpecificReasons function
 - Implemented memoization in convertMatchToProposalTalent function
 - Improved performance by preventing redundant computations
-
-## [2.3.0] - 2025-01-03
-
-### ✨ Major UI/UX Enhancements
-- **ENHANCED**: Complete UI overhaul across all components (except landing page)
-- **ENHANCED**: Modern gradient-based design system with professional color palette
-- **ENHANCED**: Improved typography, spacing, and visual hierarchy throughout
-- **ENHANCED**: Enhanced animations, hover effects, and micro-interactions
-
-#### 🎨 Component-Specific Improvements
-
-**Chatbot Component**
-- Modern gradient header with AI assistant branding
-- Improved message bubbles with better shadows and rounded corners
-- Enhanced loading animation with bouncing dots
-- Professional input area with better focus states
-
-**NotesManager Component**
-- Sleek sidebar with gradient header and integrated search
-- Modern card-based note layout with hover effects
-- Professional empty states with icons and descriptive text
-- Enhanced editor with better typography and saving indicators
-
-**ProposalGenerator Component**
-- Added professional header with icon and descriptive text
-- Improved form inputs with rounded corners and better focus states
-- Enhanced status cards with gradients, icons, and information display
-- Modern button designs with gradients, shadows, and hover effects
-
-**ProposalViewer Component**
-- Clean card-based layout with proper spacing and visual hierarchy
-- Professional metrics display with color-coded sections and gradients
-- Enhanced talent cards with better information organization
-- Fixed TypeScript errors with correct property names from type definitions
-
-**Sidebar Component**
-- Complete redesign with gradient header featuring LAYAI branding
-- Interactive navigation with hover effects, animations, and active state indicators
-- Added quick actions section and professional footer with version info
-- Implemented proper TypeScript interfaces and PageView type exports
-
-**InfluencerCard Component**
-- Modern card design with platform-specific color gradients
-- Enhanced profile section with verification badges and location info
-- Professional stats layout with color-coded engagement rates
-- Smooth hover animations and selection state indicators
-
-#### 🛠️ Technical Improvements
-- Consistent gradient color palette across components
-- Professional typography with improved font weights and spacing
-- Modern shadow effects for depth and visual hierarchy
-- Smooth transitions and hover effects throughout
-- Consistent iconography using emojis and SVG icons
-- Enhanced accessibility with better focus states
-- Responsive layouts for mobile and desktop
 
 ## [2.2.0] - 2025-01-02
 

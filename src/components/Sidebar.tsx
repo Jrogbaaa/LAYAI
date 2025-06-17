@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type PageView = 'search' | 'generate' | 'notes' | 'campaigns';
+export type PageView = 'search' | 'generate' | 'notes' | 'campaigns' | 'memory';
 
 interface SidebarProps {
   currentView: PageView;
@@ -36,6 +36,13 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
       icon: '📝',
       description: 'Manage your notes',
       gradient: 'from-orange-500 to-orange-600'
+    },
+    {
+      id: 'memory' as PageView,
+      label: 'Memory & Learning',
+      icon: '🧠',
+      description: 'AI memory system insights',
+      gradient: 'from-purple-600 to-indigo-600'
     }
   ];
 

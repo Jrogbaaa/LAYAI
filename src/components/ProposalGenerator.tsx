@@ -7,11 +7,16 @@ import { MatchResult } from '@/types/influencer';
 interface ProposalGeneratorProps {
   matchResults: MatchResult[];
   onProposalGenerated: (proposal: CampaignProposal) => void;
+  // NEW: Optional campaign context for memory integration
+  campaignId?: string;
+  campaignStatus?: 'Planning' | 'Active' | 'Completed' | 'Paused';
 }
 
 export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
   matchResults,
-  onProposalGenerated
+  onProposalGenerated,
+  campaignId,
+  campaignStatus
 }) => {
   const [campaignData, setCampaignData] = useState({
     client: '',
@@ -469,7 +474,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
 
     try {
       const handles = manualHandles
-        .split('\n')
+        .split(/[,\n]/) // Split by both comma AND newline
         .map(h => h.trim())
         .filter(h => h.length > 0)
         .map(h => h.replace('@', ''));
@@ -857,14 +862,32 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
       <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
-        <div className="flex items-center space-x-4 mb-8">
-          <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
-            <span className="text-white text-xl">📄</span>
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
+              <span className="text-white text-xl">📄</span>
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">Generate Campaign Proposal</h2>
+              <p className="text-gray-600 mt-1">Create professional influencer campaign proposals with AI-powered insights</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900">Generate Campaign Proposal</h2>
-            <p className="text-gray-600 mt-1">Create professional influencer campaign proposals with AI-powered insights</p>
-          </div>
+          
+          {/* Campaign Context Indicator */}
+          {campaignId && (
+            <div className="flex items-center space-x-3 px-4 py-2 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200">
+              <div className={`w-3 h-3 rounded-full ${
+                campaignStatus === 'Active' ? 'bg-green-500' :
+                campaignStatus === 'Planning' ? 'bg-orange-500' :
+                campaignStatus === 'Completed' ? 'bg-blue-500' :
+                'bg-gray-500'
+              }`}></div>
+              <div className="text-sm">
+                <div className="font-semibold text-purple-800">Campaign Context</div>
+                <div className="text-purple-600">ID: {campaignId} • {campaignStatus}</div>
+              </div>
+            </div>
+          )}
         </div>
         
         {/* Campaign Information */}
@@ -962,13 +985,13 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
             <h3 className="text-lg font-semibold text-blue-900">Add Instagram Influencers</h3>
           </div>
           <p className="text-blue-700 text-sm mb-4">
-            Enter Instagram handles (without @) separated by commas. We'll fetch real-time data and generate personalized analysis.
+            Enter Instagram handles (without @) separated by commas or new lines. We'll fetch real-time data and generate personalized analysis.
           </p>
           <div className="flex space-x-3">
             <textarea
               value={manualHandles}
               onChange={(e) => setManualHandles(e.target.value)}
-              placeholder="cristiano, therock, kyliejenner, selenagomez"
+              placeholder="cristiano, therock&#10;kyliejenner&#10;selenagomez"
               className="flex-1 px-4 py-3 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white resize-none"
               rows={3}
             />

@@ -126,14 +126,33 @@ const CampaignManager: React.FC = () => {
     }
   };
 
-  const updateCampaign = (campaignId: string, field: keyof Campaign, value: any) => {
+  const updateCampaign = async (campaignId: string, field: keyof Campaign, value: any) => {
     setCampaigns(prev => prev.map(campaign => 
       campaign.id === campaignId 
         ? { ...campaign, [field]: value }
         : campaign
     ));
+    
     // Auto-save to database
-    saveCampaign(campaignId, field, value);
+    await saveCampaign(campaignId, field, value);
+    
+    // If status changed, notify our memory system
+    if (field === 'status') {
+      try {
+        await fetch('/api/campaign-insights', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'updateStatus',
+            campaignId,
+            status: value
+          })
+        });
+        console.log(`📊 Memory system notified: Campaign ${campaignId} status changed to ${value}`);
+      } catch (error) {
+        console.error('Error notifying memory system:', error);
+      }
+    }
   };
 
   const handleCellClick = (campaignId: string, field: string, currentValue: any) => {
@@ -287,9 +306,9 @@ const CampaignManager: React.FC = () => {
             {statuses.map((status) => (
               <button
                 key={status}
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation();
-                  updateCampaign(campaign.id, 'status', status);
+                  await updateCampaign(campaign.id, 'status', status);
                   setOpenDropdown(null);
                 }}
                 className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 first:rounded-t-md last:rounded-b-md text-gray-900 font-medium"
@@ -325,9 +344,9 @@ const CampaignManager: React.FC = () => {
             {priorities.map((priority) => (
               <button
                 key={priority}
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation();
-                  updateCampaign(campaign.id, 'priority', priority);
+                  await updateCampaign(campaign.id, 'priority', priority);
                   setOpenDropdown(null);
                 }}
                 className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 first:rounded-t-md last:rounded-b-md text-gray-900 font-medium"

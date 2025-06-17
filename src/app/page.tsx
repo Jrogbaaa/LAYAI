@@ -10,6 +10,7 @@ import DiscoveryGrid from '@/components/DiscoveryGrid';
 import CampaignManager from '@/components/CampaignManager';
 import NotesManager from '@/components/NotesManager';
 import LandingPage from '@/components/LandingPage';
+import MemoryDashboard from '@/components/MemoryDashboard';
 import { MatchResult } from '@/types/influencer';
 import { CampaignProposal } from '@/types/campaign';
 import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
@@ -69,7 +70,11 @@ export default function Home() {
           },
           body: JSON.stringify({ 
             ...data.data,  // Spread the search parameters directly
-            sessionId: sessionId
+            sessionId: sessionId,
+            // TODO: Add campaign context when available
+            // campaignId: currentCampaignId,
+            // campaignStatus: currentCampaignStatus,
+            // brandName: data.data.brandName
           }),
         });
 
@@ -353,7 +358,13 @@ export default function Home() {
           ...searchResults?.premiumResults || [],
           ...convertDiscoveryToMatchResults(searchResults?.discoveryResults || [])
         ];
-        return <ProposalGenerator matchResults={allResults} onProposalGenerated={handleProposalGenerated} />;
+        return <ProposalGenerator 
+          matchResults={allResults} 
+          onProposalGenerated={handleProposalGenerated}
+          // TODO: Add campaign context when user selects a specific campaign
+          // campaignId={selectedCampaignId}
+          // campaignStatus={selectedCampaignStatus}
+        />;
       case 'proposal':
         return currentProposal ? (
           <div className="min-h-screen p-6">
@@ -380,6 +391,8 @@ export default function Home() {
         return <CampaignManager />;
       case 'notes':
         return <NotesManager />;
+      case 'memory':
+        return <MemoryDashboard />;
       default:
         return <Chatbot onSendMessage={handleSendMessage} />;
     }

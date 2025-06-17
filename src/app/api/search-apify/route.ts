@@ -17,7 +17,10 @@ export async function POST(request: NextRequest) {
       userQuery = '',
       specificHandle,
       verified = false,
-      maxResults = 50
+      maxResults = 50,
+      campaignId,
+      campaignStatus,
+      brandName
     } = body;
 
     console.log('🔍 Search request:', { platforms, niches, minFollowers, maxFollowers, location, gender, specificHandle });
@@ -45,8 +48,8 @@ export async function POST(request: NextRequest) {
     // Perform the search
     const searchResults = await searchInfluencersWithTwoTierDiscovery(searchParams);
 
-    // Save search to memory for learning
-    const searchId = searchMemory.saveSearch({
+    // Save search to memory with campaign context
+    const searchId = await searchMemory.saveSearch({
       userId,
       sessionId: sessionId || `session_${Date.now()}`,
       query: userQuery,
@@ -64,9 +67,23 @@ export async function POST(request: NextRequest) {
         premiumResults: searchResults.premiumResults,
         discoveryResults: searchResults.discoveryResults,
       },
+      campaignId: campaignId || undefined,
+      campaignStatus: campaignStatus || undefined,
+      brandName: brandName || undefined,
     });
 
+         // Get campaign-aware learning insights
+     const insights = await searchMemory.getLearningInsights(
+       userQuery || '',
+       {
+         brandName: brandName || undefined,
+         activeCampaigns: campaignId ? [campaignId] : undefined,
+       }
+     );
+
     console.log(`💾 Saved search with ID: ${searchId}`);
+    console.log('✅ Search completed and saved to memory with campaign context');
+    console.log('🧠 Learning insights:', insights.campaignSpecificInsights);
 
     return NextResponse.json({
       success: true,
@@ -74,6 +91,7 @@ export async function POST(request: NextRequest) {
       discoveryResults: searchResults.discoveryResults,
       totalFound: searchResults.totalFound,
       searchId, // Return searchId for feedback
+      learningInsights: insights.campaignSpecificInsights || [],
       metadata: {
         totalFound: searchResults.totalFound,
         premiumCount: searchResults.premiumResults.length,
@@ -83,7 +101,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Search error:', error);
+    console.error('❌ Search API error:', error);
     return NextResponse.json(
       { 
         success: false, 

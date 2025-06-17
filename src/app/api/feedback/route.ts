@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Save feedback
-    const feedbackId = searchMemory.saveFeedback({
+    const feedbackId = await searchMemory.saveFeedback({
       searchId,
       sessionId,
       userId,
@@ -46,8 +46,8 @@ export async function POST(request: NextRequest) {
     });
 
     // Get updated learning insights
-    const insights = searchMemory.getLearningInsights(improvedQuery || '');
-    const stats = searchMemory.getStats();
+    const insights = await searchMemory.getLearningInsights(improvedQuery || '');
+    const stats = await searchMemory.getStats();
 
     return NextResponse.json({
       success: true,
@@ -86,8 +86,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Get search history and stats
-    const history = searchMemory.getSearchHistory(sessionId || undefined, userId || undefined);
-    const stats = searchMemory.getStats();
+    const history = await searchMemory.getSearchHistory(sessionId || undefined, userId || undefined);
+    const stats = await searchMemory.getStats();
 
     return NextResponse.json({
       success: true,
