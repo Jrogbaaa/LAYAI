@@ -29,9 +29,9 @@ export default function RootLayout({
   const htmlClasses = `${inter.variable} ${spaceGrotesk.variable}`;
   
   return (
-    <html lang="en" className={htmlClasses}>
-      <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+    <html lang="en" className={`${htmlClasses} h-full`}>
+      <body className={`${inter.className} h-full`}>
+        <div className="h-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
           {/* Subtle background pattern */}
           <div 
             className="absolute inset-0 opacity-50" 
@@ -41,7 +41,7 @@ export default function RootLayout({
           ></div>
           
           {/* Main content */}
-          <div className="relative z-10">
+          <div className="relative z-10 h-full">
             {children}
           </div>
         </div>

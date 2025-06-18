@@ -25,10 +25,18 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Auto-scroll to bottom for new messages, but keep it contained within the chat
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'end',
+        inline: 'nearest'
+      });
+    }
   };
 
   useEffect(() => {
+    // Always scroll to bottom when new messages are added
     scrollToBottom();
   }, [messages]);
 
@@ -84,9 +92,9 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+    <div className="bg-white rounded-none sm:rounded-2xl shadow-xl border border-gray-100 overflow-hidden flex flex-col h-full min-h-[400px] max-h-[70vh]">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 flex-shrink-0">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
             <span className="text-white text-lg">🤖</span>
@@ -99,7 +107,7 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
       </div>
 
       {/* Messages */}
-      <div className="h-96 overflow-y-auto p-6 space-y-4 bg-gray-50/50">
+      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50/50 min-h-0">
         {messages.map((message, index) => (
           <div
             key={index}
@@ -135,7 +143,7 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
       </div>
 
       {/* Input */}
-      <div className="p-6 bg-white border-t border-gray-100">
+      <div className="p-6 bg-white border-t border-gray-100 flex-shrink-0">
         <div className="flex space-x-3">
           <div className="flex-1 relative">
             <textarea

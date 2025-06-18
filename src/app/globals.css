@@ -46,6 +46,22 @@ body {
     )
     rgb(var(--background-start-rgb));
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  /* Prevent auto-scrolling on page load/refresh */
+  scroll-behavior: auto;
+  overflow-x: hidden;
+}
+
+/* Prevent auto-scrolling and ensure proper viewport handling */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Ensure main content areas don't cause unwanted scrolling */
+.main-content {
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Fix for text appearing backward and ensure proper text visibility */

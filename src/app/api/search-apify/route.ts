@@ -1,6 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { searchInfluencersWithTwoTierDiscovery, type ApifySearchParams } from '@/lib/apifyService';
+import { searchInfluencersWithTwoTierDiscovery, type ApifySearchParams, type SearchResults } from '@/lib/apifyService';
 import { searchMemory } from '@/lib/database';
+
+/**
+ * Final deduplication across premium and discovery results
+ */
+function deduplicateSearchResults(results: SearchResults): SearchResults {
+  const allUsernames = new Set<string>();
+  const finalPremiumResults = [];
+  const finalDiscoveryResults = [];
+  
+  // Process premium results first (higher priority)
+  for (const premiumResult of results.premiumResults) {
+    const normalizedUsername = premiumResult.username.toLowerCase().replace(/[._-]/g, '');
+    const platformKey = `${normalizedUsername}_${premiumResult.platform.toLowerCase()}`;
+    
+    if (!allUsernames.has(platformKey)) {
+      allUsernames.add(platformKey);
+      finalPremiumResults.push(premiumResult);
+    } else {
+      console.log(`🔍 Removed premium duplicate: ${premiumResult.username}`);
+    }
+  }
+  
+  // Process discovery results, excluding those already in premium
+  for (const discoveryResult of results.discoveryResults) {
+    const normalizedUsername = discoveryResult.username.toLowerCase().replace(/[._-]/g, '');
+    const platformKey = `${normalizedUsername}_${discoveryResult.platform.toLowerCase()}`;
+    
+    if (!allUsernames.has(platformKey)) {
+      allUsernames.add(platformKey);
+      finalDiscoveryResults.push(discoveryResult);
+    } else {
+      console.log(`🔍 Removed discovery duplicate: ${discoveryResult.username}`);
+    }
+  }
+  
+  return {
+    premiumResults: finalPremiumResults,
+    discoveryResults: finalDiscoveryResults,
+    totalFound: finalPremiumResults.length + finalDiscoveryResults.length
+  };
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,9 +89,13 @@ export async function POST(request: NextRequest) {
     // Perform the search
     const searchResults = await searchInfluencersWithTwoTierDiscovery(searchParams);
 
-    // Save search to memory with campaign context
+    // Final deduplication check across both result types
+    const finalResults = deduplicateSearchResults(searchResults);
+    console.log(`🔍 Final deduplication: ${searchResults.totalFound} → ${finalResults.totalFound} results`);
+
+    // Save search to memory with campaign context (fix userId issue)
     const searchId = await searchMemory.saveSearch({
-      userId,
+      userId: userId || `user_${sessionId || Date.now()}`, // Provide fallback userId
       sessionId: sessionId || `session_${Date.now()}`,
       query: userQuery,
       searchParams: {
@@ -58,14 +103,14 @@ export async function POST(request: NextRequest) {
         niches,
         minFollowers,
         maxFollowers,
-        location,
-        gender,
+        location: location || undefined,
+        gender: gender || undefined,
         userQuery,
       },
       results: {
-        totalFound: searchResults.totalFound,
-        premiumResults: searchResults.premiumResults,
-        discoveryResults: searchResults.discoveryResults,
+        totalFound: finalResults.totalFound,
+        premiumResults: finalResults.premiumResults,
+        discoveryResults: finalResults.discoveryResults,
       },
       campaignId: campaignId || undefined,
       campaignStatus: campaignStatus || undefined,
@@ -87,16 +132,18 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      premiumResults: searchResults.premiumResults,
-      discoveryResults: searchResults.discoveryResults,
-      totalFound: searchResults.totalFound,
+      premiumResults: finalResults.premiumResults,
+      discoveryResults: finalResults.discoveryResults,
+      totalFound: finalResults.totalFound,
       searchId, // Return searchId for feedback
       learningInsights: insights.campaignSpecificInsights || [],
       metadata: {
-        totalFound: searchResults.totalFound,
-        premiumCount: searchResults.premiumResults.length,
-        discoveryCount: searchResults.discoveryResults.length,
+        totalFound: finalResults.totalFound,
+        premiumCount: finalResults.premiumResults.length,
+        discoveryCount: finalResults.discoveryResults.length,
         searchParams: { platforms, niches, minFollowers, maxFollowers, location, gender },
+        originalTotal: searchResults.totalFound,
+        duplicatesRemoved: searchResults.totalFound - finalResults.totalFound
       }
     });
 

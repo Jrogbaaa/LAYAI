@@ -23,7 +23,179 @@ OPENAI_API_KEY=your_openai_key (optional)
 
 ## Endpoints
 
-### 1. Search Influencers
+### 1. Enhanced Search with Spanish Detection & Age Estimation
+
+**Endpoint:** `POST /api/enhanced-search`
+
+**Description:** Advanced influencer search with Spanish location detection and age estimation capabilities.
+
+#### Request Body
+
+```typescript
+{
+  location?: string;             // Target location (e.g., "Spain", "Madrid")
+  minAge?: number;               // Minimum age (18-65)
+  maxAge?: number;               // Maximum age (18-65)
+  minFollowers?: number;         // Minimum follower count
+  maxFollowers?: number;         // Maximum follower count
+  niches?: string[];             // Target niches/categories
+  platforms?: string[];          // Default: ['instagram']
+  gender?: string;               // 'male', 'female', 'non-binary', 'other'
+  enableSpanishDetection?: boolean; // Enable Spanish location detection
+  enableAgeEstimation?: boolean;    // Enable age estimation
+  userQuery?: string;            // Natural language query
+  sessionId?: string;            // Session tracking
+  maxResults?: number;           // Default: 50
+}
+```
+
+#### Example Request
+
+```json
+{
+  "location": "Spain",
+  "minAge": 20,
+  "maxAge": 35,
+  "minFollowers": 10000,
+  "maxFollowers": 500000,
+  "niches": ["lifestyle", "fashion"],
+  "enableSpanishDetection": true,
+  "enableAgeEstimation": true,
+  "userQuery": "Find young Spanish lifestyle influencers"
+}
+```
+
+#### Response
+
+```typescript
+{
+  success: boolean;
+  results: EnhancedInfluencerProfile[];
+  metadata: {
+    totalFound: number;
+    spanishValidated: number;
+    ageEstimated: number;
+    averageConfidence: number;
+    processingTime: number;
+    searchCriteria: object;
+  };
+  recommendations: string[];
+}
+```
+
+#### Example Response
+
+```json
+{
+  "success": true,
+  "results": [
+    {
+      "username": "maria_madrid",
+      "fullName": "María García",
+      "followers": 125000,
+      "platform": "instagram",
+      "biography": "Lifestyle blogger from Madrid 🇪🇸 | 25 años",
+      "location": "Madrid, Spain",
+      "spanishValidation": {
+        "isSpanish": true,
+        "confidence": 92,
+        "indicators": ["Madrid", "🇪🇸", "años"],
+        "score": 45
+      },
+      "ageEstimation": {
+        "estimatedAge": 25,
+        "confidence": 90,
+        "method": "direct_mention",
+        "ageRange": "25-34"
+      },
+      "scoreAdjustments": {
+        "spanishBonus": 25,
+        "ageMatchBonus": 15,
+        "totalAdjustment": 40
+      },
+      "enhancementDetails": {
+        "spanishDetected": true,
+        "ageEstimated": true,
+        "confidenceScore": 91
+      }
+    }
+  ],
+  "metadata": {
+    "totalFound": 15,
+    "spanishValidated": 12,
+    "ageEstimated": 8,
+    "averageConfidence": 78,
+    "processingTime": 2340,
+    "searchCriteria": {
+      "location": "Spain",
+      "ageRange": "20-35",
+      "spanishDetection": true
+    }
+  },
+  "recommendations": [
+    "85% of results were successfully validated as Spanish",
+    "Consider expanding age range for more results",
+    "High confidence in Spanish detection (92% average)"
+  ]
+}
+```
+
+### 2. Profile Verification
+
+**Endpoint:** `POST /api/verify-profiles`
+
+**Description:** Verify and enhance influencer profiles with detailed scoring and validation.
+
+#### Request Body
+
+```typescript
+{
+  profiles: {
+    username: string;
+    platform: string;
+  }[];
+  verificationLevel: 'basic' | 'full';
+  searchCriteria?: {
+    location?: string;
+    niches?: string[];
+    ageRange?: { min: number; max: number; };
+  };
+}
+```
+
+#### Example Request
+
+```json
+{
+  "profiles": [
+    { "username": "maria_madrid", "platform": "instagram" },
+    { "username": "carlos_bcn", "platform": "instagram" }
+  ],
+  "verificationLevel": "full",
+  "searchCriteria": {
+    "location": "Spain",
+    "niches": ["lifestyle"],
+    "ageRange": { "min": 20, "max": 35 }
+  }
+}
+```
+
+#### Response
+
+```typescript
+{
+  success: boolean;
+  verifiedProfiles: VerifiedProfile[];
+  summary: {
+    totalProcessed: number;
+    successfulVerifications: number;
+    averageScore: number;
+    processingTime: number;
+  };
+}
+```
+
+### 3. Standard Search Influencers
 
 **Endpoint:** `POST /api/search-apify`
 

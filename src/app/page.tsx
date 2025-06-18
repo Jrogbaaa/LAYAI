@@ -10,13 +10,14 @@ import DiscoveryGrid from '@/components/DiscoveryGrid';
 import CampaignManager from '@/components/CampaignManager';
 import NotesManager from '@/components/NotesManager';
 import LandingPage from '@/components/LandingPage';
-import MemoryDashboard from '@/components/MemoryDashboard';
+
 import { MatchResult } from '@/types/influencer';
 import { CampaignProposal } from '@/types/campaign';
 import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
 import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/newExportUtils';
 import { generateSessionId } from '@/lib/database';
 import Sidebar, { PageView } from '@/components/Sidebar';
+import EnhancedFeedbackPanel from '@/components/EnhancedFeedbackPanel';
 
 type ExtendedPageView = PageView | 'landing' | 'chat' | 'campaigns' | 'proposal';
 
@@ -317,38 +318,84 @@ export default function Home() {
         return <LandingPage onGetStarted={handleGetStarted} />;
       case 'chat':
         return (
-          <div className="min-h-screen space-y-6 p-6">
-            <Chatbot onSendMessage={handleSendMessage} />
+          <div className="min-h-screen overflow-y-auto bg-gray-50">
+            {/* Chat Section - Always visible at top */}
+            <div className="w-full max-w-4xl mx-auto px-6 py-8">
+              <Chatbot onSendMessage={handleSendMessage} />
+            </div>
+            
+            {/* Results Section - Flows naturally below chat */}
             {searchResults && (searchResults.premiumResults.length > 0 || searchResults.discoveryResults.length > 0) && (
-              <>
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-gray-800">
-                    Search Results ({(searchResults.premiumResults.length + searchResults.discoveryResults.length)} total)
-                  </h2>
-                  <button
-                    onClick={handleClearResults}
-                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-                  >
-                    🗑️ Clear Results
-                  </button>
+              <div className="w-full max-w-7xl mx-auto px-6 pb-8">
+                {/* Search Results Header */}
+                <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        Search Results ({(searchResults.premiumResults.length + searchResults.discoveryResults.length)} total)
+                      </h2>
+                      <p className="text-gray-600 mt-1">
+                        Found {searchResults.premiumResults.length} premium and {searchResults.discoveryResults.length} discovery results
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleClearResults}
+                      className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors flex items-center space-x-2"
+                    >
+                      <span>🗑️</span>
+                      <span>Clear Results</span>
+                    </button>
+                  </div>
                 </div>
-                {searchResults.premiumResults.length > 0 && (
-                  <InfluencerResults 
-                    results={searchResults.premiumResults}
-                  />
-                )}
-                {searchResults.discoveryResults.length > 0 && (
-                  <DiscoveryGrid 
-                    discoveryInfluencers={searchResults.discoveryResults}
-                  />
-                )}
+
+                {/* Enhanced Feedback Panel - More Prominent */}
                 {currentSearchId && (
-                  <FeedbackPanel 
-                    searchId={currentSearchId}
-                    sessionId={sessionId} 
-                  />
+                  <div className="mb-6">
+                    <EnhancedFeedbackPanel 
+                      searchId={currentSearchId}
+                      sessionId={sessionId}
+                      searchQuery={searchResults.premiumResults.length > 0 ? 'Recent search' : 'Discovery search'}
+                      resultCount={searchResults.premiumResults.length + searchResults.discoveryResults.length}
+                    />
+                  </div>
                 )}
-              </>
+
+                {/* Premium Results */}
+                {searchResults.premiumResults.length > 0 && (
+                  <div className="mb-8">
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 mb-4">
+                      <h3 className="text-lg font-semibold text-blue-900 flex items-center space-x-2">
+                        <span>⭐</span>
+                        <span>Premium Results ({searchResults.premiumResults.length})</span>
+                      </h3>
+                      <p className="text-blue-700 text-sm mt-1">
+                        Verified profiles with detailed analytics and contact information
+                      </p>
+                    </div>
+                    <InfluencerResults 
+                      results={searchResults.premiumResults}
+                    />
+                  </div>
+                )}
+
+                {/* Discovery Results */}
+                {searchResults.discoveryResults.length > 0 && (
+                  <div className="mb-8">
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 mb-4">
+                      <h3 className="text-lg font-semibold text-purple-900 flex items-center space-x-2">
+                        <span>🔍</span>
+                        <span>Discovery Results ({searchResults.discoveryResults.length})</span>
+                      </h3>
+                      <p className="text-purple-700 text-sm mt-1">
+                        Profiles found through web search - upgrade for detailed analytics
+                      </p>
+                    </div>
+                    <DiscoveryGrid 
+                      discoveryInfluencers={searchResults.discoveryResults}
+                    />
+                  </div>
+                )}
+              </div>
             )}
           </div>
         );
@@ -391,8 +438,7 @@ export default function Home() {
         return <CampaignManager />;
       case 'notes':
         return <NotesManager />;
-      case 'memory':
-        return <MemoryDashboard />;
+
       default:
         return <Chatbot onSendMessage={handleSendMessage} />;
     }
@@ -404,13 +450,13 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Sidebar 
         currentView={currentView === 'chat' ? 'search' : currentView as PageView} 
         onViewChange={handleSidebarViewChange} 
       />
       
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-y-auto">
         {renderContent()}
       </main>
     </div>

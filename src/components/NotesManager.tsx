@@ -24,14 +24,14 @@ const NotesManager: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedNote) {
+    if (selectedNote && selectedNote.title && selectedNote.content !== undefined) {
       const timeoutId = setTimeout(() => {
         saveNote();
-      }, 1000);
+      }, 500); // Faster auto-save
 
       return () => clearTimeout(timeoutId);
     }
-  }, [selectedNote]);
+  }, [selectedNote?.title, selectedNote?.content]);
 
   const loadNotes = async () => {
     try {
@@ -48,24 +48,24 @@ const NotesManager: React.FC = () => {
   };
 
   const createNote = async () => {
-    const newNote: Note = {
-      id: Date.now().toString(),
-      title: 'Untitled Note',
-      content: '',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
     try {
       const response = await fetch('/api/database/notes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'create', note: newNote }),
+        body: JSON.stringify({ 
+          action: 'create',
+          title: 'Untitled Note',
+          content: ''
+        }),
       });
 
       if (response.ok) {
-        setNotes(prev => [newNote, ...prev]);
-        setSelectedNote(newNote);
+        const result = await response.json();
+        if (result.success) {
+          const newNote = result.note;
+          setNotes(prev => [newNote, ...prev]);
+          setSelectedNote(newNote);
+        }
       }
     } catch (error) {
       console.error('Failed to create note:', error);
@@ -80,13 +80,21 @@ const NotesManager: React.FC = () => {
       const response = await fetch('/api/database/notes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update', note: selectedNote }),
+        body: JSON.stringify({ 
+          action: 'update', 
+          noteId: selectedNote.id,
+          title: selectedNote.title,
+          content: selectedNote.content
+        }),
       });
 
       if (response.ok) {
-        setNotes(prev => prev.map(note => 
-          note.id === selectedNote.id ? selectedNote : note
-        ));
+        const result = await response.json();
+        if (result.success) {
+          setNotes(prev => prev.map(note => 
+            note.id === selectedNote.id ? result.note : note
+          ));
+        }
       }
     } catch (error) {
       console.error('Failed to save note:', error);

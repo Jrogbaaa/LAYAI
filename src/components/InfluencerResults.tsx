@@ -1,9 +1,48 @@
 'use client';
 
-import { MatchResult } from '@/types/influencer';
+import { MatchResult, Influencer } from '@/types/influencer';
 
 interface InfluencerResultsProps {
   results: MatchResult[];
+}
+
+interface VerificationData {
+  verified: boolean;
+  confidence: number;
+  overallScore: number;
+  matchAnalysis: {
+    nicheAlignment: {
+      score: number;
+      matchedKeywords: string[];
+      explanation: string;
+    };
+    demographicMatch: {
+      score: number;
+      locationMatch: boolean;
+      explanation: string;
+    };
+    brandCompatibility: {
+      score: number;
+      reasons: string[];
+      redFlags: string[];
+    };
+    followerValidation: {
+      score: number;
+      inRange: boolean;
+      quality: 'low' | 'medium' | 'high';
+      explanation: string;
+    };
+  };
+}
+
+// Add verification data to the influencer interface
+interface InfluencerWithVerification extends Influencer {
+  verificationData?: VerificationData;
+}
+
+// Extended MatchResult with verification
+interface MatchResultWithVerification extends MatchResult {
+  influencer: InfluencerWithVerification;
 }
 
 export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results }) => {
@@ -205,6 +244,8 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                   </ul>
                 </div>
 
+                
+
                 {/* Action Buttons */}
                 <div className="mt-6 flex flex-wrap gap-3">
                   <button className="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors">
@@ -221,6 +262,68 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
             </div>
           </div>
         ))}
+      </div>
+    </div>
+  );
+};
+
+// Add verification summary component
+const VerificationSummary: React.FC<{
+  results: InfluencerWithVerification[];
+}> = ({ results }) => {
+  const verificationStats = results.reduce((acc, result) => {
+    if (result.verificationData) {
+      acc.verified++;
+      acc.totalScore += result.verificationData.overallScore;
+      if (result.verificationData.overallScore >= 80) acc.highQuality++;
+      else if (result.verificationData.overallScore >= 60) acc.mediumQuality++;
+      else acc.lowQuality++;
+    }
+    return acc;
+  }, { 
+    verified: 0, 
+    totalScore: 0, 
+    highQuality: 0, 
+    mediumQuality: 0, 
+    lowQuality: 0 
+  });
+
+  const averageScore = verificationStats.verified > 0 ? 
+    Math.round(verificationStats.totalScore / verificationStats.verified) : 0;
+
+  if (verificationStats.verified === 0) return null;
+
+  return (
+    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 mb-6">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-gray-800">Verification Summary</h3>
+        <div className="flex items-center space-x-2">
+          <span className="text-2xl font-bold text-blue-600">{averageScore}</span>
+          <span className="text-sm text-gray-600">/100 avg</span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4 text-center">
+        <div className="bg-white rounded-lg p-4">
+          <div className="text-2xl font-bold text-green-600">{verificationStats.highQuality}</div>
+          <div className="text-sm text-gray-600">High Quality</div>
+          <div className="text-xs text-gray-500">80+ score</div>
+        </div>
+        <div className="bg-white rounded-lg p-4">
+          <div className="text-2xl font-bold text-yellow-600">{verificationStats.mediumQuality}</div>
+          <div className="text-sm text-gray-600">Medium Quality</div>
+          <div className="text-xs text-gray-500">60-79 score</div>
+        </div>
+        <div className="bg-white rounded-lg p-4">
+          <div className="text-2xl font-bold text-red-600">{verificationStats.lowQuality}</div>
+          <div className="text-sm text-gray-600">Low Quality</div>
+          <div className="text-xs text-gray-500">&lt;60 score</div>
+        </div>
+        <div className="bg-white rounded-lg p-4">
+          <div className="text-2xl font-bold text-blue-600">{verificationStats.verified}</div>
+          <div className="text-sm text-gray-600">Total Verified</div>
+          <div className="text-xs text-gray-500">of {results.length} profiles</div>
+        </div>
       </div>
     </div>
   );
