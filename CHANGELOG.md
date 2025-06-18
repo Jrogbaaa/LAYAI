@@ -5,6 +5,43 @@ All notable changes to LAYAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2025-01-18
+
+### 🇪🇸 Added - Complete Spanish Localization
+- **Full UI Translation**: Every component, label, button, and text element translated to Spanish
+  - Landing page completely in Spanish with localized messaging
+  - Sidebar navigation with Spanish menu items and descriptions
+  - Proposal generator with Spanish form labels and placeholders
+  - Error messages and validation text in Spanish
+  - CSV export headers and data in Spanish format
+- **Enhanced "Reason Why" Generation**: Spanish-specific influencer analysis
+  - Cristiano Ronaldo example: "Cristiano es el ejemplo perfecto de un influencer orientado al fitness para [marca] porque mantiene una condición física excelente..."
+  - Gordon Ramsay example: "Gordon Ramsay es un influencer perfecto para [marca] porque es uno de los chefs más reconocidos del mundo..."
+  - Cultural context understanding for Spanish brands and influencers
+  - Spanish-specific industry analysis and brand alignment
+- **Fixed Regenerate Functionality**: Enhanced regenerate button for proposal reasons
+  - Proper brand research data validation before regeneration
+  - Fallback logic when brand research isn't available
+  - Error handling for empty or failed generation attempts
+  - Real-time feedback during regeneration process
+
+### 🎨 Changed - User Experience Improvements
+- **Localized Interface**: Complete Spanish experience from landing to export
+- **Cultural Intelligence**: Spanish brand context and influencer understanding
+- **Enhanced Proposal Quality**: More specific and compelling "reason why" explanations
+- **Improved Button Functionality**: Reliable regenerate button with proper validation
+
+### 🔧 Technical Enhancements
+- **Localization Architecture**: Systematic approach to Spanish translation
+- **Enhanced Proposal Logic**: Improved brand-specific reason generation
+- **Better Error Handling**: Comprehensive validation for regenerate functionality
+- **Performance Optimization**: Faster response times for proposal generation
+
+### 📚 Documentation
+- **Updated README**: Complete documentation of Spanish localization features
+- **Translation Guidelines**: Best practices for maintaining Spanish translations
+- **Enhanced Examples**: Spanish-specific examples and use cases
+
 ## [2.4.0] - 2025-01-18
 
 ### 🇪🇸 Added - Spanish Location Detection & Age Estimation

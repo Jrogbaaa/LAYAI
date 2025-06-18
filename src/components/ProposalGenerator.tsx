@@ -282,9 +282,9 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
   const generateBrandSpecificReasons = (profile: any, brandInfo: any) => {
     if (!brandInfo) {
       return [
-        'High engagement rate and authentic content',
-        'Strong audience connection and influence',
-        'Quality content creation and storytelling'
+        'Alta tasa de engagement y creación de contenido auténtico que resuena con las audiencias',
+        'Fuerte conexión con la comunidad e influencia comprobada en su nicho de mercado',
+        'Storytelling de calidad y contenido visual que genera interacciones significativas'
       ];
     }
 
@@ -301,7 +301,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
     const cacheKey = `${username}_${brandInfo.name}`;
     
     // Enhanced content analysis using web research + Instagram bio
-    let contentToAnalyze = bio;
+    let contentToAnalyze = bio.toLowerCase();
     let webResearchInfo = '';
     if (profile.webResearch && profile.webResearch.length > 0) {
       webResearchInfo = profile.webResearch.map((r: any) => r.description).join(' ');
@@ -320,124 +320,92 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
       (window as any).analysisCache.add(cacheKey);
     }
 
-    // SPECIFIC INFLUENCER ANALYSIS - Unique for each person
+    // ENHANCED SPECIFIC INFLUENCER ANALYSIS - More compelling and specific reasons
     
-    // CRISTIANO RONALDO - Football superstar
+    // CRISTIANO RONALDO - Superestrella del fútbol (como el ejemplo de Nike)
     if (username.toLowerCase().includes('cristiano') || fullName.toLowerCase().includes('cristiano ronaldo')) {
-      reasons.push(`Global football icon with unmatched influence - perfect ambassador for ${brandInfo.name}'s worldwide reach`);
-      reasons.push(`Philanthropic efforts and business ventures align with ${brandInfo.name}'s values of making a positive impact`);
-      reasons.push(`Massive social media presence extends far beyond football, ideal for ${brandInfo.name}'s diverse audience`);
-      return reasons;
+      reasons.push(`Cristiano es el ejemplo perfecto de un influencer orientado al fitness para ${brandInfo.name} porque mantiene una condición física excelente y tiene una pasión incomparable por la excelencia atlética como uno de los mejores futbolistas del mundo`);
+      reasons.push(`Su dedicación al fitness, rutinas de entrenamiento y estilo de vida saludable encarna perfectamente el compromiso de ${brandInfo.name} con el rendimiento y la calidad`);
+      reasons.push(`Con más de ${(followers/1000000).toFixed(0)}M seguidores, su influencia global se extiende mucho más allá del fútbol, llegando a entusiastas del fitness y atletas de todo el mundo que se alinean con el mercado objetivo de ${brandInfo.name}`);
+      return [reasons[0]]; // Devolver una razón convincente como tus ejemplos
     }
 
-    // JAIME LORENTE - Spanish actor (Money Heist, Elite)
+    // GORDON RAMSAY - Chef (como el formato del ejemplo HexClad)
+    if (username.toLowerCase().includes('gordongram') || fullName.toLowerCase().includes('gordon ramsay')) {
+      reasons.push(`Gordon Ramsay es un influencer perfecto para ${brandInfo.name} porque es uno de los chefs más reconocidos del mundo y tiene una pasión por usar el mejor equipamiento y las herramientas de más alta calidad en la cocina para producir platos excepcionales`);
+      return [reasons[0]];
+    }
+
+    // JAIME LORENTE - Actor español (La Casa de Papel, Élite)
     if (username.toLowerCase().includes('jaimelorente') || fullName.toLowerCase().includes('jaime lorente')) {
-      reasons.push(`Spanish entertainment star from Money Heist and Elite - perfect for ${brandInfo.name}'s Spanish market penetration`);
-      reasons.push(`Young, trendy audience demographic aligns perfectly with ${brandInfo.name}'s target consumers`);
-      reasons.push(`Acting versatility and creative content style matches ${brandInfo.name}'s innovative brand image`);
-      return reasons;
+      reasons.push(`Jaime Lorente es un embajador ideal para ${brandInfo.name} porque es una estrella emergente del entretenimiento español de series exitosas mundialmente como La Casa de Papel y Élite, con un estilo sofisticado que resuena con audiencias jóvenes y adineradas que aprecian la calidad y exclusividad`);
+      return [reasons[0]];
     }
 
-    // FABRIZIO ROMANO - Football transfer journalist
-    if (username.toLowerCase().includes('fabrizio') || fullName.toLowerCase().includes('fabrizio romano')) {
-      reasons.push(`Trusted football journalism authority with "Here We Go" credibility - adds authenticity to ${brandInfo.name} campaigns`);
-      reasons.push(`Breaking news expertise creates viral moments perfect for ${brandInfo.name}'s social media strategy`);
-      reasons.push(`Global football community trust translates to powerful brand endorsement for ${brandInfo.name}`);
-      return reasons;
-    }
-
-    // TAYLOR SWIFT - Global music superstar
+    // TAYLOR SWIFT - Superestrella musical global
     if (username.toLowerCase().includes('taylorswift') || fullName.toLowerCase().includes('taylor swift')) {
-      reasons.push(`Global music icon with record-breaking album releases - perfect for ${brandInfo.name}'s worldwide brand recognition`);
-      reasons.push(`Swiftie fanbase loyalty and cultural influence create unmatched brand advocacy for ${brandInfo.name}`);
-      reasons.push(`Cross-generational appeal and storytelling mastery align with ${brandInfo.name}'s timeless brand values`);
-      return reasons;
+      reasons.push(`Taylor Swift es la influencer perfecta para ${brandInfo.name} porque es un ícono musical que rompe récords con una lealtad de fans sin paralelo e influencia cultural, cuyo dominio del storytelling y conexión auténtica con múltiples generaciones crea una promoción de marca sin precedentes`);
+      return [reasons[0]];
     }
 
-    // DWAYNE JOHNSON - The Rock
-    if (username.toLowerCase().includes('therock') || fullName.toLowerCase().includes('dwayne johnson')) {
-      reasons.push(`Hollywood A-lister and former WWE champion - ultimate crossover appeal for ${brandInfo.name}'s diverse campaigns`);
-      reasons.push(`Motivational content and positive messaging align with ${brandInfo.name}'s uplifting brand values`);
-      reasons.push(`Massive box office success and global recognition ensure maximum visibility for ${brandInfo.name}`);
-      return reasons;
-    }
-
-    // KYLIE JENNER - Beauty and lifestyle mogul
-    if (username.toLowerCase().includes('kyliejenner') || fullName.toLowerCase().includes('kylie jenner')) {
-      reasons.push(`Beauty empire and lifestyle influence make her perfect for ${brandInfo.name}'s premium brand positioning`);
-      reasons.push(`Young demographic dominance and trendsetting ability drive ${brandInfo.name}'s cultural relevance`);
-      reasons.push(`Business acumen and brand-building expertise align with ${brandInfo.name}'s entrepreneurial values`);
-      return reasons;
-    }
-
-    // LIONEL MESSI - Football legend
+    // LIONEL MESSI - Leyenda del fútbol
     if (username.toLowerCase().includes('leomessi') || fullName.toLowerCase().includes('lionel messi')) {
-      reasons.push(`Football legend with unparalleled skill - embodies ${brandInfo.name}'s pursuit of excellence`);
-      reasons.push(`Global fanbase across all continents ensures worldwide reach for ${brandInfo.name} campaigns`);
-      reasons.push(`Humble personality and family values resonate with ${brandInfo.name}'s authentic brand image`);
-      return reasons;
+      reasons.push(`Lionel Messi es una elección excepcional para ${brandInfo.name} porque encarna la perfección atlética y dedicación a la excelencia, con una personalidad humilde y atractivo universal que trasciende el deporte para conectar con familias y aspirantes a triunfadores en todo el mundo`);
+      return [reasons[0]];
     }
 
-    // SELENA GOMEZ - Multi-platform entertainer
-    if (username.toLowerCase().includes('selenagomez') || fullName.toLowerCase().includes('selena gomez')) {
-      reasons.push(`Multi-talented entertainer with music, acting, and business ventures - perfect for ${brandInfo.name}'s diverse portfolio`);
-      reasons.push(`Mental health advocacy and authentic storytelling align with ${brandInfo.name}'s meaningful brand purpose`);
-      reasons.push(`Cross-cultural appeal and bilingual content expand ${brandInfo.name}'s global market reach`);
-      return reasons;
-    }
-
-    // GENERIC ANALYSIS for other influencers based on content
+    // ANÁLISIS GENÉRICO MEJORADO basado en contenido con razones específicas y convincentes
     
-    // Music Artist analysis
-    if (/singer|musician|artist|music|album|song|tour|concert|grammy|billboard/i.test(contentToAnalyze)) {
-      reasons.push(`Musical artistry and creative expression align with ${brandInfo.name}'s innovative brand identity`);
-      reasons.push(`Fan loyalty and emotional connection translate to powerful brand advocacy for ${brandInfo.name}`);
-      if (isVerified) reasons.push(`Chart-topping success and industry recognition add prestige to ${brandInfo.name} partnerships`);
+    // Análisis de artista musical - Más específico como tus ejemplos
+    if (/singer|musician|artist|music|album|song|tour|concert|grammy|billboard|música|artista|cantante/i.test(contentToAnalyze)) {
+      reasons.push(`${fullName} es perfecto para ${brandInfo.name} porque su arte musical y expresión creativa demuestran la misma pasión por la excelencia que define a ${brandInfo.name}, con una base de fans comprometida que valora la autenticidad y calidad`);
     }
     
-    // Actor/Entertainment analysis
-    else if (/actor|actress|entertainment|tv|series|movie|film|celebrity|netflix|hbo/i.test(contentToAnalyze)) {
-      reasons.push(`Entertainment industry credibility brings star power and glamour to ${brandInfo.name} campaigns`);
-      if (isVerified) reasons.push(`Verified celebrity status adds premium brand association for ${brandInfo.name}`);
-      reasons.push(`Creative storytelling abilities perfect for showcasing ${brandInfo.name} products in engaging narratives`);
+    // Análisis de actor/entretenimiento - Más convincente
+    else if (/actor|actress|entertainment|tv|series|movie|film|celebrity|netflix|hbo|entretenimiento|serie|película/i.test(contentToAnalyze)) {
+      reasons.push(`${fullName} es un embajador ideal para ${brandInfo.name} porque su éxito en la industria del entretenimiento y habilidades narrativas presentan productos perfectamente en narrativas convincentes, mientras que su estatus de celebridad añade asociación de marca premium y relevancia cultural`);
     }
     
-    // Sports Journalist analysis
-    else if (/journalist|reporter|sports|football|soccer|news|transfer|breaking/i.test(contentToAnalyze)) {
-      reasons.push(`Sports journalism expertise builds trust and credibility for ${brandInfo.name} partnerships`);
-      reasons.push(`Breaking news format creates viral potential for ${brandInfo.name} announcements`);
-      reasons.push(`Sports community influence drives authentic engagement for ${brandInfo.name} campaigns`);
+    // Análisis de chef/comida - Siguiendo el formato del ejemplo Gordon Ramsay
+    else if (/chef|cook|kitchen|restaurant|culinary|food|recipe|gastronomy|cocina|restaurante|gastronomía|cocinar/i.test(contentToAnalyze)) {
+      reasons.push(`${fullName} es un influencer perfecto para ${brandInfo.name} porque es un experto culinario con pasión por usar ingredientes y herramientas de la más alta calidad en la cocina para crear experiencias gastronómicas excepcionales`);
     }
     
-    // Athlete analysis
-    else if (/athlete|football|soccer|sport|training|fitness|champion|professional/i.test(contentToAnalyze)) {
-      reasons.push(`Athletic excellence and dedication embody ${brandInfo.name}'s performance values`);
-      reasons.push(`Sports lifestyle content resonates with ${brandInfo.name}'s active consumer base`);
-      reasons.push(`Competitive spirit and winning mentality align with ${brandInfo.name}'s success-driven brand`);
+    // Análisis de fitness/atleta - Siguiendo el formato del ejemplo Cristiano
+    else if (/athlete|football|soccer|sport|training|fitness|champion|professional|gym|workout|atleta|fútbol|deporte|entrenamiento|gimnasio/i.test(contentToAnalyze)) {
+      reasons.push(`${fullName} es un excelente ejemplo de influencer orientado al fitness para ${brandInfo.name} porque mantiene una condición física óptima y tiene una pasión genuina por la salud y bienestar como atleta dedicado`);
     }
 
-    // Add follower-based reach analysis
-    if (followers > 100000000) {
-      reasons.push(`Unprecedented global reach of ${(followers/1000000).toFixed(0)}M followers guarantees worldwide exposure for ${brandInfo.name}`);
-    } else if (followers > 10000000) {
-      reasons.push(`Massive international audience of ${(followers/1000000).toFixed(0)}M followers ensures maximum visibility for ${brandInfo.name}`);
-    } else if (followers > 1000000) {
-      reasons.push(`Strong social influence with ${(followers/1000000).toFixed(1)}M followers drives significant brand awareness for ${brandInfo.name}`);
+    // Análisis de moda/estilo de vida - Más específico
+    else if (/fashion|style|outfit|designer|model|beauty|lifestyle|moda|estilo|diseñador|modelo|belleza/i.test(contentToAnalyze)) {
+      reasons.push(`${fullName} es una combinación perfecta para ${brandInfo.name} porque su sentido impecable del estilo e influencia en el mundo de la moda demuestra la misma atención a la calidad y excelencia estética que define los valores de marca de ${brandInfo.name}`);
     }
 
-    // Verification boost
-    if (isVerified && reasons.length < 3) {
-      reasons.push(`Blue checkmark verification adds credibility and premium brand association for ${brandInfo.name}`);
+    // Análisis de viajes - Más convincente
+    else if (/travel|adventure|explore|destination|wanderlust|viaje|aventura|explorar|destino/i.test(contentToAnalyze)) {
+      reasons.push(`${fullName} es un socio ideal para ${brandInfo.name} porque su espíritu aventurero y pasión por descubrir nuevas experiencias se alinea perfectamente con el compromiso de ${brandInfo.name} de ayudar a las personas a explorar las posibilidades de la vida`);
     }
 
-    // Fallback if no specific matches
+    // Análisis de negocio/emprendedor
+    else if (/entrepreneur|business|ceo|founder|startup|company|emprendedor|negocio|empresa|fundador/i.test(contentToAnalyze)) {
+      reasons.push(`${fullName} es un embajador perfecto para ${brandInfo.name} porque su éxito empresarial y perspicacia comercial demuestran el mismo pensamiento innovador y compromiso con la excelencia que impulsa el liderazgo de ${brandInfo.name} en la industria`);
+    }
+
+    // Análisis de arte/creativo
+    else if (/artist|creative|design|art|painting|gallery|museum|artista|creativo|diseño|arte|pintura|galería|museo/i.test(contentToAnalyze)) {
+      reasons.push(`${fullName} es una elección excepcional para ${brandInfo.name} porque su visión artística y excelencia creativa encarnan la misma pasión por la belleza y artesanía que define el compromiso de ${brandInfo.name} con la calidad`);
+    }
+
+    // Respaldo con análisis específico de marca
     if (reasons.length === 0) {
-      reasons.push(`Authentic content style and engaged community perfect for ${brandInfo.name}'s brand values`);
-      reasons.push(`Strong social media presence drives meaningful connections with ${brandInfo.name}'s target audience`);
-      reasons.push(`Proven influence and content quality ensure successful ${brandInfo.name} campaign performance`);
+      if (followers > 1000000) {
+        reasons.push(`${fullName} es un socio valioso para ${brandInfo.name} porque su influencia social significativa con ${(followers/1000000).toFixed(1)}M seguidores y estilo de contenido auténtico crea conexiones significativas con la audiencia objetivo de ${brandInfo.name}`);
+      } else {
+        reasons.push(`${fullName} es una excelente opción para ${brandInfo.name} porque su comunidad comprometida y enfoque de contenido auténtico se alinea perfectamente con los valores de ${brandInfo.name} y resuena con consumidores exigentes que aprecian la calidad`);
+      }
     }
 
-    return reasons.slice(0, 3); // Return top 3 most relevant reasons
+    return [reasons[0]]; // Devolver una razón convincente como tus ejemplos
   };
 
   // Improved engagement rate calculation with fallback methods
@@ -767,7 +735,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
     onProposalGenerated(proposal);
   };
 
-  // Export to CSV function (IKEA format)
+  // Export to CSV function matching Roku/Hibiki format exactly
   const exportToCSV = () => {
     const selectedInfluencers = [...matchResults, ...manualInfluencers].filter(result => 
       selectedTalents.has(result.influencer.id)
@@ -780,77 +748,75 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
 
     const talents = selectedInfluencers.map(match => convertMatchToProposalTalent(match, brandResearchData));
     
-    // CSV Headers matching IKEA format
-    const headers = [
-      'Campaña', 'FY', 'Periodo campaña', 'Fecha publicación', 'Semana', 'Mes', 'Año',
-      'Mensaje', 'Target', 'Talento', 'Profile', 'Territorio', 'Racional', 'Reason Why',
-      '¿Ha colaborado con IKEA?', 'Total publicaciones últimos 15 días', '%IP España', '% Edad',
-      'Sexo', '% Credibilidad', 'Crecimiento Seguidores últimos 6 meses', '% Ratio Comercial',
-      'Soporte', 'Link perfil', 'Formato', 'Seguidores', 'Alcance estimado', 'Impresiones Estimadas',
-      'Media interacciones', 'Impresiones totales estimadas', 'Interacciones totales estimadas',
-      'ER%', 'CPE', 'CPV', 'Nº Post', 'Total Neto', 'NOTAS'
+    // CSV Headers matching exact format from your examples
+    const csvContent = [
+      ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''], // Empty row
+      ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''], // Empty row
+      ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''], // Empty row
+      ['', '', `TALENTOS ${campaignData.brandName?.toUpperCase() || 'BRAND'}`, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''], // Brand header
+      ['', '', 'INSTAGRAM', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''], // Platform header
+      ['', '', 'Talento', 'Territorio', 'Comentarios', 'URL', 'Seguidores', 'Biografía', 'Reason Why', 'Commitment', 'Impresiones Estimadas Story', 'Impresiones Estimadas Reel', '% ER', '% Credibilidad', '% IP España', 'Sexo', '% Edad', 'Impresiones totales estimadas', 'Fee (euros)', 'Fee sin paid media (euros)'], // Column headers
+      
+      // Data rows
+      ...talents.map(talent => {
+        const engagementRate = (talent.engagementRate * 100).toFixed(1);
+        const storyImpressions = talent.metrics.storyImpressions.toLocaleString();
+        const reelImpressions = talent.metrics.reelImpressions.toLocaleString();
+        const totalImpressions = (talent.metrics.storyImpressions + talent.metrics.reelImpressions).toLocaleString();
+        const profileUrl = `https://www.instagram.com/${talent.handle.replace('@', '')}`;
+        const territoryBasedOnLocation = talent.name.includes('Spanish') || talent.name.includes('Madrid') || talent.name.includes('Barcelona') ? 'España' : 'Internacional';
+        
+        // Default demographics - you can enhance this with real data later
+        const defaultDemographics = {
+          gender: 'Hombre: 45%, Mujer: 55%',
+          age: '25 a 34 años: 42%, 35 a 44 años: 28%, +45 años: 12%'
+        };
+
+        return [
+          '', // Empty first column
+          '', // Empty second column
+          talent.name, // Talento
+          territoryBasedOnLocation, // Territorio
+          '', // Comentarios (empty for now)
+          profileUrl, // URL
+          talent.followers.toLocaleString(), // Seguidores
+          talent.biography, // Biografía
+          talent.whyThisInfluencer, // Reason Why
+          talent.commitment, // Commitment
+          storyImpressions, // Impresiones Estimadas Story
+          reelImpressions, // Impresiones Estimadas Reel
+          `${engagementRate}%`, // % ER
+          `${talent.metrics.credibilityScore}%`, // % Credibilidad
+          `${talent.metrics.spainImpressionsPercentage}%`, // % IP España
+          defaultDemographics.gender, // Sexo
+          defaultDemographics.age, // % Edad
+          totalImpressions, // Impresiones totales estimadas
+          talent.estimatedFee.toLocaleString(), // Fee (euros)
+          (talent.estimatedFee * 0.99).toFixed(0) // Fee sin paid media (euros) - 1% discount
+        ];
+      })
     ];
 
-    // Generate CSV rows
-    const rows = talents.map(talent => {
-      const engagementRate = (talent.engagementRate * 100).toFixed(1);
-      const estimatedReach = Math.floor(talent.followers * 0.3); // 30% reach estimate
-      const estimatedImpressions = Math.floor(talent.followers * 0.5); // 50% impression estimate
-      const avgInteractions = Math.floor(talent.followers * talent.engagementRate);
-      
-      return [
-        campaignData.campaignName || 'Campaign',
-        '2025',
-        'Abril',
-        new Date().toLocaleDateString('es-ES'),
-        '-',
-        'Abril',
-        '2025',
-        '-',
-        'Ind. 18-54',
-        talent.name,
-        talent.handle.replace('@', ''),
-        'Entretenimiento',
-        talent.biography.substring(0, 100) + '...',
-        talent.whyThisInfluencer,
-        'No', // ¿Ha colaborado con IKEA?
-        '10', // Total publicaciones últimos 15 días
-        `${talent.metrics.spainImpressionsPercentage}%`,
-        '18-24: 30%, 25-34: 45%, 35-44: 20%',
-        'Hombres: 45%, Mujeres: 55%',
-        `${talent.metrics.credibilityScore}%`,
-        '5%', // Crecimiento Seguidores
-        '10%', // % Ratio Comercial
-        'Instagram',
-        `https://www.instagram.com/${talent.handle.replace('@', '')}`,
-        'Reels + Stories',
-        talent.followers.toLocaleString(),
-        estimatedReach.toLocaleString(),
-        estimatedImpressions.toLocaleString(),
-        avgInteractions.toLocaleString(),
-        estimatedImpressions.toLocaleString(),
-        avgInteractions.toLocaleString(),
-        `${engagementRate}%`,
-        '€5.00',
-        '€0.02',
-        talent.commitment,
-        `€${talent.estimatedFee.toLocaleString()}.00`,
-        'Datos verificados con Apify'
-      ];
-    });
+    // Create CSV string with proper encoding
+    const csvString = csvContent
+      .map(row => 
+        row.map(cell => {
+          const cellStr = String(cell || '');
+          // Escape quotes and wrap in quotes if contains comma, quote, or newline
+          if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+            return `"${cellStr.replace(/"/g, '""')}"`;
+          }
+          return cellStr;
+        }).join(',')
+      )
+      .join('\n');
 
-    // Create CSV content
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    // Download CSV
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    // Download CSV with proper filename
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `${campaignData.brandName || 'Brand'}_Influencer_Plan.csv`);
+    link.setAttribute('download', `Propuesta_${campaignData.brandName || 'Brand'}_${campaignData.campaignName || 'Campaign'}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -868,8 +834,8 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
               <span className="text-white text-xl">📄</span>
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">Generate Campaign Proposal</h2>
-              <p className="text-gray-600 mt-1">Create professional influencer campaign proposals with AI-powered insights</p>
+              <h2 className="text-3xl font-bold text-gray-900">Generar Propuesta de Campaña</h2>
+              <p className="text-gray-600 mt-1">Crear propuestas profesionales de campañas con influencers usando insights potenciados por IA</p>
             </div>
           </div>
           
@@ -883,59 +849,59 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                 'bg-gray-500'
               }`}></div>
               <div className="text-sm">
-                <div className="font-semibold text-purple-800">Campaign Context</div>
+                <div className="font-semibold text-purple-800">Contexto de Campaña</div>
                 <div className="text-purple-600">ID: {campaignId} • {campaignStatus}</div>
               </div>
             </div>
           )}
         </div>
         
-        {/* Campaign Information */}
+        {/* Información de Campaña */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Brand Name *
+              Nombre de Marca *
             </label>
             <input
               type="text"
               value={campaignData.brandName}
               onChange={(e) => setCampaignData(prev => ({ ...prev, brandName: e.target.value }))}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
-              placeholder="e.g., Nike, IKEA, Coca-Cola"
+              placeholder="ej., Nike, IKEA, Coca-Cola"
               required
             />
           </div>
           
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Campaign Name *
+              Nombre de Campaña *
             </label>
             <input
               type="text"
               value={campaignData.campaignName}
               onChange={(e) => setCampaignData(prev => ({ ...prev, campaignName: e.target.value }))}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
-              placeholder="e.g., Summer Collection 2024"
+              placeholder="ej., Colección Verano 2024"
               required
             />
           </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Client
+              Cliente
             </label>
             <input
               type="text"
               value={campaignData.client}
               onChange={(e) => setCampaignData(prev => ({ ...prev, client: e.target.value }))}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
-              placeholder="Client name"
+              placeholder="Nombre del cliente"
             />
           </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Budget
+              Presupuesto
             </label>
             <div className="flex rounded-xl overflow-hidden border border-gray-300 focus-within:ring-2 focus-within:ring-blue-500">
               <input
@@ -957,7 +923,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
           </div>
         </div>
 
-        {/* Brand Research Status */}
+        {/* Estado de Investigación de Marca */}
         {brandResearchData && (
           <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
             <div className="flex items-center space-x-3 mb-3">
@@ -966,26 +932,26 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-green-800">Brand Research Complete</h3>
+              <h3 className="font-semibold text-green-800">Investigación de Marca Completa</h3>
             </div>
             <div className="text-green-700 text-sm">
-              <p><strong>Industry:</strong> {brandResearchData.industry}</p>
-              <p><strong>Values:</strong> {brandResearchData.values?.join(', ')}</p>
-              <p><strong>Target Audience:</strong> {brandResearchData.targetAudience}</p>
+              <p><strong>Industria:</strong> {brandResearchData.industry}</p>
+              <p><strong>Valores:</strong> {brandResearchData.values?.join(', ')}</p>
+              <p><strong>Audiencia Objetivo:</strong> {brandResearchData.targetAudience}</p>
             </div>
           </div>
         )}
 
-        {/* Manual Upload Section */}
+        {/* Sección de Carga Manual */}
         <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
           <div className="flex items-center space-x-3 mb-4">
             <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
               <span className="text-white text-sm">📱</span>
             </div>
-            <h3 className="text-lg font-semibold text-blue-900">Add Instagram Influencers</h3>
+            <h3 className="text-lg font-semibold text-blue-900">Agregar Influencers de Instagram</h3>
           </div>
           <p className="text-blue-700 text-sm mb-4">
-            Enter Instagram handles (without @) separated by commas or new lines. We'll fetch real-time data and generate personalized analysis.
+            Ingresa nombres de usuario de Instagram (sin @) separados por comas o nuevas líneas. Obtendremos datos en tiempo real y generaremos análisis personalizados.
           </p>
           <div className="flex space-x-3">
             <textarea
@@ -1003,10 +969,10 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
               {isProcessingManual ? (
                 <div className="flex items-center space-x-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>Processing...</span>
+                  <span>Procesando...</span>
                 </div>
               ) : (
-                'Add Influencers'
+                'Agregar Influencers'
               )}
             </button>
           </div>
@@ -1015,11 +981,11 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-bold text-gray-900">
-              Select Talents for Proposal ({selectedTalents.size} selected)
+              Seleccionar Talentos para Propuesta ({selectedTalents.size} seleccionados)
             </h3>
             {selectedTalents.size > 0 && (
               <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
-                {selectedTalents.size} talent{selectedTalents.size !== 1 ? 's' : ''} selected
+                {selectedTalents.size} talento{selectedTalents.size !== 1 ? 's' : ''} seleccionado{selectedTalents.size !== 1 ? 's' : ''}
               </div>
             )}
           </div>
@@ -1029,8 +995,8 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
               <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">👥</span>
               </div>
-              <h4 className="text-lg font-medium text-gray-900 mb-2">No influencers added yet</h4>
-              <p className="text-gray-600 mb-4">Add Instagram handles above to see influencer profiles here.</p>
+              <h4 className="text-lg font-medium text-gray-900 mb-2">Aún no se han agregado influencers</h4>
+              <p className="text-gray-600 mb-4">Agrega nombres de usuario de Instagram arriba para ver perfiles de influencers aquí.</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -1055,7 +1021,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                           <p className="text-gray-600 font-medium">@{result.influencer.handle}</p>
                           <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
                             <span className="bg-gray-100 px-3 py-1 rounded-full">
-                              {result.influencer.followerCount.toLocaleString()} followers
+                              {result.influencer.followerCount.toLocaleString()} seguidores
                             </span>
                             <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
                               {(result.influencer.engagementRate * 100).toFixed(1)}% ER
@@ -1069,11 +1035,11 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                           <div className="text-2xl font-bold text-green-600">
                             €{result.influencer.averageRate.toLocaleString()}
                           </div>
-                          <div className="text-sm text-gray-500">Estimated fee</div>
+                          <div className="text-sm text-gray-500">Tarifa estimada</div>
                         </div>
                       </div>
                       
-                      {/* Match Reasons */}
+                      {/* Match Reasons - Editable */}
                       <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
                         <h5 className="font-semibold text-blue-900 mb-3 flex items-center">
                           <span className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mr-2">
@@ -1081,16 +1047,92 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
                           </span>
-                          Why Perfect for {campaignData.brandName || 'This Brand'}
+                          Por Qué Es Perfecto para {campaignData.brandName || 'Esta Marca'}
+                          <button 
+                            className="ml-2 text-xs bg-blue-200 hover:bg-blue-300 text-blue-800 px-2 py-1 rounded transition-colors"
+                            onClick={() => {
+                              if (brandResearchData) {
+                                const reasons = generateBrandSpecificReasons(
+                                  (result.influencer as any).originalProfile || result.influencer, 
+                                  brandResearchData
+                                );
+                                if (reasons && reasons.length > 0) {
+                                  handleReasonChange(result.influencer.id, reasons[0]);
+                                }
+                              } else {
+                                // Generate with basic brand info if no research data
+                                const basicBrandInfo = {
+                                  name: campaignData.brandName || 'esta marca',
+                                  industry: 'lifestyle',
+                                  values: ['calidad', 'excelencia'],
+                                  targetAudience: 'consumidores exigentes'
+                                };
+                                const reasons = generateBrandSpecificReasons(
+                                  (result.influencer as any).originalProfile || result.influencer, 
+                                  basicBrandInfo
+                                );
+                                if (reasons && reasons.length > 0) {
+                                  handleReasonChange(result.influencer.id, reasons[0]);
+                                }
+                              }
+                            }}
+                          >
+                            🔄 Regenerar
+                          </button>
                         </h5>
-                        <ul className="space-y-2">
-                          {result.matchReasons.map((reason, reasonIndex) => (
-                            <li key={reasonIndex} className="text-blue-800 text-sm flex items-start">
-                              <span className="text-blue-500 mr-2 mt-1">•</span>
-                              <span className="leading-relaxed">{reason}</span>
-                            </li>
-                          ))}
-                        </ul>
+                        
+                        {/* Editable reason why text area */}
+                        <div className="space-y-3">
+                          <textarea
+                            value={customReasons[result.influencer.id] || result.matchReasons[0] || ''}
+                            onChange={(e) => handleReasonChange(result.influencer.id, e.target.value)}
+                            placeholder="Ingresa razones específicas por las que este influencer es perfecto para tu marca..."
+                            className="w-full px-4 py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-blue-800 text-sm resize-none"
+                            rows={3}
+                          />
+                          <div className="text-xs text-blue-600">
+                            💡 Consejo: Sé específico sobre la experiencia del influencer, alineación de audiencia y compatibilidad con la marca.
+                            Ejemplo: "Perfecto para Nike porque mantiene una condición física excelente y pasión por la excelencia atlética."
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Biography - Editable */}
+                      <div className="mt-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200">
+                        <h5 className="font-semibold text-gray-700 mb-3 flex items-center">
+                          <span className="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2">
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                          </span>
+                          Biografía
+                        </h5>
+                        <textarea
+                          value={customBiographies[result.influencer.id] || (result.influencer as any).biography || (result.influencer as any).bio || generatePersonalizedBiography((result.influencer as any).originalProfile || result.influencer, brandResearchData)}
+                          onChange={(e) => handleBiographyChange(result.influencer.id, e.target.value)}
+                                                      placeholder="Ingresa la biografía del influencer..."
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-700 text-sm resize-none"
+                          rows={3}
+                        />
+                      </div>
+
+                      {/* Commitment - Editable */}
+                      <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
+                        <h5 className="font-semibold text-purple-700 mb-3 flex items-center">
+                          <span className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center mr-2">
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                          </span>
+                          Compromiso
+                        </h5>
+                        <input
+                          type="text"
+                          value={customCommitments[result.influencer.id] || '2 reels en colaborativo + 4 stories en momentos distintos'}
+                          onChange={(e) => handleCommitmentChange(result.influencer.id, e.target.value)}
+                                                      placeholder="ej., 2 reels + 4 stories"
+                          className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-purple-700 text-sm"
+                        />
                       </div>
                     </div>
                   </div>
@@ -1100,7 +1142,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
           )}
         </div>
 
-        {/* Generate Proposal & Export Buttons */}
+        {/* Botones de Generar Propuesta y Exportar */}
         <div className="flex justify-center space-x-4 pt-6 border-t border-gray-200">
           <button
             onClick={generateProposal}
@@ -1111,7 +1153,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <span>Generate Proposal ({selectedTalents.size} talents)</span>
+              <span>Generar Propuesta ({selectedTalents.size} talentos)</span>
             </div>
           </button>
           
@@ -1124,7 +1166,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <span>Export CSV ({selectedTalents.size} talents)</span>
+              <span>Exportar CSV ({selectedTalents.size} talentos)</span>
             </div>
           </button>
         </div>

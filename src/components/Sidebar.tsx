@@ -11,30 +11,30 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
   const menuItems = [
     {
       id: 'search' as PageView,
-      label: 'Influencer Search',
+      label: 'Búsqueda de Influencers',
       icon: '🔍',
-      description: 'Find and discover influencers',
+      description: 'Encuentra y descubre influencers',
       gradient: 'from-blue-500 to-blue-600'
     },
     {
       id: 'generate' as PageView,
-      label: 'Generate Proposal',
+      label: 'Generar Propuesta',
       icon: '📄',
-      description: 'Create campaign proposals',
+      description: 'Crea propuestas de campaña',
       gradient: 'from-purple-500 to-purple-600'
     },
     {
       id: 'campaigns' as PageView,
-      label: 'Campaigns',
+      label: 'Campañas',
       icon: '🎯',
-      description: 'Manage your campaigns',
+      description: 'Gestiona tus campañas',
       gradient: 'from-green-500 to-green-600'
     },
     {
       id: 'notes' as PageView,
-      label: 'Notes',
+      label: 'Notas',
       icon: '📝',
-      description: 'Manage your notes',
+      description: 'Gestiona tus notas',
       gradient: 'from-orange-500 to-orange-600'
     }
   ];
@@ -49,12 +49,12 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
           </div>
           <div>
             <h1 className="text-2xl font-bold">LAYAI</h1>
-            <p className="text-gray-300 text-sm">Influencer Marketing Platform</p>
+            <p className="text-gray-300 text-sm">Plataforma de Marketing de Influencers</p>
           </div>
         </div>
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
           <p className="text-white/90 text-sm leading-relaxed">
-            Discover, analyze, and collaborate with top influencers to create impactful campaigns.
+            Descubre, analiza y colabora con los mejores influencers para crear campañas impactantes.
           </p>
         </div>
       </div>
@@ -121,26 +121,26 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </span>
-              Quick Actions
+              Acciones Rápidas
             </h4>
             <div className="space-y-2">
               <button 
                 onClick={() => onViewChange('search')}
                 className="w-full text-left text-sm text-gray-600 hover:text-blue-600 transition-colors py-1"
               >
-                → Start new search
+                → Iniciar nueva búsqueda
               </button>
               <button 
                 onClick={() => onViewChange('generate')}
                 className="w-full text-left text-sm text-gray-600 hover:text-purple-600 transition-colors py-1"
               >
-                → Create proposal
+                → Crear propuesta
               </button>
               <button 
                 onClick={() => onViewChange('notes')}
                 className="w-full text-left text-sm text-gray-600 hover:text-orange-600 transition-colors py-1"
               >
-                → Take notes
+                → Tomar notas
               </button>
             </div>
           </div>
@@ -148,11 +148,11 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
           {/* Version Info */}
           <div className="text-center">
             <p className="text-xs text-gray-500">
-              Version 2.3.0 • Built with ❤️
+              Versión 2.3.0 • Hecho con ❤️
             </p>
             <div className="flex items-center justify-center space-x-2 mt-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-gray-600">All systems operational</span>
+              <span className="text-xs text-gray-600">Todos los sistemas operativos</span>
             </div>
           </div>
         </div>

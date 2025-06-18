@@ -61,10 +61,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
           }`}
         >
           <p className="text-xl md:text-2xl lg:text-3xl text-white/90 font-light leading-relaxed max-w-3xl">
-            AI-Powered Influencer Marketing Platform
+            Plataforma de Marketing de Influencers Potenciada por IA
           </p>
           <p className="text-lg md:text-xl text-white/70 font-light mt-4 max-w-2xl">
-            Discover, analyze, and connect with the perfect influencers for your brand
+            Descubre, analiza y conecta con los influencers perfectos para tu marca
           </p>
         </div>
 
@@ -81,7 +81,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
             className="group relative px-12 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold text-lg rounded-xl border border-white/20 hover:from-blue-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25"
           >
             <span className="relative z-10 flex items-center gap-3">
-              Get Started
+              Comenzar
               <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
@@ -105,8 +105,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <h3 className="text-white font-semibold mb-2">Smart Discovery</h3>
-              <p className="text-white/70 text-sm">AI-powered influencer search and matching</p>
+              <h3 className="text-white font-semibold mb-2">Descubrimiento Inteligente</h3>
+              <p className="text-white/70 text-sm">Búsqueda y emparejamiento de influencers potenciado por IA</p>
             </div>
             
             <div className="text-center">
@@ -115,8 +115,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
-              <h3 className="text-white font-semibold mb-2">Real-time Analytics</h3>
-              <p className="text-white/70 text-sm">Live data and performance insights</p>
+              <h3 className="text-white font-semibold mb-2">Análisis en Tiempo Real</h3>
+              <p className="text-white/70 text-sm">Datos en vivo e insights de rendimiento</p>
             </div>
             
             <div className="text-center">
@@ -125,8 +125,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
                 </svg>
               </div>
-              <h3 className="text-white font-semibold mb-2">Campaign Management</h3>
-              <p className="text-white/70 text-sm">Professional proposal generation</p>
+              <h3 className="text-white font-semibold mb-2">Gestión de Campañas</h3>
+              <p className="text-white/70 text-sm">Generación profesional de propuestas</p>
             </div>
           </div>
         </div>

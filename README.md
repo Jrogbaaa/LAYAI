@@ -1,10 +1,19 @@
 # 🚀 LAYAI - AI-Powered Influencer Marketing Platform
 
-**Version 2.4.0** | *The most advanced influencer discovery and verification platform*
+**Version 2.5.0** | *The most advanced influencer discovery and verification platform*
 
 LAYAI revolutionizes influencer marketing through cutting-edge AI technology, providing unparalleled accuracy in influencer discovery, verification, and campaign management. Our platform combines sophisticated search algorithms with real-time profile verification to deliver the highest quality influencer matches.
 
-## 🌟 Latest Enhancements (v2.4.0)
+## 🌟 Latest Enhancements (v2.5.0)
+
+### 🇪🇸 **Complete Spanish Localization**
+- **Full UI Translation**: Every component and interface element translated to Spanish
+- **Enhanced Proposal Generation**: Spanish "reason why" explanations with cultural context
+- **Improved Regenerate Functionality**: Fixed and enhanced regenerate button for proposal reasons
+- **Localized Examples**: Spanish-specific examples (Cristiano/Nike, Gordon Ramsay/HexClad style)
+- **Cultural Intelligence**: Spanish brand context understanding and influencer analysis
+
+## 🌟 Previous Enhancements (v2.4.0)
 
 ### 🇪🇸 **Spanish Location Detection & Age Estimation**
 - **Multi-factor Spanish detection**: 85-95% accuracy in identifying Spanish influencers
