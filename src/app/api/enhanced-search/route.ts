@@ -119,6 +119,92 @@ function estimateAge(profile: any): {
   };
 }
 
+// Generate personalized match reasons for real-time search results
+function generateRealtimeMatchReasons(influencer: any, params: ApifySearchParams): string[] {
+  const reasons: string[] = [];
+  
+  // Always include source
+  reasons.push('Búsqueda en tiempo real');
+  
+  // Brand-specific matching
+  if (params.brandName?.toLowerCase().includes('ikea') || params.userQuery?.toLowerCase().includes('ikea')) {
+    if (influencer.category?.toLowerCase().includes('lifestyle') || 
+        influencer.category?.toLowerCase().includes('home') ||
+        influencer.category?.toLowerCase().includes('fashion')) {
+      reasons.push('Creador perfecto para IKEA: contenido de hogar y lifestyle');
+    }
+    if (influencer.followers >= 100000 && influencer.followers <= 500000) {
+      reasons.push('Audiencia ideal para marca premium como IKEA');
+    }
+    if (influencer.engagementRate > 3) {
+      reasons.push('Excelente interacción con contenido de decoración');
+    }
+  }
+  
+  // Niche-specific matching  
+  if (params.niches && params.niches.length > 0 && influencer.category) {
+    const matchingNiches = params.niches.filter(niche => 
+      influencer.category.toLowerCase().includes(niche.toLowerCase()) ||
+      niche.toLowerCase().includes(influencer.category.toLowerCase())
+    );
+    
+    if (matchingNiches.length > 0) {
+      reasons.push(`Especialista activo en ${influencer.category}`);
+    }
+  }
+  
+  // Engagement analysis
+  if (influencer.engagementRate > 5) {
+    reasons.push(`Engagement excepcional ${influencer.engagementRate.toFixed(1)}% - audiencia muy comprometida`);
+  } else if (influencer.engagementRate > 3) {
+    reasons.push(`Engagement sólido ${influencer.engagementRate.toFixed(1)}% - buena interacción`);
+  } else if (influencer.engagementRate > 1) {
+    reasons.push(`${influencer.engagementRate.toFixed(1)}% engagement rate`);
+  }
+  
+  // Follower analysis
+  if (influencer.followers > 1000000) {
+    reasons.push('Mega-influencer con alcance masivo');
+  } else if (influencer.followers > 500000) {
+    reasons.push('Macro-influencer con gran alcance');
+  } else if (influencer.followers > 100000) {
+    reasons.push('Influencer establecido con audiencia sólida');
+  } else if (influencer.followers > 50000) {
+    reasons.push('Micro-influencer con comunidad engaged');
+  } else {
+    reasons.push('Nano-influencer con conexión personal');
+  }
+  
+  // Verification and activity
+  if (influencer.verified) {
+    reasons.push('✅ Cuenta verificada con credibilidad oficial');
+  } else {
+    reasons.push('Creador activo con contenido regular');
+  }
+  
+  // Location matching
+  if (params.location && influencer.location?.toLowerCase().includes(params.location.toLowerCase())) {
+    reasons.push(`Ubicado en ${influencer.location} - audiencia local`);
+  }
+  
+  // Platform benefits
+  if (influencer.platform === 'Instagram') {
+    reasons.push('Instagram: plataforma ideal para contenido visual de marca');
+  } else if (influencer.platform === 'TikTok') {
+    reasons.push('TikTok: formato viral ideal para alcance joven');
+  }
+  
+  // Brand compatibility
+  if (influencer.brandCompatibilityScore > 85) {
+    reasons.push('Alta compatibilidad de marca según análisis IA');
+  } else if (influencer.brandCompatibilityScore > 70) {
+    reasons.push('Buena compatibilidad de marca detectada');
+  }
+  
+  // Limit to 4-5 most relevant reasons
+  return reasons.slice(0, 5);
+}
+
 export async function POST(req: Request) {
   try {
     const searchParams: ApifySearchParams = await req.json();
@@ -135,7 +221,10 @@ export async function POST(req: Request) {
     const vettedResults = await searchVettedInfluencers(searchParams);
     
     if (vettedResults.influencers.length > 0) {
-      const convertedVetted = vettedResults.influencers.map(convertVettedToMatchResult);
+      // Convert vetted results to match result format
+      const convertedVetted = vettedResults.influencers.map(inf => 
+        convertVettedToMatchResult(inf, searchParams)
+      );
       allResults.push(...convertedVetted);
       totalFound += vettedResults.totalCount;
       searchSources.push('Base de datos verificada');
@@ -196,12 +285,7 @@ export async function POST(req: Request) {
           matchScore: vettedResults.influencers.length > 0 ? 
             (influencer.brandCompatibilityScore || 75) / 100 * 0.8 : // Lower score if we have vetted results
             (influencer.brandCompatibilityScore || 75) / 100, // Higher score if no vetted results
-          matchReasons: [
-            'Búsqueda en tiempo real',
-            `${(influencer.followers || 0).toLocaleString()} seguidores`,
-            `${(influencer.engagementRate || 0).toFixed(1)}% engagement rate`,
-            influencer.verified ? '✅ Cuenta verificada' : 'Cuenta activa'
-          ],
+          matchReasons: generateRealtimeMatchReasons(influencer, searchParams),
           estimatedCost: Math.floor(influencer.followers / 100) || 500,
           similarPastCampaigns: [],
           potentialReach: Math.round(influencer.followers * (influencer.engagementRate / 100)),

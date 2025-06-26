@@ -306,8 +306,108 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
   }
 }
 
+// Generate personalized match reasons based on influencer profile and search parameters
+function generatePersonalizedMatchReasons(vetted: VettedInfluencer, params: ApifySearchParams): string[] {
+  const reasons: string[] = [];
+  
+  // Always include verified source
+  reasons.push('Base de datos verificada');
+  
+  // Brand-specific matching
+  if (params.brandName?.toLowerCase().includes('ikea') || params.userQuery?.toLowerCase().includes('ikea')) {
+    if (vetted.genres.some(genre => ['lifestyle', 'home', 'fashion', 'diy'].includes(genre.toLowerCase()))) {
+      reasons.push('Perfecto para IKEA: especialista en contenido de hogar y estilo de vida');
+    }
+    if (vetted.followerCount >= 100000 && vetted.followerCount <= 500000) {
+      reasons.push('Tamaño ideal de audiencia para campañas de marca premium');
+    }
+    if (vetted.engagementRate > 0.03) {
+      reasons.push('Alta interacción con contenido de decoración y hogar');
+    }
+  }
+  
+  // Niche-specific matching
+  if (params.niches && params.niches.length > 0) {
+    const matchingNiches = vetted.genres.filter(genre => 
+      params.niches!.some(niche => 
+        genre.toLowerCase().includes(niche.toLowerCase()) ||
+        niche.toLowerCase().includes(genre.toLowerCase())
+      )
+    );
+    
+    if (matchingNiches.length > 0) {
+      const nicheText = matchingNiches.slice(0, 2).join(' y ');
+      reasons.push(`Especialista verificado en ${nicheText}`);
+    }
+  }
+  
+  // Engagement quality
+  if (vetted.engagementRate > 0.05) {
+    reasons.push(`Engagement excepcional del ${(vetted.engagementRate * 100).toFixed(1)}% - audiencia muy activa`);
+  } else if (vetted.engagementRate > 0.03) {
+    reasons.push(`Engagement sólido del ${(vetted.engagementRate * 100).toFixed(1)}% - gran interacción`);
+  } else {
+    reasons.push(`${(vetted.engagementRate * 100).toFixed(1)}% engagement rate`);
+  }
+  
+  // Follower count reasoning
+  if (vetted.followerCount > 1000000) {
+    reasons.push('Mega-influencer con alcance masivo en España');
+  } else if (vetted.followerCount > 500000) {
+    reasons.push('Macro-influencer con gran influencia nacional');
+  } else if (vetted.followerCount > 100000) {
+    reasons.push('Influencer establecido con audiencia consolidada');
+  } else if (vetted.followerCount > 10000) {
+    reasons.push('Micro-influencer con alta conexión personal');
+  }
+  
+  // Category-specific benefits
+  switch (vetted.category) {
+    case 'Celebrity':
+      reasons.push('Estatus de celebridad con reconocimiento masivo');
+      break;
+    case 'Mega':
+      reasons.push('Alcance premium con audiencia establecida');
+      break;
+    case 'Macro':
+      reasons.push('Equilibrio perfecto entre alcance y engagement');
+      break;
+    case 'Micro':
+      reasons.push('Conexión auténtica con comunidad leal');
+      break;
+    case 'Nano':
+      reasons.push('Influencia local con alta credibilidad');
+      break;
+  }
+  
+  // Platform-specific advantages
+  if (vetted.platform === 'Instagram') {
+    reasons.push('Plataforma ideal para contenido visual de marca');
+  } else if (vetted.platform === 'TikTok') {
+    reasons.push('Creador viral en la plataforma de mayor crecimiento');
+  }
+  
+  // Location-based matching
+  if (params.location?.toLowerCase().includes('spain') || params.location?.toLowerCase().includes('españa')) {
+    reasons.push('Influencer local español con audiencia nativa');
+  }
+  
+  // Verification status
+  if (vetted.isVerified) {
+    reasons.push('✅ Cuenta verificada oficialmente');
+  }
+  
+  // Activity status
+  if (vetted.isActive) {
+    reasons.push('Creador activo con contenido regular');
+  }
+  
+  // Limit to 4-5 most relevant reasons to avoid overwhelming
+  return reasons.slice(0, 5);
+}
+
 // Convert vetted influencer to match result format for consistency
-export function convertVettedToMatchResult(vetted: VettedInfluencer) {
+export function convertVettedToMatchResult(vetted: VettedInfluencer, params?: ApifySearchParams) {
   return {
     influencer: {
       id: vetted.username,
@@ -351,7 +451,7 @@ export function convertVettedToMatchResult(vetted: VettedInfluencer) {
       lastUpdated: new Date(),
     },
     matchScore: Math.min(0.95, 0.85 + (vetted.engagementRate * 2)), // High score for vetted influencers
-    matchReasons: [
+    matchReasons: params ? generatePersonalizedMatchReasons(vetted, params) : [
       'Base de datos verificada',
       `Especialista en ${vetted.primaryGenre}`,
       `${(vetted.followerCount / 1000).toFixed(0)}K seguidores`,
