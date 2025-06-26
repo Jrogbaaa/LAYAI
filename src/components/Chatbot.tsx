@@ -15,7 +15,7 @@ interface ChatbotProps {
 export function Chatbot({ onSendMessage }: ChatbotProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "Hi! I'm your AI assistant for finding influencers. Ask me to find creators based on criteria like:\n\n🔍 'Find fashion influencers on Instagram with 10k-100k followers'\n🎯 'Show me tech YouTubers in California'\n💄 'Find beauty influencers with high engagement rates'\n\n💡 After I show results, you can ask follow-up questions to add more results!",
+      text: "¡Hola! Soy tu asistente de IA para encontrar influencers. Pídeme que encuentre creadores según criterios como:\n\n🔍 'Encuentra influencers de moda en Instagram con 10k-100k seguidores'\n🎯 'Muéstrame YouTubers de tecnología en California'\n💄 'Encuentra influencers de belleza con altas tasas de engagement'\n\n💡 ¡Después de mostrar resultados, puedes hacer preguntas de seguimiento para añadir más resultados!",
       sender: 'bot',
       type: 'chat',
     },
@@ -58,14 +58,18 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
       
       let botResponse: Message;
       if (response.type === 'search') {
+        // Access the search data properly - it's nested in response.data.data
+        const searchData = response.data?.data || response.data;
+        const totalFound = searchData?.totalFound || 0;
+        
         botResponse = {
-          text: `🔍 I found ${response.data.totalFound || 0} influencers matching your criteria! Check the results below.`,
+          text: `🔍 ¡Encontré ${totalFound} influencers que coinciden con tus criterios! Revisa los resultados a continuación.`,
           sender: 'bot',
           type: 'search',
         };
       } else {
         botResponse = {
-          text: response.data || 'I received your message. How can I help you find influencers?',
+          text: response.data || 'Recibí tu mensaje. ¿Cómo puedo ayudarte a encontrar influencers?',
           sender: 'bot',
           type: 'chat',
         };
@@ -74,7 +78,7 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
       setMessages(prev => [...prev, botResponse]);
     } catch (error) {
       const errorMessage: Message = {
-        text: 'Sorry, I encountered an error. Please try again.',
+        text: 'Lo siento, encontré un error. Por favor, inténtalo de nuevo.',
         sender: 'bot',
         type: 'chat',
       };
@@ -100,8 +104,8 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
             <span className="text-white text-lg">🤖</span>
           </div>
           <div>
-            <h2 className="text-white font-semibold text-lg">AI Influencer Assistant</h2>
-            <p className="text-blue-100 text-sm">Find the perfect creators for your campaigns</p>
+            <h2 className="text-white font-semibold text-lg">Asistente de IA para Influencers</h2>
+            <p className="text-blue-100 text-sm">Encuentra los creadores perfectos para tus campañas</p>
           </div>
         </div>
       </div>
@@ -134,7 +138,7 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
                   <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                   <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
-                <span className="text-sm text-gray-600">Thinking...</span>
+                <span className="text-sm text-gray-600">Pensando...</span>
               </div>
             </div>
           </div>
@@ -150,7 +154,7 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Ask me to find influencers..."
+              placeholder="Pídeme que encuentre influencers..."
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm bg-gray-50 focus:bg-white transition-colors"
               rows={2}
               disabled={isLoading}

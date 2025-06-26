@@ -5,38 +5,42 @@ import { ApifySearchParams } from '@/lib/apifyService';
 function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifySearchParams; response?: string } {
   const lowerMessage = message.toLowerCase();
   
-  // Check if this is a search intent
-  const searchKeywords = ['find', 'search', 'show', 'get', 'look for', 'discover', 'recommend'];
+  // Check if this is a search intent - support both English and Spanish keywords
+  const searchKeywords = ['find', 'search', 'show', 'get', 'look for', 'discover', 'recommend', 'buscar', 'encontrar', 'mostrar', 'busca', 'encuentra', 'muestra', 'recomendar', 'descubrir'];
   const isSearch = searchKeywords.some(keyword => lowerMessage.includes(keyword)) ||
                    lowerMessage.includes('influencer') ||
-                   lowerMessage.includes('creator');
+                   lowerMessage.includes('creator') ||
+                   lowerMessage.includes('creador') ||
+                   lowerMessage.includes('creadores');
 
   if (!isSearch) {
-    // Handle non-search queries with conversational responses
-    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+    // Handle non-search queries with conversational responses in Spanish
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey') || 
+        lowerMessage.includes('hola') || lowerMessage.includes('buenos') || lowerMessage.includes('buenas')) {
       return {
         isSearch: false,
-        response: "Hi! I can help you find the perfect influencers for your brand. Just tell me what you're looking for - like the niche, platform, follower count, or location, and I'll search for matching influencers!"
+        response: "¡Hola! Puedo ayudarte a encontrar los influencers perfectos para tu marca. Solo dime qué estás buscando: el nicho, la plataforma, el número de seguidores o la ubicación, ¡y buscaré influencers que coincidan!"
       };
     }
     
-    if (lowerMessage.includes('how') && (lowerMessage.includes('work') || lowerMessage.includes('use'))) {
+    if ((lowerMessage.includes('how') && (lowerMessage.includes('work') || lowerMessage.includes('use'))) ||
+        (lowerMessage.includes('cómo') && (lowerMessage.includes('funciona') || lowerMessage.includes('usar') || lowerMessage.includes('usas')))) {
       return {
         isSearch: false,
-        response: "It's simple! Just describe what kind of influencers you're looking for. For example: 'Find fashion influencers on Instagram with 10k-100k followers in New York' or 'Show me tech YouTubers with over 50k subscribers'."
+        response: "¡Es simple! Solo describe qué tipo de influencers estás buscando. Por ejemplo: 'Encuentra influencers de moda en Instagram con 10k-100k seguidores en Nueva York' o 'Muéstrame YouTubers de tecnología con más de 50k suscriptores'."
       };
     }
     
-    if (lowerMessage.includes('help')) {
+    if (lowerMessage.includes('help') || lowerMessage.includes('ayuda') || lowerMessage.includes('ayudar')) {
       return {
         isSearch: false,
-        response: "I can help you search for influencers! You can specify:\n• Platform (Instagram, TikTok, YouTube, Twitter)\n• Niche (fashion, fitness, tech, beauty, etc.)\n• Follower count (10k, 100k, 1M, etc.)\n• Location (city or country)\n• Gender (male, female)\n• Age range (18-24, 25-34, etc.)\n\nJust tell me what you're looking for!"
+        response: "¡Puedo ayudarte a buscar influencers! Puedes especificar:\n• Plataforma (Instagram, TikTok, YouTube, Twitter)\n• Nicho (moda, fitness, tecnología, belleza, etc.)\n• Número de seguidores (10k, 100k, 1M, etc.)\n• Ubicación (ciudad o país)\n• Género (masculino, femenino)\n• Rango de edad (18-24, 25-34, etc.)\n\n¡Solo dime qué estás buscando!"
       };
     }
     
     return {
       isSearch: false,
-      response: "I'm here to help you find influencers! Try asking something like 'Find fitness influencers on Instagram' or 'Show me tech YouTubers with 50k+ followers'."
+      response: "¡Estoy aquí para ayudarte a encontrar influencers! Prueba preguntando algo como 'Encuentra influencers de fitness en Instagram' o 'Muéstrame YouTubers de tecnología con más de 50k seguidores'."
     };
   }
 
@@ -235,13 +239,18 @@ function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifyS
     }
   }
 
-  // Extract location with improved patterns
+  // Extract location with improved patterns (including Spanish)
   let location: string | undefined;
   const locationPatterns = [
+    // English patterns
     /in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
     /from\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
     /based in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
-    /located in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i
+    /located in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
+    // Spanish patterns
+    /en\s+([a-zA-ZáéíóúñÑ\s]+?)(?:\s+con|\s+más|\s+para|\s+de|$|,|\.|!|\?)/i,
+    /de\s+([a-zA-ZáéíóúñÑ\s]+?)(?:\s+con|\s+más|\s+para|\s+en|$|,|\.|!|\?)/i,
+    /desde\s+([a-zA-ZáéíóúñÑ\s]+?)(?:\s+con|\s+más|\s+para|\s+en|$|,|\.|!|\?)/i
   ];
 
   for (const pattern of locationPatterns) {

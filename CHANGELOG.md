@@ -161,73 +161,85 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Interactive Elements**: Smooth animations and transitions throughout
 - **Professional Export Options**: Multiple format support for proposals
 
-## [2.1.0] - 2025-01-05
+## [2.1.0] - 2025-01-25
 
-### 🚀 Added - Core Platform Features
-- **AI-Powered Chatbot**: Natural language search interface for influencer discovery
-- **Influencer Results Display**: Comprehensive profile information with engagement metrics
-- **Campaign Proposal System**: Generate professional campaign proposals with selected influencers
-- **Notes Management**: Built-in note-taking system for campaign planning
+### 🚀 Major Features Added
+- **Spanish Influencer Database**: Imported 1,096+ verified Spanish influencers from real CSV data
+- **Hybrid Search System**: Combined Firebase verified data with real-time Apify searches
+- **Enhanced Chat Interface**: Improved conversational AI for natural language queries
+- **Data Quality Assurance**: Automatic engagement rate normalization and validation
 
-### 🔧 Technical Foundation
-- **Next.js 15.3.3**: Latest framework with app directory structure
-- **TypeScript Integration**: Full type safety across the application
-- **Tailwind CSS**: Utility-first styling with custom design system
-- **API Integration**: Apify and Serply APIs for data sourcing
+### 🔧 Bug Fixes
+- **Fixed TypeError**: Resolved "Cannot read properties of undefined" errors in InfluencerResults component
+- **Chat Display Issue**: Fixed "0 influencers returned" message showing incorrect count
+- **Engagement Rate Display**: Fixed extreme engagement rates (>20%) with automatic normalization
+- **Data Validation**: Added comprehensive defensive checks for undefined/null values
 
-### 📊 Data & Analytics
-- **Real-time Metrics**: Live follower counts and engagement rates
-- **Audience Demographics**: Age groups, gender distribution, and location data
-- **Performance Tracking**: Campaign success metrics and ROI calculations
-- **Export Capabilities**: CSV and PDF export for proposals and data
+### 💫 Improvements
+- **Enhanced Search Logic**: Improved Spain-related query detection and niche matching
+- **Better Error Handling**: Added fallbacks for all potentially undefined properties
+- **Improved Data Import**: Enhanced CSV import script with data quality validation
+- **Debug Logging**: Added detailed logging for search operations and data processing
 
-## [2.0.0] - 2024-12-20
+### 🗃️ Database Updates
+- **Normalized Engagement Rates**: Fixed 1,854 documents with incorrect engagement rates
+- **Capped Extreme Values**: Applied realistic caps to engagement rates (1-15%)
+- **Data Cleanup**: Removed outliers and applied statistical normalization
+- **Genre Mapping**: Enhanced category matching for better search results
 
-### 🎯 Major Platform Rewrite
-- **Complete Architecture Overhaul**: Rebuilt from ground up with modern technologies
-- **AI-First Approach**: Integrated AI throughout the entire user experience
-- **Professional UI**: Complete redesign with focus on usability and aesthetics
-- **Scalable Backend**: Designed for high-volume influencer data processing
+### 🔍 Search Enhancements
+- **Flexible Location Detection**: Improved Spain-related query recognition
+- **Better Brand Matching**: Enhanced IKEA and home-related searches
+- **Inclusive Search Logic**: More permissive matching for broader results
+- **Real-time Validation**: Live data validation during search operations
 
-### 🔍 Advanced Search Capabilities
-- **Multi-source Discovery**: Combined web search and direct platform scraping
-- **Intelligent Filtering**: AI-powered filtering based on brand compatibility
-- **Real-time Validation**: Live verification of influencer profiles and metrics
-- **Batch Processing**: Efficient handling of large influencer datasets
+### 📊 Technical Improvements
+- **Firebase Integration**: Optimized Firestore queries for better performance
+- **API Response Structure**: Standardized response formats across all endpoints
+- **Error Recovery**: Added automatic retry logic for failed operations
+- **Memory Management**: Improved data handling for large result sets
 
-### 📈 Analytics & Insights
-- **Comprehensive Metrics**: Detailed analytics on influencer performance
-- **Predictive Scoring**: AI-powered predictions for campaign success
-- **Trend Analysis**: Market trends and influencer performance patterns
-- **ROI Optimization**: Data-driven recommendations for budget allocation
+### 🐛 Issues Resolved
+- Fixed engagement rate calculation displaying as percentages instead of decimals
+- Resolved undefined property access in multiple components
+- Fixed search result count discrepancy in chat interface
+- Corrected data type mismatches in influencer profiles
 
-## [1.5.0] - 2024-11-15
+## [2.0.0] - 2025-01-20
 
-### 🔧 Infrastructure Improvements
-- **Performance Optimization**: 50% faster page load times
-- **Database Optimization**: Improved query performance and data structure
-- **Error Handling**: Enhanced error recovery and user feedback
-- **Security Updates**: Latest security patches and improvements
+### 🎉 Major Release
+- **Complete Spanish Translation**: Full platform localization
+- **Enhanced Proposal Generator**: AI-powered campaign proposal generation
+- **Advanced Search Filters**: Multi-criteria filtering system
+- **Export Functionality**: Multiple export formats (CSV, PDF, custom)
 
-### 🎨 UI Enhancements
-- **Mobile Optimization**: Improved mobile responsiveness
-- **Accessibility**: Better screen reader support and keyboard navigation
-- **Dark Mode**: Optional dark theme for better user experience
-- **Loading States**: Better visual feedback during data loading
+### 🔧 Core Features
+- **Firebase Integration**: Real-time database for influencer data
+- **Apify Integration**: Live social media data scraping
+- **OpenAI Integration**: AI-powered content generation
+- **Responsive Design**: Mobile-first UI/UX
 
-## [1.0.0] - 2024-10-01
+### 📈 Performance
+- **Optimized Queries**: Faster search response times
+- **Cached Results**: Improved data loading performance
+- **Lazy Loading**: Efficient component rendering
+- **API Rate Limiting**: Stable API performance
 
-### 🚀 Initial Release
-- **Basic Influencer Search**: Simple search functionality for Instagram influencers
-- **Profile Display**: Basic profile information and metrics
-- **CSV Export**: Simple data export capabilities
-- **User Authentication**: Basic login and user management
+## [1.5.0] - 2025-01-15
 
-### 🔍 Core Features
-- **Instagram Integration**: Direct API integration for profile data
-- **Search Filters**: Basic filtering by follower count and engagement
-- **Results Display**: Simple table view of search results
-- **Data Export**: CSV export for further analysis
+### 🔍 Search Improvements
+- **Enhanced Discovery**: Better influencer discovery algorithms
+- **Location Filtering**: Precise geographic targeting
+- **Engagement Analytics**: Detailed performance metrics
+- **Brand Compatibility**: AI-powered brand matching
+
+## [1.0.0] - 2025-01-01
+
+### 🎊 Initial Release
+- **Basic Search**: Influencer discovery functionality
+- **Profile Display**: Detailed influencer profiles
+- **Export Options**: Basic CSV export
+- **Firebase Backend**: Initial database setup
 
 ---
 

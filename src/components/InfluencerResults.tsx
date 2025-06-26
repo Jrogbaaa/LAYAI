@@ -46,14 +46,20 @@ interface MatchResultWithVerification extends MatchResult {
 }
 
 export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results }) => {
-  const formatNumber = (num: number): string => {
-    if (num >= 1000000) {
-      return `${(num / 1000000).toFixed(1)}M`;
+  const formatNumber = (num: number | undefined | null): string => {
+    // Handle undefined, null, or non-numeric values
+    if (num === undefined || num === null || isNaN(num)) {
+      return '0';
     }
-    if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)}K`;
+    
+    const numValue = Number(num);
+    if (numValue >= 1000000) {
+      return `${(numValue / 1000000).toFixed(1)}M`;
     }
-    return num.toString();
+    if (numValue >= 1000) {
+      return `${(numValue / 1000).toFixed(1)}K`;
+    }
+    return numValue.toString();
   };
 
   const getMatchScoreColor = (score: number): string => {
@@ -99,9 +105,9 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900">
-                      {result.influencer.name}
+                      {result.influencer.name || 'Unknown Name'}
                     </h3>
-                    <p className="text-gray-600">@{result.influencer.handle}</p>
+                    <p className="text-gray-600">@{result.influencer.handle || 'unknown'}</p>
                     <div className="flex items-center space-x-2 mt-1">
                       <span className="text-sm font-medium text-blue-600">
                         #{index + 1} Match
@@ -125,7 +131,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <span className="text-gray-600">Platform:</span>
-                          <span className="font-medium platform-badge">{result.influencer.platform}</span>
+                          <span className="font-medium platform-badge">{result.influencer.platform || 'Unknown'}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Followers:</span>
@@ -133,7 +139,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Engagement:</span>
-                          <span className="font-medium engagement-rate">{(result.influencer.engagementRate * 100).toFixed(1)}%</span>
+                          <span className="font-medium engagement-rate">{((result.influencer.engagementRate || 0) * 100).toFixed(1)}%</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Est. Reach:</span>
@@ -148,15 +154,15 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <span className="text-gray-600">Gender:</span>
-                          <span className="font-medium">{result.influencer.gender}</span>
+                          <span className="font-medium">{result.influencer.gender || 'Not specified'}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Age Range:</span>
-                          <span className="font-medium">{result.influencer.ageRange}</span>
+                          <span className="font-medium">{result.influencer.ageRange || 'Not specified'}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Location:</span>
-                          <span className="font-medium">{result.influencer.location}</span>
+                          <span className="font-medium">{result.influencer.location || 'Not specified'}</span>
                         </div>
                       </div>
                     </div>
@@ -170,12 +176,12 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <span className="text-gray-600">Average Rate:</span>
-                          <span className="font-bold text-lg">${result.estimatedCost.toLocaleString()}</span>
+                          <span className="font-bold text-lg">${(result.estimatedCost || 0).toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Cost Level:</span>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCostLevelColor(result.influencer.costLevel)}`}>
-                            {result.influencer.costLevel}
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCostLevelColor(result.influencer.costLevel || 'budget')}`}>
+                            {result.influencer.costLevel || 'Budget'}
                           </span>
                         </div>
                       </div>
@@ -185,7 +191,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2">Content Niches</h4>
                       <div className="flex flex-wrap gap-2">
-                        {result.influencer.niche.map((niche, nicheIndex) => (
+                        {(result.influencer.niche || []).map((niche, nicheIndex) => (
                           <span 
                             key={`${niche}-${nicheIndex}`}
                             className="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
@@ -197,13 +203,13 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                     </div>
 
                     {/* Past Collaborations */}
-                    {result.influencer.pastCollaborations.length > 0 && (
+                    {(result.influencer.pastCollaborations || []).length > 0 && (
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-2">Experience</h4>
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span className="text-gray-600">Brand Partnerships:</span>
-                            <span className="font-medium">{result.influencer.pastCollaborations.length}</span>
+                            <span className="font-medium">{(result.influencer.pastCollaborations || []).length}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-600">Avg. Rating:</span>
@@ -212,7 +218,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                                 <svg 
                                   key={i}
                                   className={`w-4 h-4 ${
-                                    i < Math.round(result.influencer.pastCollaborations.reduce((sum, collab) => sum + collab.rating, 0) / result.influencer.pastCollaborations.length)
+                                    i < Math.round((result.influencer.pastCollaborations || []).reduce((sum, collab) => sum + (collab.rating || 0), 0) / Math.max((result.influencer.pastCollaborations || []).length, 1))
                                       ? 'text-yellow-400 fill-current'
                                       : 'text-gray-300'
                                   }`}
@@ -233,7 +239,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                 <div className="mt-6 p-4 bg-green-50 rounded-lg">
                   <h4 className="font-semibold text-gray-900 mb-2">Why This Match Works</h4>
                   <ul className="space-y-1">
-                    {result.matchReasons.map((reason, reasonIndex) => (
+                    {(result.matchReasons || []).map((reason, reasonIndex) => (
                       <li key={`${reason}-${reasonIndex}`} className="text-green-700 text-sm flex items-center">
                         <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />

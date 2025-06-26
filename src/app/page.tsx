@@ -64,53 +64,49 @@ export default function Home() {
       if (data.type === 'search') {
         console.log('🔍 Processing search request with params:', data.data);
         
-        const searchResponse = await fetch('/api/search-apify', {
+        const searchResponse = await fetch('/api/enhanced-search', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ 
-            ...data.data,  // Spread the search parameters directly
-            sessionId: sessionId,
-            // TODO: Add campaign context when available
-            // campaignId: currentCampaignId,
-            // campaignStatus: currentCampaignStatus,
-            // brandName: data.data.brandName
-          }),
+          body: JSON.stringify(data.data), // Use the enhanced search API
         });
 
         const searchData = await searchResponse.json();
         
         if (searchData.success) {
-          // Convert the results to MatchResult format
-          const convertedResults = convertToMatchResults(searchData.premiumResults || []);
+          // Enhanced search API returns data in .data property
+          const results = searchData.data?.premiumResults || searchData.premiumResults || [];
+          const convertedResults = convertToMatchResults(results);
           console.log('Search results received:', {
-            premiumResults: searchData.premiumResults?.length || 0,
-            discoveryResults: searchData.discoveryResults?.length || 0,
-            totalFound: searchData.totalFound || 0
+            premiumResults: results.length,
+            discoveryResults: searchData.data?.discoveryResults?.length || 0,
+            totalFound: searchData.data?.totalFound || searchData.totalFound || 0
           });
           
           // Check if this is a follow-up search (if we already have results)
           if (searchResults && searchResults.premiumResults.length > 0) {
             // Accumulate results - combine with existing results
             const existingDiscoveryUrls = new Set(searchResults.premiumResults.map(r => r.influencer.handle));
-            const newDiscoveryResults = (searchData.discoveryResults || []).filter(
+            const discoveryResults = searchData.data?.discoveryResults || searchData.discoveryResults || [];
+            const newDiscoveryResults = discoveryResults.filter(
               (result: any) => !existingDiscoveryUrls.has(result.handle)
             );
             
             setSearchResults({
               premiumResults: [...searchResults.premiumResults, ...convertedResults, ...newDiscoveryResults],
-              discoveryResults: searchData.discoveryResults || [],
-              totalFound: searchData.totalFound || 0
+              discoveryResults: discoveryResults,
+              totalFound: searchData.data?.totalFound || searchData.totalFound || 0
             });
             
             console.log(`🔄 Follow-up search: Added ${newDiscoveryResults.length} new discovery results`);
           } else {
             // First search - set results normally
+            const discoveryResults = searchData.data?.discoveryResults || searchData.discoveryResults || [];
             setSearchResults({
-              premiumResults: [...convertedResults, ...searchData.premiumResults || []],
-              discoveryResults: searchData.discoveryResults || [],
-              totalFound: searchData.totalFound || 0
+              premiumResults: convertedResults,
+              discoveryResults: discoveryResults,
+              totalFound: searchData.data?.totalFound || searchData.totalFound || 0
             });
           }
           
@@ -125,20 +121,20 @@ export default function Home() {
         return { type: 'chat', data: data.data };
       } else {
         console.error('❌ Unexpected response type:', data);
-        return { type: 'chat', data: 'Sorry, I received an unexpected response. Please try again.' };
+        return { type: 'chat', data: 'Lo siento, recibí una respuesta inesperada. Por favor, inténtalo de nuevo.' };
       }
     } catch (error) {
       console.error('❌ Error sending message:', error);
       
-      // Provide more specific error messages
-      let errorMessage = 'Sorry, something went wrong. Please try again.';
+      // Provide more specific error messages in Spanish
+      let errorMessage = 'Lo siento, algo salió mal. Por favor, inténtalo de nuevo.';
       if (error instanceof Error) {
         if (error.message.includes('fetch')) {
-          errorMessage = 'Unable to connect to the server. Please check your internet connection and try again.';
+          errorMessage = 'No se pudo conectar al servidor. Por favor, verifica tu conexión a internet e inténtalo de nuevo.';
         } else if (error.message.includes('timeout')) {
-          errorMessage = 'The request timed out. Please try again.';
+          errorMessage = 'La solicitud se agotó. Por favor, inténtalo de nuevo.';
         } else if (error.message.includes('API failed')) {
-          errorMessage = 'There was an issue with the API. Please try again in a moment.';
+          errorMessage = 'Hubo un problema con la API. Por favor, inténtalo de nuevo en un momento.';
         } else {
           errorMessage = `Error: ${error.message}`;
         }
@@ -150,60 +146,65 @@ export default function Home() {
     }
   };
 
-  // Convert ScrapedInfluencer to MatchResult for existing components
+  // Convert enhanced search results to MatchResult format for existing components
   const convertToMatchResults = (influencers: any[]): MatchResult[] => {
-    return influencers.map((influencer) => ({
-      influencer: {
-        id: influencer.id,
-        name: influencer.fullName || influencer.username,
-        handle: influencer.username,
-        platform: influencer.platform as 'Instagram' | 'TikTok' | 'YouTube' | 'Twitter' | 'Multi-Platform',
-        followerCount: influencer.followers,
-        engagementRate: (influencer.engagementRate || 2.5) / 100,
-        ageRange: '25-34',
-        gender: 'Other' as 'Male' | 'Female' | 'Non-Binary' | 'Other',
-        location: influencer.location || 'Unknown',
-        niche: [influencer.category || 'Lifestyle'],
-        contentStyle: ['Posts'],
-        pastCollaborations: [],
-        averageRate: 1000,
-        costLevel: 'Mid-Range' as 'Budget' | 'Mid-Range' | 'Premium' | 'Celebrity',
-        audienceDemographics: {
-          ageGroups: {
-            '13-17': 0,
-            '18-24': 30,
-            '25-34': 40,
-            '35-44': 20,
-            '45-54': 8,
-            '55+': 2,
+    return influencers.map((result) => {
+      // Handle both direct influencer objects and result objects with influencer property
+      const influencer = result.influencer || result;
+      
+      return {
+        influencer: {
+          id: influencer.id || influencer.username,
+          name: influencer.name || influencer.fullName || influencer.displayName || influencer.username,
+          handle: influencer.handle || influencer.username,
+          platform: influencer.platform as 'Instagram' | 'TikTok' | 'YouTube' | 'Twitter' | 'Multi-Platform',
+          followerCount: influencer.followerCount || influencer.followers,
+          engagementRate: influencer.engagementRate || (influencer.engagementRate || 2.5) / 100,
+          ageRange: '25-34',
+          gender: 'Other' as 'Male' | 'Female' | 'Non-Binary' | 'Other',
+          location: influencer.location || 'Unknown',
+          niche: [influencer.category || 'Lifestyle'],
+          contentStyle: ['Posts'],
+          pastCollaborations: [],
+          averageRate: 1000,
+          costLevel: 'Mid-Range' as 'Budget' | 'Mid-Range' | 'Premium' | 'Celebrity',
+          audienceDemographics: {
+            ageGroups: {
+              '13-17': 0,
+              '18-24': 30,
+              '25-34': 40,
+              '35-44': 20,
+              '45-54': 8,
+              '55+': 2,
+            },
+            gender: {
+              male: 50,
+              female: 48,
+              other: 2,
+            },
+            topLocations: [influencer.location || 'Unknown'],
+            interests: [influencer.category || 'Lifestyle'],
           },
-          gender: {
-            male: 50,
-            female: 48,
-            other: 2,
+          recentPosts: [],
+          contactInfo: {
+            email: influencer.email,
+            preferredContact: 'Email' as 'Email' | 'Phone' | 'DM' | 'Management',
           },
-          topLocations: [influencer.location || 'Unknown'],
-          interests: [influencer.category || 'Lifestyle'],
+          isActive: true,
+          lastUpdated: new Date(),
         },
-        recentPosts: [],
-        contactInfo: {
-          email: influencer.email,
-          preferredContact: 'Email' as 'Email' | 'Phone' | 'DM' | 'Management',
-        },
-        isActive: true,
-        lastUpdated: new Date(),
-      },
-      matchScore: (influencer.brandCompatibilityScore || 85) / 100,
-      matchReasons: [
-        'Real-time data from social media',
-        `Active in ${influencer.category || 'lifestyle'} niche`,
-        `${influencer.followers.toLocaleString()} followers`,
-      ],
-      estimatedCost: 1000,
-      similarPastCampaigns: [],
-      potentialReach: Math.round(influencer.followers * ((influencer.engagementRate || 2.5) / 100)),
-      recommendations: ['Consider this influencer for authentic content'],
-    }));
+        matchScore: result.matchScore || (influencer.brandCompatibilityScore || 85) / 100,
+        matchReasons: result.matchReasons || [
+          'Real-time data from social media',
+          `Active in ${influencer.category || 'lifestyle'} niche`,
+          `${(influencer.followerCount || influencer.followers || 0).toLocaleString()} followers`,
+        ],
+        estimatedCost: result.estimatedCost || 1000,
+        similarPastCampaigns: result.similarPastCampaigns || [],
+        potentialReach: result.potentialReach || Math.round((influencer.followerCount || influencer.followers || 0) * (influencer.engagementRate || 0.025)),
+        recommendations: result.recommendations || ['Consider this influencer for authentic content'],
+      };
+    });
   };
 
   // Convert discovery results to MatchResult format

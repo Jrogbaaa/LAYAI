@@ -1,332 +1,278 @@
-# 🚀 LAYAI - AI-Powered Influencer Marketing Platform
+# LAYAI - Plataforma de Marketing de Influencers en Español
 
-**Version 2.5.0** | *The most advanced influencer discovery and verification platform*
+![LAYAI Logo](https://via.placeholder.com/400x100/1E40AF/FFFFFF?text=LAYAI)
 
-LAYAI revolutionizes influencer marketing through cutting-edge AI technology, providing unparalleled accuracy in influencer discovery, verification, and campaign management. Our platform combines sophisticated search algorithms with real-time profile verification to deliver the highest quality influencer matches.
+> **Inteligencia Artificial para el Descubrimiento de Influencers** - Encuentra los creadores perfectos para tus campañas con IA avanzada y datos verificados de España.
 
-## 🌟 Latest Enhancements (v2.5.0)
+## 🌟 Características Principales
 
-### 🇪🇸 **Complete Spanish Localization**
-- **Full UI Translation**: Every component and interface element translated to Spanish
-- **Enhanced Proposal Generation**: Spanish "reason why" explanations with cultural context
-- **Improved Regenerate Functionality**: Fixed and enhanced regenerate button for proposal reasons
-- **Localized Examples**: Spanish-specific examples (Cristiano/Nike, Gordon Ramsay/HexClad style)
-- **Cultural Intelligence**: Spanish brand context understanding and influencer analysis
+### 🔍 **Búsqueda Híbrida Inteligente**
+- **Base de datos verificada** con **1,096+ influencers españoles** importados de datos reales
+- **Búsqueda en tiempo real** usando Apify para descubrir nuevos talentos
+- **IA conversacional** para consultas naturales en español
+- **Filtros avanzados** por plataforma, nicho, ubicación, seguidores y engagement
 
-## 🌟 Previous Enhancements (v2.4.0)
+### 📊 **Datos Precisos y Verificados**
+- **Tasas de engagement realistas** (1-15%) normalizadas automáticamente
+- **Métricas detalladas** de audiencia y rendimiento
+- **Información de contacto** y datos demográficos
+- **Análisis de compatibilidad de marca** con puntuaciones personalizadas
 
-### 🇪🇸 **Spanish Location Detection & Age Estimation**
-- **Multi-factor Spanish detection**: 85-95% accuracy in identifying Spanish influencers
-- **Advanced age estimation**: 60-75% success rate using multiple detection methods
-- **Cultural intelligence**: Recognizes Spanish cities, regions, language, and cultural markers
-- **Real-time scoring**: Automatic score adjustments based on location and age validation
+### 🤖 **Asistente de IA Avanzado**
+- **Procesamiento de lenguaje natural** en español
+- **Búsquedas conversacionales** como "Encuentra influencers de hogar en España para IKEA"
+- **Seguimiento de historial** y búsquedas incrementales
+- **Sugerencias inteligentes** basadas en el contexto
 
-### 🔍 **Enhanced Profile Verification System**
-- **Four-tier scoring algorithm**: Niche alignment, brand compatibility, follower validation, demographic matching
-- **Multi-platform support**: Instagram, TikTok, YouTube with specialized actors
-- **Rate limiting & anti-bot measures**: Respectful scraping with 2-second delays
-- **Confidence scoring**: All verifications include detailed confidence percentages
+### 📈 **Generación de Propuestas**
+- **Propuestas de campaña automatizadas** con IA
+- **Cálculos de presupuesto** y alcance estimado
+- **Exportación múltiple** (CSV, PDF, formatos personalizados)
+- **Análisis de ROI** y métricas de rendimiento
 
-### 🧠 **Automatic Memory & Learning**
-- **Intelligent feedback processing**: Automatic learning from user interactions
-- **Campaign-aware insights**: Context-aware recommendations and improvements
-- **Persistent Firebase storage**: Long-term memory retention across sessions
-- **Real-time optimization**: Continuous improvement of search algorithms
+## 🚀 Instalación y Configuración
 
-### 📝 **Enhanced Notes System**
-- **Auto-saving**: Notes save automatically every 500ms
-- **Real-time sync**: Instant synchronization across sessions
-- **Search functionality**: Full-text search across all notes
-- **Improved UX**: Better editor with formatting and timestamps
+### Prerrequisitos
+- Node.js 18+ 
+- npm o yarn
+- Cuenta de Firebase
+- Claves API de Apify y Serply (opcional)
 
-## 🎯 Core Features
-
-### **AI-Powered Search & Discovery**
-- **Hybrid search approach**: Web discovery + Apify profile scraping
-- **Brand intelligence**: Automatic brand analysis and influencer matching
-- **Multi-platform support**: Instagram, TikTok, YouTube, Twitter
-- **Real-time verification**: Live profile data validation during search
-
-### **Advanced Verification Pipeline**
-- **Two-tier system**: Basic (fast) vs Full (comprehensive) verification
-- **Batch processing**: Up to 50 profiles with intelligent fallbacks
-- **Quality scoring**: Weighted algorithms for accurate matching
-- **Error handling**: Graceful degradation with comprehensive retry logic
-
-### **Campaign Management**
-- **Proposal generation**: AI-powered campaign proposals with export options
-- **Multi-format export**: CSV, PDF, Hibiki-style, Orange-style formats
-- **Campaign tracking**: Full lifecycle management and analytics
-- **Collaboration tools**: Team-friendly workflow management
-
-### **Smart Analytics & Insights**
-- **Performance metrics**: Detailed analytics on search accuracy and results
-- **User feedback integration**: Continuous improvement through user input
-- **Recommendation engine**: Intelligent suggestions for better results
-- **Cost optimization**: Efficient resource usage and budget management
-
-## 🏗️ Architecture Overview
-
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Frontend UI   │    │   API Gateway    │    │   Verification  │
-│                 │    │                  │    │     Engine      │
-│ • React/Next.js │◄──►│ • Search API     │◄──►│ • Apify Actors  │
-│ • Tailwind CSS  │    │ • Feedback API   │    │ • Rate Limiting │
-│ • TypeScript    │    │ • Notes API      │    │ • Quality Score │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Memory &      │    │   Data Storage   │    │   External      │
-│   Learning      │    │                  │    │   Services      │
-│                 │    │ • Firebase       │    │ • Serply API    │
-│ • Auto Learning │    │ • Local JSON     │    │ • Apify Cloud   │
-│ • Feedback Loop │    │ • Session Cache  │    │ • Web Scraping  │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
+### 1. Clonar el Repositorio
+```bash
+git clone https://github.com/tu-usuario/LAYAI.git
+cd LAYAI
 ```
 
-## 🚀 Quick Start
+### 2. Instalar Dependencias
+```bash
+npm install
+# o
+yarn install
+```
 
-### Prerequisites
-- Node.js 18+ and npm
-- Firebase account (optional, for persistent memory)
-- Apify account for profile verification
+### 3. Configurar Variables de Entorno
+Crea un archivo `.env.local` en la raíz del proyecto:
 
-### Installation
+```env
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=tu-api-key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=tu-proyecto.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=tu-proyecto-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=tu-proyecto.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
+NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123def456
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
+
+# API Keys (Opcional - para búsqueda en tiempo real)
+APIFY_API_TOKEN=tu-token-apify
+SERPLY_API_KEY=tu-clave-serply
+
+# OpenAI (Para generación de propuestas)
+OPENAI_API_KEY=tu-clave-openai
+```
+
+### 4. Configurar Firebase
+1. Crea un proyecto en [Firebase Console](https://console.firebase.google.com)
+2. Habilita Firestore Database
+3. Configura las reglas de seguridad para permitir lectura/escritura
+4. Copia las credenciales al archivo `.env.local`
+
+### 5. Importar Datos de Influencers (Opcional)
+Si tienes un archivo CSV con datos de influencers:
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/layai.git
-cd layai
+# Coloca tu CSV en el directorio raíz
+# Ejecuta el script de importación
+node scripts/importVettedInfluencersFixed.js
+```
 
-# Install dependencies
-npm install
+### 6. Ejecutar la Aplicación
+```bash
+npm run dev
+# o
+yarn dev
+```
 
-# Set up environment variables
-cp .env.example .env.local
-# Add your API keys:
-# - APIFY_API_TOKEN
-# - SERPLY_API_KEY (optional)
-# - Firebase config (optional)
+La aplicación estará disponible en `http://localhost:3000`
 
-# Run development server
+## 📱 Uso de la Plataforma
+
+### Búsqueda de Influencers
+1. **Página de Inicio**: Introduce criterios básicos de búsqueda
+2. **Chat con IA**: Usa consultas naturales como:
+   - "Encuentra influencers de lifestyle en Madrid con 100k-500k seguidores"
+   - "Muéstrame YouTubers de tecnología verificados"
+   - "Busca micro-influencers de belleza en Barcelona"
+
+### Generación de Propuestas
+1. Selecciona influencers de los resultados de búsqueda
+2. Completa los detalles de la campaña
+3. La IA genera automáticamente propuestas profesionales
+4. Exporta en múltiples formatos (PDF, CSV, etc.)
+
+### Gestión de Resultados
+- **Filtrar** resultados por criterios específicos
+- **Comparar** métricas de rendimiento
+- **Exportar** listas para plataformas externas
+- **Guardar** búsquedas favoritas
+
+## 🛠️ Arquitectura Técnica
+
+### Stack Tecnológico
+- **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS
+- **Backend**: API Routes de Next.js, Node.js
+- **Base de Datos**: Firebase Firestore
+- **IA**: OpenAI GPT-4, procesamiento de lenguaje natural
+- **APIs Externas**: Apify (scraping), Serply (búsqueda web)
+
+### Estructura del Proyecto
+```
+LAYAI/
+├── src/
+│   ├── app/              # App Router de Next.js
+│   ├── components/       # Componentes React reutilizables
+│   ├── lib/              # Servicios y utilidades
+│   ├── types/            # Definiciones de TypeScript
+│   └── data/             # Datos estáticos y configuración
+├── scripts/              # Scripts de utilidad e importación
+├── public/               # Archivos estáticos
+└── docs/                 # Documentación del proyecto
+```
+
+### APIs Principales
+
+#### 🔍 Enhanced Search API
+**Endpoint**: `/api/enhanced-search`
+**Método**: POST
+
+Realiza búsqueda híbrida combinando datos verificados y búsqueda en tiempo real.
+
+```typescript
+interface SearchParams {
+  platforms: string[];
+  niches: string[];
+  minFollowers: number;
+  maxFollowers: number;
+  location?: string;
+  brandName?: string;
+  userQuery?: string;
+  maxResults: number;
+}
+```
+
+#### 💬 Chat API  
+**Endpoint**: `/api/chat`
+**Método**: POST
+
+Procesa consultas en lenguaje natural y determina si ejecutar búsqueda o responder conversacionalmente.
+
+#### 🤖 Proposal Generation API
+**Endpoint**: `/api/proposal-generation`
+**Método**: POST
+
+Genera propuestas de campaña personalizadas usando IA.
+
+## 🔧 Características Avanzadas
+
+### Base de Datos de Influencers Verificados
+- **1,096+ influencers españoles** con datos verificados
+- **Métricas de engagement normalizadas** (1-15%)
+- **Información de contacto** y demografía
+- **Categorización automática** por nicho y audiencia
+
+### Sistema de Puntuación de Marca
+- **Algoritmo de compatibilidad** personalizado
+- **Análisis de audiencia** y demografía
+- **Factores de engagement** y actividad
+- **Puntuación ponderada** por múltiples criterios
+
+### Manejo de Errores Robusto
+- **Validación de datos** en tiempo real
+- **Fallbacks automáticos** para valores undefined
+- **Gestión de errores de API** con reintentos
+- **Logging detallado** para debugging
+
+## 📈 Métricas y Análisis
+
+### Datos Disponibles por Influencer
+- **Seguidores**: Conteo total verificado
+- **Engagement Rate**: Tasa normalizada (1-15%)
+- **Demografía**: Edad, género, ubicación
+- **Costo Estimado**: Basado en seguidores y engagement
+- **Alcance Potencial**: Calculado dinámicamente
+- **Historial**: Colaboraciones pasadas y rendimiento
+
+### Exportación de Datos
+- **CSV**: Para análisis en Excel/Google Sheets
+- **PDF**: Propuestas profesionales listas para cliente
+- **Hibiki**: Formato compatible con Hibiki
+- **Orange**: Formato personalizado para Orange
+
+## 🐛 Resolución de Problemas
+
+### Errores Comunes
+
+#### Error: "Cannot read properties of undefined"
+**Solución**: Ya resuelto con validaciones defensivas en todos los componentes.
+
+#### Tasas de engagement irreales (>20%)
+**Solución**: Sistema automático de normalización implementado.
+
+#### Resultados de búsqueda vacíos
+**Verificar**:
+1. Conexión a Firebase
+2. Datos importados correctamente
+3. Filtros de búsqueda no demasiado restrictivos
+
+### Logs de Debug
+```bash
+# Ver logs detallados en consola del navegador
+# O en terminal si ejecutas en desarrollo
 npm run dev
 ```
 
-### Environment Variables
+## 🤝 Contribución
 
-```env
-# Required for profile verification
-APIFY_API_TOKEN=your_apify_token_here
+### Proceso de Desarrollo
+1. Fork del repositorio
+2. Crear rama feature: `git checkout -b feature/nueva-funcionalidad`
+3. Commit cambios: `git commit -m 'Agregar nueva funcionalidad'`
+4. Push a la rama: `git push origin feature/nueva-funcionalidad`
+5. Crear Pull Request
 
-# Optional for enhanced web search
-SERPLY_API_KEY=your_serply_key_here
+### Estándares de Código
+- **TypeScript** para tipado estático
+- **ESLint** para calidad de código
+- **Prettier** para formateo consistente
+- **Convenciones**: Nombres en español para UI, inglés para código
 
-# Optional for persistent memory (Firebase)
-NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-```
+## 📚 Documentación Adicional
 
-## 📊 Performance Metrics
+### Archivos de Documentación
+- `docs/API.md` - Documentación completa de APIs
+- `docs/DEPLOYMENT.md` - Guía de despliegue en producción
+- `docs/CONTRIBUTING.md` - Guía detallada de contribución
+- `docs/ARCHITECTURE.md` - Arquitectura técnica profunda
 
-### **Search Accuracy Improvements**
-- **Spanish Detection**: 85-95% accuracy (up from ~40%)
-- **Age Estimation**: 60-75% success rate
-- **Brand Matching**: 40% improvement in relevance
-- **False Positives**: 70% reduction
+### Recursos Externos
+- [Documentación de Firebase](https://firebase.google.com/docs)
+- [API de Apify](https://docs.apify.com/)
+- [OpenAI API](https://platform.openai.com/docs)
 
-### **System Performance**
-- **Search Speed**: 2-5 seconds for comprehensive results
-- **Verification Rate**: 100ms per profile (basic), 2-5s (full)
-- **Cost Efficiency**: $50-200/month for typical usage
-- **Uptime**: 99.9% availability with graceful degradation
+## 📄 Licencia
 
-### **User Experience Metrics**
-- **Auto-save**: 500ms response time for notes
-- **Memory Learning**: Automatic with no user intervention required
-- **Feedback Integration**: Real-time improvement suggestions
-- **Export Speed**: Instant CSV/PDF generation
+Este proyecto está licenciado bajo la Licencia MIT. Ver `LICENSE` para más detalles.
 
-## 🔧 Advanced Configuration
+## 🙏 Agradecimientos
 
-### **Spanish Location Detection**
-```javascript
-// Confidence thresholds
-const SPANISH_DETECTION = {
-  strict: 50,    // High precision
-  balanced: 30,  // Recommended
-  inclusive: 15  // High recall
-};
-```
-
-### **Verification Levels**
-```javascript
-// Choose verification depth
-const VERIFICATION_MODES = {
-  basic: { maxConfidence: 70, speed: 'fast' },
-  full: { maxConfidence: 100, speed: 'comprehensive' }
-};
-```
-
-### **Rate Limiting**
-```javascript
-// Respectful scraping configuration
-const RATE_LIMITS = {
-  requestDelay: 2000,      // 2 seconds between requests
-  batchSize: 5,            // Profiles per batch
-  batchDelay: 3000,        // 3 seconds between batches
-  maxRetries: 3            // Retry failed requests
-};
-```
-
-## 📱 API Usage Examples
-
-### **Enhanced Search with Spanish Detection**
-```javascript
-const response = await fetch('/api/enhanced-search', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    location: 'Spain',
-    minAge: 20,
-    maxAge: 35,
-    enableSpanishDetection: true,
-    enableAgeEstimation: true,
-    niches: ['lifestyle', 'fashion'],
-    minFollowers: 10000,
-    maxFollowers: 500000
-  })
-});
-```
-
-### **Profile Verification**
-```javascript
-const verification = await fetch('/api/verify-profiles', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    profiles: [
-      { username: 'maria_madrid', platform: 'instagram' }
-    ],
-    verificationLevel: 'full',
-    searchCriteria: {
-      location: 'Spain',
-      niches: ['lifestyle'],
-      ageRange: { min: 20, max: 35 }
-    }
-  })
-});
-```
-
-## 🎨 User Interface
-
-### **Main Navigation**
-- **🔍 Influencer Search**: AI-powered discovery with real-time chat
-- **📄 Generate Proposal**: Campaign creation with multiple export formats
-- **🎯 Campaigns**: Full campaign lifecycle management
-- **📝 Notes**: Auto-saving note system with search functionality
-
-### **Enhanced Features**
-- **Spanish Validation Indicators**: 🇪🇸 Visual confirmation of Spanish profiles
-- **Age Estimation Display**: 🎂 Estimated age with confidence scores
-- **Score Adjustments**: ⭐ Real-time scoring based on criteria matching
-- **Automatic Learning**: 🧠 Background optimization (no manual intervention)
-
-## 🔬 Testing & Quality Assurance
-
-### **Run Tests**
-```bash
-# Unit tests
-npm run test
-
-# Integration tests
-npm run test:integration
-
-# End-to-end tests
-npm run test:e2e
-
-# Performance tests
-npm run test:performance
-```
-
-### **Quality Metrics**
-- **Test Coverage**: 85%+ across all modules
-- **Performance**: Sub-3s response times
-- **Reliability**: 99.9% uptime with error handling
-- **Security**: Rate limiting and input validation
-
-## 📈 Roadmap
-
-### **Q1 2025**
-- [ ] Multi-country expansion (France, Italy, Germany)
-- [ ] Visual age detection using profile photos
-- [ ] Advanced content analysis for niche detection
-- [ ] Real-time collaboration features
-
-### **Q2 2025**
-- [ ] Machine learning model training on verified profiles
-- [ ] Social graph analysis for network detection
-- [ ] Advanced cultural trend analysis
-- [ ] Mobile app development
-
-### **Q3 2025**
-- [ ] Enterprise SSO integration
-- [ ] Advanced analytics dashboard
-- [ ] API marketplace for third-party integrations
-- [ ] White-label solutions
-
-## 📞 Support & Documentation
-
-### **Complete Documentation**
-- [📚 Technical Documentation](./TECHNICAL_DOCUMENTATION.md)
-- [🔍 Verification System Guide](./VERIFICATION_SYSTEM_DOCUMENTATION.md)
-- [🇪🇸 Spanish Enhancement Guide](./SPANISH_LOCATION_ENHANCEMENT_GUIDE.md)
-- [🚀 API Documentation](./API_DOCUMENTATION.md)
-- [📝 Changelog](./CHANGELOG.md)
-
-### **Getting Help**
-- **Issues**: Report bugs via GitHub Issues
-- **Feature Requests**: Submit via GitHub Discussions
-- **Documentation**: Comprehensive guides in `/docs`
-- **Community**: Join our Discord for real-time support
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
-
-### **Development Setup**
-```bash
-# Fork and clone
-git clone https://github.com/your-username/layai.git
-
-# Create feature branch
-git checkout -b feature/amazing-feature
-
-# Make changes and test
-npm run test
-
-# Submit pull request
-```
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Apify** for robust web scraping infrastructure
-- **Firebase** for reliable backend services
-- **Next.js** for the amazing React framework
-- **Tailwind CSS** for beautiful, responsive design
-- **Community** for feedback and contributions
+- **Firebase** por la infraestructura de base de datos
+- **Apify** por las herramientas de scraping
+- **OpenAI** por las capacidades de IA
+- **Comunidad open source** por las bibliotecas utilizadas
 
 ---
 
-**Built with ❤️ by the LAYAI Team** | [Website](https://layai.com) | [Documentation](./docs) | [Support](mailto:support@layai.com)
+**Desarrollado con ❤️ para el mercado de influencers en español**
 
-*Transforming influencer marketing through AI innovation* 
+*Para soporte técnico o preguntas, por favor abre un issue en GitHub.* 

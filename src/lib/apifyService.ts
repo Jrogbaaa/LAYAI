@@ -546,18 +546,24 @@ function buildSearchQueries(platform: string, params: ApifySearchParams): string
 
   // 3. Platform-specific direct searches
   if (platform.toLowerCase() === 'tiktok') {
-    queries.add(`${targetLocation} ${targetGender} ${targetNiches[0]} tiktok.com/@`);
-    queries.add(`site:tiktok.com "@" ${targetLocation} ${targetGender} ${targetNiches[0]}`);
+    // Only add if we have valid parameters to avoid "undefined" in search
+    if (targetLocation && targetGender && targetNiches.length > 0) {
+      queries.add(`${targetLocation} ${targetGender} ${targetNiches[0]} tiktok.com/@`);
+      queries.add(`site:tiktok.com "@" ${targetLocation} ${targetGender} ${targetNiches[0]}`);
+    }
   } else if (platform.toLowerCase() === 'instagram') {
-    queries.add(`${targetLocation} ${targetGender} ${targetNiches[0]} instagram.com`);
-    queries.add(`site:instagram.com ${targetLocation} ${targetGender} ${targetNiches[0]}`);
+    // Only add if we have valid parameters to avoid "undefined" in search
+    if (targetLocation && targetGender && targetNiches.length > 0) {
+      queries.add(`${targetLocation} ${targetGender} ${targetNiches[0]} instagram.com`);
+      queries.add(`site:instagram.com ${targetLocation} ${targetGender} ${targetNiches[0]}`);
+    }
   }
 
   // 4. Follower-range specific searches
   const minFollowers = params.minFollowers || 0;
   const maxFollowers = params.maxFollowers || 10000000;
   
-  if (minFollowers >= 10000 && maxFollowers <= 1000000) {
+  if (minFollowers >= 10000 && maxFollowers <= 1000000 && targetLocation && targetGender && targetNiches.length > 0) {
     const followerTerm = minFollowers >= 100000 ? 'macro influencers' : 'micro influencers';
     queries.add(`${followerTerm} ${targetLocation} ${targetGender} ${targetNiches[0]} ${platformName}`);
   }
@@ -821,6 +827,12 @@ function isKnownInvalidProfile(username: string, url: string): boolean {
     // System/reserved usernames
     /^(admin|support|help|info|contact|official)$/i,
     
+    // Programming/technical terms (common false positives)
+    /^(undefined|null|error|unknown|anonymous|default|example)\d*$/i,
+    
+    // Catch any variations of "undefined" that might slip through
+    /undefined/i,
+    
     // Very short usernames (likely invalid)
     /^[a-z]{1,2}$/,
     
@@ -829,6 +841,9 @@ function isKnownInvalidProfile(username: string, url: string): boolean {
     
     // Multiple consecutive dots or underscores
     /[._]{3,}/,
+    
+    // Common spam patterns
+    /^(spam|bot|fake|clone)\d*$/i,
   ];
   
   // URL-based checks

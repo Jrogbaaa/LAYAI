@@ -441,11 +441,13 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
     setIsProcessingManual(true);
 
     try {
+      // Enhanced parsing: handle commas, line breaks, spaces, and mixed separators
       const handles = manualHandles
-        .split(/[,\n]/) // Split by both comma AND newline
+        .split(/[,\n\r\s]+/) // Split by comma, newline, carriage return, and spaces
         .map(h => h.trim())
         .filter(h => h.length > 0)
-        .map(h => h.replace('@', ''));
+        .map(h => h.replace(/[@\s]/g, '')) // Remove @ symbol and any remaining spaces
+        .filter(h => h.length > 0); // Final filter to ensure no empty strings
 
       console.log(`🔍 Processing ${handles.length} manual handles...`);
 
@@ -951,30 +953,35 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
             <h3 className="text-lg font-semibold text-blue-900">Agregar Influencers de Instagram</h3>
           </div>
           <p className="text-blue-700 text-sm mb-4">
-            Ingresa nombres de usuario de Instagram (sin @) separados por comas o nuevas líneas. Obtendremos datos en tiempo real y generaremos análisis personalizados.
+            Ingresa nombres de usuario de Instagram separados por <strong>comas</strong> o <strong>nuevas líneas</strong>. Puedes incluir @ o no, nosotros lo procesaremos. Obtendremos datos en tiempo real y generaremos análisis personalizados.
           </p>
-          <div className="flex space-x-3">
-            <textarea
-              value={manualHandles}
-              onChange={(e) => setManualHandles(e.target.value)}
-              placeholder="cristiano, therock&#10;kyliejenner&#10;selenagomez"
-              className="flex-1 px-4 py-3 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white resize-none"
-              rows={3}
-            />
-            <button
-              onClick={handleManualUpload}
-              disabled={isProcessingManual || !manualHandles.trim()}
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
-            >
-              {isProcessingManual ? (
-                <div className="flex items-center space-x-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>Procesando...</span>
-                </div>
-              ) : (
-                'Agregar Influencers'
-              )}
-            </button>
+          <div className="space-y-2">
+            <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded-lg">
+              💡 <strong>Ejemplos válidos:</strong> "cristiano, therock, kyliejenner" o separados por líneas o "@cristiano @therock @kyliejenner"
+            </div>
+            <div className="flex space-x-3">
+              <textarea
+                value={manualHandles}
+                onChange={(e) => setManualHandles(e.target.value)}
+                placeholder="cristiano, therock, kyliejenner&#10;O uno por línea:&#10;selenagomez&#10;justinbieber"
+                className="flex-1 px-4 py-3 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white resize-none"
+                rows={4}
+              />
+              <button
+                onClick={handleManualUpload}
+                disabled={isProcessingManual || !manualHandles.trim()}
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
+              >
+                {isProcessingManual ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>Procesando...</span>
+                  </div>
+                ) : (
+                  'Agregar Influencers'
+                )}
+              </button>
+            </div>
           </div>
         </div>
 

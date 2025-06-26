@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { searchInfluencersWithTwoTierDiscovery, type ApifySearchParams } from '@/lib/apifyService';
+import { searchInfluencersWithApify, type ApifySearchParams } from '@/lib/apifyService';
+import { searchVettedInfluencers, convertVettedToMatchResult } from '@/lib/vettedInfluencersService';
 
 interface EnhancedSearchRequest {
   query: string;
@@ -118,232 +119,252 @@ function estimateAge(profile: any): {
   };
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const body: EnhancedSearchRequest = await request.json();
+    const searchParams: ApifySearchParams = await req.json();
     
-    console.log('🚀 Enhanced search request:', {
-      query: body.query,
-      location: body.location,
-      spanishDetection: body.enableSpanishDetection,
-      ageEstimation: body.enableAgeEstimation
+    console.log('🔍 Enhanced search started with params:', searchParams);
+    
+    // Initialize results
+    let allResults: any[] = [];
+    let totalFound = 0;
+    let searchSources: string[] = [];
+    
+    // 1. Search vetted influencers database first (only for Spain-related queries)
+    console.log('📊 Searching vetted influencers database...');
+    const vettedResults = await searchVettedInfluencers(searchParams);
+    
+    if (vettedResults.influencers.length > 0) {
+      const convertedVetted = vettedResults.influencers.map(convertVettedToMatchResult);
+      allResults.push(...convertedVetted);
+      totalFound += vettedResults.totalCount;
+      searchSources.push('Base de datos verificada');
+      
+      console.log(`✅ Found ${vettedResults.influencers.length} vetted influencers`);
+    } else {
+      console.log('📍 No vetted influencers found, proceeding with other sources');
+    }
+    
+    // 2. Always search Apify API for real-time results
+    console.log('🌐 Searching Apify API...');
+    try {
+      const apifyInfluencers = await searchInfluencersWithApify(searchParams);
+      
+      if (apifyInfluencers && apifyInfluencers.length > 0) {
+        // Convert ScrapedInfluencer[] to MatchResult[] format
+        const convertedApify = apifyInfluencers.map(influencer => ({
+          influencer: {
+            id: influencer.username,
+            name: influencer.fullName || influencer.username,
+            handle: influencer.username,
+            platform: influencer.platform as 'Instagram' | 'TikTok' | 'YouTube' | 'Twitter' | 'Multi-Platform',
+            followerCount: influencer.followers,
+            engagementRate: influencer.engagementRate / 100,
+            ageRange: '25-34' as const,
+            gender: 'Other' as const,
+            location: influencer.location || 'Unknown',
+            niche: [influencer.category || 'Lifestyle'],
+            contentStyle: ['Posts'] as const,
+            pastCollaborations: [],
+            averageRate: Math.floor(influencer.followers / 100) || 500,
+            costLevel: 'Mid-Range' as const,
+            audienceDemographics: {
+              ageGroups: {
+                '13-17': 5,
+                '18-24': 30,
+                '25-34': 40,
+                '35-44': 20,
+                '45-54': 4,
+                '55+': 1,
+              },
+              gender: {
+                male: 45,
+                female: 52,
+                other: 3,
+              },
+              topLocations: [influencer.location || 'Unknown'],
+              interests: [influencer.category || 'Lifestyle'],
+            },
+            recentPosts: [],
+            contactInfo: {
+              email: influencer.email,
+              preferredContact: 'Email' as const,
+            },
+            isActive: true,
+            lastUpdated: new Date(),
+          },
+          matchScore: vettedResults.influencers.length > 0 ? 
+            (influencer.brandCompatibilityScore || 75) / 100 * 0.8 : // Lower score if we have vetted results
+            (influencer.brandCompatibilityScore || 75) / 100, // Higher score if no vetted results
+          matchReasons: [
+            'Búsqueda en tiempo real',
+            `${(influencer.followers || 0).toLocaleString()} seguidores`,
+            `${(influencer.engagementRate || 0).toFixed(1)}% engagement rate`,
+            influencer.verified ? '✅ Cuenta verificada' : 'Cuenta activa'
+          ],
+          estimatedCost: Math.floor(influencer.followers / 100) || 500,
+          similarPastCampaigns: [],
+          potentialReach: Math.round(influencer.followers * (influencer.engagementRate / 100)),
+          recommendations: ['Influencer encontrado mediante búsqueda en tiempo real'],
+        }));
+        
+        allResults.push(...convertedApify);
+        totalFound += apifyInfluencers.length;
+        searchSources.push('Búsqueda en tiempo real');
+        
+        console.log(`✅ Found ${apifyInfluencers.length} Apify results`);
+      } else {
+        console.log('⚠️ No Apify results found');
+      }
+    } catch (error) {
+      console.warn('⚠️ Apify search failed:', error);
+    }
+    
+    // Remove duplicates based on handle/username
+    const uniqueResults = allResults.filter((result, index, array) => {
+      return array.findIndex(r => 
+        r.influencer.handle?.toLowerCase() === result.influencer.handle?.toLowerCase() ||
+        r.influencer.name?.toLowerCase() === result.influencer.name?.toLowerCase()
+      ) === index;
     });
-
-    // Prepare search parameters
-    const searchParams: ApifySearchParams = {
-      niches: body.niches || [],
-      location: body.location,
-      minFollowers: body.minFollowers || 1000,
-      maxFollowers: body.maxFollowers || 10000000,
-      gender: body.gender,
-      platforms: body.platforms || ['instagram', 'tiktok', 'youtube'],
-      brandName: body.brandName
-    };
-
-    // Perform initial search
-    console.log('🔍 Phase 1: Initial discovery...');
-    const searchResults = await searchInfluencersWithTwoTierDiscovery(searchParams);
-
-    if ((!searchResults.premiumResults || searchResults.premiumResults.length === 0) && 
-        (!searchResults.discoveryResults || searchResults.discoveryResults.length === 0)) {
+    
+    // Sort with sophisticated prioritization:
+    // 1. Vetted database results first (highest match scores)
+    // 2. Within each group, sort by engagement rate then follower count
+    uniqueResults.sort((a, b) => {
+      // Primary sort: Match score (vetted results have 0.95 score)
+      const scoreDiff = (b.matchScore || 0) - (a.matchScore || 0);
+      if (Math.abs(scoreDiff) > 0.1) {
+        return scoreDiff;
+      }
+      
+      // Secondary sort: Engagement rate (higher is better)
+      const engagementA = a.influencer.engagementRate || 0;
+      const engagementB = b.influencer.engagementRate || 0;
+      const engagementDiff = engagementB - engagementA;
+      if (Math.abs(engagementDiff) > 0.001) {
+        return engagementDiff;
+      }
+      
+      // Tertiary sort: Follower count (higher is better)
+      const followersA = a.influencer.followerCount || 0;
+      const followersB = b.influencer.followerCount || 0;
+      return followersB - followersA;
+    });
+    
+    // Apply result limit
+    const limitedResults = uniqueResults.slice(0, searchParams.maxResults || 20);
+    
+    console.log(`🎯 Returning ${limitedResults.length} unique results from sources: ${searchSources.join(', ')}`);
+    
+    // Enhanced response format
+    return NextResponse.json({
+      success: true,
+      data: {
+        premiumResults: limitedResults,
+        totalFound: uniqueResults.length,
+        searchSources,
+        searchMetadata: {
+          vettedCount: vettedResults.influencers.length,
+          apifyCount: allResults.length - vettedResults.influencers.length,
+          query: searchParams.platforms?.join(', ') || 'Enhanced search',
+          location: searchParams.location,
+          platforms: searchParams.platforms,
+          filters: {
+            minFollowers: searchParams.minFollowers,
+            maxFollowers: searchParams.maxFollowers,
+            niches: searchParams.niches
+          }
+        },
+        recommendations: generateRecommendations(limitedResults, searchParams),
+        searchStrategy: searchSources.length > 1 ? 
+          'hybrid_search' : 
+          searchSources.includes('Base de datos verificada') ? 'vetted_only' : 'realtime_only'
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Enhanced search error:', error);
+    
+    // Fallback to basic Apify search
+    try {
+      console.log('🔄 Falling back to basic Apify search...');
+      // Don't try to parse request body again - use basic fallback params
+      const fallbackResults = await searchInfluencersWithApify({
+        platforms: ['Instagram'],
+        niches: ['lifestyle', 'fashion'],
+        location: 'Spain',
+        minFollowers: 10000,
+        maxFollowers: 1000000,
+        maxResults: 10
+      });
+      
+      return NextResponse.json({
+        success: true,
+        data: {
+          premiumResults: fallbackResults.map(influencer => ({
+            influencer: {
+              id: influencer.username,
+              name: influencer.fullName || influencer.username,
+              handle: influencer.username,
+              platform: influencer.platform as 'Instagram' | 'TikTok' | 'YouTube' | 'Twitter' | 'Multi-Platform',
+              followerCount: influencer.followers,
+              engagementRate: influencer.engagementRate / 100,
+              location: influencer.location || 'Unknown',
+              niche: [influencer.category || 'Lifestyle'],
+              isActive: true,
+              lastUpdated: new Date(),
+            },
+            matchScore: (influencer.brandCompatibilityScore || 75) / 100,
+            matchReasons: ['Búsqueda básica'],
+          })),
+          totalFound: fallbackResults.length,
+          searchSources: ['Búsqueda de respaldo'],
+          searchStrategy: 'fallback'
+        }
+      });
+    } catch (fallbackError) {
+      console.error('❌ Fallback search also failed:', fallbackError);
+      
       return NextResponse.json({
         success: false,
-        results: [],
-        message: 'No influencers found matching the criteria',
-        metadata: {
+        error: 'Lo siento, no se pudieron encontrar influencers en este momento. Por favor, inténtalo de nuevo.',
+        data: {
+          premiumResults: [],
           totalFound: 0,
-          spanishValidated: 0,
-          ageEstimated: 0,
-          processingTime: 0
+          searchSources: [],
+          searchStrategy: 'failed'
         }
       });
     }
-
-    // Combine all results
-    const allResults = [...searchResults.premiumResults, ...searchResults.discoveryResults];
-    console.log(`✅ Discovery found ${allResults.length} profiles (${searchResults.premiumResults.length} premium + ${searchResults.discoveryResults.length} discovery)`);
-
-    // Phase 2: Enhanced validation
-    const startTime = Date.now();
-    let spanishValidatedCount = 0;
-    let ageEstimatedCount = 0;
-
-    const enhancedResults = allResults.map((influencer: any) => {
-      try {
-        let enhancedInfluencer = { ...influencer };
-        let scoreAdjustment = 0;
-        const enhancements: string[] = [];
-
-        // Spanish location detection
-        if (body.enableSpanishDetection) {
-          console.log(`🇪🇸 Analyzing Spanish location for: ${influencer.username}`);
-          const spanishResult = detectSpanishLocation(influencer);
-          
-          enhancedInfluencer.spanishValidation = {
-            isSpanish: spanishResult.isSpanish,
-            confidence: spanishResult.confidence,
-            indicators: spanishResult.indicators.slice(0, 3)
-          };
-
-          if (spanishResult.isSpanish) {
-            spanishValidatedCount++;
-          }
-
-          // Adjust score if looking for Spanish influencers
-          const isLookingForSpanish = body.location && (
-            body.location.toLowerCase().includes('spain') ||
-            body.location.toLowerCase().includes('spanish') ||
-            body.location.toLowerCase().includes('españa')
-          );
-
-          if (isLookingForSpanish) {
-            if (spanishResult.isSpanish) {
-              scoreAdjustment += 25;
-              enhancements.push(`✅ Spanish location confirmed (${spanishResult.confidence}% confidence)`);
-            } else {
-              scoreAdjustment -= 15;
-              enhancements.push(`❌ No Spanish location indicators found`);
-            }
-          }
-        }
-
-        // Age estimation
-        if (body.enableAgeEstimation) {
-          console.log(`🎂 Estimating age for: ${influencer.username}`);
-          const ageResult = estimateAge(influencer);
-          
-          enhancedInfluencer.ageEstimation = {
-            estimatedAge: ageResult.estimatedAge,
-            confidence: ageResult.confidence,
-            method: ageResult.method
-          };
-
-          if (ageResult.estimatedAge) {
-            ageEstimatedCount++;
-          }
-
-          // Validate against age criteria
-          if (body.minAge || body.maxAge) {
-            const ageToCheck = ageResult.estimatedAge;
-            
-            if (ageToCheck) {
-              let ageMatch = true;
-              if (body.minAge && ageToCheck < body.minAge) ageMatch = false;
-              if (body.maxAge && ageToCheck > body.maxAge) ageMatch = false;
-
-              if (ageMatch) {
-                scoreAdjustment += 15;
-                enhancements.push(`✅ Age ${ageToCheck} matches criteria`);
-              } else {
-                scoreAdjustment -= 10;
-                enhancements.push(`❌ Age ${ageToCheck} outside criteria (${body.minAge}-${body.maxAge})`);
-              }
-            }
-          }
-        }
-
-        // Apply score adjustments
-        if (scoreAdjustment !== 0) {
-          enhancedInfluencer.originalScore = influencer.score || 50;
-          enhancedInfluencer.enhancedScore = Math.max(0, Math.min(100, (influencer.score || 50) + scoreAdjustment));
-          enhancedInfluencer.scoreAdjustment = scoreAdjustment;
-          enhancedInfluencer.enhancements = enhancements;
-        }
-
-        return enhancedInfluencer;
-
-      } catch (error) {
-        console.error(`❌ Error enhancing profile ${influencer.username}:`, error);
-        return influencer; // Return original if enhancement fails
-      }
-    });
-
-    // Sort by enhanced score if available, otherwise by original score
-    enhancedResults.sort((a: any, b: any) => {
-      const scoreA = a.enhancedScore || a.score || 50;
-      const scoreB = b.enhancedScore || b.score || 50;
-      return scoreB - scoreA;
-    });
-
-    const processingTime = Date.now() - startTime;
-
-    console.log(`✅ Enhanced search completed:`);
-    console.log(`   📊 Total found: ${enhancedResults.length}`);
-    console.log(`   🇪🇸 Spanish validated: ${spanishValidatedCount}`);
-    console.log(`   🎂 Age estimated: ${ageEstimatedCount}`);
-    console.log(`   ⏱️ Processing time: ${processingTime}ms`);
-
-    return NextResponse.json({
-      success: true,
-      results: enhancedResults,
-      metadata: {
-        totalFound: enhancedResults.length,
-        spanishValidated: spanishValidatedCount,
-        ageEstimated: ageEstimatedCount,
-        processingTime,
-        enhancementsApplied: {
-          spanishDetection: body.enableSpanishDetection || false,
-          ageEstimation: body.enableAgeEstimation || false
-        },
-        searchCriteria: {
-          location: body.location,
-          minAge: body.minAge,
-          maxAge: body.maxAge,
-          gender: body.gender,
-          niches: body.niches
-        }
-      },
-      recommendations: generateRecommendations(enhancedResults, body)
-    });
-
-  } catch (error) {
-    console.error('❌ Enhanced search API error:', error);
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Enhanced search failed', 
-        details: error instanceof Error ? error.message : 'Unknown error' 
-      },
-      { status: 500 }
-    );
   }
 }
 
-function generateRecommendations(results: any[], searchParams: EnhancedSearchRequest): string[] {
+function generateRecommendations(results: any[], searchParams: any): string[] {
   const recommendations: string[] = [];
   
   if (results.length === 0) {
-    recommendations.push('No results found. Try broadening your search criteria.');
+    recommendations.push('Intenta ampliar los criterios de búsqueda');
+    recommendations.push('Considera buscar en plataformas adicionales');
     return recommendations;
   }
-
-  // Spanish-specific recommendations
-  if (searchParams.enableSpanishDetection) {
-    const spanishCount = results.filter(r => r.spanishValidation?.isSpanish).length;
-    const spanishPercentage = (spanishCount / results.length) * 100;
-    
-    if (spanishPercentage < 30) {
-      recommendations.push(`Only ${spanishPercentage.toFixed(0)}% of results are from Spain. Consider using Spanish keywords or location terms.`);
-    } else {
-      recommendations.push(`Good Spanish coverage: ${spanishPercentage.toFixed(0)}% of results are from Spain.`);
-    }
+  
+  if (results.length < 5) {
+    recommendations.push('Considera ampliar el rango de seguidores para más opciones');
   }
-
-  // Age-specific recommendations
-  if (searchParams.enableAgeEstimation) {
-    const ageEstimatedCount = results.filter(r => r.ageEstimation?.estimatedAge).length;
-    const agePercentage = (ageEstimatedCount / results.length) * 100;
-    
-    if (agePercentage < 50) {
-      recommendations.push(`Age could only be estimated for ${agePercentage.toFixed(0)}% of profiles. Consider profiles with more biographical information.`);
-    }
+  
+  const platforms = Array.from(new Set(results.map(r => r.influencer.platform)));
+  if (platforms.length === 1) {
+    recommendations.push('Considera buscar en otras plataformas para mayor diversidad');
   }
-
-  // Score-based recommendations
-  const highScoreCount = results.filter(r => (r.enhancedScore || r.score || 0) >= 70).length;
-  if (highScoreCount < results.length * 0.3) {
-    recommendations.push('Consider refining your search criteria for better matches.');
+  
+  const vettedCount = results.filter(r => 
+    r.matchReasons && r.matchReasons.some((reason: string) => reason.includes('verificado'))
+  ).length;
+  
+  if (vettedCount > 0) {
+    recommendations.push(`${vettedCount} influencers pre-verificados encontrados para mayor seguridad de marca`);
   }
-
+  
   return recommendations;
 } 
