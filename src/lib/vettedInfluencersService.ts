@@ -19,6 +19,7 @@ export interface VettedInfluencer {
   source: string;
   createdAt: Date;
   updatedAt: Date;
+  brandCompatibilityScore?: number; // For brand-specific scoring
 }
 
 export interface VettedSearchResult {
@@ -151,9 +152,14 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
       niches: params.niches,
       brandName: params.brandName,
       userQuery: params.userQuery,
+      gender: params.gender,
       minFollowers: params.minFollowers,
       maxFollowers: params.maxFollowers
     });
+
+    // Enhanced query parsing for better database filtering
+    const parsedQuery = parseUserQuery(params.userQuery || '', params);
+    console.log('🧠 Parsed query parameters:', parsedQuery);
 
     // Debug the Spain check
     console.log('🔍 Spain relation check:', {
@@ -164,7 +170,10 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
     });
 
     // Automatically search vetted database for Spain-related queries OR IKEA brand
-    const isIkeaBrand = params.brandName?.toLowerCase().includes('ikea') || params.userQuery?.toLowerCase().includes('ikea');
+    const isIkeaBrand = parsedQuery.brand?.toLowerCase().includes('ikea') || 
+                       params.brandName?.toLowerCase().includes('ikea') || 
+                       params.userQuery?.toLowerCase().includes('ikea');
+    
     if (!isSpainRelated(params.location, params.userQuery, params.brandName) && !isIkeaBrand) {
       console.log('❌ Not a Spain-related query or IKEA brand, skipping vetted database');
       return {
@@ -209,33 +218,36 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
 
     console.log(`📊 Successfully parsed ${allInfluencers.length} influencers from database`);
 
-    // Apply filters in memory (no index required)
+    // Apply enhanced filters based on parsed query
     let filteredInfluencers = allInfluencers;
 
-    // Enhance niches for IKEA brand searches
-    let searchNiches = params.niches ? [...params.niches] : [];
+    // Use parsed gender or fallback to params.gender
+    const targetGender = parsedQuery.gender || params.gender;
+    if (targetGender && targetGender !== 'any') {
+      console.log(`👤 Filtering by gender: ${targetGender}`);
+      filteredInfluencers = filteredInfluencers.filter(inf => 
+        matchesGender(inf, targetGender)
+      );
+      console.log(`📊 After gender filter: ${filteredInfluencers.length} influencers`);
+    }
+
+    // Enhanced niche filtering with brand context
+    let searchNiches = parsedQuery.niches.length > 0 ? parsedQuery.niches : (params.niches || []);
+    
+    // Add brand-specific niches
     if (isIkeaBrand) {
       // Add relevant niches for IKEA brand compatibility
-      searchNiches.push('home', 'lifestyle', 'fashion');
+      const ikeaNiches = ['home', 'lifestyle', 'fashion', 'diy', 'interior', 'decor'];
+      searchNiches = Array.from(new Set([...searchNiches, ...ikeaNiches]));
       console.log('🏠 Enhanced search niches for IKEA brand:', searchNiches);
     }
 
-    // Debug initial sample
-    if (allInfluencers.length > 0) {
-      console.log('📝 Sample influencer from database:', {
-        username: allInfluencers[0].username,
-        displayName: allInfluencers[0].displayName,
-        genres: allInfluencers[0].genres,
-        followerCount: allInfluencers[0].followerCount
-      });
-    }
-
-    // Filter by niche
+    // Apply niche filtering
     if (searchNiches.length > 0) {
       console.log(`🎯 Filtering by niches: ${searchNiches.join(', ')}`);
       
       // Debug niche matching for first few influencers
-      const debugCount = Math.min(5, filteredInfluencers.length);
+      const debugCount = Math.min(3, filteredInfluencers.length);
       for (let i = 0; i < debugCount; i++) {
         const inf = filteredInfluencers[i];
         const matches = matchesNiche(inf.genres, searchNiches);
@@ -248,47 +260,52 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
       console.log(`📊 After niche filter: ${filteredInfluencers.length} influencers`);
     }
 
-    // Filter by gender
-    if (params.gender && params.gender !== 'any') {
-      console.log(`👤 Filtering by gender: ${params.gender}`);
+    // Enhanced follower count filtering
+    const minFollowers = parsedQuery.minFollowers || params.minFollowers;
+    const maxFollowers = parsedQuery.maxFollowers || params.maxFollowers;
+    
+    if (minFollowers) {
+      console.log(`📊 Filtering by minFollowers: ${minFollowers}`);
       filteredInfluencers = filteredInfluencers.filter(inf => 
-        matchesGender(inf, params.gender)
-      );
-      console.log(`📊 After gender filter: ${filteredInfluencers.length} influencers`);
-    }
-
-    // Filter by follower count
-    if (params.minFollowers) {
-      console.log(`📊 Filtering by minFollowers: ${params.minFollowers}`);
-      filteredInfluencers = filteredInfluencers.filter(inf => 
-        inf.followerCount >= params.minFollowers!
+        inf.followerCount >= minFollowers
       );
       console.log(`📊 After minFollowers filter: ${filteredInfluencers.length} influencers`);
     }
 
-    if (params.maxFollowers) {
-      console.log(`📊 Filtering by maxFollowers: ${params.maxFollowers}`);
+    if (maxFollowers) {
+      console.log(`📊 Filtering by maxFollowers: ${maxFollowers}`);
       filteredInfluencers = filteredInfluencers.filter(inf => 
-        inf.followerCount <= params.maxFollowers!
+        inf.followerCount <= maxFollowers
       );
       console.log(`📊 After maxFollowers filter: ${filteredInfluencers.length} influencers`);
     }
 
-    // Sort by engagement rate first (higher is better), then by follower count descending
-    filteredInfluencers.sort((a, b) => {
-      // Primary sort: engagement rate (higher first)
-      const engagementDiff = b.engagementRate - a.engagementRate;
-      if (Math.abs(engagementDiff) > 0.001) { // Use small threshold for floating point comparison
-        return engagementDiff;
-      }
-      // Secondary sort: follower count (higher first)
-      return b.followerCount - a.followerCount;
-    });
+    // Brand compatibility scoring for IKEA
+    if (isIkeaBrand) {
+      console.log('🏠 Applying IKEA brand compatibility scoring...');
+      filteredInfluencers = filteredInfluencers.map(inf => ({
+        ...inf,
+        brandCompatibilityScore: calculateIkeaBrandCompatibility(inf)
+      })).sort((a, b) => (b.brandCompatibilityScore || 0) - (a.brandCompatibilityScore || 0));
+      
+      console.log(`🏆 Top IKEA compatibility scores: ${filteredInfluencers.slice(0, 3).map(inf => `${inf.username}: ${inf.brandCompatibilityScore}`).join(', ')}`);
+    } else {
+      // Sort by engagement rate first (higher is better), then by follower count descending
+      filteredInfluencers.sort((a, b) => {
+        // Primary sort: engagement rate (higher first)
+        const engagementDiff = b.engagementRate - a.engagementRate;
+        if (Math.abs(engagementDiff) > 0.001) { // Use small threshold for floating point comparison
+          return engagementDiff;
+        }
+        // Secondary sort: follower count (higher first)
+        return b.followerCount - a.followerCount;
+      });
+    }
 
     // Limit results
     const limitedResults = filteredInfluencers.slice(0, 50);
 
-    console.log(`✅ Vetted database search complete: ${limitedResults.length} results`);
+    console.log(`✅ Vetted database search complete: ${limitedResults.length} results after enhanced filtering`);
 
     return {
       influencers: limitedResults,
@@ -304,6 +321,129 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
       searchSource: 'vetted_database'
     };
   }
+}
+
+/**
+ * Parse user query to extract specific search parameters
+ * Examples: "women from Spain perfect for Ikea that are lifestyle influencers"
+ */
+function parseUserQuery(userQuery: string, params: ApifySearchParams): {
+  gender?: string;
+  location?: string;
+  niches: string[];
+  brand?: string;
+  minFollowers?: number;
+  maxFollowers?: number;
+} {
+  const query = userQuery.toLowerCase();
+  const parsed: any = { niches: [] };
+
+  // Extract gender
+  if (/\b(women|female|females|girls?|ladies)\b/.test(query)) {
+    parsed.gender = 'female';
+  } else if (/\b(men|male|males|guys?|gentlemen)\b/.test(query)) {
+    parsed.gender = 'male';
+  }
+
+  // Extract location
+  if (/\b(spain|españa|spanish|from spain|in spain)\b/.test(query)) {
+    parsed.location = 'Spain';
+  }
+
+  // Extract brand
+  const brandMatches = query.match(/\b(ikea|nike|adidas|zara|h&m|coca.?cola|pepsi|mcdonald.?s)\b/);
+  if (brandMatches) {
+    parsed.brand = brandMatches[0];
+  }
+
+  // Extract niches based on keywords
+  const nicheKeywords = {
+    'lifestyle': ['lifestyle', 'life', 'daily', 'routine', 'living'],
+    'home': ['home', 'decor', 'interior', 'furniture', 'house', 'ikea', 'decoration'],
+    'fashion': ['fashion', 'style', 'clothing', 'outfit', 'trends', 'mode'],
+    'beauty': ['beauty', 'makeup', 'skincare', 'cosmetics', 'belleza'],
+    'fitness': ['fitness', 'gym', 'workout', 'health', 'sport', 'exercise'],
+    'food': ['food', 'cooking', 'recipe', 'chef', 'culinary', 'comida'],
+    'travel': ['travel', 'trip', 'vacation', 'explore', 'viaje'],
+    'tech': ['tech', 'technology', 'gadget', 'app', 'digital'],
+    'parenting': ['parenting', 'mom', 'dad', 'family', 'kids', 'children'],
+    'business': ['business', 'entrepreneur', 'startup', 'professional'],
+    'entertainment': ['entertainment', 'comedy', 'music', 'art', 'creative']
+  };
+
+  Object.entries(nicheKeywords).forEach(([niche, keywords]) => {
+    if (keywords.some(keyword => query.includes(keyword))) {
+      parsed.niches.push(niche);
+    }
+  });
+
+  // Extract follower ranges
+  const followerMatches = query.match(/(\d+(?:k|m|thousand|million))\s*(?:to|-)?\s*(\d+(?:k|m|thousand|million))?/);
+  if (followerMatches) {
+    const parseFollowerNumber = (str: string): number => {
+      const num = parseFloat(str);
+      if (str.includes('k') || str.includes('thousand')) return num * 1000;
+      if (str.includes('m') || str.includes('million')) return num * 1000000;
+      return num;
+    };
+
+    parsed.minFollowers = parseFollowerNumber(followerMatches[1]);
+    if (followerMatches[2]) {
+      parsed.maxFollowers = parseFollowerNumber(followerMatches[2]);
+    }
+  }
+
+  // Micro/macro influencer detection
+  if (/\bmicro.?influencers?\b/.test(query)) {
+    parsed.minFollowers = 10000;
+    parsed.maxFollowers = 100000;
+  } else if (/\bmacro.?influencers?\b/.test(query)) {
+    parsed.minFollowers = 100000;
+    parsed.maxFollowers = 1000000;
+  }
+
+  return parsed;
+}
+
+/**
+ * Calculate IKEA brand compatibility score
+ */
+function calculateIkeaBrandCompatibility(influencer: VettedInfluencer): number {
+  let score = 0;
+
+  // Genre compatibility (40% of score)
+  const ikeaCompatibleGenres = ['lifestyle', 'home', 'fashion', 'diy', 'interior', 'decor'];
+  const genreMatches = influencer.genres.filter(genre => 
+    ikeaCompatibleGenres.some(compatible => 
+      genre.toLowerCase().includes(compatible) || compatible.includes(genre.toLowerCase())
+    )
+  );
+  score += (genreMatches.length / Math.max(influencer.genres.length, 1)) * 40;
+
+  // Follower count sweet spot for IKEA (30% of score)
+  if (influencer.followerCount >= 50000 && influencer.followerCount <= 500000) {
+    score += 30; // Perfect range for IKEA campaigns
+  } else if (influencer.followerCount >= 10000 && influencer.followerCount < 50000) {
+    score += 20; // Good for micro-influencer campaigns
+  } else if (influencer.followerCount > 500000 && influencer.followerCount <= 1000000) {
+    score += 15; // Decent for macro campaigns
+  }
+
+  // Engagement rate (20% of score)
+  if (influencer.engagementRate > 0.05) {
+    score += 20; // Excellent engagement
+  } else if (influencer.engagementRate > 0.03) {
+    score += 15; // Good engagement
+  } else if (influencer.engagementRate > 0.02) {
+    score += 10; // Acceptable engagement
+  }
+
+  // Verification status (10% of score)
+  if (influencer.isVerified) {
+    score += 10;
+  }
+
+  return Math.round(score);
 }
 
 // Generate personalized match reasons based on influencer profile and search parameters

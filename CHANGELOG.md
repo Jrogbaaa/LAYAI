@@ -5,6 +5,49 @@ All notable changes to LAYAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2025-01-18
+
+### 🔍 Added - Enhanced Results Pagination
+- **Smart Results Display**: Intelligent pagination for better user experience
+  - Shows first 20 premium results by default for faster loading
+  - "Show More" button appears when there are more than 20 results
+  - Expandable view to display all found influencers (up to 59+ results)
+  - Clean collapse functionality to return to top 20 results
+- **Improved Search UX**: Better organization of search results
+  - Eliminates overwhelming initial display of large result sets
+  - Maintains focus on highest-quality matches first
+  - Easy access to all discovered influencers
+  - Spanish localized interface: "Mostrar Todos los X Resultados"
+- **Fixed Search Parameter Extraction**: Enhanced query parsing for better filtering
+  - Improved location detection: "from Spain" properly extracted
+  - Better brand recognition: Nike, IKEA automatically detected
+  - Enhanced niche detection: fitness, lifestyle, athlete keywords
+  - Gender filtering: female/male properly identified from queries
+- **Cleaned Profile Extraction**: Eliminated invalid usernames from web search
+  - Fixed username extraction from URLs to prevent `gmail.comInstagram` type errors
+  - Better validation of profile URLs before scraping
+  - Improved deduplication of discovered profiles
+
+### 🎯 Enhanced - Search Quality
+- **Spain-Specific Searches**: Added Spanish language search queries
+  - `"influencers femeninas lifestyle España"` for female lifestyle searches
+  - `"influencers deportivos España Nike"` for sports/Nike brand searches
+  - `"atletas influencers España Nike"` for athlete-focused queries
+- **Real-time Search Improvements**: Better query building and validation
+  - Prioritizes user's actual search terms over generic fallbacks
+  - Removes generic celebrity searches that returned irrelevant results
+  - Enhanced parameter extraction with regex improvements
+
+### 🔧 Technical Enhancements
+- **Pagination State Management**: Proper state handling for expand/collapse
+  - Auto-reset on new searches and clear results
+  - Maintains user preference during session
+  - Clean state transitions between expanded/collapsed views
+- **Performance Optimization**: Better handling of large result sets
+  - Only renders visible results initially
+  - Lazy loading for additional results
+  - Improved memory usage for large searches
+
 ## [2.5.0] - 2025-01-18
 
 ### 🇪🇸 Added - Complete Spanish Localization

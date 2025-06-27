@@ -193,11 +193,87 @@ function deduplicateSearchResults(results: SearchResults): SearchResults {
 - Quality score tracking
 - Before/after deduplication counts
 
+## Latest Improvements (v2.6.0)
+
+### 7. Intelligent Results Pagination
+**File**: `src/app/page.tsx`
+
+Added smart pagination system to handle large result sets efficiently:
+
+#### Features:
+- **Smart Display**: Shows first 20 premium results by default
+- **Expandable View**: "Show More" button reveals remaining results
+- **Performance Optimization**: Only renders visible results initially
+- **State Management**: Proper expand/collapse state handling
+- **Spanish Localization**: "Mostrar Todos los X Resultados"
+
+#### Implementation:
+```typescript
+const [showAllResults, setShowAllResults] = useState(false);
+
+// Display logic
+const displayedResults = showAllResults 
+  ? searchResults.premiumResults 
+  : searchResults.premiumResults.slice(0, 20);
+
+// Show more button appears when > 20 results
+{searchResults.premiumResults.length > 20 && !showAllResults && (
+  <button onClick={() => setShowAllResults(true)}>
+    Mostrar Todos los {searchResults.premiumResults.length} Resultados
+  </button>
+)}
+```
+
+### 8. Enhanced Search Parameter Extraction
+**File**: `src/lib/apifyService.ts`
+
+Improved query parsing for better location and brand detection:
+
+#### Location Detection:
+```typescript
+// Enhanced patterns for Spain detection
+const locationPatterns = [
+  /\b(spain|españa|spanish)\b/gi,
+  /\bfrom\s+([a-z\s]+?)\b(?=\s|$)/gi,
+  /\bin\s+([a-z\s]+?)\b(?=\s|$)/gi
+];
+```
+
+#### Brand-Specific Searches:
+```typescript
+// Nike brand searches in Spanish
+if (targetBrand?.toLowerCase().includes('nike')) {
+  queries.add(`influencers deportivos España Nike ${platformName}`);
+  queries.add(`influencers fitness lifestyle España Nike ${platformName}`);
+  queries.add(`atletas influencers España Nike ${platformName}`);
+}
+```
+
+### 9. Cleaned Profile URL Extraction
+**File**: `src/lib/apifyService.ts`
+
+Fixed invalid username extraction preventing errors like "gmail.comInstagram":
+
+#### Before:
+```typescript
+const usernames = urls.map(url => url.replace('https://www.instagram.com/', ''));
+```
+
+#### After:
+```typescript
+const usernames = urls.map(url => extractUsernameFromUrl(url, 'instagram'))
+  .filter(username => username !== 'unknown' && 
+                     username.length > 0 && 
+                     !username.includes('.com'));
+```
+
 ## Expected Impact:
 - **Reduced duplicates**: No more "Isabel" and "María" for same @marta__sierra
 - **Higher quality results**: Fewer fake/spam/invalid profiles
-- **Better user experience**: More trustworthy search results
+- **Better user experience**: More trustworthy search results with smart pagination
 - **Improved accuracy**: Consistent profile information
+- **Enhanced Performance**: Faster loading with intelligent result display
+- **Better Search Quality**: Spain-specific searches with proper parameter extraction
 
 The system now provides multiple layers of validation and deduplication without requiring actual Instagram/TikTok scraping, significantly improving search result quality and eliminating the confusing duplicate issue. 
 

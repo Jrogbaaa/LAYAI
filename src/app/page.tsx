@@ -35,6 +35,7 @@ export default function Home() {
   const [sessionId, setSessionId] = useState<string>('');
   const [currentSearchId, setCurrentSearchId] = useState<string | null>(null);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [showAllResults, setShowAllResults] = useState(false);
 
   useEffect(() => {
     setSessionId(generateSessionId());
@@ -108,6 +109,7 @@ export default function Home() {
               discoveryResults: discoveryResults,
               totalFound: searchData.data?.totalFound || searchData.totalFound || 0
             });
+            setShowAllResults(false); // Reset expanded view for new search
           }
           
           setCurrentSearchId(searchData.searchId);
@@ -303,6 +305,7 @@ export default function Home() {
   const handleClearResults = () => {
     setSearchResults(null);
     setCurrentSearchId(null);
+    setShowAllResults(false);
   };
 
   const handleSidebarViewChange = (view: PageView) => {
@@ -361,7 +364,7 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* Premium Results */}
+                {/* Results Display with Pagination */}
                 {searchResults.premiumResults.length > 0 && (
                   <div className="mb-8">
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 mb-4">
@@ -373,13 +376,54 @@ export default function Home() {
                         Verified profiles with detailed analytics and contact information
                       </p>
                     </div>
+                    
+                    {/* Show first 20 results */}
                     <InfluencerResults 
-                      results={searchResults.premiumResults}
+                      results={showAllResults ? searchResults.premiumResults : searchResults.premiumResults.slice(0, 20)}
                     />
+                    
+                    {/* Show More Button - only if there are more than 20 results */}
+                    {searchResults.premiumResults.length > 20 && !showAllResults && (
+                      <div className="mt-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-6 text-center border-2 border-dashed border-gray-300">
+                        <div className="flex flex-col items-center space-y-4">
+                          <div className="p-3 bg-white rounded-full">
+                            <span className="text-2xl">🔍</span>
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                              {searchResults.premiumResults.length - 20} Influencers Adicionales Encontrados
+                            </h3>
+                            <p className="text-gray-600 text-sm max-w-md mx-auto">
+                              Mostrando los primeros 20 resultados. Hay {searchResults.premiumResults.length - 20} influencers más disponibles.
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => setShowAllResults(true)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2"
+                          >
+                            <span>👀</span>
+                            <span>Mostrar Todos los {searchResults.premiumResults.length} Resultados</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Collapse Button - when showing all results */}
+                    {showAllResults && searchResults.premiumResults.length > 20 && (
+                      <div className="mt-6 text-center">
+                        <button
+                          onClick={() => setShowAllResults(false)}
+                          className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 mx-auto"
+                        >
+                          <span>▲</span>
+                          <span>Mostrar Solo los Primeros 20</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
 
-                {/* Discovery Results */}
+                {/* Discovery Results (separate section if any) */}
                 {searchResults.discoveryResults.length > 0 && (
                   <div className="mb-8">
                     <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 mb-4">
@@ -388,7 +432,7 @@ export default function Home() {
                         <span>Discovery Results ({searchResults.discoveryResults.length})</span>
                       </h3>
                       <p className="text-purple-700 text-sm mt-1">
-                        Profiles found through web search - upgrade for detailed analytics
+                        Additional profiles found through web search
                       </p>
                     </div>
                     <DiscoveryGrid 

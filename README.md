@@ -11,6 +11,8 @@
 - **Búsqueda en tiempo real** usando Apify para descubrir nuevos talentos
 - **IA conversacional** para consultas naturales en español
 - **Filtros avanzados** por plataforma, nicho, ubicación, seguidores y engagement
+- **Paginación inteligente** - Muestra los 20 mejores resultados primero con opción de expandir
+- **Búsquedas específicas de España** con consultas en español nativo
 
 ### 📊 **Datos Precisos y Verificados**
 - **Tasas de engagement realistas** (1-15%) normalizadas automáticamente

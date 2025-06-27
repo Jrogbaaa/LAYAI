@@ -256,42 +256,104 @@ async function performStrategicFallbackSearch(params: ApifySearchParams): Promis
 
 /**
  * Build simplified fallback queries for broader search coverage
+ * IMPORTANT: No more generic celebrity searches - only user-prompt-specific searches
  */
 function buildFallbackQueries(params: ApifySearchParams): string[] {
   const queries: string[] = [];
-  const { location, gender, niches } = params;
+  const { location, gender, niches, userQuery, brandName } = params;
   
-  // Simplified location-based searches
-  if (location?.toLowerCase().includes('spain')) {
-    queries.push('influencers España TikTok');
-    queries.push('content creators españoles TikTok');
-    queries.push('tiktokers famosos España');
+  // Extract parameters from user query for better fallback searches
+  const extractedParams = extractSearchParametersFromQuery(userQuery || '', params);
+  const targetLocation = extractedParams.location || location;
+  const targetGender = extractedParams.gender || gender;
+  const targetNiches = extractedParams.niches.length > 0 ? extractedParams.niches : niches;
+  const targetBrand = extractedParams.brand || brandName;
+  
+  console.log('🔄 Building prompt-specific fallback queries for:', {
+    userQuery,
+    targetLocation,
+    targetGender,
+    targetNiches,
+    targetBrand
+  });
+
+  // USER QUERY-BASED SEARCHES (Top Priority)
+  if (userQuery && userQuery.trim().length > 0) {
+    // Clean the user query for search
+    const cleanQuery = userQuery
+      .replace(/['"]/g, '') // Remove quotes
+      .replace(/\b(find|search|show|get|me)\b/gi, '') // Remove search words
+      .replace(/\b(that are|who are|which are)\b/gi, '') // Remove connector words
+      .trim();
     
-    if (gender === 'female') {
-      queries.push('influencers femeninas España TikTok');
-      queries.push('tiktokers mujeres España');
-    }
-    
-    // Niche-specific Spanish searches
-    if (niches.includes('home') || niches.includes('lifestyle')) {
-      queries.push('influencers decoración España TikTok');
-      queries.push('home decor influencers Spain TikTok');
+    if (cleanQuery.length > 3) {
+      // Direct user query searches
+      queries.push(`${cleanQuery} influencers`);
+      queries.push(`${cleanQuery} content creators`);
+      
+      // Add platform-specific searches
+      if (targetLocation?.toLowerCase().includes('spain')) {
+        queries.push(`${cleanQuery} España`);
+        queries.push(`${cleanQuery} Spanish influencers`);
+      }
     }
   }
   
-  // Platform-specific generic searches
-  queries.push('TikTok influencers profiles');
-  queries.push('TikTok content creators');
-  queries.push('popular TikTok accounts');
-  
-  // Gender and niche combinations
-  if (gender && niches.length > 0) {
-    const mainNiche = niches[0];
-    queries.push(`${gender} ${mainNiche} TikTok`);
-    queries.push(`${mainNiche} TikTok creators`);
+  // LOCATION + NICHE SPECIFIC SEARCHES
+  if (targetLocation && targetNiches.length > 0) {
+    const mainNiche = targetNiches[0];
+    
+    if (targetLocation.toLowerCase().includes('spain')) {
+      // Spanish-specific searches
+      queries.push(`influencers ${mainNiche} España`);
+      queries.push(`${mainNiche} content creators España`);
+      
+      if (targetGender === 'female') {
+        queries.push(`influencers femeninas ${mainNiche} España`);
+        queries.push(`mujeres ${mainNiche} influencers España`);
+      } else if (targetGender === 'male') {
+        queries.push(`influencers masculinos ${mainNiche} España`);
+        queries.push(`hombres ${mainNiche} influencers España`);
+      }
+      
+      // Brand-specific Spanish searches
+      if (targetBrand?.toLowerCase().includes('ikea')) {
+        queries.push(`influencers decoración hogar España`);
+        queries.push(`home lifestyle influencers Spain`);
+      }
+    } else {
+      // General location-based searches
+      queries.push(`${mainNiche} influencers ${targetLocation}`);
+      queries.push(`${targetGender || ''} ${mainNiche} content creators ${targetLocation}`.trim());
+    }
   }
   
-  return queries.slice(0, 6);
+  // BRAND-SPECIFIC SEARCHES
+  if (targetBrand) {
+    if (targetBrand.toLowerCase().includes('ikea')) {
+      queries.push(`home decor influencers ${targetLocation || ''}`);
+      queries.push(`lifestyle home influencers ${targetLocation || ''}`);
+      queries.push(`interior design content creators ${targetLocation || ''}`);
+    } else {
+      queries.push(`${targetBrand} brand influencers ${targetLocation || ''}`);
+      queries.push(`${targetBrand} compatible content creators ${targetLocation || ''}`);
+    }
+  }
+  
+  // NEVER ADD GENERIC SEARCHES - only user-specific queries
+  // Remove these lines that were causing celebrity results:
+  // queries.push('TikTok influencers profiles');
+  // queries.push('TikTok content creators');
+  // queries.push('popular TikTok accounts');
+  
+  // Filter out empty or too-generic queries
+  const filteredQueries = queries
+    .filter(query => query.trim().length > 10) // Must be substantial
+    .filter(query => !query.includes('undefined')) // No undefined values
+    .slice(0, 6); // Limit to 6 targeted queries
+  
+  console.log(`🎯 Generated ${filteredQueries.length} user-prompt-specific fallback queries:`, filteredQueries);
+  return filteredQueries;
 }
 
 /**
@@ -503,12 +565,42 @@ function buildSearchQueries(platform: string, params: ApifySearchParams): string
   const targetBrand = extractedParams.brand || brandName;
   const targetAge = extractedParams.ageRange;
 
-  // 1. Build targeted profile discovery queries (HIGHEST PRIORITY)
+  console.log('🔍 Search parameter extraction:', {
+    userQuery,
+    extractedParams,
+    finalParams: { targetLocation, targetGender, targetNiches, targetBrand }
+  });
+
+  // 1. PRIORITY: Use actual user query if provided (NEW APPROACH)
+  if (userQuery && userQuery.trim().length > 10) {
+    // Clean and enhance user query for search
+    const cleanQuery = userQuery
+      .replace(/['"]/g, '') // Remove quotes
+      .replace(/\b(find|search|show|get|me|that are|who are|which are)\b/gi, '') // Remove search words
+      .trim();
+    
+    if (cleanQuery.length > 5) {
+      // Direct user query search (highest priority)
+      queries.add(`${cleanQuery} ${platformName}`);
+      queries.add(`${cleanQuery} influencers ${platformName}`);
+      
+      // Add platform-specific format
+      if (platform.toLowerCase() === 'instagram') {
+        queries.add(`${cleanQuery} site:instagram.com`);
+      } else if (platform.toLowerCase() === 'tiktok') {
+        queries.add(`${cleanQuery} site:tiktok.com`);
+      }
+      
+      console.log(`🎯 Added user query-based searches: ${cleanQuery}`);
+    }
+  }
+
+  // 2. Build targeted profile discovery queries (ONLY if specific parameters available)
   if (targetLocation && targetGender && targetNiches.length > 0) {
     const mainNiche = targetNiches[0];
     const genderTerm = targetGender === 'female' ? 'female' : targetGender === 'male' ? 'male' : '';
     
-    // Direct profile searches
+    // Direct profile searches with user's criteria
     queries.add(`${genderTerm} ${mainNiche} influencers ${targetLocation} ${platformName}`);
     queries.add(`top ${genderTerm} ${mainNiche} ${platformName} ${targetLocation}`);
     queries.add(`${mainNiche} ${genderTerm} content creators ${targetLocation} ${platformName}`);
@@ -520,7 +612,7 @@ function buildSearchQueries(platform: string, params: ApifySearchParams): string
     }
   }
 
-  // 2. Location-specific native language searches
+  // 3. Location-specific native language searches
   if (targetLocation?.toLowerCase().includes('spain') || targetLocation?.toLowerCase().includes('español') || targetLocation?.toLowerCase().includes('spanish')) {
     const spanishGender = targetGender === 'female' ? 'femeninas' : targetGender === 'male' ? 'masculinos' : '';
     const mainNiche = targetNiches[0] || 'lifestyle';
@@ -541,25 +633,25 @@ function buildSearchQueries(platform: string, params: ApifySearchParams): string
       queries.add(`influencers decoración hogar España ${platformName}`);
       queries.add(`influencers lifestyle hogar España ${platformName}`);
       queries.add(`influencers muebles decoración España ${platformName}`);
+    } else if (targetBrand?.toLowerCase().includes('nike')) {
+      queries.add(`influencers deportivos España Nike ${platformName}`);
+      queries.add(`influencers fitness lifestyle España Nike ${platformName}`);
+      queries.add(`atletas influencers España Nike ${platformName}`);
     }
   }
 
-  // 3. Platform-specific direct searches
-  if (platform.toLowerCase() === 'tiktok') {
-    // Only add if we have valid parameters to avoid "undefined" in search
-    if (targetLocation && targetGender && targetNiches.length > 0) {
+  // 4. Platform-specific direct searches (ONLY with specific criteria)
+  if (targetLocation && targetGender && targetNiches.length > 0) {
+    if (platform.toLowerCase() === 'tiktok') {
       queries.add(`${targetLocation} ${targetGender} ${targetNiches[0]} tiktok.com/@`);
       queries.add(`site:tiktok.com "@" ${targetLocation} ${targetGender} ${targetNiches[0]}`);
-    }
-  } else if (platform.toLowerCase() === 'instagram') {
-    // Only add if we have valid parameters to avoid "undefined" in search
-    if (targetLocation && targetGender && targetNiches.length > 0) {
+    } else if (platform.toLowerCase() === 'instagram') {
       queries.add(`${targetLocation} ${targetGender} ${targetNiches[0]} instagram.com`);
       queries.add(`site:instagram.com ${targetLocation} ${targetGender} ${targetNiches[0]}`);
     }
   }
 
-  // 4. Follower-range specific searches
+  // 5. Follower-range specific searches (only with specific criteria)
   const minFollowers = params.minFollowers || 0;
   const maxFollowers = params.maxFollowers || 10000000;
   
@@ -568,22 +660,33 @@ function buildSearchQueries(platform: string, params: ApifySearchParams): string
     queries.add(`${followerTerm} ${targetLocation} ${targetGender} ${targetNiches[0]} ${platformName}`);
   }
 
-  // 5. Niche-specific searches with common synonyms
-  targetNiches.forEach(niche => {
-    const nicheVariations = getNicheVariations(niche);
-    nicheVariations.forEach(variation => {
-      if (targetLocation && targetGender) {
+  // 6. Niche-specific searches with common synonyms (only if we have specific criteria)
+  if (targetLocation && targetGender) {
+    targetNiches.forEach(niche => {
+      const nicheVariations = getNicheVariations(niche);
+      nicheVariations.slice(0, 2).forEach(variation => { // Limit variations to avoid too many queries
         queries.add(`${variation} influencers ${targetGender} ${targetLocation} ${platformName}`);
-      }
+      });
     });
-  });
+  }
 
-  // Filter out any remaining conversational elements and return top 8 queries
+  // Filter out conversational elements and ensure quality
   const filteredQueries = Array.from(queries)
     .filter(query => !isConversationalQuery(query))
-    .slice(0, 8);
+    .filter(query => query.trim().length > 15) // Ensure substantial queries
+    .filter(query => !query.includes('undefined')) // No undefined values
+    .slice(0, 8); // Top 8 queries
   
-  console.log(`🎯 Generated ${filteredQueries.length} optimized search queries:`, filteredQueries);
+  console.log(`🎯 Generated ${filteredQueries.length} user-prompt-focused search queries:`, filteredQueries);
+  
+  // Ensure we have at least some queries
+  if (filteredQueries.length === 0) {
+    console.log('⚠️ No specific queries generated, adding minimal fallback');
+    if (targetLocation && targetNiches.length > 0) {
+      filteredQueries.push(`${targetNiches[0]} influencers ${targetLocation}`);
+    }
+  }
+  
   return filteredQueries;
 }
 
@@ -600,22 +703,29 @@ function extractSearchParametersFromQuery(userQuery: string, params: ApifySearch
   const query = userQuery.toLowerCase();
   const extracted: any = { niches: [] };
 
-  // Extract location
+  // Extract location (enhanced patterns)
   const locationPatterns = [
-    /spain|españa|spanish/i,
-    /madrid|barcelona|valencia|seville/i,
-    /in ([a-z\s]+)/i
+    /\b(spain|españa|spanish)\b/gi,
+    /\b(madrid|barcelona|valencia|seville)\b/gi,
+    /\bfrom\s+([a-z\s]+?)\b(?=\s|$)/gi,
+    /\bin\s+([a-z\s]+?)\b(?=\s|$)/gi
   ];
   
   locationPatterns.forEach(pattern => {
-    const match = query.match(pattern);
-    if (match) {
-      if (match[0].includes('spain') || match[0].includes('españa') || match[0].includes('spanish')) {
+    let match;
+    while ((match = pattern.exec(query)) !== null) {
+      if (match[0] && (match[0].toLowerCase().includes('spain') || match[0].toLowerCase().includes('españa') || match[0].toLowerCase().includes('spanish'))) {
         extracted.location = 'Spain';
-      } else if (match[1]) {
-        extracted.location = match[1].trim();
+      } else if (match[1] && match[1].trim().length > 2) {
+        const location = match[1].trim();
+        if (location.toLowerCase().includes('spain') || location.toLowerCase().includes('españa')) {
+          extracted.location = 'Spain';
+        } else {
+          extracted.location = location.charAt(0).toUpperCase() + location.slice(1);
+        }
       }
     }
+    pattern.lastIndex = 0; // Reset regex state
   });
 
   // Extract gender
@@ -658,7 +768,7 @@ function extractSearchParametersFromQuery(userQuery: string, params: ApifySearch
   const nicheKeywords = {
     'home': ['ikea', 'home', 'decor', 'interior', 'furniture', 'house'],
     'lifestyle': ['lifestyle', 'life', 'daily', 'routine'],
-    'fitness': ['fitness', 'gym', 'workout', 'health', 'sport'],
+    'fitness': ['fitness', 'gym', 'workout', 'health', 'sport', 'athlete', 'athletic'],
     'fashion': ['fashion', 'style', 'clothing', 'outfit'],
     'beauty': ['beauty', 'makeup', 'skincare', 'cosmetics'],
     'food': ['food', 'cooking', 'recipe', 'chef'],
@@ -672,9 +782,11 @@ function extractSearchParametersFromQuery(userQuery: string, params: ApifySearch
     }
   });
 
-  // If IKEA is mentioned, add relevant niches
+  // Add brand-specific niches
   if (extracted.brand?.toLowerCase().includes('ikea')) {
     extracted.niches.push('home', 'lifestyle');
+  } else if (extracted.brand?.toLowerCase().includes('nike')) {
+    extracted.niches.push('fitness', 'lifestyle', 'fashion');
   }
 
   return extracted;
@@ -1003,23 +1115,25 @@ async function scrapeProfilesWithApify(profileUrls: {url: string, platform: stri
           switch (platform.toLowerCase()) {
         case 'instagram':
           actorId = 'apify/instagram-profile-scraper';
-          // Extract usernames from URLs (remove https://www.instagram.com/)
-          const usernames = urls.map(url => url.replace('https://www.instagram.com/', ''));
+          // Extract usernames properly using the extractUsernameFromUrl function
+          const usernames = urls.map(url => extractUsernameFromUrl(url, 'instagram'))
+            .filter(username => username !== 'unknown' && username.length > 0 && !username.includes('.com'));
           input = {
             usernames: usernames,
             resultsType: 'profiles',
-            resultsLimit: urls.length,
+            resultsLimit: usernames.length,
             addParentData: false,
           };
           break;
           
         case 'tiktok':
           actorId = 'clockworks/free-tiktok-scraper';
-          // Extract usernames from TikTok URLs (remove https://www.tiktok.com/@)
-          const tiktokUsernames = urls.map(url => url.replace('https://www.tiktok.com/@', ''));
+          // Extract usernames properly using the extractUsernameFromUrl function
+          const tiktokUsernames = urls.map(url => extractUsernameFromUrl(url, 'tiktok'))
+            .filter(username => username !== 'unknown' && username.length > 0 && !username.includes('.com'));
           input = {
             profiles: tiktokUsernames,
-            resultsPerPage: urls.length,
+            resultsPerPage: tiktokUsernames.length,
           };
           break;
           
