@@ -46,6 +46,16 @@ interface MatchResultWithVerification extends MatchResult {
 }
 
 export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results }) => {
+  const getProfileLink = (handle: string, name: string): string => {
+    // Clean the handle and create Instagram URL
+    const cleanHandle = handle?.replace('@', '') || '';
+    return `https://instagram.com/${cleanHandle}`;
+  };
+
+  const getGoogleSearchLink = (handle: string, name: string): string => {
+    return `https://google.com/search?q=${encodeURIComponent(`${name} ${handle} Instagram influencer`)}`;
+  };
+
   const formatNumber = (num: number | undefined | null): string => {
     // Handle undefined, null, or non-numeric values
     if (num === undefined || num === null || isNaN(num)) {
@@ -84,36 +94,36 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
 
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">
-          Found {results.length} Perfect Match{results.length !== 1 ? 'es' : ''}
+      <div className="mb-4">
+        <h2 className="text-xl font-bold text-gray-900">
+          {results.length} Coincidencia{results.length !== 1 ? 's' : ''} Perfecta{results.length !== 1 ? 's' : ''} Encontrada{results.length !== 1 ? 's' : ''}
         </h2>
-        <p className="text-gray-600 mt-1">
-          Ranked by compatibility score and past campaign performance
+        <p className="text-gray-600 mt-1 text-sm">
+          Clasificados por puntuación de compatibilidad y rendimiento de campañas anteriores
         </p>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid gap-4">
         {results.map((result, index) => (
-          <div key={`${result.influencer.handle}-${index}`} data-testid="influencer-card" className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
+          <div key={`${result.influencer.handle}-${index}`} data-testid="influencer-card" className="bg-white rounded-lg shadow-md p-4">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-4">
               {/* Profile Section */}
-              <div className="flex-shrink-0 mb-6 lg:mb-0">
-                <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
+              <div className="flex-shrink-0 mb-4 lg:mb-0">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
                     {result.influencer.name.charAt(0)}
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">
+                    <h3 className="text-lg font-bold text-gray-900">
                       {result.influencer.name || 'Unknown Name'}
                     </h3>
-                    <p className="text-gray-600">@{result.influencer.handle || 'unknown'}</p>
+                    <p className="text-sm text-gray-600">@{result.influencer.handle || 'unknown'}</p>
                     <div className="flex items-center space-x-2 mt-1">
-                      <span className="text-sm font-medium text-blue-600">
+                      <span className="text-xs font-medium text-blue-600">
                         #{index + 1} Match
                       </span>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getMatchScoreColor(result.matchScore)}`}>
-                        {(result.matchScore * 100).toFixed(0)}% Match
+                        {(result.matchScore * 100).toFixed(0)}%
                       </span>
                     </div>
                   </div>
@@ -122,64 +132,64 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
 
               {/* Details Section */}
               <div className="flex-grow">
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-4">
                   {/* Left Column */}
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {/* Platform & Stats */}
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Platform & Reach</h4>
-                      <div className="space-y-2">
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">Plataforma y Alcance</h4>
+                      <div className="space-y-1">
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Platform:</span>
-                          <span className="font-medium platform-badge">{result.influencer.platform || 'Unknown'}</span>
+                          <span className="text-gray-600 text-sm">Plataforma:</span>
+                          <span className="font-medium platform-badge text-sm">{result.influencer.platform || 'Unknown'}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Followers:</span>
-                          <span className="font-medium follower-count">{formatNumber(result.influencer.followerCount)}</span>
+                          <span className="text-gray-600 text-sm">Seguidores:</span>
+                          <span className="font-medium follower-count text-sm">{formatNumber(result.influencer.followerCount)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Engagement:</span>
-                          <span className="font-medium engagement-rate">{((result.influencer.engagementRate || 0) * 100).toFixed(1)}%</span>
+                          <span className="text-gray-600 text-sm">Engagement:</span>
+                          <span className="font-medium engagement-rate text-sm">{((result.influencer.engagementRate || 0) * 100).toFixed(1)}%</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Est. Reach:</span>
-                          <span className="font-medium text-green-600">{formatNumber(result.potentialReach)}</span>
+                          <span className="text-gray-600 text-sm">Alcance Est.:</span>
+                          <span className="font-medium text-green-600 text-sm">{formatNumber(result.potentialReach)}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Demographics */}
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Demographics</h4>
-                      <div className="space-y-2">
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">Demografía</h4>
+                      <div className="space-y-1">
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Gender:</span>
-                          <span className="font-medium">{result.influencer.gender || 'Not specified'}</span>
+                          <span className="text-gray-600 text-sm">Género:</span>
+                          <span className="font-medium text-sm">{result.influencer.gender || 'No especificado'}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Age Range:</span>
-                          <span className="font-medium">{result.influencer.ageRange || 'Not specified'}</span>
+                          <span className="text-gray-600 text-sm">Edad:</span>
+                          <span className="font-medium text-sm">{result.influencer.ageRange || 'No especificado'}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Location:</span>
-                          <span className="font-medium">{result.influencer.location || 'Not specified'}</span>
+                          <span className="text-gray-600 text-sm">Ubicación:</span>
+                          <span className="font-medium text-sm">{result.influencer.location || 'No especificado'}</span>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Right Column */}
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {/* Pricing */}
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Pricing</h4>
-                      <div className="space-y-2">
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">Precios</h4>
+                      <div className="space-y-1">
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Average Rate:</span>
-                          <span className="font-bold text-lg">${(result.estimatedCost || 0).toLocaleString()}</span>
+                          <span className="text-gray-600 text-sm">Tarifa Promedio:</span>
+                          <span className="font-bold text-base">${(result.estimatedCost || 0).toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Cost Level:</span>
+                          <span className="text-gray-600 text-sm">Nivel de Costo:</span>
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCostLevelColor(result.influencer.costLevel || 'budget')}`}>
                             {result.influencer.costLevel || 'Budget'}
                           </span>
@@ -189,12 +199,12 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
 
                     {/* Content Niches */}
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Content Niches</h4>
-                      <div className="flex flex-wrap gap-2">
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">Nichos de Contenido</h4>
+                      <div className="flex flex-wrap gap-1">
                         {(result.influencer.niche || []).map((niche, nicheIndex) => (
                           <span 
                             key={`${niche}-${nicheIndex}`}
-                            className="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
+                            className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
                           >
                             {niche}
                           </span>
@@ -205,14 +215,14 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                     {/* Past Collaborations */}
                     {(result.influencer.pastCollaborations || []).length > 0 && (
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-2">Experience</h4>
-                        <div className="space-y-2">
+                        <h4 className="font-semibold text-gray-900 mb-2 text-sm">Experiencia</h4>
+                        <div className="space-y-1">
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Brand Partnerships:</span>
-                            <span className="font-medium">{(result.influencer.pastCollaborations || []).length}</span>
+                            <span className="text-gray-600 text-sm">Colaboraciones:</span>
+                            <span className="font-medium text-sm">{(result.influencer.pastCollaborations || []).length}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Avg. Rating:</span>
+                            <span className="text-gray-600 text-sm">Calificación:</span>
                             <div className="flex items-center">
                               {[...Array(5)].map((_, i) => (
                                 <svg 
@@ -236,12 +246,12 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                 </div>
 
                 {/* Match Reasons */}
-                <div className="mt-6 p-4 bg-green-50 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 mb-2">Why This Match Works</h4>
+                <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2 text-sm">Por Qué Funciona Esta Coincidencia</h4>
                   <ul className="space-y-1">
                     {(result.matchReasons || []).map((reason, reasonIndex) => (
-                      <li key={`${reason}-${reasonIndex}`} className="text-green-700 text-sm flex items-center">
-                        <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <li key={`${reason}-${reasonIndex}`} className="text-green-700 text-xs flex items-center">
+                        <svg className="w-3 h-3 mr-2 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                         {reason}
@@ -253,15 +263,32 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                 
 
                 {/* Action Buttons */}
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <button className="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors">
-                    View Profile
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <div className="flex gap-2">
+                    <a
+                      href={getProfileLink(result.influencer.handle, result.influencer.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-blue-600 text-white px-3 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors text-sm"
+                      title="Ver perfil de Instagram"
+                    >
+                      📸 Instagram
+                    </a>
+                    <a
+                      href={getGoogleSearchLink(result.influencer.handle, result.influencer.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-gray-600 text-white px-3 py-2 rounded-md font-medium hover:bg-gray-700 transition-colors text-sm"
+                      title="Buscar en Google"
+                    >
+                      🔍 Buscar
+                    </a>
+                  </div>
+                  <button className="bg-green-600 text-white px-4 py-2 rounded-md font-medium hover:bg-green-700 transition-colors text-sm">
+                    Contactar
                   </button>
-                  <button className="bg-green-600 text-white px-6 py-2 rounded-md font-medium hover:bg-green-700 transition-colors">
-                    Contact Influencer
-                  </button>
-                  <button className="border border-gray-300 text-gray-700 px-6 py-2 rounded-md font-medium hover:bg-gray-50 transition-colors">
-                    Save for Later
+                  <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md font-medium hover:bg-gray-50 transition-colors text-sm">
+                    Guardar
                   </button>
                 </div>
               </div>

@@ -84,6 +84,7 @@ export default function Home() {
             discoveryResults: searchData.data?.discoveryResults?.length || 0,
             totalFound: searchData.data?.totalFound || searchData.totalFound || 0
           });
+          console.log('🔍 Premium results length for pagination:', results.length, 'Show button:', results.length > 20);
           
           // Check if this is a follow-up search (if we already have results)
           if (searchResults && searchResults.premiumResults.length > 0) {
@@ -365,7 +366,10 @@ export default function Home() {
                 )}
 
                 {/* Results Display with Pagination */}
-                {searchResults.premiumResults.length > 0 && (
+                {searchResults.premiumResults.length > 0 && (() => {
+                  console.log('🔍 Rendering results section. Premium count:', searchResults.premiumResults.length, 'Show all:', showAllResults, 'Should show button:', searchResults.premiumResults.length > 20 && !showAllResults);
+                  return true;
+                })() && (
                   <div className="mb-8">
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 mb-4">
                       <h3 className="text-lg font-semibold text-blue-900 flex items-center space-x-2">
@@ -384,9 +388,9 @@ export default function Home() {
                     
                     {/* Show More Button - only if there are more than 20 results */}
                     {searchResults.premiumResults.length > 20 && !showAllResults && (
-                      <div className="mt-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-6 text-center border-2 border-dashed border-gray-300">
+                      <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 text-center border-2 border-dashed border-blue-200">
                         <div className="flex flex-col items-center space-y-4">
-                          <div className="p-3 bg-white rounded-full">
+                          <div className="p-3 bg-white rounded-full shadow-sm">
                             <span className="text-2xl">🔍</span>
                           </div>
                           <div>
@@ -398,8 +402,11 @@ export default function Home() {
                             </p>
                           </div>
                           <button
-                            onClick={() => setShowAllResults(true)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2"
+                            onClick={() => {
+                              console.log('🔄 Expanding to show all results:', searchResults.premiumResults.length);
+                              setShowAllResults(true);
+                            }}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 shadow-sm"
                           >
                             <span>👀</span>
                             <span>Mostrar Todos los {searchResults.premiumResults.length} Resultados</span>

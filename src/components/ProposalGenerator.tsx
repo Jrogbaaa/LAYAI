@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CampaignProposal, ProposalTalent } from '@/types/campaign';
 import { MatchResult } from '@/types/influencer';
 
@@ -37,6 +37,43 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
   const [manualInfluencers, setManualInfluencers] = useState<MatchResult[]>([]);
   const [isProcessingManual, setIsProcessingManual] = useState(false);
   const [brandResearchData, setBrandResearchData] = useState<any>(null);
+  const [isResearchingBrand, setIsResearchingBrand] = useState(false);
+
+  // Automatically research brand when brand name changes
+  useEffect(() => {
+    const researchBrandAutomatically = async () => {
+      if (campaignData.brandName.trim() && campaignData.brandName.length > 2) {
+        setIsResearchingBrand(true);
+        console.log(`🔍 Auto-researching brand: ${campaignData.brandName}`);
+        
+        try {
+          const brandInfo = await researchBrand(campaignData.brandName);
+          setBrandResearchData(brandInfo);
+          
+          // Clear any cached conversion data to regenerate reasons with new brand info
+          if ((window as any).conversionCache) {
+            (window as any).conversionCache.clear();
+          }
+          
+          console.log(`✅ Auto-research completed for ${campaignData.brandName}`);
+        } catch (error) {
+          console.error('❌ Auto-research failed:', error);
+        } finally {
+          setIsResearchingBrand(false);
+        }
+      } else {
+        // Clear brand research if brand name is empty
+        setBrandResearchData(null);
+        if ((window as any).conversionCache) {
+          (window as any).conversionCache.clear();
+        }
+      }
+    };
+
+    // Debounce the research to avoid too many API calls
+    const timeoutId = setTimeout(researchBrandAutomatically, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [campaignData.brandName]);
 
   const handleTalentSelection = (influencerId: string) => {
     const newSelected = new Set(selectedTalents);
@@ -280,12 +317,90 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
 
   // Generate UNIQUE, personalized match reasons based on REAL profile content + brand
   const generateBrandSpecificReasons = (profile: any, brandInfo: any) => {
+    // Even without brand info, generate unique reasons based on the influencer
     if (!brandInfo) {
-      return [
-        'Alta tasa de engagement y creación de contenido auténtico que resuena con las audiencias',
-        'Fuerte conexión con la comunidad e influencia comprobada en su nicho de mercado',
-        'Storytelling de calidad y contenido visual que genera interacciones significativas'
-      ];
+      const username = profile.username || profile.handle || '';
+      const bio = profile.biography || profile.bio || '';
+      const fullName = profile.fullName || profile.name || profile.username || 'influencer';
+      const followers = profile.followers || profile.followersCount || profile.followerCount || 0;
+      const contentToAnalyze = bio.toLowerCase();
+
+      // Generate unique reasons based on influencer characteristics
+      // SPECIFIC INFLUENCER ANALYSIS without brand context
+      
+      // CRISTIANO RONALDO
+      if (username.toLowerCase().includes('cristiano') || fullName.toLowerCase().includes('cristiano ronaldo')) {
+        return [`${fullName} es perfecto porque es un ícono del fitness y la excelencia atlética con ${(followers/1000000).toFixed(0)}M seguidores, cuya dedicación al entrenamiento y estilo de vida saludable inspira a millones de seguidores en todo el mundo`];
+      }
+
+      // GORDON RAMSAY  
+      if (username.toLowerCase().includes('gordongram') || fullName.toLowerCase().includes('gordon ramsay')) {
+        return [`${fullName} es una elección excepcional porque es uno de los chefs más reconocidos mundialmente con una pasión por la excelencia culinaria y herramientas de alta calidad que resuena con audiencias que aprecian la perfección`];
+      }
+
+      // JAIME LORENTE
+      if (username.toLowerCase().includes('jaimelorente') || fullName.toLowerCase().includes('jaime lorente')) {
+        return [`${fullName} es ideal porque es una estrella emergente del entretenimiento español de series exitosas como La Casa de Papel y Élite, con un estilo sofisticado que atrae a audiencias jóvenes y exigentes`];
+      }
+
+      // TAYLOR SWIFT
+      if (username.toLowerCase().includes('taylorswift') || fullName.toLowerCase().includes('taylor swift')) {
+        return [`${fullName} es perfecta porque es un ícono musical global que rompe récords con lealtad de fans sin paralelo e influencia cultural masiva, cuyo storytelling auténtico conecta con múltiples generaciones`];
+      }
+
+      // LIONEL MESSI
+      if (username.toLowerCase().includes('leomessi') || fullName.toLowerCase().includes('lionel messi')) {
+        return [`${fullName} es excepcional porque encarna la perfección atlética y dedicación, con una personalidad humilde y atractivo universal que trasciende el deporte para conectar con familias en todo el mundo`];
+      }
+
+      // GENERIC ANALYSIS based on content - make each unique
+      
+      // Musical content
+      if (/singer|musician|artist|music|album|song|tour|concert|grammy|billboard|música|artista|cantante/i.test(contentToAnalyze)) {
+        return [`${fullName} es perfecto porque su arte musical y expresión creativa demuestran autenticidad excepcional, con una base de fans comprometida que valora la calidad y conexión emocional profunda`];
+      }
+      
+          // Entertainment content
+    else if (/actor|actress|entertainment|tv|series|movie|film|celebrity|netflix|hbo|entretenimiento|serie|película|comedy|comedian|sketch|funny|humor|viral|content creator|creator/i.test(contentToAnalyze)) {
+        return [`${fullName} es ideal porque su éxito en entretenimiento y habilidades narrativas crean conexiones auténticas con audiencias, mientras que su estatus de celebridad añade prestigio y relevancia cultural`];
+      }
+      
+      // Culinary content
+      else if (/chef|cook|kitchen|restaurant|culinary|food|recipe|gastronomy|cocina|restaurante|gastronomía|cocinar/i.test(contentToAnalyze)) {
+        return [`${fullName} es perfecto porque es un experto culinario apasionado por la excelencia gastronómica y ingredientes de alta calidad, creando experiencias excepcionales que inspiran a su audiencia`];
+      }
+      
+      // Fitness/sports content
+      else if (/athlete|football|soccer|sport|training|fitness|champion|professional|gym|workout|atleta|fútbol|deporte|entrenamiento|gimnasio/i.test(contentToAnalyze)) {
+        return [`${fullName} es excepcional porque mantiene una condición física óptima y tiene pasión genuina por la salud y bienestar, inspirando a su comunidad hacia un estilo de vida activo y saludable`];
+      }
+
+      // Fashion/lifestyle content
+      else if (/fashion|style|outfit|designer|model|beauty|lifestyle|moda|estilo|diseñador|modelo|belleza/i.test(contentToAnalyze)) {
+        return [`${fullName} es perfecto porque su sentido impecable del estilo e influencia en moda demuestran atención excepcional a la calidad estética y tendencias que inspiran a su audiencia sofisticada`];
+      }
+
+      // Travel content
+      else if (/travel|adventure|explore|destination|wanderlust|viaje|aventura|explorar|destino/i.test(contentToAnalyze)) {
+        return [`${fullName} es ideal porque su espíritu aventurero y pasión por descubrir nuevas experiencias inspiran a su audiencia a explorar las posibilidades infinitas de la vida y el mundo`];
+      }
+
+      // Business/entrepreneur content
+      else if (/entrepreneur|business|ceo|founder|startup|company|emprendedor|negocio|empresa|fundador/i.test(contentToAnalyze)) {
+        return [`${fullName} es perfecto porque su éxito empresarial y perspicacia comercial demuestran pensamiento innovador y compromiso con la excelencia, inspirando a emprendedores y profesionales ambiciosos`];
+      }
+
+      // Creative/art content
+      else if (/artist|creative|design|art|painting|gallery|museum|artista|creativo|diseño|arte|pintura|galería|museo/i.test(contentToAnalyze)) {
+        return [`${fullName} es excepcional porque su visión artística y excelencia creativa encarnan pasión por la belleza y artesanía, inspirando a su audiencia creativa hacia la expresión auténtica`];
+      }
+
+      // Default unique reason based on follower count and influence
+      if (followers > 1000000) {
+        return [`${fullName} es valioso porque su influencia social significativa con ${(followers/1000000).toFixed(1)}M seguidores y contenido auténtico crea conexiones profundas y engagement excepcional con audiencias comprometidas`];
+      } else {
+        return [`${fullName} es una excelente opción porque su comunidad altamente comprometida y enfoque de contenido auténtico genera interacciones significativas con consumidores exigentes que valoran la calidad genuina`];
+      }
     }
 
     const reasons = [];
@@ -320,20 +435,34 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
       (window as any).analysisCache.add(cacheKey);
     }
 
-    // ENHANCED SPECIFIC INFLUENCER ANALYSIS - More compelling and specific reasons
+    // ENHANCED SPECIFIC INFLUENCER ANALYSIS - Multiple variations for regeneration
     
     // CRISTIANO RONALDO - Superestrella del fútbol (como el ejemplo de Nike)
     if (username.toLowerCase().includes('cristiano') || fullName.toLowerCase().includes('cristiano ronaldo')) {
-      reasons.push(`Cristiano es el ejemplo perfecto de un influencer orientado al fitness para ${brandInfo.name} porque mantiene una condición física excelente y tiene una pasión incomparable por la excelencia atlética como uno de los mejores futbolistas del mundo`);
-      reasons.push(`Su dedicación al fitness, rutinas de entrenamiento y estilo de vida saludable encarna perfectamente el compromiso de ${brandInfo.name} con el rendimiento y la calidad`);
-      reasons.push(`Con más de ${(followers/1000000).toFixed(0)}M seguidores, su influencia global se extiende mucho más allá del fútbol, llegando a entusiastas del fitness y atletas de todo el mundo que se alinean con el mercado objetivo de ${brandInfo.name}`);
-      return [reasons[0]]; // Devolver una razón convincente como tus ejemplos
+      const cristianoReasons = [
+        `Cristiano es el ejemplo perfecto de un influencer orientado al fitness para ${brandInfo.name} porque mantiene una condición física excelente y tiene una pasión incomparable por la excelencia atlética como uno de los mejores futbolistas del mundo`,
+        `Su dedicación al fitness, rutinas de entrenamiento y estilo de vida saludable encarna perfectamente el compromiso de ${brandInfo.name} con el rendimiento y la calidad`,
+        `Con más de ${(followers/1000000).toFixed(0)}M seguidores, su influencia global se extiende mucho más allá del fútbol, llegando a entusiastas del fitness y atletas de todo el mundo que se alinean con el mercado objetivo de ${brandInfo.name}`,
+        `Cristiano representa la excelencia absoluta para ${brandInfo.name} porque su disciplina legendaria y mentalidad ganadora inspiran a millones a superar sus límites, perfectamente alineado con los valores de rendimiento superior`,
+        `Su estatus como ícono global del deporte y empresario exitoso hace de Cristiano el embajador ideal para ${brandInfo.name}, combinando influencia masiva con credibilidad auténtica en fitness y estilo de vida premium`
+      ];
+      // Use regeneration ID or random selection for variety
+      const hasRegeneration = profile._regenerationId || Math.random() > 0.5;
+      const selectedIndex = hasRegeneration ? Math.floor(Math.random() * cristianoReasons.length) : 0;
+      return [cristianoReasons[selectedIndex]];
     }
 
     // GORDON RAMSAY - Chef (como el formato del ejemplo HexClad)
     if (username.toLowerCase().includes('gordongram') || fullName.toLowerCase().includes('gordon ramsay')) {
-      reasons.push(`Gordon Ramsay es un influencer perfecto para ${brandInfo.name} porque es uno de los chefs más reconocidos del mundo y tiene una pasión por usar el mejor equipamiento y las herramientas de más alta calidad en la cocina para producir platos excepcionales`);
-      return [reasons[0]];
+      const ramsayReasons = [
+        `Gordon Ramsay es un influencer perfecto para ${brandInfo.name} porque es uno de los chefs más reconocidos del mundo y tiene una pasión por usar el mejor equipamiento y las herramientas de más alta calidad en la cocina para producir platos excepcionales`,
+        `Gordon representa la excelencia culinaria para ${brandInfo.name} porque su dedicación a la perfección y uso exclusivo de ingredientes premium reflejan los mismos estándares de calidad que definen a la marca`,
+        `Su imperio gastronómico global y reconocimiento mundial hacen de Gordon el embajador perfecto para ${brandInfo.name}, combinando expertise culinario con influencia masiva en el mundo de la alta cocina`,
+        `Gordon es ideal para ${brandInfo.name} porque su personalidad apasionada y compromiso inquebrantable con la excelencia inspiran a chefs profesionales y entusiastas caseros que valoran la calidad superior`
+      ];
+      const hasRegeneration = profile._regenerationId || Math.random() > 0.5;
+      const selectedIndex = hasRegeneration ? Math.floor(Math.random() * ramsayReasons.length) : 0;
+      return [ramsayReasons[selectedIndex]];
     }
 
     // JAIME LORENTE - Actor español (La Casa de Papel, Élite)
@@ -354,16 +483,32 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
       return [reasons[0]];
     }
 
-    // ANÁLISIS GENÉRICO MEJORADO basado en contenido con razones específicas y convincentes
+    // ANÁLISIS GENÉRICO MEJORADO basado en contenido con múltiples variaciones
     
-    // Análisis de artista musical - Más específico como tus ejemplos
+    // Análisis de artista musical - Múltiples variaciones
     if (/singer|musician|artist|music|album|song|tour|concert|grammy|billboard|música|artista|cantante/i.test(contentToAnalyze)) {
-      reasons.push(`${fullName} es perfecto para ${brandInfo.name} porque su arte musical y expresión creativa demuestran la misma pasión por la excelencia que define a ${brandInfo.name}, con una base de fans comprometida que valora la autenticidad y calidad`);
+      const musicReasons = [
+        `${fullName} es perfecto para ${brandInfo.name} porque su arte musical y expresión creativa demuestran la misma pasión por la excelencia que define a ${brandInfo.name}, con una base de fans comprometida que valora la autenticidad y calidad`,
+        `Su talento musical excepcional y conexión emocional auténtica con audiencias globales hacen de ${fullName} el embajador ideal para ${brandInfo.name}, reflejando los valores de inspiración y creatividad de la marca`,
+        `${fullName} representa la innovación artística para ${brandInfo.name} porque su capacidad de conmover y conectar con millones a través de la música resuena perfectamente con el compromiso de la marca hacia la excelencia creativa`,
+        `La influencia cultural masiva y credibilidad artística de ${fullName} proporcionan a ${brandInfo.name} una plataforma auténtica para llegar a audiencias que aprecian la calidad, creatividad y expresión genuina`
+      ];
+      const hasRegeneration = profile._regenerationId || Math.random() > 0.5;
+      const selectedIndex = hasRegeneration ? Math.floor(Math.random() * musicReasons.length) : 0;
+      reasons.push(musicReasons[selectedIndex]);
     }
     
-    // Análisis de actor/entretenimiento - Más convincente
-    else if (/actor|actress|entertainment|tv|series|movie|film|celebrity|netflix|hbo|entretenimiento|serie|película/i.test(contentToAnalyze)) {
-      reasons.push(`${fullName} es un embajador ideal para ${brandInfo.name} porque su éxito en la industria del entretenimiento y habilidades narrativas presentan productos perfectamente en narrativas convincentes, mientras que su estatus de celebridad añade asociación de marca premium y relevancia cultural`);
+    // Análisis de actor/entretenimiento/comedia - Múltiples variaciones
+    else if (/actor|actress|entertainment|tv|series|movie|film|celebrity|netflix|hbo|entretenimiento|serie|película|comedy|comedian|sketch|funny|humor|viral|content creator|creator/i.test(contentToAnalyze)) {
+      const entertainmentReasons = [
+        `${fullName} es un embajador ideal para ${brandInfo.name} porque su éxito en la industria del entretenimiento y habilidades narrativas presentan productos perfectamente en narrativas convincentes, mientras que su estatus de celebridad añade asociación de marca premium y relevancia cultural`,
+        `Su talento para crear contenido viral y conectar con audiencias jóvenes hace de ${fullName} el colaborador perfecto para ${brandInfo.name}, aportando humor auténtico y engagement excepcional que resuena con consumidores modernos`,
+        `${fullName} representa la creatividad innovadora para ${brandInfo.name} porque su capacidad de entretener y generar conversaciones orgánicas proporciona una plataforma única para mostrar productos de manera natural y memorable`,
+        `La influencia cultural y habilidad de ${fullName} para crear momentos virales proporcionan a ${brandInfo.name} acceso auténtico a audiencias que valoran la originalidad, humor y contenido de calidad excepcional`
+      ];
+      const hasRegeneration = profile._regenerationId || Math.random() > 0.5;
+      const selectedIndex = hasRegeneration ? Math.floor(Math.random() * entertainmentReasons.length) : 0;
+      reasons.push(entertainmentReasons[selectedIndex]);
     }
     
     // Análisis de chef/comida - Siguiendo el formato del ejemplo Gordon Ramsay
@@ -371,9 +516,17 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
       reasons.push(`${fullName} es un influencer perfecto para ${brandInfo.name} porque es un experto culinario con pasión por usar ingredientes y herramientas de la más alta calidad en la cocina para crear experiencias gastronómicas excepcionales`);
     }
     
-    // Análisis de fitness/atleta - Siguiendo el formato del ejemplo Cristiano
+    // Análisis de fitness/atleta - Múltiples variaciones siguiendo el formato del ejemplo Cristiano
     else if (/athlete|football|soccer|sport|training|fitness|champion|professional|gym|workout|atleta|fútbol|deporte|entrenamiento|gimnasio/i.test(contentToAnalyze)) {
-      reasons.push(`${fullName} es un excelente ejemplo de influencer orientado al fitness para ${brandInfo.name} porque mantiene una condición física óptima y tiene una pasión genuina por la salud y bienestar como atleta dedicado`);
+      const fitnessReasons = [
+        `${fullName} es un excelente ejemplo de influencer orientado al fitness para ${brandInfo.name} porque mantiene una condición física óptima y tiene una pasión genuina por la salud y bienestar como atleta dedicado`,
+        `Su compromiso inquebrantable con el entrenamiento y la excelencia atlética hacen de ${fullName} el representante perfecto para ${brandInfo.name}, inspirando a su audiencia hacia un estilo de vida activo y saludable`,
+        `${fullName} encarna los valores de rendimiento superior de ${brandInfo.name} porque su disciplina deportiva y mentalidad ganadora resuenan con consumidores que buscan superar sus límites personales`,
+        `La credibilidad atlética y influencia motivacional de ${fullName} proporcionan a ${brandInfo.name} una conexión auténtica con entusiastas del fitness que valoran la dedicación, perseverancia y resultados genuinos`
+      ];
+      const hasRegeneration = profile._regenerationId || Math.random() > 0.5;
+      const selectedIndex = hasRegeneration ? Math.floor(Math.random() * fitnessReasons.length) : 0;
+      reasons.push(fitnessReasons[selectedIndex]);
     }
 
     // Análisis de moda/estilo de vida - Más específico
@@ -396,13 +549,30 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
       reasons.push(`${fullName} es una elección excepcional para ${brandInfo.name} porque su visión artística y excelencia creativa encarnan la misma pasión por la belleza y artesanía que define el compromiso de ${brandInfo.name} con la calidad`);
     }
 
-    // Respaldo con análisis específico de marca
+    // Respaldo con análisis específico de marca - Múltiples variaciones
     if (reasons.length === 0) {
+      const fallbackReasons = [];
+      
       if (followers > 1000000) {
-        reasons.push(`${fullName} es un socio valioso para ${brandInfo.name} porque su influencia social significativa con ${(followers/1000000).toFixed(1)}M seguidores y estilo de contenido auténtico crea conexiones significativas con la audiencia objetivo de ${brandInfo.name}`);
+        fallbackReasons.push(
+          `${fullName} es un socio valioso para ${brandInfo.name} porque su influencia social significativa con ${(followers/1000000).toFixed(1)}M seguidores y estilo de contenido auténtico crea conexiones significativas con la audiencia objetivo de ${brandInfo.name}`,
+          `Su alcance masivo de ${(followers/1000000).toFixed(1)}M seguidores y capacidad de generar engagement auténtico hacen de ${fullName} el embajador perfecto para amplificar el mensaje de ${brandInfo.name} a escala global`,
+          `${fullName} representa una oportunidad excepcional para ${brandInfo.name} porque su influencia comprobada y conexión genuina con millones de seguidores garantiza visibilidad premium y credibilidad instantánea`,
+          `La presencia digital dominante de ${fullName} con ${(followers/1000000).toFixed(1)}M seguidores proporciona a ${brandInfo.name} acceso directo a una audiencia masiva que valora la autenticidad y calidad excepcional`
+        );
       } else {
-        reasons.push(`${fullName} es una excelente opción para ${brandInfo.name} porque su comunidad comprometida y enfoque de contenido auténtico se alinea perfectamente con los valores de ${brandInfo.name} y resuena con consumidores exigentes que aprecian la calidad`);
+        fallbackReasons.push(
+          `${fullName} es una excelente opción para ${brandInfo.name} porque su comunidad comprometida y enfoque de contenido auténtico se alinea perfectamente con los valores de ${brandInfo.name} y resuena con consumidores exigentes que aprecian la calidad`,
+          `Su audiencia altamente comprometida y estilo de contenido genuino hacen de ${fullName} el colaborador ideal para ${brandInfo.name}, creando conexiones profundas con consumidores que buscan autenticidad y excelencia`,
+          `${fullName} es perfecto para ${brandInfo.name} porque su enfoque personalizado y relación cercana con su comunidad genera el tipo de confianza y lealtad que las marcas premium necesitan para prosperar`,
+          `La capacidad de ${fullName} para mantener engagement auténtico y construir relaciones genuinas con su audiencia proporciona a ${brandInfo.name} una plataforma ideal para conectar con consumidores conscientes y exigentes`
+        );
       }
+      
+      // Use regeneration ID or random selection for variety
+      const hasRegeneration = profile._regenerationId || Math.random() > 0.5;
+      const selectedIndex = hasRegeneration ? Math.floor(Math.random() * fallbackReasons.length) : 0;
+      reasons.push(fallbackReasons[selectedIndex]);
     }
 
     return [reasons[0]]; // Devolver una razón convincente como tus ejemplos
@@ -926,7 +1096,19 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
         </div>
 
         {/* Estado de Investigación de Marca */}
-        {brandResearchData && (
+        {isResearchingBrand && (
+          <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+              <h3 className="font-semibold text-blue-800">Investigando Marca...</h3>
+            </div>
+            <div className="text-blue-700 text-sm">
+              <p>Analizando información de marca para generar insights personalizados y razones específicas para cada influencer.</p>
+            </div>
+          </div>
+        )}
+        
+        {brandResearchData && !isResearchingBrand && (
           <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
             <div className="flex items-center space-x-3 mb-3">
               <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
@@ -934,12 +1116,13 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-green-800">Investigación de Marca Completa</h3>
+              <h3 className="font-semibold text-green-800">Investigación de Marca Completa ✨</h3>
             </div>
             <div className="text-green-700 text-sm">
               <p><strong>Industria:</strong> {brandResearchData.industry}</p>
               <p><strong>Valores:</strong> {brandResearchData.values?.join(', ')}</p>
               <p><strong>Audiencia Objetivo:</strong> {brandResearchData.targetAudience}</p>
+              <p className="mt-2 text-xs italic">💡 Los influencers ahora mostrarán razones personalizadas basadas en esta investigación.</p>
             </div>
           </div>
         )}
@@ -1058,28 +1241,62 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                           <button 
                             className="ml-2 text-xs bg-blue-200 hover:bg-blue-300 text-blue-800 px-2 py-1 rounded transition-colors"
                             onClick={() => {
+                              console.log(`🔄 Regenerating reason for ${result.influencer.name} (${result.influencer.handle})`);
+                              
+                              // Clear any cached data for this influencer to force new generation
+                              const cacheKey = `${result.influencer.handle}_${brandResearchData?.name || campaignData.brandName || 'default'}`;
+                              if ((window as any).analysisCache) {
+                                (window as any).analysisCache.delete(cacheKey);
+                                console.log(`🗑️ Cleared cache for: ${cacheKey}`);
+                              }
+                              
+                              // Add randomization factor to ensure different results
+                              const profile = {
+                                ...(result.influencer as any).originalProfile || result.influencer,
+                                _regenerationId: Math.random().toString(36).substr(2, 9) // Force cache miss
+                              };
+                              console.log(`🎲 Generated regeneration ID: ${profile._regenerationId}`);
+                              
                               if (brandResearchData) {
-                                const reasons = generateBrandSpecificReasons(
-                                  (result.influencer as any).originalProfile || result.influencer, 
-                                  brandResearchData
-                                );
+                                const reasons = generateBrandSpecificReasons(profile, brandResearchData);
                                 if (reasons && reasons.length > 0) {
+                                  console.log(`✅ Generated new reason: "${reasons[0].substring(0, 100)}..."`);
                                   handleReasonChange(result.influencer.id, reasons[0]);
+                                } else {
+                                  console.log(`❌ No reasons generated with brand data`);
                                 }
                               } else {
-                                // Generate with basic brand info if no research data
-                                const basicBrandInfo = {
-                                  name: campaignData.brandName || 'esta marca',
-                                  industry: 'lifestyle',
-                                  values: ['calidad', 'excelencia'],
-                                  targetAudience: 'consumidores exigentes'
-                                };
-                                const reasons = generateBrandSpecificReasons(
-                                  (result.influencer as any).originalProfile || result.influencer, 
-                                  basicBrandInfo
-                                );
+                                // Generate with enhanced brand info variations
+                                const brandVariations = [
+                                  {
+                                    name: campaignData.brandName || 'esta marca',
+                                    industry: 'lifestyle',
+                                    values: ['calidad', 'excelencia'],
+                                    targetAudience: 'consumidores exigentes'
+                                  },
+                                  {
+                                    name: campaignData.brandName || 'esta marca',
+                                    industry: 'premium',
+                                    values: ['innovación', 'autenticidad'],
+                                    targetAudience: 'audiencias sofisticadas'
+                                  },
+                                  {
+                                    name: campaignData.brandName || 'esta marca',
+                                    industry: 'modern',
+                                    values: ['inspiración', 'conexión'],
+                                    targetAudience: 'consumidores conscientes'
+                                  }
+                                ];
+                                
+                                // Select a random variation to get different results
+                                const selectedVariation = brandVariations[Math.floor(Math.random() * brandVariations.length)];
+                                console.log(`🎯 Using brand variation: ${selectedVariation.industry} - ${selectedVariation.values.join(', ')}`);
+                                const reasons = generateBrandSpecificReasons(profile, selectedVariation);
                                 if (reasons && reasons.length > 0) {
+                                  console.log(`✅ Generated fallback reason: "${reasons[0].substring(0, 100)}..."`);
                                   handleReasonChange(result.influencer.id, reasons[0]);
+                                } else {
+                                  console.log(`❌ No reasons generated with fallback data`);
                                 }
                               }
                             }}
