@@ -1,4 +1,4 @@
-# LAYAI - Plataforma de Marketing de Influencers en Español
+# LAYAI - Plataforma de Marketing de Influencers en Español (v2.7.0)
 
 ![LAYAI Logo](https://via.placeholder.com/400x100/1E40AF/FFFFFF?text=LAYAI)
 
@@ -31,6 +31,13 @@
 - **Cálculos de presupuesto** y alcance estimado
 - **Exportación múltiple** (CSV, PDF, formatos personalizados)
 - **Análisis de ROI** y métricas de rendimiento
+
+### 🎨 **Interfaz de Usuario Mejorada (v2.7.0)**
+- **Tarjetas de influencer compactas** - 40% más pequeñas para mejor navegación
+- **Acceso dual a perfiles** - Enlaces directos a Instagram + búsqueda de Google como respaldo
+- **Diseño responsivo** con mejor densidad de información
+- **Localización completa** en español para todos los elementos de la interfaz
+- **Paginación mejorada** con mejor estilo visual y funcionalidad
 
 ## 🚀 Instalación y Configuración
 

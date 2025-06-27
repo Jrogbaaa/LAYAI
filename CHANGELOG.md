@@ -5,6 +5,58 @@ All notable changes to LAYAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2025-01-18
+
+### 🎨 Added - Enhanced Influencer Card UI
+- **Compact Card Design**: 40% smaller influencer cards for better navigation
+  - Reduced padding from `p-6` to `p-4` for tighter layout
+  - Smaller avatar size (12x12 instead of 16x16) for space efficiency
+  - Compact text sizing (`text-sm`, `text-xs`) for better information density
+  - Improved visual hierarchy with consistent Spanish labels
+- **Dual Profile Access**: Enhanced profile link functionality
+  - **Instagram Direct Link**: `📸 Instagram` button for immediate profile access
+  - **Google Search Fallback**: `🔍 Buscar` button for reliable backup search
+  - Both buttons open in new tabs with proper security attributes
+  - Automatic fallback when Instagram links are unavailable
+- **Enhanced Pagination Styling**: Improved Show More button design
+  - Better visual contrast with blue gradient background
+  - Enhanced button styling with shadows and hover effects
+  - Debug logging for pagination troubleshooting
+  - Cleaner visual separation between sections
+
+### 🌐 Enhanced - Spanish Localization
+- **Complete UI Translation**: All influencer card elements in Spanish
+  - "Plataforma y Alcance" (Platform & Reach)
+  - "Demografía" (Demographics)
+  - "Precios" (Pricing)
+  - "Nichos de Contenido" (Content Niches)
+  - "Experiencia" (Experience)
+  - "Por Qué Funciona Esta Coincidencia" (Why This Match Works)
+- **Action Button Translation**: Spanish labels for all interactive elements
+  - "Ver Perfil" → "📸 Instagram" + "🔍 Buscar"
+  - "Contactar" (Contact)
+  - "Guardar" (Save)
+
+### 🔧 Technical Improvements
+- **Profile Link Validation**: Robust URL handling and fallback logic
+  - Clean handle extraction (removes @ symbols)
+  - Proper URL encoding for Google search queries
+  - Error-resistant link generation
+- **Card Layout Optimization**: Better responsive design
+  - Improved grid spacing and alignment
+  - Enhanced mobile compatibility
+  - Consistent spacing across all card elements
+- **Debug Enhancement**: Added comprehensive logging for pagination
+  - Console logging for result counts and pagination state
+  - Button click tracking for Show More functionality
+  - State management debugging for expand/collapse
+
+### 🎯 UX Improvements
+- **Faster Result Scanning**: More influencers visible per screen
+- **Reliable Profile Access**: Two-option approach ensures users can always access profiles
+- **Better Visual Flow**: Improved spacing and typography for easier reading
+- **Enhanced Navigation**: Cleaner pagination with better visual feedback
+
 ## [2.6.0] - 2025-01-18
 
 ### 🔍 Added - Enhanced Results Pagination
