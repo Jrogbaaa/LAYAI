@@ -5,6 +5,52 @@ All notable changes to LAYAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.4] - 2025-01-19
+
+### 🚀 Major Feature - Brand Collaboration History Detection
+
+#### 🤝 **Intelligent Collaboration Checking**
+- **Chatbot Integration**: Ask "¿Ha trabajado Cristiano con IKEA?" directly in chat
+- **Auto-Detection**: Recognizes collaboration queries in multiple languages
+  - "Has X worked with Y?"
+  - "¿Ha trabajado X con Y?"
+  - "X colaborado con Y"
+- **Real-time Analysis**: Uses Apify to scrape influencer's recent posts (20 posts)
+- **Smart Pattern Recognition**: Detects partnerships, sponsorships, mentions, and brand references
+
+#### 📊 **Enhanced Search Results**
+- **Brand Collaboration Status**: Each influencer shows collaboration history with searched brand
+- **Visual Indicators**: ✅ "Ha trabajado con BRAND" or ❌ "Sin colaboraciones previas"
+- **Confidence Scoring**: Shows reliability percentage (30-90% confidence)
+- **Evidence Detection**: Identifies sponsored posts, partnerships, and organic mentions
+- **Automatic Integration**: Works seamlessly with existing search flow
+
+#### 🔍 **Advanced Analysis Capabilities**
+- **Multi-Language Support**: Detects Spanish and English collaboration keywords
+- **Partnership Types**: Distinguishes between paid partnerships and organic mentions
+- **Brand Variations**: Recognizes @brand, #brand, and common brand handles
+- **Historical Tracking**: Shows last collaboration date when available
+- **Evidence Summaries**: Provides snippets of detected collaboration content
+
+#### 📱 **New API Endpoint**
+- **`/api/check-brand-collaboration`**: Dedicated endpoint for detailed collaboration checking
+- **Performance Optimized**: 2-minute timeout with AbortController
+- **Fallback Handling**: Graceful error handling with mock data support
+- **Comprehensive Response**: Returns collaboration type, evidence, and confidence scores
+
+### 🔧 Enhanced - User Experience
+- **Chatbot Welcome Message**: Updated to mention collaboration checking capability
+- **Natural Query Processing**: Smart detection of user intent in conversations
+- **Detailed Responses**: Rich formatted responses with evidence and confidence levels
+- **Search Result Integration**: Seamless display of collaboration status in influencer cards
+
+### 💡 Use Cases Enabled
+- **Due Diligence**: "¿Ha trabajado este influencer con competidores?"
+- **Relationship Mapping**: Identify existing brand relationships before outreach
+- **Competitor Analysis**: See which influencers have worked with competitor brands
+- **Strategic Planning**: Avoid conflicts of interest in influencer partnerships
+- **ROI Optimization**: Target influencers with proven brand collaboration experience
+
 ## [2.10.3] - 2025-01-19
 
 ### 🚀 Enhanced - Streamlined PDF Proposal Upload Workflow

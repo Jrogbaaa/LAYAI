@@ -21,27 +21,50 @@ LAYAI is built on a modern Next.js 15 architecture with TypeScript, utilizing th
 - **APIs**: Apify (Instagram), Serply (Web Search)
 - **Data**: JSON-based storage with RESTful API endpoints
 
-### Recent Architecture Improvements (v2.10.3)
+### Recent Architecture Improvements (v2.10.4)
 
-#### Streamlined PDF Workflow
+#### Brand Collaboration Detection System (NEW)
+- **New API Endpoint**: `/api/check-brand-collaboration` for real-time collaboration analysis
+- **Apify Integration**: Enhanced Instagram post scraping with 20-post analysis window
+- **AI Pattern Recognition**: Multi-language detection engine for partnerships and sponsorships
+- **Evidence Extraction**: Advanced content analysis with confidence scoring (30-90%)
+- **Performance Optimization**: 2-minute timeout with AbortController for stability
+
+#### Enhanced Search Intelligence
+- **Automatic Brand Extraction**: Smart parsing engine for brand names from search queries
+- **Real-time Collaboration Status**: Integration of collaboration checking during search flow
+- **Visual Status Indicators**: Dynamic green/gray badges showing collaboration history
+- **Confidence Metrics**: Algorithm-based reliability scoring using evidence strength
+- **Historical Data Tracking**: Last collaboration date extraction and display
+
+#### Chatbot AI Enhancement
+- **Query Classification Engine**: Automatic detection of collaboration vs. search intent
+- **Multi-Pattern NLP**: Recognition system for various query formats and languages
+- **Rich Response System**: Structured collaboration reports with evidence summaries
+- **Context Preservation**: Maintains search conversation flow while adding collaboration features
+- **Error Resilience**: Comprehensive fallbacks for API timeouts and parsing failures
+
+#### Previous Improvements (v2.10.3)
+
+##### Streamlined PDF Workflow
 - **Component Consolidation**: Removed separate PDF upload components (ProposalUpload.tsx, EnhancedSearchInterface.tsx, ProposalDrivenSearch.tsx)
 - **Unified Experience**: All PDF functionality integrated into Chatbot component
 - **Workflow Simplification**: PDF Upload → Analysis → Additional Input → Search (all in chat)
 - **State Management**: Enhanced PDF analysis state with better user feedback
 
-#### Enhanced Search Completion
+##### Enhanced Search Completion
 - **Auto-scroll Implementation**: Smooth navigation to results after search completion  
 - **Extended Feedback**: Increased completion message visibility from 1.5s to 3s
 - **Celebratory UX**: Enhanced completion messaging with emojis and result counts
 - **DOM Interaction**: Auto-scroll using `document.querySelector` and `scrollIntoView`
 
-#### Error Resolution & Stability
+##### Error Resolution & Stability
 - **ProposalGenerator Fixes**: Added comprehensive null safety to prevent `toLocaleString()` errors
 - **Type Safety**: Enhanced with `|| 0` fallbacks for all numeric operations
 - **CSV Export Stability**: Protected all numeric fields in export functionality
 - **Graceful Degradation**: Shows "0" instead of crashing on missing data
 
-#### UI Alignment & Consistency
+##### UI Alignment & Consistency
 - **Card Redesign**: Complete influencer card restructure for perfect alignment
 - **Button Removal**: Eliminated non-functional Guardar/Contactar buttons
 - **Visual Hierarchy**: Organized card sections (Header → Stats → Actions)

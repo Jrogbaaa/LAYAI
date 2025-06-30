@@ -205,6 +205,71 @@ function generateRealtimeMatchReasons(influencer: any, params: ApifySearchParams
   return reasons.slice(0, 5);
 }
 
+function extractBrandFromQuery(searchParams: ApifySearchParams): string | null {
+  // Extract brand from the search query
+  const query = searchParams.userQuery?.toLowerCase() || '';
+  
+  // Common brand patterns in Spanish searches
+  const brandPatterns = [
+    /para\s+(\w+)/i,           // "para IKEA", "para Nike"
+    /con\s+(\w+)/i,            // "con Zara", "con Adidas" 
+    /de\s+(\w+)/i,             // "de H&M", "de Mango"
+    /compatible[s]?\s+con\s+(\w+)/i,  // "compatibles con Nike"
+    /\b(ikea|nike|adidas|zara|mango|h&m|inditex|bershka|stradivarius|pull&bear|massimo|dutti|shein|amazon|apple|samsung|coca|cola|pepsi|mcdonalds|burger|king|kfc|netflix|spotify|vodafone|movistar|orange|banco|santander|bbva|ing|openbank)\b/i
+  ];
+
+  for (const pattern of brandPatterns) {
+    const match = query.match(pattern);
+    if (match && match[1]) {
+      return match[1].toLowerCase();
+    }
+  }
+
+  // Also check brandName if provided
+  if (searchParams.brandName) {
+    return searchParams.brandName.toLowerCase();
+  }
+
+  return null;
+}
+
+async function addCollaborationStatus(results: any[], brandName: string | null): Promise<any[]> {
+  if (!brandName) return results;
+
+  console.log(`🤝 Adding collaboration status for brand: ${brandName}`);
+
+  // For performance, we'll add a simplified collaboration check
+  // This checks if brand appears in the influencer's bio or recent activity
+  return results.map(result => {
+    const bio = (result.influencer.biography || '').toLowerCase();
+    const handle = result.influencer.handle.toLowerCase();
+    
+    // Quick check for brand mentions in bio
+    const brandVariations = [
+      brandName,
+      `@${brandName}`,
+      `#${brandName}`,
+      brandName.replace('&', 'and'),
+      brandName.replace(' ', ''),
+    ];
+
+    const hasCollaboration = brandVariations.some(variation => 
+      bio.includes(variation.toLowerCase())
+    );
+
+    return {
+      ...result,
+      brandCollaboration: {
+        brandName,
+        hasWorkedWith: hasCollaboration,
+        type: hasCollaboration ? 'mention' : 'none',
+        confidence: hasCollaboration ? 60 : 0,
+        source: 'bio_analysis'
+      }
+    };
+  });
+}
+
 export async function POST(req: Request) {
   try {
     const searchParams: ApifySearchParams = await req.json();
@@ -312,10 +377,14 @@ export async function POST(req: Request) {
       ) === index;
     });
     
+    // Add collaboration status for each influencer
+    const brandName = extractBrandFromQuery(searchParams);
+    const resultsWithCollaboration = await addCollaborationStatus(uniqueResults, brandName);
+    
     // Sort with sophisticated prioritization:
     // 1. Vetted database results first (highest match scores)
     // 2. Within each group, sort by engagement rate then follower count
-    uniqueResults.sort((a, b) => {
+    resultsWithCollaboration.sort((a, b) => {
       // Primary sort: Match score (vetted results have 0.95 score)
       const scoreDiff = (b.matchScore || 0) - (a.matchScore || 0);
       if (Math.abs(scoreDiff) > 0.1) {
@@ -337,14 +406,14 @@ export async function POST(req: Request) {
     });
     
     // Don't limit results here - let frontend handle pagination
-    console.log(`🎯 Returning ${uniqueResults.length} unique results from sources: ${searchSources.join(', ')}`);
+    console.log(`🎯 Returning ${resultsWithCollaboration.length} unique results from sources: ${searchSources.join(', ')}`);
     
     // Enhanced response format
     return NextResponse.json({
       success: true,
       data: {
-        premiumResults: uniqueResults, // Return ALL results for frontend pagination
-        totalFound: uniqueResults.length,
+        premiumResults: resultsWithCollaboration, // Return ALL results for frontend pagination
+        totalFound: resultsWithCollaboration.length,
         searchSources,
         searchMetadata: {
           vettedCount: vettedResults.influencers.length,
@@ -356,9 +425,13 @@ export async function POST(req: Request) {
             minFollowers: searchParams.minFollowers,
             maxFollowers: searchParams.maxFollowers,
             niches: searchParams.niches
-          }
+          },
+          brandCollaborationCheck: brandName ? {
+            brandName,
+            enabled: true
+          } : null
         },
-        recommendations: generateRecommendations(uniqueResults, searchParams),
+        recommendations: generateRecommendations(resultsWithCollaboration, searchParams),
         searchStrategy: searchSources.length > 1 ? 
           'hybrid_search' : 
           searchSources.includes('Base de datos verificada') ? 'vetted_only' : 'realtime_only'

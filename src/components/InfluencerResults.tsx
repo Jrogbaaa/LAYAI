@@ -221,6 +221,32 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                 </div>
               </div>
 
+              {/* Brand Collaboration Status */}
+              {(result as any).brandCollaboration && (
+                <div className="mb-4">
+                  <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium ${
+                    (result as any).brandCollaboration.hasWorkedWith 
+                      ? 'bg-green-50 text-green-800 border border-green-200' 
+                      : 'bg-gray-50 text-gray-600 border border-gray-200'
+                  }`}>
+                    {(result as any).brandCollaboration.hasWorkedWith ? (
+                      <>
+                        <span className="text-green-600">✅</span>
+                        <span>Ha trabajado con {(result as any).brandCollaboration.brandName.toUpperCase()}</span>
+                        <span className="text-green-600 text-xs">
+                          ({(result as any).brandCollaboration.confidence}% confianza)
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-gray-400">❌</span>
+                        <span>Sin colaboraciones previas con {(result as any).brandCollaboration.brandName.toUpperCase()}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Tags Row - Fixed Height */}
               <div className="flex flex-wrap items-center gap-2 mb-4 min-h-[2rem]">
                 {/* Niches */}

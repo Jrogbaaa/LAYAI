@@ -20,10 +20,34 @@ interface ChatbotProps {
   onSendMessage: (message: string, history: Message[]) => Promise<any>;
 }
 
+// Helper function to detect brand collaboration queries
+function detectCollaborationQuery(message: string): { influencer: string; brand: string } | null {
+  const lowerMessage = message.toLowerCase();
+  
+  // Patterns to detect collaboration queries
+  const patterns = [
+    /(?:has|ha)\s+(\w+)\s+(?:worked|trabajado)\s+(?:with|con)\s+(\w+)/i,
+    /(\w+)\s+(?:ha\s+trabajado|worked)\s+(?:con|with)\s+(\w+)/i,
+    /(?:colaborado|collaborated)\s+(\w+)\s+(?:con|with)\s+(\w+)/i,
+    /(\w+)\s+(?:colaborado|collaborated)\s+(?:con|with)\s+(\w+)/i,
+  ];
+  
+  for (const pattern of patterns) {
+    const match = message.match(pattern);
+    if (match) {
+      const influencer = match[1].toLowerCase();
+      const brand = match[2].toLowerCase();
+      return { influencer, brand };
+    }
+  }
+  
+  return null;
+}
+
 export function Chatbot({ onSendMessage }: ChatbotProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "¡Hola! Soy tu asistente de IA para encontrar influencers. Puedes:\n\n🔍 Escribir tu búsqueda: 'Encuentra influencers de moda en Instagram'\n📄 Subir una propuesta PDF para búsqueda personalizada\n💡 Hacer preguntas de seguimiento para refinar resultados\n\n¿Cómo te gustaría empezar?",
+      text: "¡Hola! Soy tu asistente de IA para encontrar influencers. Puedes:\n\n🔍 Escribir tu búsqueda: 'Encuentra influencers de moda en Instagram'\n📄 Subir una propuesta PDF para búsqueda personalizada\n🤝 Preguntar sobre colaboraciones: '¿Ha trabajado Cristiano con IKEA?'\n💡 Hacer preguntas de seguimiento para refinar resultados\n\n¿Cómo te gustaría empezar?",
       sender: 'bot',
       type: 'chat',
     },
@@ -329,6 +353,66 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
     await handleSearchFromPDF(searchQuery);
   };
 
+  const handleCollaborationCheck = async (influencer: string, brand: string) => {
+    try {
+      const response = await fetch('/api/check-brand-collaboration', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          influencerHandle: influencer,
+          brandName: brand,
+          postsToCheck: 20
+        }),
+      });
+
+      const result = await response.json();
+
+      let responseText = '';
+      if (result.success && result.collaboration.hasCollaborated) {
+        const { collaborationType, evidence, confidenceScore, lastCollabDate } = result.collaboration;
+        
+        if (collaborationType === 'partnership') {
+          responseText = `✅ **SÍ, ${influencer.toUpperCase()} ha trabajado con ${brand.toUpperCase()}**\n\n🤝 **Tipo**: Colaboración comercial confirmada\n🎯 **Confianza**: ${confidenceScore}%`;
+          if (lastCollabDate) {
+            responseText += `\n📅 **Última colaboración**: ${lastCollabDate}`;
+          }
+        } else if (collaborationType === 'mention') {
+          responseText = `✅ **SÍ, ${influencer.toUpperCase()} ha mencionado ${brand.toUpperCase()}**\n\n💬 **Tipo**: Mención de marca\n🎯 **Confianza**: ${confidenceScore}%`;
+          if (lastCollabDate) {
+            responseText += `\n📅 **Última mención**: ${lastCollabDate}`;
+          }
+        }
+
+        if (evidence.length > 0) {
+          responseText += `\n\n📝 **Evidencia encontrada**:\n${evidence.map((e: string) => `• ${e}`).join('\n')}`;
+        }
+      } else {
+        responseText = `❌ **NO, ${influencer.toUpperCase()} no ha trabajado con ${brand.toUpperCase()}**\n\n🔍 **Análisis**: Revisé ${result.postsAnalyzed || 20} publicaciones recientes\n📊 **Resultado**: Sin colaboraciones o menciones detectadas`;
+      }
+
+      const collaborationResponse: Message = {
+        text: responseText,
+        sender: 'bot',
+        type: 'chat',
+      };
+
+      setMessages(prev => [...prev, collaborationResponse]);
+
+    } catch (error) {
+      console.error('Error checking collaboration:', error);
+      const errorMessage: Message = {
+        text: `❌ Error al verificar la colaboración entre ${influencer} y ${brand}. Por favor, inténtalo de nuevo.`,
+        sender: 'bot',
+        type: 'chat',
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
@@ -385,6 +469,22 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
     setSearchProgress(null);
 
     try {
+      // Check if this is a brand collaboration query
+      const collaborationMatch = detectCollaborationQuery(messageToSend);
+      if (collaborationMatch) {
+        const { influencer, brand } = collaborationMatch;
+        
+        const checkingMessage: Message = {
+          text: `🔍 Revisando si ${influencer} ha trabajado con ${brand} anteriormente...`,
+          sender: 'bot',
+          type: 'chat',
+        };
+        setMessages(prev => [...prev, checkingMessage]);
+        
+        await handleCollaborationCheck(influencer, brand);
+        return;
+      }
+
       // Check if this is likely a search query
       const isSearchQuery = inputMessage.toLowerCase().includes('encuentra') || 
                            inputMessage.toLowerCase().includes('busca') || 

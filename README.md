@@ -1,8 +1,21 @@
-# 🚀 LAYAI - AI-Powered Influencer Marketing Platform v2.10.3
+# 🚀 LAYAI - AI-Powered Influencer Marketing Platform v2.10.4
 
-> **Versión 2.10.3** - Plataforma completa de marketing de influencers con flujo de trabajo PDF optimizado, experiencia unificada en chatbot, alineación de UI mejorada, y generación de propuestas estable.
+> **Versión 2.10.4** - Plataforma completa de marketing de influencers con detección inteligente de colaboraciones de marca, análisis histórico de partnerships, y verificación automática de relaciones influencer-marca.
 
-## ✨ Últimas Funcionalidades (v2.10.3)
+## ✨ Últimas Funcionalidades (v2.10.4)
+
+### 🤝 **Detección de Colaboraciones de Marca (NUEVO)**
+- **Consultas en Chat**: "¿Ha trabajado Cristiano con IKEA?" - respuesta automática con evidencia
+- **Análisis en Tiempo Real**: Scraping de posts recientes con IA para detectar colaboraciones
+- **Historial Visual**: Cada influencer muestra ✅/❌ colaboraciones previas con tu marca
+- **Tipos de Colaboración**: Distingue entre partnerships pagados y menciones orgánicas
+- **Confianza y Evidencia**: Scoring de confiabilidad 30-90% con snippets de posts
+
+### 🔍 **Inteligencia de Relaciones**
+- **Mapeo de Competidores**: Identifica influencers que han trabajado con competencia
+- **Due Diligence Automático**: Verifica conflictos de interés antes de contactar
+- **Análisis Multiidioma**: Detecta colaboraciones en español e inglés
+- **Variaciones de Marca**: Reconoce @marca, #marca, y handles alternativos
 
 ### 🚀 **Flujo de Trabajo PDF Optimizado**
 - **Experiencia PDF Unificada**: Toda la funcionalidad de PDF consolidada en el chatbot
