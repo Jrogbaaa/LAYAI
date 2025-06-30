@@ -929,6 +929,107 @@ function validateProfileUrl(url: string, platform: string): { isValid: boolean; 
 }
 
 /**
+ * Check if a profile is a brand/corporate account (not an influencer)
+ */
+function isBrandAccount(username: string, fullName?: string, biography?: string, category?: string): boolean {
+  // Known brand/store account patterns
+  const brandPatterns = [
+    // Major brands and stores
+    /^(nike|adidas|zara|h&m|primark|ikea|mango|stradivarius|bershka|pull&bear|massimo|dutti)$/i,
+    /^(coca-cola|pepsi|mcdonald|burger|king|kfc|starbucks|apple|google|microsoft|amazon)$/i,
+    /^(walmart|target|bestbuy|home|depot|lowes|costco|sams|club|macys|nordstrom)$/i,
+    /^(toyota|ford|bmw|mercedes|audi|volkswagen|honda|nissan|hyundai|kia)$/i,
+    /^(netflix|disney|hbo|paramount|amazon|prime|hulu|spotify|youtube|music)$/i,
+    
+    // Store/brand indicators
+    /^(store|shop|brand|company|corp|inc|ltd|llc|official|headquarters|hq)$/i,
+    /(store|shop|brand|company|corp|inc|ltd|llc|official|headquarters|hq)$/i,
+    
+    // Spanish/European brands
+    /^(el|corte|ingles|carrefour|mercadona|dia|lidl|aldi|eroski|alcampo)$/i,
+    /^(telefonica|movistar|vodafone|orange|yoigo|pepephone|masmovil)$/i,
+    /^(bbva|santander|caixabank|bankia|sabadell|unicaja|openbank)$/i,
+    /^(repsol|cepsa|bp|shell|galp|petromiralles|ballenoil)$/i,
+    
+    // Domain indicators in username
+    /\.(com|es|org|net|co|uk|de|fr|it)$/i,
+    
+    // Email patterns that slipped through
+    /gmail|hotmail|yahoo|outlook|email/i,
+    
+    // Generic store terms
+    /^(tienda|shop|store|boutique|outlet|market|plaza|center|mall)$/i,
+    
+    // Professional services
+    /^(agency|studio|design|marketing|media|digital|consulting|solutions)$/i,
+    
+    // Multiple words (brands often use spaces or dots)
+    /^[a-z]+\.[a-z]+/i,  // brand.name format
+  ];
+  
+  // Check category for business indicators
+  const businessCategories = [
+    'shopping & retail',
+    'brand',
+    'company',
+    'business service',
+    'local business',
+    'website',
+    'app',
+    'product/service',
+    'retail company',
+    'clothing (brand)',
+    'shopping mall',
+    'grocery store',
+  ];
+  
+  // Check biography for brand indicators
+  const brandBioKeywords = [
+    'official account',
+    'tienda oficial',
+    'official store',
+    'brand',
+    'empresa',
+    'company',
+    'corporation',
+    'inc.',
+    'ltd.',
+    'llc',
+    'headquarters',
+    'sede central',
+    'customer service',
+    'atención al cliente',
+    'buy now',
+    'compra ahora',
+    'shop online',
+    'tienda online',
+  ];
+  
+  // Username checks
+  const usernameMatch = brandPatterns.some(pattern => pattern.test(username));
+  
+  // Category checks
+  const categoryMatch = category && businessCategories.some(cat => 
+    category.toLowerCase().includes(cat.toLowerCase())
+  );
+  
+  // Biography checks
+  const biographyMatch = biography && brandBioKeywords.some(keyword =>
+    biography.toLowerCase().includes(keyword.toLowerCase())
+  );
+  
+  // Full name checks (for brand names in display name)
+  const fullNameMatch = fullName && brandPatterns.some(pattern => pattern.test(fullName));
+  
+  if (usernameMatch || categoryMatch || biographyMatch || fullNameMatch) {
+    console.log(`🏢 Detected brand account: ${username} (${category || 'Unknown category'})`);
+    return true;
+  }
+  
+  return false;
+}
+
+/**
  * Check for known problematic patterns
  */
 function isKnownInvalidProfile(username: string, url: string): boolean {
@@ -1035,6 +1136,12 @@ function extractProfileUrls(searchResults: any[], platform: string): {url: strin
         continue;
       }
       
+      // Check if it's a brand account
+      if (isBrandAccount(username)) {
+        console.log(`   ❌ Brand account detected: ${username}`);
+        continue;
+      }
+      
       const cleanUrl = result.link.split('?')[0];
       urls.push({ url: cleanUrl, platform });
       console.log(`   ✅ Added validated link: ${cleanUrl}`);
@@ -1048,7 +1155,7 @@ function extractProfileUrls(searchResults: any[], platform: string): {url: strin
           const validation = validateProfileUrl(additionalLink.href, platform);
           if (validation.isValid) {
             const username = extractUsernameFromUrl(additionalLink.href, platform);
-            if (!isKnownInvalidProfile(username, additionalLink.href)) {
+            if (!isKnownInvalidProfile(username, additionalLink.href) && !isBrandAccount(username)) {
               const cleanUrl = additionalLink.href.split('?')[0];
               urls.push({ url: cleanUrl, platform });
               console.log(`   ✅ Added validated additional link: ${cleanUrl}`);
@@ -1067,7 +1174,7 @@ function extractProfileUrls(searchResults: any[], platform: string): {url: strin
         console.log(`   📢 Found mentions: ${mentions.join(', ')}`);
         mentions.forEach((mention: string) => {
           const username = mention.replace('@', '');
-          if (!isKnownInvalidProfile(username, '')) {
+          if (!isKnownInvalidProfile(username, '') && !isBrandAccount(username)) {
             const profileUrl = `https://www.instagram.com/${username}`;
             urls.push({ url: profileUrl, platform });
             console.log(`   ✅ Added from mention: ${profileUrl}`);
@@ -1191,6 +1298,10 @@ function transformProfileResults(items: any[], platform: string, params: ApifySe
 
   const validItems = items.filter(item => item && typeof item.username === 'string');
 
+  // Track filtering statistics
+  let brandAccountsFiltered = 0;
+  let followerCountFiltered = 0;
+
   // Niche scoring for brand compatibility
   const nicheScores: { [key: string]: number } = {
     fashion: 3,
@@ -1201,14 +1312,22 @@ function transformProfileResults(items: any[], platform: string, params: ApifySe
     lifestyle: 1,
   };
 
-  return validItems
+  const results = validItems
     .map(item => {
       const transformed = transformProfileToInfluencer(item, platform);
       if (!transformed) return null;
 
+      // Filter out brand accounts
+      if (isBrandAccount(transformed.username, transformed.fullName, transformed.biography, transformed.category)) {
+        console.log(`🏢 Filtered out brand account: ${transformed.username}`);
+        brandAccountsFiltered++;
+        return null;
+      }
+
       // Filter by follower count (important for quality control)
       const followers = transformed.followers;
       if (followers < params.minFollowers || followers > params.maxFollowers) {
+        followerCountFiltered++;
         return null;
       }
       
@@ -1225,6 +1344,14 @@ function transformProfileResults(items: any[], platform: string, params: ApifySe
     })
     .filter((p): p is ScrapedInfluencer => p !== null)
     .sort((a, b) => (b.brandCompatibilityScore || 0) - (a.brandCompatibilityScore || 0));
+
+  // Log filtering statistics
+  console.log(`🔍 Filtering summary for ${platform}:`);
+  console.log(`   - Brand accounts filtered: ${brandAccountsFiltered}`);
+  console.log(`   - Follower count filtered: ${followerCountFiltered}`);
+  console.log(`   - Final results: ${results.length}`);
+
+  return results;
 }
 
 /**

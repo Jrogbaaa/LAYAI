@@ -336,16 +336,14 @@ export async function POST(req: Request) {
       return followersB - followersA;
     });
     
-    // Apply result limit
-    const limitedResults = uniqueResults.slice(0, searchParams.maxResults || 20);
-    
-    console.log(`🎯 Returning ${limitedResults.length} unique results from sources: ${searchSources.join(', ')}`);
+    // Don't limit results here - let frontend handle pagination
+    console.log(`🎯 Returning ${uniqueResults.length} unique results from sources: ${searchSources.join(', ')}`);
     
     // Enhanced response format
     return NextResponse.json({
       success: true,
       data: {
-        premiumResults: limitedResults,
+        premiumResults: uniqueResults, // Return ALL results for frontend pagination
         totalFound: uniqueResults.length,
         searchSources,
         searchMetadata: {
@@ -360,7 +358,7 @@ export async function POST(req: Request) {
             niches: searchParams.niches
           }
         },
-        recommendations: generateRecommendations(limitedResults, searchParams),
+        recommendations: generateRecommendations(uniqueResults, searchParams),
         searchStrategy: searchSources.length > 1 ? 
           'hybrid_search' : 
           searchSources.includes('Base de datos verificada') ? 'vetted_only' : 'realtime_only'

@@ -381,12 +381,12 @@ export default function Home() {
                       </p>
                     </div>
                     
-                    {/* Show first 20 results */}
+                    {/* Show first 20 results by default */}
                     <InfluencerResults 
                       results={showAllResults ? searchResults.premiumResults : searchResults.premiumResults.slice(0, 20)}
                     />
                     
-                    {/* Show More Button - only if there are more than 20 results */}
+                    {/* Show More Button - show when there are more than 20 results */}
                     {searchResults.premiumResults.length > 20 && !showAllResults && (
                       <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 text-center border-2 border-dashed border-blue-200">
                         <div className="flex flex-col items-center space-y-4">
@@ -398,7 +398,7 @@ export default function Home() {
                               {searchResults.premiumResults.length - 20} Influencers Adicionales Encontrados
                             </h3>
                             <p className="text-gray-600 text-sm max-w-md mx-auto">
-                              Mostrando los primeros 20 resultados. Hay {searchResults.premiumResults.length - 20} influencers más disponibles.
+                              Mostrando los primeros 20 resultados. Hay {searchResults.premiumResults.length - 20} influencers más que coinciden perfectamente con tu búsqueda.
                             </p>
                           </div>
                           <button
