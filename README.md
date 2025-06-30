@@ -1,6 +1,6 @@
 # 🎯 LAYAI - Plataforma de Marketing de Influencers con IA
 
-> **Versión 2.8.0** - Plataforma completa de marketing de influencers con localización española, filtrado avanzado de marcas, y acceso completo a resultados de búsqueda.
+> **Versión 2.9.0** - Plataforma completa de marketing de influencers con seguimiento avanzado de progreso, localización española, filtrado de marcas, y acceso completo a resultados.
 
 Una plataforma de marketing de influencers impulsada por IA que combina búsqueda en tiempo real, verificación automatizada de perfiles, y generación inteligente de propuestas de campaña. Diseñada específicamente para el mercado español con detección avanzada de ubicación y estimación de edad.
 
@@ -22,6 +22,8 @@ Una plataforma de marketing de influencers impulsada por IA que combina búsqued
 
 ### 🔍 **Búsqueda y Verificación Avanzada**
 - **Búsqueda Híbrida**: Combina base de datos verificada + búsqueda en tiempo real
+- **Seguimiento de Progreso en Tiempo Real**: Barra de progreso inteligente con 7 etapas detalladas
+- **Estimación de Tiempo**: Feedback visual durante búsquedas de 1-2 minutos
 - **Verificación de Perfiles**: Sistema de verificación de 4 niveles
 - **Compatibilidad de Marca**: Análisis IA para alineación con marcas
 - **Métricas en Tiempo Real**: Seguidores, engagement, y datos de audiencia actualizados
@@ -182,9 +184,12 @@ Resultados Ordenados → Paginación → Selección → Propuesta
 - **Cuentas de Marca Filtradas**: 15-25% de perfiles descubiertos
 - **Acceso a Resultados**: 100% transparencia, sin limitaciones
 
-## 🔄 Actualizaciones Recientes (v2.8.0)
+## 🔄 Actualizaciones Recientes (v2.9.0)
 
 ### ✅ **Completado**
+- ✅ **NUEVO**: Barra de progreso inteligente para búsquedas de influencers
+- ✅ **NUEVO**: Seguimiento en tiempo real con 7 etapas detalladas de búsqueda
+- ✅ **NUEVO**: Estimación de tiempo y feedback visual durante procesos largos
 - ✅ Filtrado avanzado de cuentas de marca (Nike, IKEA, Primark, etc.)
 - ✅ Localización española completa en toda la plataforma
 - ✅ Paginación inteligente para acceso completo a resultados
@@ -226,4 +231,4 @@ Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
 
 ---
 
-> **LAYAI v2.8.0** - La plataforma de marketing de influencers más avanzada para el mercado español. 🇪🇸 
+> **LAYAI v2.9.0** - La plataforma de marketing de influencers más avanzada para el mercado español con seguimiento de progreso en tiempo real. 🇪🇸 

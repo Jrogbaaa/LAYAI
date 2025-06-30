@@ -5,6 +5,61 @@ All notable changes to LAYAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - 2025-01-18
+
+### 🔄 Added - Advanced Search Progress Tracking
+- **Intelligent Progress Bar**: Real-time progress updates for influencer searches
+  - **Multi-Stage Progress**: 7 distinct stages reflecting actual search process
+  - **Realistic Timing**: Progress bars calibrated for 1-2 minute search duration
+  - **Stage-Specific Details**: Clear explanations of each search phase
+    - Procesando consulta (Processing query) - 15%
+    - Buscando en base de datos (Database search) - 25%
+    - Búsqueda en tiempo real (Real-time search) - 60%
+    - Extrayendo perfiles (Profile extraction) - 80%
+    - Verificando perfiles (Profile verification) - 90%
+    - Analizando compatibilidad (Compatibility analysis) - 95%
+    - Finalizando (Finalizing) - 98%
+- **Enhanced Visual Design**: Improved progress bar aesthetics
+  - **Gradient Progress Bar**: Blue-to-indigo gradient with animated shine effect
+  - **Completion Animation**: Green gradient with checkmark on completion
+  - **Time Estimation**: Dynamic time remaining estimates
+  - **Search Icon**: Visual indicator with 🔍 icon
+  - **Smooth Transitions**: 500ms duration transitions for fluid experience
+
+### 🎨 Enhanced - User Experience During Search
+- **Search Query Detection**: Automatically detects influencer search queries
+  - Keywords: "encuentra", "busca", "find", "search", "influencer"
+  - Shows progress bar only for search queries
+  - Regular chat messages use simple "Pensando..." indicator
+- **Detailed Progress Feedback**: Users understand exactly what's happening
+  - "Extrayendo parámetros de búsqueda con IA" (Extracting search parameters with AI)
+  - "Consultando influencers verificados" (Consulting verified influencers)
+  - "Descubriendo nuevos perfiles en redes sociales" (Discovering new social media profiles)
+  - "Scrapeando datos de influencers encontrados" (Scraping found influencer data)
+  - "Validando métricas y filtrando marcas" (Validating metrics and filtering brands)
+  - "Calculando puntuaciones de marca" (Calculating brand scores)
+- **Completion Celebration**: Success animation with checkmark and completion message
+
+### 🔧 Technical Improvements
+- **Smart Progress Simulation**: Algorithm that simulates realistic search progression
+  - Stage-based progression with appropriate timing
+  - Incremental updates based on actual search duration
+  - Automatic stage transitions with smooth animations
+- **State Management**: Proper progress state handling
+  - Progress state cleanup on completion
+  - Error handling with progress reset
+  - Memory efficient interval management
+- **Responsive Design**: Progress bar adapts to different screen sizes
+  - Maximum width constraints for readability
+  - Proper spacing and typography
+  - Mobile-optimized layout
+
+### 📊 User Feedback Improvements
+- **Clear Expectations**: Users know search will take 1-2 minutes
+- **Engagement During Wait**: Interactive progress keeps users engaged
+- **Reduced Abandonment**: Visual feedback prevents users from leaving during search
+- **Professional Feel**: Polished progress tracking increases user confidence
+
 ## [2.8.0] - 2025-01-18
 
 ### 🏢 Added - Advanced Brand Account Filtering
