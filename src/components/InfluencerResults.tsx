@@ -46,6 +46,56 @@ interface MatchResultWithVerification extends MatchResult {
 }
 
 export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results }) => {
+  const isValidInstagramHandle = (handle: string): boolean => {
+    if (!handle || typeof handle !== 'string') return false;
+    
+    // Check for obvious invalid patterns
+    const invalidPatterns = [
+      /techblockproject/i,
+      /gmail\.com/i,
+      /yahoo\.com/i,
+      /hotmail\.com/i,
+      /[./]/,
+      /undefined/i,
+      /null/i,
+      /error/i,
+      /test/i,
+      /example/i,
+      /sample/i,
+      /^[a-z]{1,2}$/,
+      /^[\d]+$/,
+      /\s/,
+      /[<>]/,
+      /www\./i,
+      /http/i,
+      /\.com/i,
+      /\.net/i,
+      /\.org/i,
+      // Common invalid usernames from search results
+      /reserved/i,
+      /global_mrm/i,
+      /worldarchitecturedesign/i,
+      /studiomcgee/i,
+      /westwingcom/i,
+      /pullandbear/i,
+      /patrikssontalent/i
+    ];
+    
+    // Must be reasonable length and contain valid characters
+    const isValidLength = handle.length > 2 && handle.length < 30;
+    const hasValidChars = /^[a-zA-Z0-9._]+$/.test(handle);
+    const noConsecutiveDots = !handle.includes('..');
+    const notStartsWithDot = !handle.startsWith('.');
+    const notEndsWithDot = !handle.endsWith('.');
+    
+    return !invalidPatterns.some(pattern => pattern.test(handle)) && 
+           isValidLength &&
+           hasValidChars &&
+           noConsecutiveDots &&
+           notStartsWithDot &&
+           notEndsWithDot;
+  };
+
   const getProfileLink = (handle: string, name: string): string => {
     // Clean the handle and create Instagram URL
     const cleanHandle = handle?.replace('@', '') || '';
@@ -73,18 +123,18 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
   };
 
   const getMatchScoreColor = (score: number): string => {
-    if (score >= 0.8) return 'text-green-600 bg-green-100';
-    if (score >= 0.6) return 'text-yellow-600 bg-yellow-100';
-    return 'text-red-600 bg-red-100';
+    if (score >= 0.8) return 'text-green-700 bg-green-100';
+    if (score >= 0.6) return 'text-yellow-700 bg-yellow-100';
+    return 'text-red-700 bg-red-100';
   };
 
   const getCostLevelColor = (costLevel: string): string => {
     switch (costLevel.toLowerCase()) {
-      case 'budget': return 'text-green-600 bg-green-100';
-      case 'mid-range': return 'text-blue-600 bg-blue-100';
-      case 'premium': return 'text-purple-600 bg-purple-100';
-      case 'celebrity': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'budget': return 'text-green-700 bg-green-100';
+      case 'mid-range': return 'text-blue-700 bg-blue-100';
+      case 'premium': return 'text-purple-700 bg-purple-100';
+      case 'celebrity': return 'text-red-700 bg-red-100';
+      default: return 'text-gray-700 bg-gray-100';
     }
   };
 
@@ -103,191 +153,128 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
         </p>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-3">
         {results.map((result, index) => (
-          <div key={`${result.influencer.handle}-${index}`} data-testid="influencer-card" className="bg-white rounded-lg shadow-md p-4">
-            <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-4">
-              {/* Profile Section */}
-              <div className="flex-shrink-0 mb-4 lg:mb-0">
+          <div key={`${result.influencer.handle}-${index}`} data-testid="influencer-card" className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 p-4">
+            <div className="flex items-start space-x-4">
+              {/* Profile Section - Compact */}
+              <div className="flex-shrink-0">
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
                     {result.influencer.name.charAt(0)}
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900">
+                    <h3 className="text-base font-bold text-gray-900 leading-tight">
                       {result.influencer.name || 'Unknown Name'}
                     </h3>
                     <p className="text-sm text-gray-600">@{result.influencer.handle || 'unknown'}</p>
                     <div className="flex items-center space-x-2 mt-1">
-                      <span className="text-xs font-medium text-blue-600">
-                        #{index + 1} Match
-                      </span>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getMatchScoreColor(result.matchScore)}`}>
-                        {(result.matchScore * 100).toFixed(0)}%
+                        #{index + 1} • {(result.matchScore * 100).toFixed(0)}%
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Details Section */}
+              {/* Stats Grid - Horizontal Layout */}
               <div className="flex-grow">
-                <div className="grid md:grid-cols-2 gap-4">
-                  {/* Left Column */}
-                  <div className="space-y-3">
-                    {/* Platform & Stats */}
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">Plataforma y Alcance</h4>
-                      <div className="space-y-1">
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 text-sm">Plataforma:</span>
-                          <span className="font-medium platform-badge text-sm">{result.influencer.platform || 'Unknown'}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 text-sm">Seguidores:</span>
-                          <span className="font-medium follower-count text-sm">{formatNumber(result.influencer.followerCount)}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 text-sm">Engagement:</span>
-                          <span className="font-medium engagement-rate text-sm">{((result.influencer.engagementRate || 0) * 100).toFixed(1)}%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 text-sm">Alcance Est.:</span>
-                          <span className="font-medium text-green-600 text-sm">{formatNumber(result.potentialReach)}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Demographics */}
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">Demografía</h4>
-                      <div className="space-y-1">
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 text-sm">Género:</span>
-                          <span className="font-medium text-sm">{result.influencer.gender || 'No especificado'}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 text-sm">Edad:</span>
-                          <span className="font-medium text-sm">{result.influencer.ageRange || 'No especificado'}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 text-sm">Ubicación:</span>
-                          <span className="font-medium text-sm">{result.influencer.location || 'No especificado'}</span>
-                        </div>
-                      </div>
-                    </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-3">
+                  {/* Followers */}
+                  <div className="text-center">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide">Seguidores</p>
+                    <p className="text-lg font-bold text-gray-900">{formatNumber(result.influencer.followerCount)}</p>
                   </div>
-
-                  {/* Right Column */}
-                  <div className="space-y-3">
-                    {/* Pricing */}
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">Precios</h4>
-                      <div className="space-y-1">
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 text-sm">Tarifa Promedio:</span>
-                          <span className="font-bold text-base">${(result.estimatedCost || 0).toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 text-sm">Nivel de Costo:</span>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCostLevelColor(result.influencer.costLevel || 'budget')}`}>
-                            {result.influencer.costLevel || 'Budget'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Content Niches */}
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">Nichos de Contenido</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {(result.influencer.niche || []).map((niche, nicheIndex) => (
-                          <span 
-                            key={`${niche}-${nicheIndex}`}
-                            className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
-                          >
-                            {niche}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Past Collaborations */}
-                    {(result.influencer.pastCollaborations || []).length > 0 && (
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-2 text-sm">Experiencia</h4>
-                        <div className="space-y-1">
-                          <div className="flex justify-between">
-                            <span className="text-gray-600 text-sm">Colaboraciones:</span>
-                            <span className="font-medium text-sm">{(result.influencer.pastCollaborations || []).length}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600 text-sm">Calificación:</span>
-                            <div className="flex items-center">
-                              {[...Array(5)].map((_, i) => (
-                                <svg 
-                                  key={i}
-                                  className={`w-4 h-4 ${
-                                    i < Math.round((result.influencer.pastCollaborations || []).reduce((sum, collab) => sum + (collab.rating || 0), 0) / Math.max((result.influencer.pastCollaborations || []).length, 1))
-                                      ? 'text-yellow-400 fill-current'
-                                      : 'text-gray-300'
-                                  }`}
-                                  viewBox="0 0 20 20"
-                                >
-                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                  
+                  {/* Engagement */}
+                  <div className="text-center">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide">Engagement</p>
+                    <p className="text-lg font-bold text-green-600">{((result.influencer.engagementRate || 0) * 100).toFixed(1)}%</p>
+                  </div>
+                  
+                  {/* Cost */}
+                  <div className="text-center">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide">Tarifa Est.</p>
+                    <p className="text-lg font-bold text-blue-600">${(result.estimatedCost || 0).toLocaleString()}</p>
+                  </div>
+                  
+                  {/* Platform */}
+                  <div className="text-center">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide">Plataforma</p>
+                    <p className="text-sm font-medium text-gray-700">{result.influencer.platform || 'Unknown'}</p>
                   </div>
                 </div>
 
-                {/* Match Reasons */}
-                <div className="mt-4 p-3 bg-green-50 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 mb-2 text-sm">Por Qué Funciona Esta Coincidencia</h4>
-                  <ul className="space-y-1">
-                    {(result.matchReasons || []).map((reason, reasonIndex) => (
-                      <li key={`${reason}-${reasonIndex}`} className="text-green-700 text-xs flex items-center">
-                        <svg className="w-3 h-3 mr-2 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                        {reason}
-                      </li>
-                    ))}
-                  </ul>
+                {/* Quick Info */}
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  {/* Niches */}
+                  {(result.influencer.niche || []).slice(0, 2).map((niche, nicheIndex) => (
+                    <span 
+                      key={`${niche}-${nicheIndex}`}
+                      className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium"
+                    >
+                      {niche}
+                    </span>
+                  ))}
+                  
+                  {/* Location */}
+                  {result.influencer.location && (
+                    <span className="text-xs text-gray-600 flex items-center">
+                      📍 {result.influencer.location}
+                    </span>
+                  )}
+                  
+                  {/* Cost Level */}
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCostLevelColor(result.influencer.costLevel || 'budget')}`}>
+                    {result.influencer.costLevel || 'Budget'}
+                  </span>
                 </div>
 
-                
+                {/* Top Match Reason */}
+                {(result.matchReasons || []).length > 0 && (
+                  <div className="mb-3 p-2 bg-green-50 rounded-md">
+                    <p className="text-xs text-green-700 flex items-center">
+                      <svg className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      {result.matchReasons[0]}
+                    </p>
+                  </div>
+                )}
 
-                {/* Action Buttons */}
-                <div className="mt-4 flex flex-wrap gap-3">
-                  <div className="flex gap-2">
+                {/* Action Buttons - Enhanced */}
+                <div className="flex flex-wrap gap-2">
+                  {isValidInstagramHandle(result.influencer.handle) ? (
                     <a
                       href={getProfileLink(result.influencer.handle, result.influencer.name)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-blue-600 text-white px-3 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors text-sm"
+                      className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-3 py-2 rounded-md font-medium hover:from-pink-600 hover:to-purple-700 transition-all text-sm flex items-center shadow-sm"
                       title="Ver perfil de Instagram"
                     >
                       📸 Instagram
                     </a>
-                    <a
-                      href={getGoogleSearchLink(result.influencer.handle, result.influencer.name)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-gray-600 text-white px-3 py-2 rounded-md font-medium hover:bg-gray-700 transition-colors text-sm"
-                      title="Buscar en Google"
-                    >
-                      🔍 Buscar
-                    </a>
-                  </div>
-                  <button className="bg-green-600 text-white px-4 py-2 rounded-md font-medium hover:bg-green-700 transition-colors text-sm">
+                  ) : (
+                    <span className="bg-gray-300 text-gray-500 px-3 py-2 rounded-md text-sm cursor-not-allowed flex items-center">
+                      ⚠️ Perfil No Válido
+                    </span>
+                  )}
+                  
+                  <a
+                    href={getGoogleSearchLink(result.influencer.handle, result.influencer.name)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gray-600 text-white px-3 py-2 rounded-md font-medium hover:bg-gray-700 transition-colors text-sm flex items-center shadow-sm"
+                    title="Buscar en Google"
+                  >
+                    🔍 Buscar
+                  </a>
+                  
+                  <button className="bg-green-600 text-white px-3 py-2 rounded-md font-medium hover:bg-green-700 transition-colors text-sm shadow-sm">
                     Contactar
                   </button>
-                  <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md font-medium hover:bg-gray-50 transition-colors text-sm">
+                  
+                  <button className="border border-gray-300 text-gray-700 px-3 py-2 rounded-md font-medium hover:bg-gray-50 transition-colors text-sm">
                     Guardar
                   </button>
                 </div>

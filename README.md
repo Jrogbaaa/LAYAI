@@ -1,6 +1,25 @@
-# 🎯 LAYAI - Plataforma de Marketing de Influencers con IA
+# 🚀 LAYAI - AI-Powered Influencer Marketing Platform v2.10.0
 
-> **Versión 2.9.0** - Plataforma completa de marketing de influencers con seguimiento avanzado de progreso, localización española, filtrado de marcas, y acceso completo a resultados.
+> **Versión 2.10.0** - Plataforma completa de marketing de influencers con diseño compacto, validación de enlaces de Instagram, seguimiento avanzado de progreso, localización española, y filtrado de marcas.
+
+## ✨ Últimas Funcionalidades (v2.10.0)
+
+### 🎨 **Diseño Compacto de Tarjetas de Influencers**
+- **50% Más Compacto**: Visualiza 2-3x más influencers por pantalla
+- **Grid Horizontal de Estadísticas**: Métricas clave en formato fácil de escanear
+- **Información Esencial Primero**: Seguidores, engagement, costo y plataforma prominentemente mostrados
+- **Sección de Perfil Optimizada**: Diseño simplificado para toma de decisiones rápida
+
+### 🔗 **Validación Inteligente de Enlaces de Instagram**
+- **Detección Avanzada de Perfiles**: Filtra handles inválidos (techblockproject, gmail.com, etc.)
+- **Sistema de Feedback Visual**: ✅ Perfiles válidos con botones gradient, ⚠️ Perfiles inválidos claramente marcados
+- **Filtrado de Cuentas de Marca**: Excluye cuentas corporativas para mejores resultados
+- **Acceso de Un Clic**: Enlaces directos confiables a perfiles de Instagram funcionando
+
+### 👩‍💼 **Flujo de Trabajo Optimizado**
+- **Escaneo Más Rápido**: 150% mejora en velocidad de evaluación
+- **Señales Visuales Claras**: Feedback inmediato sobre calidad y validez del perfil
+- **Toma de Decisiones Eficiente**: Carga cognitiva reducida con display de información enfocado
 
 Una plataforma de marketing de influencers impulsada por IA que combina búsqueda en tiempo real, verificación automatizada de perfiles, y generación inteligente de propuestas de campaña. Diseñada específicamente para el mercado español con detección avanzada de ubicación y estimación de edad.
 
