@@ -28,6 +28,13 @@ export interface ScrapedInfluencer {
   website?: string;
   collaborationRate?: number;
   brandCompatibilityScore?: number;
+  // Validation status from backend processing
+  validationStatus?: {
+    isValidProfile: boolean;
+    isBrandAccount: boolean;
+    validationReason?: string;
+    apifyVerified: boolean;
+  };
 }
 
 export interface ApifySearchParams {
@@ -1317,8 +1324,25 @@ function transformProfileResults(items: any[], platform: string, params: ApifySe
       const transformed = transformProfileToInfluencer(item, platform);
       if (!transformed) return null;
 
-      // Filter out brand accounts
-      if (isBrandAccount(transformed.username, transformed.fullName, transformed.biography, transformed.category)) {
+      // Check validation status
+      const profileUrl = `https://${platform.toLowerCase() === 'instagram' ? 'instagram' : 'tiktok'}.com/${transformed.username}`;
+      const isBrand = isBrandAccount(transformed.username, transformed.fullName, transformed.biography, transformed.category);
+      const isInvalidProfile = isKnownInvalidProfile(transformed.username, profileUrl);
+      const urlValidation = validateProfileUrl(profileUrl, platform);
+
+      // Add validation status to the profile
+      transformed.validationStatus = {
+        isValidProfile: !isInvalidProfile && urlValidation.isValid,
+        isBrandAccount: isBrand,
+        validationReason: isInvalidProfile ? 'Profile detectado como inválido' : 
+                         isBrand ? 'Cuenta de marca detectada' :
+                         !urlValidation.isValid ? urlValidation.reason || 'Formato de URL inválido' :
+                         undefined,
+        apifyVerified: true
+      };
+
+      // Filter out brand accounts (but keep them for logging)
+      if (isBrand) {
         console.log(`🏢 Filtered out brand account: ${transformed.username}`);
         brandAccountsFiltered++;
         return null;

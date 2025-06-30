@@ -18,6 +18,13 @@ export interface Influencer {
   contactInfo: ContactInfo;
   isActive: boolean;
   lastUpdated: Date;
+  // Validation status from Apify backend
+  validationStatus?: {
+    isValidProfile: boolean;
+    isBrandAccount: boolean;
+    validationReason?: string;
+    apifyVerified: boolean;
+  };
 }
 
 export interface BrandCollaboration {

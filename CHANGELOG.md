@@ -5,6 +5,44 @@ All notable changes to LAYAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.1] - 2025-01-18
+
+### 🔗 Enhanced - Backend Validation Integration
+- **Apify-Powered Validation**: Frontend now uses Apify's comprehensive validation instead of basic pattern matching
+  - **Brand Account Detection**: Uses sophisticated multi-layer analysis (username, biography, category)
+  - **Invalid Profile Detection**: Leverages Apify's URL structure validation and known problematic patterns
+  - **Validation Reasons**: Detailed feedback on why profiles are invalid (brand account, invalid format, etc.)
+  - **Synchronized Data**: Frontend validation status directly from backend processing for 100% accuracy
+- **Enhanced Validation Status**: New `validationStatus` field in profile data
+  - **isValidProfile**: Boolean indicating if profile passes all validation checks
+  - **isBrandAccount**: Specific flag for brand/corporate accounts
+  - **validationReason**: Human-readable explanation for invalid profiles
+  - **apifyVerified**: Confirmation that profile was processed by Apify
+
+### 🎨 Fixed - Button Alignment Issues
+- **Consistent Button Layout**: All action buttons now align perfectly across all search results
+  - **Fixed Flexbox Behavior**: Added `items-center` and `min-w-0` for consistent alignment
+  - **Uniform Spacing**: Equal gaps between buttons regardless of content length
+  - **Professional Appearance**: Eliminated visual inconsistencies in button positioning
+  - **Responsive Design**: Proper alignment maintained across all screen sizes
+- **Enhanced Button Styling**: Improved visual consistency
+  - **Tooltip Support**: Invalid profile button shows validation reason on hover
+  - **Consistent Sizing**: All buttons maintain same height and padding
+  - **Better Visual Hierarchy**: Clear distinction between valid/invalid profile states
+
+### 🔧 Technical Improvements
+- **Type Safety**: Enhanced TypeScript interfaces for validation status
+- **Data Flow Optimization**: Validation data flows seamlessly from Apify → Backend → Frontend
+- **Performance**: Reduced frontend validation overhead by leveraging backend processing
+- **Error Handling**: Graceful fallback to frontend validation if backend data unavailable
+- **Code Consistency**: Unified validation logic across platform
+
+### 👩‍💼 User Experience Enhancements
+- **Accurate Profile Status**: Users see exactly what Apify determined about each profile
+- **Better Visual Feedback**: Clear indication of why profiles are invalid with hover tooltips
+- **Professional Layout**: Clean, aligned button layout improves scanning efficiency
+- **Trust Indicators**: Users can trust that invalid profiles are properly filtered by backend
+
 ## [2.10.0] - 2025-01-18
 
 ### 🎨 Added - Compact Influencer Card Design
