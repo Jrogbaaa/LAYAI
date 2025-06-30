@@ -44,17 +44,22 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { action, campaign, campaignId, field, value } = body;
+    const { action, campaign, campaignId, field, value, savedSearch, historyEntry, savedInfluencer } = body;
 
     const campaigns = await loadCampaigns();
 
     switch (action) {
       case 'create':
+      case 'create_enhanced':
         const newCampaign = {
           id: `campaign_${Date.now()}`,
           ...campaign,
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
+          // Enhanced campaign fields with defaults
+          savedSearches: campaign.savedSearches || [],
+          savedInfluencers: campaign.savedInfluencers || [],
+          searchHistory: campaign.searchHistory || []
         };
         campaigns.push(newCampaign);
         await saveCampaigns(campaigns);
@@ -66,13 +71,50 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ success: false, error: 'Campaign not found' }, { status: 404 });
         }
         
+        // 🔒 Preserve critical fields when updating
+        const originalCampaign = campaigns[campaignIndex];
         campaigns[campaignIndex] = {
-          ...campaigns[campaignIndex],
+          ...originalCampaign,
           [field]: value,
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
+          // 📅 Ensure dates are preserved unless explicitly being updated
+          startDate: field === 'startDate' ? value : originalCampaign.startDate,
+          endDate: field === 'endDate' ? value : originalCampaign.endDate,
+          createdAt: originalCampaign.createdAt, // Never overwrite creation date
         };
         await saveCampaigns(campaigns);
         return NextResponse.json({ success: true, campaign: campaigns[campaignIndex] });
+
+      case 'add_search':
+        const searchCampaignIndex = campaigns.findIndex((c: any) => c.id === campaignId);
+        if (searchCampaignIndex === -1) {
+          return NextResponse.json({ success: false, error: 'Campaign not found' }, { status: 404 });
+        }
+        
+        // Add search to existing campaign
+        campaigns[searchCampaignIndex].savedSearches = campaigns[searchCampaignIndex].savedSearches || [];
+        campaigns[searchCampaignIndex].searchHistory = campaigns[searchCampaignIndex].searchHistory || [];
+        
+        campaigns[searchCampaignIndex].savedSearches.push(savedSearch);
+        campaigns[searchCampaignIndex].searchHistory.push(historyEntry);
+        campaigns[searchCampaignIndex].updatedAt = new Date().toISOString();
+        
+        await saveCampaigns(campaigns);
+        return NextResponse.json({ success: true, campaign: campaigns[searchCampaignIndex] });
+
+      case 'add_influencer':
+        const influencerCampaignIndex = campaigns.findIndex((c: any) => c.id === campaignId);
+        if (influencerCampaignIndex === -1) {
+          return NextResponse.json({ success: false, error: 'Campaign not found' }, { status: 404 });
+        }
+        
+        // Add influencer to existing campaign
+        campaigns[influencerCampaignIndex].savedInfluencers = campaigns[influencerCampaignIndex].savedInfluencers || [];
+        campaigns[influencerCampaignIndex].savedInfluencers.push(savedInfluencer);
+        campaigns[influencerCampaignIndex].updatedAt = new Date().toISOString();
+        
+        await saveCampaigns(campaigns);
+        return NextResponse.json({ success: true, campaign: campaigns[influencerCampaignIndex] });
 
       case 'delete':
         const filteredCampaigns = campaigns.filter((c: any) => c.id !== campaignId);

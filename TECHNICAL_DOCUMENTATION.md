@@ -21,7 +21,33 @@ LAYAI is built on a modern Next.js 15 architecture with TypeScript, utilizing th
 - **APIs**: Apify (Instagram), Serply (Web Search)
 - **Data**: JSON-based storage with RESTful API endpoints
 
-### Recent Architecture Improvements (v2.3.1)
+### Recent Architecture Improvements (v2.10.3)
+
+#### Streamlined PDF Workflow
+- **Component Consolidation**: Removed separate PDF upload components (ProposalUpload.tsx, EnhancedSearchInterface.tsx, ProposalDrivenSearch.tsx)
+- **Unified Experience**: All PDF functionality integrated into Chatbot component
+- **Workflow Simplification**: PDF Upload → Analysis → Additional Input → Search (all in chat)
+- **State Management**: Enhanced PDF analysis state with better user feedback
+
+#### Enhanced Search Completion
+- **Auto-scroll Implementation**: Smooth navigation to results after search completion  
+- **Extended Feedback**: Increased completion message visibility from 1.5s to 3s
+- **Celebratory UX**: Enhanced completion messaging with emojis and result counts
+- **DOM Interaction**: Auto-scroll using `document.querySelector` and `scrollIntoView`
+
+#### Error Resolution & Stability
+- **ProposalGenerator Fixes**: Added comprehensive null safety to prevent `toLocaleString()` errors
+- **Type Safety**: Enhanced with `|| 0` fallbacks for all numeric operations
+- **CSV Export Stability**: Protected all numeric fields in export functionality
+- **Graceful Degradation**: Shows "0" instead of crashing on missing data
+
+#### UI Alignment & Consistency
+- **Card Redesign**: Complete influencer card restructure for perfect alignment
+- **Button Removal**: Eliminated non-functional Guardar/Contactar buttons
+- **Visual Hierarchy**: Organized card sections (Header → Stats → Actions)
+- **Responsive Alignment**: Consistent layout across all screen sizes
+
+### Legacy Architecture Improvements (v2.3.1)
 - **Performance Optimization**: Added caching and memoization to prevent infinite loops
 - **Search Results Display**: Enhanced conditional rendering for better UX
 - **Component Stability**: Improved ProposalGenerator with proper state management

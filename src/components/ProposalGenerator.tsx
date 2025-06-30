@@ -252,7 +252,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
     if (!enhancedBio || enhancedBio.length < 10) {
       enhancedBio = `${fullName || username} is a content creator`;
       if (location) enhancedBio += ` based in ${location}`;
-      enhancedBio += ` with ${followers.toLocaleString()} followers`;
+      enhancedBio += ` with ${(followers || 0).toLocaleString()} followers`;
       if (postsCount > 0) enhancedBio += ` and ${postsCount} posts`;
       enhancedBio += '.';
     }
@@ -714,7 +714,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
         // Generate contextual match reasons
         const reasons = profile.matchReasons || [
           `Expertise aligns perfectly with ${campaignData.brandName || 'brand'}`,
-          `Verified data with ${followerCount.toLocaleString()} authentic followers`,
+          `Verified data with ${(followerCount || 0).toLocaleString()} authentic followers`,
           `Strong engagement rate of ${(engagementRate * 100).toFixed(1)}%`
         ].filter(Boolean);
 
@@ -932,9 +932,9 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
       // Data rows
       ...talents.map(talent => {
         const engagementRate = (talent.engagementRate * 100).toFixed(1);
-        const storyImpressions = talent.metrics.storyImpressions.toLocaleString();
-        const reelImpressions = talent.metrics.reelImpressions.toLocaleString();
-        const totalImpressions = (talent.metrics.storyImpressions + talent.metrics.reelImpressions).toLocaleString();
+        const storyImpressions = (talent.metrics.storyImpressions || 0).toLocaleString();
+        const reelImpressions = (talent.metrics.reelImpressions || 0).toLocaleString();
+        const totalImpressions = ((talent.metrics.storyImpressions || 0) + (talent.metrics.reelImpressions || 0)).toLocaleString();
         const profileUrl = `https://www.instagram.com/${talent.handle.replace('@', '')}`;
         const territoryBasedOnLocation = talent.name.includes('Spanish') || talent.name.includes('Madrid') || talent.name.includes('Barcelona') ? 'España' : 'Internacional';
         
@@ -951,7 +951,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
           territoryBasedOnLocation, // Territorio
           '', // Comentarios (empty for now)
           profileUrl, // URL
-          talent.followers.toLocaleString(), // Seguidores
+          (talent.followers || 0).toLocaleString(), // Seguidores
           talent.biography, // Biografía
           talent.whyThisInfluencer, // Reason Why
           talent.commitment, // Commitment
@@ -963,8 +963,8 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
           defaultDemographics.gender, // Sexo
           defaultDemographics.age, // % Edad
           totalImpressions, // Impresiones totales estimadas
-          talent.estimatedFee.toLocaleString(), // Fee (euros)
-          (talent.estimatedFee * 0.99).toFixed(0) // Fee sin paid media (euros) - 1% discount
+          (talent.estimatedFee || 0).toLocaleString(), // Fee (euros)
+          ((talent.estimatedFee || 0) * 0.99).toFixed(0) // Fee sin paid media (euros) - 1% discount
         ];
       })
     ];
@@ -1211,10 +1211,10 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                           <p className="text-gray-600 font-medium">@{result.influencer.handle}</p>
                           <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
                             <span className="bg-gray-100 px-3 py-1 rounded-full">
-                              {result.influencer.followerCount.toLocaleString()} seguidores
+                              {(result.influencer.followerCount || 0).toLocaleString()} seguidores
                             </span>
                             <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-                              {(result.influencer.engagementRate * 100).toFixed(1)}% ER
+                              {((result.influencer.engagementRate || 0) * 100).toFixed(1)}% ER
                             </span>
                             <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
                               {result.influencer.platform}
@@ -1223,7 +1223,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                         </div>
                         <div className="text-right">
                           <div className="text-2xl font-bold text-green-600">
-                            €{result.influencer.averageRate.toLocaleString()}
+                            €{(result.influencer.averageRate || 0).toLocaleString()}
                           </div>
                           <div className="text-sm text-gray-500">Tarifa estimada</div>
                         </div>

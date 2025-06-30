@@ -1,22 +1,5 @@
 [
   {
-    "id": "campaign_1750080910003",
-    "name": "IKEA",
-    "owner": "Clara",
-    "status": "Planning",
-    "priority": "Critical",
-    "startDate": "2025-06-16",
-    "endDate": "2025-06-30",
-    "budget": 20000,
-    "influencerCount": 3,
-    "platform": [
-      "Instagram"
-    ],
-    "notes": "Close deals\n",
-    "createdAt": "2025-06-16T13:35:10.004Z",
-    "updatedAt": "2025-06-26T15:06:32.305Z"
-  },
-  {
     "id": "campaign_1750950335906",
     "name": "Nike",
     "owner": "Clara",
@@ -29,8 +12,4197 @@
     "platform": [
       "Instagram"
     ],
-    "notes": "",
+    "notes": "heyeyehey",
     "createdAt": "2025-06-26T15:05:35.906Z",
-    "updatedAt": "2025-06-26T15:05:58.444Z"
+    "updatedAt": "2025-06-30T09:33:17.813Z",
+    "customTimeline": "Junio 23"
+  },
+  {
+    "id": "campaign_1751277638669",
+    "name": "IKEA Campaign",
+    "brandName": "IKEA",
+    "owner": "Clara",
+    "status": "Planning",
+    "priority": "Medium",
+    "startDate": "2025-06-30",
+    "endDate": "2025-07-30",
+    "budget": 25000,
+    "platform": [
+      "Instagram"
+    ],
+    "notes": "Auto-created from search: \"find me influencers for ikea from spain men only \"",
+    "savedSearches": [
+      {
+        "id": "z5480ye2zmcixhm8q",
+        "query": "find me influencers for ikea from spain men only ",
+        "brandName": "IKEA",
+        "timestamp": "2025-06-30T10:00:38.618Z",
+        "resultsCount": 57,
+        "parameters": {
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "niches": [
+            "home"
+          ],
+          "minFollowers": 1000,
+          "maxFollowers": 1000000,
+          "location": "men",
+          "verified": false,
+          "maxResults": 20,
+          "gender": "male",
+          "strictLocationMatch": true,
+          "userQuery": "find me influencers for ikea from spain men only "
+        },
+        "influencerIds": [
+          "rudyruymanoficial",
+          "techblockproject",
+          "susi_dg",
+          "luiski_26",
+          "misticahinojosa",
+          "anuel_2blea_g4",
+          "justalpatri",
+          "cachoo01",
+          "bienvenidoaguado",
+          "leroymerlines",
+          "isabelmarind",
+          "wferreira86",
+          "loletabyloleta",
+          "charly_blockchain",
+          "los40spain",
+          "julendlg",
+          "cocinaparatodos",
+          "jesuscrazyofficial",
+          "bartabacmode",
+          "lookandchic",
+          "ewkharis_ofcc",
+          "c.ronaldo500_",
+          "harpersbazaares",
+          "planetadelibros",
+          "judiithmr",
+          "galahaduke",
+          "mhmadhouse",
+          "acbcom",
+          "meksi_doha",
+          "edwinvergara_",
+          "irenejunquera",
+          "miquelantoja",
+          "kiarabrunett",
+          "angelvaargass",
+          "bygemalopez",
+          "joseriveraprod",
+          "nattjim",
+          "missassi_",
+          "davidkoch8",
+          "bentaylortech",
+          "pashagrozdov",
+          "lucy",
+          "andrewdwheatcroft",
+          "goanddogood",
+          "nanukuhouse",
+          "hryspn",
+          "lifeof2men",
+          "casatierra",
+          "mildactivity",
+          "stephcwoods",
+          "spanishstyleliving_",
+          "casamallorca",
+          "wespeakgay",
+          "sergioramos.",
+          "thewestwillow.",
+          "andresiniesta8.",
+          "garethbale11."
+        ]
+      },
+      {
+        "id": "hdx4cj3a0mciy1v17",
+        "query": "find male influencers from spain for ikea ",
+        "brandName": "IKEA",
+        "timestamp": "2025-06-30T10:16:23.131Z",
+        "resultsCount": 54,
+        "parameters": {
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "niches": [
+            "home"
+          ],
+          "minFollowers": 1000,
+          "maxFollowers": 1000000,
+          "location": "for ikea",
+          "verified": false,
+          "maxResults": 20,
+          "gender": "male",
+          "strictLocationMatch": true,
+          "userQuery": "find male influencers from spain for ikea "
+        },
+        "influencerIds": [
+          "rudyruymanoficial",
+          "techblockproject",
+          "susi_dg",
+          "luiski_26",
+          "misticahinojosa",
+          "anuel_2blea_g4",
+          "justalpatri",
+          "cachoo01",
+          "bienvenidoaguado",
+          "leroymerlines",
+          "isabelmarind",
+          "wferreira86",
+          "loletabyloleta",
+          "charly_blockchain",
+          "los40spain",
+          "julendlg",
+          "cocinaparatodos",
+          "jesuscrazyofficial",
+          "bartabacmode",
+          "lookandchic",
+          "ewkharis_ofcc",
+          "c.ronaldo500_",
+          "harpersbazaares",
+          "planetadelibros",
+          "judiithmr",
+          "galahaduke",
+          "mhmadhouse",
+          "acbcom",
+          "meksi_doha",
+          "edwinvergara_",
+          "irenejunquera",
+          "miquelantoja",
+          "kiarabrunett",
+          "angelvaargass",
+          "bygemalopez",
+          "joseriveraprod",
+          "nattjim",
+          "missassi_",
+          "officialbyredo",
+          "pashagrozdov",
+          "mytinyestate",
+          "andrewdwheatcroft",
+          "bengorham",
+          "goanddogood",
+          "nanukuhouse",
+          "hryspn",
+          "paticheri",
+          "mildactivity",
+          "hopeandglorypr",
+          "shalikuta",
+          "andresiniesta8.",
+          "sergioramos.",
+          "garethbale11.",
+          "indianants."
+        ]
+      },
+      {
+        "id": "npyidaei8mcj1kqnw",
+        "query": "influencers compatibles con proposal document en Spain de Instagram, TikTok",
+        "brandName": "INFLUENCERS",
+        "timestamp": "2025-06-30T11:55:02.780Z",
+        "resultsCount": 45,
+        "parameters": {
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "niches": [
+            "lifestyle"
+          ],
+          "minFollowers": 1000,
+          "maxFollowers": 1000000,
+          "location": "de instagram",
+          "verified": false,
+          "maxResults": 20,
+          "strictLocationMatch": true,
+          "userQuery": "influencers compatibles con proposal document en Spain de Instagram, TikTok"
+        },
+        "influencerIds": [
+          "mariquitatrasquila",
+          "rudyruymanoficial",
+          "joseriveraprod",
+          "jjeesiicaa_",
+          "techblockproject",
+          "laramartingilarranz",
+          "susi_dg",
+          "luiski_26",
+          "misticahinojosa",
+          "marketingenioso",
+          "anuel_2blea_g4",
+          "justalpatri",
+          "holaenfermera",
+          "paramvir_beniwal",
+          "sparta356yt",
+          "helloimlana",
+          "unicosobreviviente",
+          "sunfwer",
+          "annaponsalopez",
+          "cachoo01",
+          "lapostaec",
+          "_onagonfaus",
+          "bienvenidoaguado",
+          "cristinaverdu",
+          "lucasperacchi",
+          "nataliaosona",
+          "nuriarocagranell",
+          "marshamilan",
+          "ivansanchezz",
+          "polispol",
+          "likeshaimaa",
+          "sandroramirez9",
+          "alexdelamadrid",
+          "jorge_amor",
+          "ramontorrespsicologo",
+          "nerea.gogo",
+          "movistar_team",
+          "garethbale11.",
+          "georginagio.",
+          "adlermarlowtravel.",
+          "sergioramos.",
+          "hannimartiniii",
+          "el__mehdi30",
+          "trendwatching_com",
+          "spainwithemily"
+        ]
+      },
+      {
+        "id": "tgsmojchvmcj1sbjm",
+        "query": "influencers compatibles con proposal document en Spain de Instagram, TikTok",
+        "brandName": "INFLUENCERS",
+        "timestamp": "2025-06-30T12:00:56.434Z",
+        "resultsCount": 45,
+        "parameters": {
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "niches": [
+            "lifestyle"
+          ],
+          "minFollowers": 1000,
+          "maxFollowers": 1000000,
+          "location": "de instagram",
+          "verified": false,
+          "maxResults": 20,
+          "strictLocationMatch": true,
+          "userQuery": "influencers compatibles con proposal document en Spain de Instagram, TikTok"
+        },
+        "influencerIds": [
+          "mariquitatrasquila",
+          "rudyruymanoficial",
+          "joseriveraprod",
+          "jjeesiicaa_",
+          "techblockproject",
+          "laramartingilarranz",
+          "susi_dg",
+          "luiski_26",
+          "misticahinojosa",
+          "marketingenioso",
+          "anuel_2blea_g4",
+          "justalpatri",
+          "holaenfermera",
+          "paramvir_beniwal",
+          "sparta356yt",
+          "helloimlana",
+          "unicosobreviviente",
+          "sunfwer",
+          "annaponsalopez",
+          "cachoo01",
+          "lapostaec",
+          "_onagonfaus",
+          "bienvenidoaguado",
+          "cristinaverdu",
+          "lucasperacchi",
+          "nataliaosona",
+          "nuriarocagranell",
+          "marshamilan",
+          "ivansanchezz",
+          "polispol",
+          "likeshaimaa",
+          "sandroramirez9",
+          "alexdelamadrid",
+          "jorge_amor",
+          "ramontorrespsicologo",
+          "nerea.gogo",
+          "movistar_team",
+          "georginagio.",
+          "sergioramos.",
+          "adlermarlowtravel.",
+          "garethbale11.",
+          "hannimartiniii",
+          "el__mehdi30",
+          "trendwatching_com",
+          "spainwithemily"
+        ]
+      },
+      {
+        "id": "znypoxy1umcj2igra",
+        "query": "influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older ",
+        "brandName": "INFLUENCERS",
+        "timestamp": "2025-06-30T12:21:16.246Z",
+        "resultsCount": 59,
+        "parameters": {
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "niches": [
+            "lifestyle"
+          ],
+          "minFollowers": 1000,
+          "maxFollowers": 1000000,
+          "location": "de instagram",
+          "verified": false,
+          "maxResults": 20,
+          "gender": "male",
+          "strictLocationMatch": true,
+          "userQuery": "influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older "
+        },
+        "influencerIds": [
+          "mariquitatrasquila",
+          "rudyruymanoficial",
+          "joseriveraprod",
+          "jjeesiicaa_",
+          "techblockproject",
+          "laramartingilarranz",
+          "susi_dg",
+          "luiski_26",
+          "misticahinojosa",
+          "marketingenioso",
+          "anuel_2blea_g4",
+          "justalpatri",
+          "holaenfermera",
+          "paramvir_beniwal",
+          "sparta356yt",
+          "unicosobreviviente",
+          "sunfwer",
+          "annaponsalopez",
+          "cachoo01",
+          "lapostaec",
+          "_onagonfaus",
+          "bienvenidoaguado",
+          "lucasperacchi",
+          "nuriarocagranell",
+          "marshamilan",
+          "ivansanchezz",
+          "polispol",
+          "likeshaimaa",
+          "sandroramirez9",
+          "alexdelamadrid",
+          "jorge_amor",
+          "ramontorrespsicologo",
+          "nerea.gogo",
+          "movistar_team",
+          "tumediceyyotedig0",
+          "claudialagatta",
+          "dante_caro",
+          "news_rmd",
+          "tipicajuventud",
+          "niklinio",
+          "calebthill",
+          "guicamon",
+          "richard_duchon.",
+          "georginagio.",
+          "sergioramos.",
+          "garethbale11.",
+          "tr4iner.",
+          "theeverydayman",
+          "mattredwards",
+          "el__mehdi30",
+          "albertosolon",
+          "bradleysimmonds",
+          "marcforne",
+          "pepebarrososilva",
+          "carmeron",
+          "fernandoguallar",
+          "danielo_costa",
+          "adri_marlon",
+          "goanddogood"
+        ]
+      },
+      {
+        "id": "ngsebxoycmcj32cw3",
+        "query": "influencers compatibles con proposal document en Spain de Instagram, TikTok",
+        "brandName": "INFLUENCERS",
+        "timestamp": "2025-06-30T12:36:44.355Z",
+        "resultsCount": 51,
+        "parameters": {
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "niches": [
+            "lifestyle"
+          ],
+          "minFollowers": 1000,
+          "maxFollowers": 1000000,
+          "location": "de instagram",
+          "verified": false,
+          "maxResults": 20,
+          "strictLocationMatch": true,
+          "userQuery": "influencers compatibles con proposal document en Spain de Instagram, TikTok"
+        },
+        "influencerIds": [
+          "mariquitatrasquila",
+          "rudyruymanoficial",
+          "joseriveraprod",
+          "jjeesiicaa_",
+          "techblockproject",
+          "laramartingilarranz",
+          "susi_dg",
+          "luiski_26",
+          "misticahinojosa",
+          "marketingenioso",
+          "anuel_2blea_g4",
+          "justalpatri",
+          "holaenfermera",
+          "paramvir_beniwal",
+          "sparta356yt",
+          "helloimlana",
+          "unicosobreviviente",
+          "sunfwer",
+          "annaponsalopez",
+          "cachoo01",
+          "lapostaec",
+          "_onagonfaus",
+          "bienvenidoaguado",
+          "cristinaverdu",
+          "lucasperacchi",
+          "nataliaosona",
+          "nuriarocagranell",
+          "marshamilan",
+          "ivansanchezz",
+          "polispol",
+          "likeshaimaa",
+          "sandroramirez9",
+          "alexdelamadrid",
+          "jorge_amor",
+          "ramontorrespsicologo",
+          "nerea.gogo",
+          "movistar_team",
+          "guicamon",
+          "sylviamontoliuelle",
+          "blancaglezrufino",
+          "darioaranyo",
+          "barbaragarralda",
+          "premiosinfluencersspain",
+          "andresiniesta8.",
+          "sergioramos.",
+          "garethbale11.",
+          "georginagio.",
+          "el__mehdi30",
+          "pepebarrososilva",
+          "fernandoguallar",
+          "adri_marlon"
+        ]
+      },
+      {
+        "id": "u77ze3jx2mcj3ds86",
+        "query": "influencers compatibles con proposal document en Spain de Instagram, TikTok",
+        "brandName": "INFLUENCERS",
+        "timestamp": "2025-06-30T12:45:37.446Z",
+        "resultsCount": 41,
+        "parameters": {
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "niches": [
+            "lifestyle"
+          ],
+          "minFollowers": 1000,
+          "maxFollowers": 1000000,
+          "location": "de instagram",
+          "verified": false,
+          "maxResults": 20,
+          "strictLocationMatch": true,
+          "userQuery": "influencers compatibles con proposal document en Spain de Instagram, TikTok"
+        },
+        "influencerIds": [
+          "mariquitatrasquila",
+          "rudyruymanoficial",
+          "joseriveraprod",
+          "jjeesiicaa_",
+          "techblockproject",
+          "laramartingilarranz",
+          "susi_dg",
+          "luiski_26",
+          "misticahinojosa",
+          "marketingenioso",
+          "anuel_2blea_g4",
+          "justalpatri",
+          "holaenfermera",
+          "paramvir_beniwal",
+          "sparta356yt",
+          "helloimlana",
+          "unicosobreviviente",
+          "sunfwer",
+          "annaponsalopez",
+          "cachoo01",
+          "lapostaec",
+          "_onagonfaus",
+          "bienvenidoaguado",
+          "cristinaverdu",
+          "lucasperacchi",
+          "nataliaosona",
+          "nuriarocagranell",
+          "marshamilan",
+          "ivansanchezz",
+          "polispol",
+          "likeshaimaa",
+          "sandroramirez9",
+          "alexdelamadrid",
+          "jorge_amor",
+          "ramontorrespsicologo",
+          "nerea.gogo",
+          "movistar_team",
+          "premiosinfluencersspain",
+          "sergioramos.",
+          "garethbale11.",
+          "andresiniesta8."
+        ]
+      }
+    ],
+    "savedInfluencers": [
+      {
+        "id": "czenms9m8mcixhmas",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "RUDY RUYMÁN\n@rudyruymanoficial",
+          "handle": "rudyruymanoficial",
+          "platform": "Instagram",
+          "followers": 431800,
+          "engagementRate": 0.15,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4318
+        },
+        "savedAt": "2025-06-30T10:00:38.692Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "yjat62pekmcixhmbb",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Crypto | Blockchain | Trading\n@techblockproject",
+          "handle": "techblockproject",
+          "platform": "Instagram",
+          "followers": 389700,
+          "engagementRate": 0.14,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3897
+        },
+        "savedAt": "2025-06-30T10:00:38.711Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "yvdehj2x8mcixhmbs",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Susi Díaz | Ideas & Recetas Fáciles\n@susi_dg",
+          "handle": "susi_dg",
+          "platform": "Instagram",
+          "followers": 371100,
+          "engagementRate": 0.14,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3711
+        },
+        "savedAt": "2025-06-30T10:00:38.728Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ku7nivsf9mcixhmcc",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "LUISKI GARCIA 🔥❣️",
+          "handle": "luiski_26",
+          "platform": "Instagram",
+          "followers": 439500,
+          "engagementRate": 0.1321,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4395
+        },
+        "savedAt": "2025-06-30T10:00:38.748Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "r3prcx1eemcixhmch",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "🌜Misti🌛\n@misticahinojosa",
+          "handle": "misticahinojosa",
+          "platform": "Instagram",
+          "followers": 404000,
+          "engagementRate": 0.13138724380147737,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4040
+        },
+        "savedAt": "2025-06-30T10:00:38.753Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "fgqdj60jumcixhmcx",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "LAS LEYENDAS NUNCA MUEREN\n@anuel_2blea_g4",
+          "handle": "anuel_2blea_g4",
+          "platform": "Instagram",
+          "followers": 411400,
+          "engagementRate": 0.13,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4114
+        },
+        "savedAt": "2025-06-30T10:00:38.769Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "9b3po1i55mcixhmd3",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Patricia Pastor\n@justalpatri",
+          "handle": "justalpatri",
+          "platform": "Instagram",
+          "followers": 445100,
+          "engagementRate": 0.11708860402071654,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4451
+        },
+        "savedAt": "2025-06-30T10:00:38.775Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "mom7s7ry6mcixhmde",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Jose Antonio Cacho\n@cachoo01",
+          "handle": "cachoo01",
+          "platform": "Instagram",
+          "followers": 418600,
+          "engagementRate": 0.1084,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4186
+        },
+        "savedAt": "2025-06-30T10:00:38.786Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "vzbh45jjrmcixhmdi",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Bienvenido Aguado\n@bienvenidoaguado",
+          "handle": "bienvenidoaguado",
+          "platform": "Instagram",
+          "followers": 390500,
+          "engagementRate": 0.1033,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3905
+        },
+        "savedAt": "2025-06-30T10:00:38.790Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "br78f2mdtmcixhmdp",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Leroy Merlin España\n@leroymerlines",
+          "handle": "leroymerlines",
+          "platform": "Instagram",
+          "followers": 497600,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4976
+        },
+        "savedAt": "2025-06-30T10:00:38.797Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "0gj3awzg4mcixhmdt",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "ISABEL MARÍN\n@isabelmarind",
+          "handle": "isabelmarind",
+          "platform": "Instagram",
+          "followers": 496400,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4964
+        },
+        "savedAt": "2025-06-30T10:00:38.801Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "24ovdjl5smcixhmdx",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Wellington Freitas Filho\n@wferreira86",
+          "handle": "wferreira86",
+          "platform": "Instagram",
+          "followers": 474800,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4748
+        },
+        "savedAt": "2025-06-30T10:00:38.805Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "3kqv7iayqmcixhme3",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Loleta Bernabé - luxury Travel and Cooking\n@loletabyloleta",
+          "handle": "loletabyloleta",
+          "platform": "Instagram",
+          "followers": 470400,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4704
+        },
+        "savedAt": "2025-06-30T10:00:38.811Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "yegi9mepxmcixhme8",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "💫Charly Blockchain\n@charly_blockchain",
+          "handle": "charly_blockchain",
+          "platform": "Instagram",
+          "followers": 467700,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4677
+        },
+        "savedAt": "2025-06-30T10:00:38.816Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "sox7h81z7mcixhmec",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "LOS40\n@los40spain",
+          "handle": "los40spain",
+          "platform": "Instagram",
+          "followers": 462900,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4629
+        },
+        "savedAt": "2025-06-30T10:00:38.820Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "sq1qw0pgwmcixhmeg",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "J U L E N\n@julendlg",
+          "handle": "julendlg",
+          "platform": "Instagram",
+          "followers": 453100,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4531
+        },
+        "savedAt": "2025-06-30T10:00:38.824Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "a2aq8jq0rmcixhmeo",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Mery García Butrón\n@cocinaparatodos",
+          "handle": "cocinaparatodos",
+          "platform": "Instagram",
+          "followers": 445700,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4457
+        },
+        "savedAt": "2025-06-30T10:00:38.832Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "u30hy1nbnmcixhmes",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Jesus Crazy\n@jesuscrazyofficial",
+          "handle": "jesuscrazyofficial",
+          "platform": "Instagram",
+          "followers": 440000,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4400
+        },
+        "savedAt": "2025-06-30T10:00:38.836Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "azr4gf6nomcixhmew",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Silvia García BARTABAC\n@bartabacmode",
+          "handle": "bartabacmode",
+          "platform": "Instagram",
+          "followers": 439500,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4395
+        },
+        "savedAt": "2025-06-30T10:00:38.840Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "z4jg39svtmcixhmf3",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "ANE HERNANDO | Moda casual, cosmética y viajes\n@lookandchic",
+          "handle": "lookandchic",
+          "platform": "Instagram",
+          "followers": 431900,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4319
+        },
+        "savedAt": "2025-06-30T10:00:38.847Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "y8l55ta2amcixhmf7",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "𝑲𝒉𝒂𝒓𝒊𝒔𝒎𝒂 𝒄𝒂𝒉𝒂𝒚𝒂 𝒑𝒖𝒕𝒓𝒊\n@ewkharis_ofcc",
+          "handle": "ewkharis_ofcc",
+          "platform": "Instagram",
+          "followers": 419900,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4199
+        },
+        "savedAt": "2025-06-30T10:00:38.851Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "1jmqbggqfmcixhmfa",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "C.Ronaldo500_\n@c.ronaldo500_",
+          "handle": "c.ronaldo500_",
+          "platform": "Instagram",
+          "followers": 409900,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4099
+        },
+        "savedAt": "2025-06-30T10:00:38.854Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "u5tit7qnlmcixhmff",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Harper's Bazaar España\n@harpersbazaares",
+          "handle": "harpersbazaares",
+          "platform": "Instagram",
+          "followers": 406700,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4067
+        },
+        "savedAt": "2025-06-30T10:00:38.859Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "4xbuemshgmcixhmfm",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Planetadelibros.com\n@planetadelibros",
+          "handle": "planetadelibros",
+          "platform": "Instagram",
+          "followers": 406600,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4066
+        },
+        "savedAt": "2025-06-30T10:00:38.866Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "5ux93308qmcixhmfq",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "JUDITH MARTOS🔥\n@judiithmr",
+          "handle": "judiithmr",
+          "platform": "Instagram",
+          "followers": 403000,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4030
+        },
+        "savedAt": "2025-06-30T10:00:38.870Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "7isc9mdnomcixhmfu",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Alex\n@galahaduke",
+          "handle": "galahaduke",
+          "platform": "Instagram",
+          "followers": 399000,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3990
+        },
+        "savedAt": "2025-06-30T10:00:38.874Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "adnkg4rltmcixhmg1",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "MadHouse\n@mhmadhouse",
+          "handle": "mhmadhouse",
+          "platform": "Instagram",
+          "followers": 398800,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3988
+        },
+        "savedAt": "2025-06-30T10:00:38.881Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "6fxwarr15mcixhmg5",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Liga Endesa\n@acbcom",
+          "handle": "acbcom",
+          "platform": "Instagram",
+          "followers": 392500,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3925
+        },
+        "savedAt": "2025-06-30T10:00:38.885Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "mtxadvnuemcixhmg9",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Doha Meksi ضحى مكسي\n@meksi_doha",
+          "handle": "meksi_doha",
+          "platform": "Instagram",
+          "followers": 382100,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3821
+        },
+        "savedAt": "2025-06-30T10:00:38.889Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "alk63a8ozmcixhmgd",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Edwin Vergara\n@edwinvergara_",
+          "handle": "edwinvergara_",
+          "platform": "Instagram",
+          "followers": 380500,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3805
+        },
+        "savedAt": "2025-06-30T10:00:38.893Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "d22zobxq3mcixhmgj",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Irene Junquera\n@irenejunquera",
+          "handle": "irenejunquera",
+          "platform": "Instagram",
+          "followers": 379900,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3799
+        },
+        "savedAt": "2025-06-30T10:00:38.899Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ztkkdv7dkmcixhmgm",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "MIQUEL ANTOJA\n@miquelantoja",
+          "handle": "miquelantoja",
+          "platform": "Instagram",
+          "followers": 376600,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3766
+        },
+        "savedAt": "2025-06-30T10:00:38.902Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "qrt9us0icmcixhmgq",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "𝐊𝐢𝐚𝐫𝐚🐍\n@kiarabrunett",
+          "handle": "kiarabrunett",
+          "platform": "Instagram",
+          "followers": 376300,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3763
+        },
+        "savedAt": "2025-06-30T10:00:38.906Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "73z1nib1lmcixhmgx",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Angel Vargas",
+          "handle": "angelvaargass",
+          "platform": "Instagram",
+          "followers": 472100,
+          "engagementRate": 0.0836,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4721
+        },
+        "savedAt": "2025-06-30T10:00:38.913Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "7hz8kwotzmcixhmh1",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Gema López\n@bygemalopez",
+          "handle": "bygemalopez",
+          "platform": "Instagram",
+          "followers": 392000,
+          "engagementRate": 0.07572979482338088,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3920
+        },
+        "savedAt": "2025-06-30T10:00:38.917Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "bmqgxzgmwmcixhmh4",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Jose Rivera Payán\n@joseriveraprod",
+          "handle": "joseriveraprod",
+          "platform": "Instagram",
+          "followers": 396600,
+          "engagementRate": 0.066576671107098,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3966
+        },
+        "savedAt": "2025-06-30T10:00:38.920Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "h5kaxmx60mcixhmh9",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "🌸 Natalia Jiménez 🌸- Natt💓\n@nattjim",
+          "handle": "nattjim",
+          "platform": "Instagram",
+          "followers": 497400,
+          "engagementRate": 0.0622,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4974
+        },
+        "savedAt": "2025-06-30T10:00:38.925Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "rr82dosuemcixhmhf",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Marie Assi",
+          "handle": "missassi_",
+          "platform": "Instagram",
+          "followers": 404500,
+          "engagementRate": 0.0613,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4045
+        },
+        "savedAt": "2025-06-30T10:00:38.931Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "g0shvfkdqmcixhmhj",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "David Koch",
+          "handle": "davidkoch8",
+          "platform": "Instagram",
+          "followers": 685982,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6859
+        },
+        "savedAt": "2025-06-30T10:00:38.935Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "d6hccfy8tmcixhmhn",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Ben Taylor",
+          "handle": "bentaylortech",
+          "platform": "Instagram",
+          "followers": 595753,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5957
+        },
+        "savedAt": "2025-06-30T10:00:38.939Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "uizcsz83amcixhmhr",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Pasha Grozdov",
+          "handle": "pashagrozdov",
+          "platform": "Instagram",
+          "followers": 484260,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4842
+        },
+        "savedAt": "2025-06-30T10:00:38.943Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "w6xmisiaemcixhmhx",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Lucy Bella Simkins",
+          "handle": "lucy",
+          "platform": "Instagram",
+          "followers": 297710,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 2977
+        },
+        "savedAt": "2025-06-30T10:00:38.949Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "hpp36tvlbmcixhmi1",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Andrew Donaldson-Wheatcroft",
+          "handle": "andrewdwheatcroft",
+          "platform": "Instagram",
+          "followers": 163398,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 1633
+        },
+        "savedAt": "2025-06-30T10:00:38.953Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "q1b8x64wnmcixhmi5",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Meg James & Family | Americans in Spain",
+          "handle": "goanddogood",
+          "platform": "Instagram",
+          "followers": 71227,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 712
+        },
+        "savedAt": "2025-06-30T10:00:38.957Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "b73xqtzhpmcixhmib",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "NANUKU house",
+          "handle": "nanukuhouse",
+          "platform": "Instagram",
+          "followers": 60751,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 607
+        },
+        "savedAt": "2025-06-30T10:00:38.963Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "tx7belbaamcixhmif",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Harry Spain",
+          "handle": "hryspn",
+          "platform": "Instagram",
+          "followers": 47217,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 472
+        },
+        "savedAt": "2025-06-30T10:00:38.967Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "1fs606zcjmcixhmii",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Hannu and Raúl & Pancho",
+          "handle": "lifeof2men",
+          "platform": "Instagram",
+          "followers": 19078,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 190
+        },
+        "savedAt": "2025-06-30T10:00:38.970Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "8mdcgefznmcixhmim",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Casa Tierra",
+          "handle": "casatierra",
+          "platform": "Instagram",
+          "followers": 17467,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 174
+        },
+        "savedAt": "2025-06-30T10:00:38.974Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "4u0js2cixmcixhmis",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Mild Activity",
+          "handle": "mildactivity",
+          "platform": "Instagram",
+          "followers": 9779,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 97
+        },
+        "savedAt": "2025-06-30T10:00:38.980Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "q1oys6t7lmcixhmiv",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Steph Woods",
+          "handle": "stephcwoods",
+          "platform": "Instagram",
+          "followers": 9513,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 95
+        },
+        "savedAt": "2025-06-30T10:00:38.983Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "pxhy5cqwcmcixhmiy",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Spanish Style Living",
+          "handle": "spanishstyleliving_",
+          "platform": "Instagram",
+          "followers": 4931,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 49
+        },
+        "savedAt": "2025-06-30T10:00:38.986Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "9u7ltbdcmmcixhmj2",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Casa Mallorca(mai · or · kuh)",
+          "handle": "casamallorca",
+          "platform": "Instagram",
+          "followers": 2510,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 25
+        },
+        "savedAt": "2025-06-30T10:00:38.990Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "abyy27q28mcixhmj7",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "LGBTQ+ Friendly  Community",
+          "handle": "wespeakgay",
+          "platform": "Instagram",
+          "followers": 1200,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 12
+        },
+        "savedAt": "2025-06-30T10:00:38.995Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "4tw50qobmmcixhmjb",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "sergioramos.",
+          "handle": "sergioramos.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T10:00:38.999Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "njfk2phxdmcixhmjf",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "thewestwillow.",
+          "handle": "thewestwillow.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T10:00:39.003Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "snhk0leybmcixhmji",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "andresiniesta8.",
+          "handle": "andresiniesta8.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T10:00:39.006Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ncpmg80l0mcixhmjo",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "garethbale11.",
+          "handle": "garethbale11.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T10:00:39.012Z",
+        "notes": "Auto-saved from search: \"find me influencers for ikea from spain men only \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ih6ic773kmciy1v40",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "BYREDO",
+          "handle": "officialbyredo",
+          "platform": "Instagram",
+          "followers": 776696,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7766
+        },
+        "savedAt": "2025-06-30T10:16:23.233Z",
+        "notes": "Auto-saved from search: \"find male influencers from spain for ikea \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "f8tk2jm96mciy1v4g",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "My Tiny Estate™ [ Saving The Manor ]",
+          "handle": "mytinyestate",
+          "platform": "Instagram",
+          "followers": 257380,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 2573
+        },
+        "savedAt": "2025-06-30T10:16:23.248Z",
+        "notes": "Auto-saved from search: \"find male influencers from spain for ikea \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "tfzc1xsxdmciy1v4p",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "bengorham",
+          "handle": "bengorham",
+          "platform": "Instagram",
+          "followers": 103982,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 1039
+        },
+        "savedAt": "2025-06-30T10:16:23.257Z",
+        "notes": "Auto-saved from search: \"find male influencers from spain for ikea \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "vvhwlr2ismciy1v4x",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Deepa",
+          "handle": "paticheri",
+          "platform": "Instagram",
+          "followers": 16243,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 162
+        },
+        "savedAt": "2025-06-30T10:16:23.265Z",
+        "notes": "Auto-saved from search: \"find male influencers from spain for ikea \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "055d5zejqmciy1v51",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Hope&Glory",
+          "handle": "hopeandglorypr",
+          "platform": "Instagram",
+          "followers": 5627,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 56
+        },
+        "savedAt": "2025-06-30T10:16:23.269Z",
+        "notes": "Auto-saved from search: \"find male influencers from spain for ikea \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "exfjhinsymciy1v5g",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Shalikuta Heritage Rices India",
+          "handle": "shalikuta",
+          "platform": "Instagram",
+          "followers": 4160,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 41
+        },
+        "savedAt": "2025-06-30T10:16:23.284Z",
+        "notes": "Auto-saved from search: \"find male influencers from spain for ikea \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "dds8a0limmciy1v5l",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "indianants.",
+          "handle": "indianants.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T10:16:23.289Z",
+        "notes": "Auto-saved from search: \"find male influencers from spain for ikea \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "628zx32w2mcj1kqpp",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Mariquita Trasquilá\n@mariquitatrasquila",
+          "handle": "mariquitatrasquila",
+          "platform": "Instagram",
+          "followers": 726700,
+          "engagementRate": 0.15,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7267
+        },
+        "savedAt": "2025-06-30T11:55:02.845Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "9keetkzuwmcj1kqpv",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "J e s i c a 𓆙",
+          "handle": "jjeesiicaa_",
+          "platform": "Instagram",
+          "followers": 829300,
+          "engagementRate": 0.142,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 8293
+        },
+        "savedAt": "2025-06-30T11:55:02.851Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "bfha4cifumcj1kqq5",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Lara M.Gilarranz\n@laramartingilarranz",
+          "handle": "laramartingilarranz",
+          "platform": "Instagram",
+          "followers": 377900,
+          "engagementRate": 0.1390978297277027,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3779
+        },
+        "savedAt": "2025-06-30T11:55:02.861Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "tyoop1rcjmcj1kqqc",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Marketing Ingenioso - Vende con Instagram💰\n@marketingenioso",
+          "handle": "marketingenioso",
+          "platform": "Instagram",
+          "followers": 690400,
+          "engagementRate": 0.13,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6904
+        },
+        "savedAt": "2025-06-30T11:55:02.868Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "zqallt7ttmcj1kqqo",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "HolaEnfermera\n@holaenfermera",
+          "handle": "holaenfermera",
+          "platform": "Instagram",
+          "followers": 1000000,
+          "engagementRate": 0.11380000000000001,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 10000
+        },
+        "savedAt": "2025-06-30T11:55:02.880Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "g5gd6xaz5mcj1kqqw",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Paramvir Singh Beniwal\n@paramvir_beniwal",
+          "handle": "paramvir_beniwal",
+          "platform": "Instagram",
+          "followers": 574000,
+          "engagementRate": 0.11419194298241518,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5740
+        },
+        "savedAt": "2025-06-30T11:55:02.888Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "txez5pbgsmcj1kqr8",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Sparta356",
+          "handle": "sparta356yt",
+          "platform": "Instagram",
+          "followers": 525800,
+          "engagementRate": 0.1124,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5258
+        },
+        "savedAt": "2025-06-30T11:55:02.900Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "4usczx8fjmcj1kqrs",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Lana\n@helloimlana",
+          "handle": "helloimlana",
+          "platform": "Instagram",
+          "followers": 702000,
+          "engagementRate": 0.1093,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7020
+        },
+        "savedAt": "2025-06-30T11:55:02.920Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "b7ze04a92mcj1kqsb",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Único Sobreviviente\n@unicosobreviviente",
+          "handle": "unicosobreviviente",
+          "platform": "Instagram",
+          "followers": 681400,
+          "engagementRate": 0.11,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6814
+        },
+        "savedAt": "2025-06-30T11:55:02.939Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "as6hcc18dmcj1kqst",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Cristina Ji\n@sunfwer",
+          "handle": "sunfwer",
+          "platform": "Instagram",
+          "followers": 508500,
+          "engagementRate": 0.10980000000000001,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5085
+        },
+        "savedAt": "2025-06-30T11:55:02.957Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "3a5z6dfyamcj1kqtd",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Anna Ponsa Lopez\n@annaponsalopez",
+          "handle": "annaponsalopez",
+          "platform": "Instagram",
+          "followers": 559000,
+          "engagementRate": 0.1082,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5590
+        },
+        "savedAt": "2025-06-30T11:55:02.977Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "zv9wom220mcj1kqtw",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "La Posta\n@lapostaec",
+          "handle": "lapostaec",
+          "platform": "Instagram",
+          "followers": 390700,
+          "engagementRate": 0.10846089847336887,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3907
+        },
+        "savedAt": "2025-06-30T11:55:02.996Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "pcn0avwjgmcj1kqu2",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Ona Gonfaus\n@_onagonfaus",
+          "handle": "_onagonfaus",
+          "platform": "Instagram",
+          "followers": 610300,
+          "engagementRate": 0.106,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6103
+        },
+        "savedAt": "2025-06-30T11:55:03.002Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "pl58k6sekmcj1kque",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Cristina Verdú 🌿 Travel / Vegan / Curly",
+          "handle": "cristinaverdu",
+          "platform": "Instagram",
+          "followers": 427200,
+          "engagementRate": 0.1013,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4272
+        },
+        "savedAt": "2025-06-30T11:55:03.014Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "2vjuc1y18mcj1kquk",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "LUCAS🔥PERACCHI🔥PUROSANGUE\n@lucasperacchi",
+          "handle": "lucasperacchi",
+          "platform": "Instagram",
+          "followers": 1000000,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 10000
+        },
+        "savedAt": "2025-06-30T11:55:03.020Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "w06p18ugomcj1kqux",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "NATALIA OSONA\n@nataliaosona",
+          "handle": "nataliaosona",
+          "platform": "Instagram",
+          "followers": 1000000,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 10000
+        },
+        "savedAt": "2025-06-30T11:55:03.033Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "85hby8q9wmcj1kqv4",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "NURIA ROCA\n@nuriarocagranell",
+          "handle": "nuriarocagranell",
+          "platform": "Instagram",
+          "followers": 1000000,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 10000
+        },
+        "savedAt": "2025-06-30T11:55:03.040Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "gdz31tg22mcj1kqvi",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Madrid Milan London\n@marshamilan",
+          "handle": "marshamilan",
+          "platform": "Instagram",
+          "followers": 988000,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 9880
+        },
+        "savedAt": "2025-06-30T11:55:03.054Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "9nbu8qh6jmcj1kqw0",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "ivansanchezz\n@ivansanchezz",
+          "handle": "ivansanchezz",
+          "platform": "Instagram",
+          "followers": 984600,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 9846
+        },
+        "savedAt": "2025-06-30T11:55:03.072Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "jcmlr5j60mcj1kqw6",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Pol Turrents\n@polispol",
+          "handle": "polispol",
+          "platform": "Instagram",
+          "followers": 965800,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 9658
+        },
+        "savedAt": "2025-06-30T11:55:03.078Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "2terlqeo6mcj1kqwh",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Shimaa\n@likeshaimaa",
+          "handle": "likeshaimaa",
+          "platform": "Instagram",
+          "followers": 965000,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 9650
+        },
+        "savedAt": "2025-06-30T11:55:03.089Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "bqbsafdq3mcj1kqwn",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Sandro Ramirez\n@sandroramirez9",
+          "handle": "sandroramirez9",
+          "platform": "Instagram",
+          "followers": 784800,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7848
+        },
+        "savedAt": "2025-06-30T11:55:03.095Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "mf1qsr5d8mcj1kqx3",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Alejandro de la Madrid\n@alexdelamadrid",
+          "handle": "alexdelamadrid",
+          "platform": "Instagram",
+          "followers": 761900,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7619
+        },
+        "savedAt": "2025-06-30T11:55:03.111Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "o3fx9vmmymcj1kqx9",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Jorge Amor\n@jorge_amor",
+          "handle": "jorge_amor",
+          "platform": "Instagram",
+          "followers": 753400,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7534
+        },
+        "savedAt": "2025-06-30T11:55:03.117Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "5z1tmlz6gmcj1kqxl",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Ramón Torres Psicologo\n@ramontorrespsicologo",
+          "handle": "ramontorrespsicologo",
+          "platform": "Instagram",
+          "followers": 746100,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7461
+        },
+        "savedAt": "2025-06-30T11:55:03.129Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "n09hz0r63mcj1kqxq",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Nerea González\n@nerea.gogo",
+          "handle": "nerea.gogo",
+          "platform": "Instagram",
+          "followers": 743500,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7435
+        },
+        "savedAt": "2025-06-30T11:55:03.134Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "dkudxtsjlmcj1kqy2",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Movistar Team\n@movistar_team",
+          "handle": "movistar_team",
+          "platform": "Instagram",
+          "followers": 724600,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7246
+        },
+        "savedAt": "2025-06-30T11:55:03.146Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "7yusp93vhmcj1kqy7",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "georginagio.",
+          "handle": "georginagio.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T11:55:03.151Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "py89yrtrpmcj1kqyl",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "adlermarlowtravel.",
+          "handle": "adlermarlowtravel.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T11:55:03.165Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "94ynlrpubmcj1kqyq",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Hanni Martini - My Life in Spain",
+          "handle": "hannimartiniii",
+          "platform": "Instagram",
+          "followers": 25768,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 257
+        },
+        "savedAt": "2025-06-30T11:55:03.170Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "uv3sdzkl2mcj1kqz7",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "el mehdiiii :-)",
+          "handle": "el__mehdi30",
+          "platform": "Instagram",
+          "followers": 13336,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 133
+        },
+        "savedAt": "2025-06-30T11:55:03.187Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "cgdc9p1bmmcj1kqzd",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "TrendWatching",
+          "handle": "trendwatching_com",
+          "platform": "Instagram",
+          "followers": 33806,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 338
+        },
+        "savedAt": "2025-06-30T11:55:03.193Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "rqazh3csbmcj1kqzr",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Emily in Seville │ American in Spain",
+          "handle": "spainwithemily",
+          "platform": "Instagram",
+          "followers": 28316,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 283
+        },
+        "savedAt": "2025-06-30T11:55:03.207Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "srvi0xqs1mcj1slm7",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Susi Díaz | Ideas & Recetas Fáciles\n@susi_dg",
+          "handle": "susi_dg",
+          "platform": "Instagram",
+          "followers": 371100,
+          "engagementRate": 0.14,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3711
+        },
+        "savedAt": "2025-06-30T12:01:09.487Z",
+        "status": "saved",
+        "tags": []
+      },
+      {
+        "id": "iucd3ofyymcj1snze",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Lara M.Gilarranz\n@laramartingilarranz",
+          "handle": "laramartingilarranz",
+          "platform": "Instagram",
+          "followers": 377900,
+          "engagementRate": 0.1390978297277027,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3779
+        },
+        "savedAt": "2025-06-30T12:01:12.554Z",
+        "status": "saved",
+        "tags": []
+      },
+      {
+        "id": "6g77ilg3umcj2igzc",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Jannys Yamilet Mercedes Gonzalez\n@tumediceyyotedig0",
+          "handle": "tumediceyyotedig0",
+          "platform": "Instagram",
+          "followers": 724300,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7243
+        },
+        "savedAt": "2025-06-30T12:21:16.536Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "nriqg5qnfmcj2igzk",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Claudia La Gatta\n@claudialagatta",
+          "handle": "claudialagatta",
+          "platform": "Instagram",
+          "followers": 702400,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7024
+        },
+        "savedAt": "2025-06-30T12:21:16.544Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "wtd8q1vlomcj2igzp",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Dante Caro\n@dante_caro",
+          "handle": "dante_caro",
+          "platform": "Instagram",
+          "followers": 690600,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6906
+        },
+        "savedAt": "2025-06-30T12:21:16.549Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "xuzydta1nmcj2igzv",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "مستر ريال مدريد 🇰🇼\n@news_rmd",
+          "handle": "news_rmd",
+          "platform": "Instagram",
+          "followers": 690500,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6905
+        },
+        "savedAt": "2025-06-30T12:21:16.555Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "5i5s3tae6mcj2ih01",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "FRASES - AMOR - CONSEJOS\n@tipicajuventud",
+          "handle": "tipicajuventud",
+          "platform": "Instagram",
+          "followers": 670800,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6708
+        },
+        "savedAt": "2025-06-30T12:21:16.561Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "p2k3tutg5mcj2ih07",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Niklas Rueth",
+          "handle": "niklinio",
+          "platform": "Instagram",
+          "followers": 782121,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7821
+        },
+        "savedAt": "2025-06-30T12:21:16.567Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "58wwvfzc1mcj2ih0g",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Caleb Thill",
+          "handle": "calebthill",
+          "platform": "Instagram",
+          "followers": 156359,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 1563
+        },
+        "savedAt": "2025-06-30T12:21:16.576Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "9oc8qsbytmcj2ih0l",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "𝐆 𝐔 𝐈 𝐋 𝐋 𝐄 𝐌   𝐂 𝐀 𝐍 𝐎",
+          "handle": "guicamon",
+          "platform": "Instagram",
+          "followers": 15379,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 153
+        },
+        "savedAt": "2025-06-30T12:21:16.581Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ryhmy1iidmcj2ih0r",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "richard_duchon.",
+          "handle": "richard_duchon.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T12:21:16.587Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "e3r0z1u3cmcj2ih0x",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "tr4iner.",
+          "handle": "tr4iner.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T12:21:16.593Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "2y6gcip1amcj2ih13",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "John Robertson",
+          "handle": "theeverydayman",
+          "platform": "Instagram",
+          "followers": 42140,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 421
+        },
+        "savedAt": "2025-06-30T12:21:16.599Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "x43n8zzdkmcj2ih1a",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Matt R Edwards",
+          "handle": "mattredwards",
+          "platform": "Instagram",
+          "followers": 23790,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 237
+        },
+        "savedAt": "2025-06-30T12:21:16.606Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ee5v4t6x2mcj2ih1g",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Alberto Solon",
+          "handle": "albertosolon",
+          "platform": "Instagram",
+          "followers": 685821,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6858
+        },
+        "savedAt": "2025-06-30T12:21:16.612Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "92d9f7ddzmcj2ih1l",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "bradleysimmonds:Online Coach",
+          "handle": "bradleysimmonds",
+          "platform": "Instagram",
+          "followers": 610123,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6101
+        },
+        "savedAt": "2025-06-30T12:21:16.617Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "xznvfjcwxmcj2ih1r",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "marcforne",
+          "handle": "marcforne",
+          "platform": "Instagram",
+          "followers": 501280,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5012
+        },
+        "savedAt": "2025-06-30T12:21:16.623Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "blh77tag1mcj2ih1x",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Pepe Barroso Silva",
+          "handle": "pepebarrososilva",
+          "platform": "Instagram",
+          "followers": 348913,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3489
+        },
+        "savedAt": "2025-06-30T12:21:16.629Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "b3me4cri1mcj2ih23",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Carmeron",
+          "handle": "carmeron",
+          "platform": "Instagram",
+          "followers": 284263,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 2842
+        },
+        "savedAt": "2025-06-30T12:21:16.635Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "evpo8cc2cmcj2ih28",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Fernando Guallar",
+          "handle": "fernandoguallar",
+          "platform": "Instagram",
+          "followers": 212959,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 2129
+        },
+        "savedAt": "2025-06-30T12:21:16.640Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "d1gyqhw3zmcj2ih2e",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Danielo Costa",
+          "handle": "danielo_costa",
+          "platform": "Instagram",
+          "followers": 200885,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 2008
+        },
+        "savedAt": "2025-06-30T12:21:16.646Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "6f2l0afhamcj2ih2j",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Adri Roma",
+          "handle": "adri_marlon",
+          "platform": "Instagram",
+          "followers": 120136,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 1201
+        },
+        "savedAt": "2025-06-30T12:21:16.651Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older \"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "a2o8f18qtmcj32d3h",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Sylvia Montoliu",
+          "handle": "sylviamontoliuelle",
+          "platform": "Instagram",
+          "followers": 14296,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 142
+        },
+        "savedAt": "2025-06-30T12:36:44.621Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "negn9e02wmcj32d3o",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Blanca González Rufino",
+          "handle": "blancaglezrufino",
+          "platform": "Instagram",
+          "followers": 14214,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 142
+        },
+        "savedAt": "2025-06-30T12:36:44.628Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "9z0p7h1oamcj32d3v",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Dario Aranyo",
+          "handle": "darioaranyo",
+          "platform": "Instagram",
+          "followers": 9771,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 97
+        },
+        "savedAt": "2025-06-30T12:36:44.635Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "u358jjqhsmcj32d41",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Bárbara Garralda",
+          "handle": "barbaragarralda",
+          "platform": "Instagram",
+          "followers": 5330,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 53
+        },
+        "savedAt": "2025-06-30T12:36:44.641Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "j4xsnuloimcj32d48",
+        "campaignId": "campaign_1751277638669",
+        "influencerData": {
+          "name": "Premios Influencers España",
+          "handle": "premiosinfluencersspain",
+          "platform": "Instagram",
+          "followers": 1476,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 14
+        },
+        "savedAt": "2025-06-30T12:36:44.648Z",
+        "notes": "Auto-saved from search: \"influencers compatibles con proposal document en Spain de Instagram, TikTok\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      }
+    ],
+    "searchHistory": [
+      {
+        "id": "nmxv4c1tsmcixhm8q",
+        "query": "find me influencers for ikea from spain men only ",
+        "brandName": "IKEA",
+        "timestamp": "2025-06-30T10:00:38.618Z",
+        "resultsCount": 57
+      },
+      {
+        "id": "ug63vitxsmciy1v17",
+        "query": "find male influencers from spain for ikea ",
+        "brandName": "IKEA",
+        "timestamp": "2025-06-30T10:16:23.131Z",
+        "resultsCount": 54
+      },
+      {
+        "id": "q1gl8wvwimcj1kqnw",
+        "query": "influencers compatibles con proposal document en Spain de Instagram, TikTok",
+        "brandName": "INFLUENCERS",
+        "timestamp": "2025-06-30T11:55:02.780Z",
+        "resultsCount": 45
+      },
+      {
+        "id": "dulg7e91omcj1sbjm",
+        "query": "influencers compatibles con proposal document en Spain de Instagram, TikTok",
+        "brandName": "INFLUENCERS",
+        "timestamp": "2025-06-30T12:00:56.434Z",
+        "resultsCount": 45
+      },
+      {
+        "id": "4z792yli2mcj2igra",
+        "query": "influencers compatibles con proposal document en Spain de Instagram, TikTok make sure its male only and ages 30 and older ",
+        "brandName": "INFLUENCERS",
+        "timestamp": "2025-06-30T12:21:16.246Z",
+        "resultsCount": 59
+      },
+      {
+        "id": "2ta2ng95emcj32cw3",
+        "query": "influencers compatibles con proposal document en Spain de Instagram, TikTok",
+        "brandName": "INFLUENCERS",
+        "timestamp": "2025-06-30T12:36:44.355Z",
+        "resultsCount": 51
+      },
+      {
+        "id": "tz1mc0i59mcj3ds86",
+        "query": "influencers compatibles con proposal document en Spain de Instagram, TikTok",
+        "brandName": "INFLUENCERS",
+        "timestamp": "2025-06-30T12:45:37.446Z",
+        "resultsCount": 41
+      }
+    ],
+    "autoCreatedFromSearch": true,
+    "originalSearchQuery": "find me influencers for ikea from spain men only ",
+    "createdAt": "2025-06-30T10:00:38.669Z",
+    "updatedAt": "2025-06-30T12:45:37.731Z"
+  },
+  {
+    "id": "campaign_1751284468717",
+    "name": "BUSCA Campaign",
+    "brandName": "BUSCA",
+    "owner": "Clara",
+    "status": "Planning",
+    "priority": "Medium",
+    "startDate": "2025-06-30",
+    "endDate": "2025-07-30",
+    "budget": 25000,
+    "platform": [
+      "Instagram"
+    ],
+    "notes": "Auto-created from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+    "savedSearches": [
+      {
+        "id": "vn2dslyjemcj1k0be",
+        "query": "Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels",
+        "brandName": "BUSCA",
+        "timestamp": "2025-06-30T11:54:28.634Z",
+        "resultsCount": 29,
+        "parameters": {
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "niches": [
+            "lifestyle"
+          ],
+          "minFollowers": 1000,
+          "maxFollowers": 1000000,
+          "location": "de instagram",
+          "verified": false,
+          "maxResults": 20,
+          "strictLocationMatch": true,
+          "userQuery": "Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels"
+        },
+        "influencerIds": [
+          "paramvir_beniwal",
+          "cristinaverdu",
+          "gemelosviajeros",
+          "come.vive.viaja",
+          "travel2you.ru",
+          "eyesofthemoon",
+          "juntos_viajando",
+          "charlysinewan",
+          "secretosdemadrid",
+          "kikearnaiz",
+          "jordirocasan",
+          "akkicris89",
+          "hugoperezcabaleiro",
+          "ovunno",
+          "cristiandelgadofdez",
+          "rutaideal",
+          "asieretxeandia",
+          "mytenida",
+          "isabelmarind",
+          "mireballestero",
+          "collagevintage",
+          "adlermarlowtravel.",
+          "garethbale11.",
+          "georginagio.",
+          "sergioramos.",
+          "hannimartiniii",
+          "el__mehdi30",
+          "andybadilloo",
+          "spainwithemily"
+        ]
+      }
+    ],
+    "savedInfluencers": [
+      {
+        "id": "vczk2j4ugmcj1k0e7",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Paramvir Singh Beniwal\n@paramvir_beniwal",
+          "handle": "paramvir_beniwal",
+          "platform": "Instagram",
+          "followers": 574000,
+          "engagementRate": 0.11419194298241518,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5740
+        },
+        "savedAt": "2025-06-30T11:54:28.735Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "0votene16mcj1k0eq",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Cristina Verdú 🌿 Travel / Vegan / Curly",
+          "handle": "cristinaverdu",
+          "platform": "Instagram",
+          "followers": 427200,
+          "engagementRate": 0.1013,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4272
+        },
+        "savedAt": "2025-06-30T11:54:28.754Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "bs82vkox4mcj1k0f8",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Alfon & Gon| Viajes 🌍📸\n@gemelosviajeros",
+          "handle": "gemelosviajeros",
+          "platform": "Instagram",
+          "followers": 599100,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5991
+        },
+        "savedAt": "2025-06-30T11:54:28.772Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "kx0itfc9tmcj1k0fu",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Irene 💚 Viajes & Cocina Sana\n@come.vive.viaja",
+          "handle": "come.vive.viaja",
+          "platform": "Instagram",
+          "followers": 597500,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5975
+        },
+        "savedAt": "2025-06-30T11:54:28.794Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "nxdltvdremcj1k0g3",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "☀️TRAVEL☀️ LIFE☀️ BUSINESS",
+          "handle": "travel2you.ru",
+          "platform": "Instagram",
+          "followers": 997500,
+          "engagementRate": 0.0398,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 9975
+        },
+        "savedAt": "2025-06-30T11:54:28.803Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "r41b3g8ysmcj1k0gk",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Angie L. Luna",
+          "handle": "eyesofthemoon",
+          "platform": "Instagram",
+          "followers": 596100,
+          "engagementRate": 0.033,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5961
+        },
+        "savedAt": "2025-06-30T11:54:28.820Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "doy9lmg0fmcj1k0h3",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Laura Duran & Alex Garcia / Travel",
+          "handle": "juntos_viajando",
+          "platform": "Instagram",
+          "followers": 460300,
+          "engagementRate": 0.0296,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4603
+        },
+        "savedAt": "2025-06-30T11:54:28.839Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "cfj4yr6qimcj1k0hn",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Charly Sinewan",
+          "handle": "charlysinewan",
+          "platform": "Instagram",
+          "followers": 665000,
+          "engagementRate": 0.0225,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6650
+        },
+        "savedAt": "2025-06-30T11:54:28.859Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "2rnsktsdvmcj1k0i3",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Secretos de Madrid",
+          "handle": "secretosdemadrid",
+          "platform": "Instagram",
+          "followers": 419800,
+          "engagementRate": 0.022400000000000003,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4198
+        },
+        "savedAt": "2025-06-30T11:54:28.875Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ehr8inep7mcj1k0in",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Kike Arnaiz",
+          "handle": "kikearnaiz",
+          "platform": "Instagram",
+          "followers": 419500,
+          "engagementRate": 0.021400000000000002,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4195
+        },
+        "savedAt": "2025-06-30T11:54:28.895Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "4r2wret40mcj1k0je",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Jordi Roca",
+          "handle": "jordirocasan",
+          "platform": "Instagram",
+          "followers": 728600,
+          "engagementRate": 0.0191,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7286
+        },
+        "savedAt": "2025-06-30T11:54:28.922Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "3ek8trv5wmcj1k0jp",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Cristina Rodríguez Box",
+          "handle": "akkicris89",
+          "platform": "Instagram",
+          "followers": 495600,
+          "engagementRate": 0.0191,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4956
+        },
+        "savedAt": "2025-06-30T11:54:28.933Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "lymbsuu25mcj1k0jv",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Hugo Pérez",
+          "handle": "hugoperezcabaleiro",
+          "platform": "Instagram",
+          "followers": 691500,
+          "engagementRate": 0.0163,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6915
+        },
+        "savedAt": "2025-06-30T11:54:28.939Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "89rs3plw5mcj1k0k8",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Oliver Vegas",
+          "handle": "ovunno",
+          "platform": "Instagram",
+          "followers": 422300,
+          "engagementRate": 0.016,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4223
+        },
+        "savedAt": "2025-06-30T11:54:28.952Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "4eparxvpxmcj1k0l1",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Cristian Delgado ✈ Travel Content Creator",
+          "handle": "cristiandelgadofdez",
+          "platform": "Instagram",
+          "followers": 506100,
+          "engagementRate": 0.0148,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5061
+        },
+        "savedAt": "2025-06-30T11:54:28.981Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "fgyiyulhfmcj1k0lf",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "David Bermudez & Kalina ☓ Travel Couple + 🐺",
+          "handle": "rutaideal",
+          "platform": "Instagram",
+          "followers": 489000,
+          "engagementRate": 0.0138,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4890
+        },
+        "savedAt": "2025-06-30T11:54:28.995Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "eqzc41bxcmcj1k0lr",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Asier Etxeandia",
+          "handle": "asieretxeandia",
+          "platform": "Instagram",
+          "followers": 530900,
+          "engagementRate": 0.0079,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5309
+        },
+        "savedAt": "2025-06-30T11:54:29.007Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "b66m4gtnbmcj1k0lx",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Mayte Gálvez",
+          "handle": "mytenida",
+          "platform": "Instagram",
+          "followers": 469300,
+          "engagementRate": 0.0070999999999999995,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4693
+        },
+        "savedAt": "2025-06-30T11:54:29.013Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "d0zi94pd8mcj1k0m9",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "ISABEL MARÍN",
+          "handle": "isabelmarind",
+          "platform": "Instagram",
+          "followers": 496400,
+          "engagementRate": 0.0049,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4964
+        },
+        "savedAt": "2025-06-30T11:54:29.025Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "jd78l8zt7mcj1k0ms",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Mireia Pujó Ballestero",
+          "handle": "mireballestero",
+          "platform": "Instagram",
+          "followers": 397700,
+          "engagementRate": 0.0058,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3977
+        },
+        "savedAt": "2025-06-30T11:54:29.044Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "knk8xxkinmcj1k0nb",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Sara Escudero",
+          "handle": "collagevintage",
+          "platform": "Instagram",
+          "followers": 968700,
+          "engagementRate": 0.001,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 9687
+        },
+        "savedAt": "2025-06-30T11:54:29.063Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "jgqxs09p0mcj1k0o1",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "adlermarlowtravel.",
+          "handle": "adlermarlowtravel.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T11:54:29.089Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "hujvqpvyimcj1k0oj",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "garethbale11.",
+          "handle": "garethbale11.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T11:54:29.107Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "pb18f42vnmcj1k0ou",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "georginagio.",
+          "handle": "georginagio.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T11:54:29.118Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "gezq7o645mcj1k0p2",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "sergioramos.",
+          "handle": "sergioramos.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-06-30T11:54:29.126Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "zsj74yl9bmcj1k0pp",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Hanni Martini - My Life in Spain",
+          "handle": "hannimartiniii",
+          "platform": "Instagram",
+          "followers": 25768,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 257
+        },
+        "savedAt": "2025-06-30T11:54:29.149Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "6xxxuxy14mcj1k0pz",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "el mehdiiii :-)",
+          "handle": "el__mehdi30",
+          "platform": "Instagram",
+          "followers": 13336,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 133
+        },
+        "savedAt": "2025-06-30T11:54:29.159Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "weurcbe2mmcj1k0qf",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Andy Badillo",
+          "handle": "andybadilloo",
+          "platform": "Instagram",
+          "followers": 287923,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 2879
+        },
+        "savedAt": "2025-06-30T11:54:29.175Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "1db5ngie6mcj1k0r2",
+        "campaignId": "campaign_1751284468717",
+        "influencerData": {
+          "name": "Emily in Seville │ American in Spain",
+          "handle": "spainwithemily",
+          "platform": "Instagram",
+          "followers": 28316,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 283
+        },
+        "savedAt": "2025-06-30T11:54:29.198Z",
+        "notes": "Auto-saved from search: \"Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      }
+    ],
+    "searchHistory": [
+      {
+        "id": "ejz1jwhh1mcj1k0be",
+        "query": "Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels",
+        "brandName": "BUSCA",
+        "timestamp": "2025-06-30T11:54:28.634Z",
+        "resultsCount": 29
+      }
+    ],
+    "autoCreatedFromSearch": true,
+    "originalSearchQuery": "Busca influencers compatibles con proposal document hombres de 25-34 años especializados en moda, viajes en Spain de Instagram, TikTok con presupuesto entre 500€ y 5000€ para conocimiento de marca, entretenimiento que crean posts, stories, reels",
+    "createdAt": "2025-06-30T11:54:28.717Z",
+    "updatedAt": "2025-06-30T11:54:29.204Z"
   }
 ]

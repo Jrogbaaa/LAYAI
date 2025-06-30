@@ -76,18 +76,29 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
               : 'opacity-0 transform translate-y-8'
           }`}
         >
-          <button 
-            onClick={onGetStarted}
-            className="group relative px-12 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold text-lg rounded-xl border border-white/20 hover:from-blue-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25"
-          >
-            <span className="relative z-10 flex items-center gap-3">
-              Comenzar
-              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </button>
+          <div className="flex flex-col items-center justify-center">
+            <button 
+              onClick={onGetStarted}
+              className="group relative px-12 py-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold text-xl rounded-xl border border-white/20 hover:from-blue-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25"
+            >
+              <span className="relative z-10 flex items-center gap-3">
+                Comenzar Búsqueda
+                <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </button>
+          </div>
+          
+          <div className="mt-8 text-white/60 text-lg max-w-3xl mx-auto text-center">
+            <p className="mb-3">
+              🔍 <strong>Búsqueda Inteligente:</strong> Chat con IA + subida de propuestas PDF
+            </p>
+            <p>
+              💡 <strong>Todo en uno:</strong> Encuentra influencers, genera propuestas y gestiona campañas
+            </p>
+          </div>
         </div>
 
         {/* Feature Highlights */}

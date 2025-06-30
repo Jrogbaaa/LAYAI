@@ -5,6 +5,165 @@ All notable changes to LAYAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.3] - 2025-01-19
+
+### 🚀 Enhanced - Streamlined PDF Proposal Upload Workflow
+- **Unified PDF Experience**: Consolidated PDF upload functionality exclusively within the chatbot interface
+  - **Removed Separate PDF Page**: Eliminated the standalone PDF upload wizard to reduce complexity
+  - **Chatbot-Only PDF Processing**: All PDF analysis and search generation now happens directly in the chat
+  - **Smart Follow-up**: After PDF analysis, chatbot asks "¿Hay alguna información adicional que te gustaría agregar?"
+  - **Flexible Response Options**: Users can add additional criteria, say "no", or click "Iniciar Búsqueda" button
+  - **Intelligent Query Combination**: System combines PDF analysis with user's additional input for enhanced search accuracy
+- **Enhanced PDF Workflow**: More intuitive and conversational experience
+  - **Real-time Analysis Feedback**: Clear progress indicators during PDF processing
+  - **Visual File Management**: File name display with remove option before analysis
+  - **Start Search Button**: Prominent green "Iniciar Búsqueda" button appears after PDF analysis
+  - **Context Preservation**: PDF analysis results maintained throughout the conversation
+
+### 🎯 Enhanced - Search Completion & User Guidance
+- **Improved Search Completion Feedback**: More obvious and celebratory completion experience
+  - **Enhanced Completion Message**: Changed from basic completion to "🎉 ¡Búsqueda completada exitosamente!"
+  - **Result Count Display**: Shows exact number of influencers found in completion message
+  - **Extended Display Time**: Increased completion message visibility from 1.5s to 3s
+  - **Auto-Scroll to Results**: Automatically scrolls down to results section with smooth animation
+  - **Clear User Direction**: Guides users to their search results immediately after completion
+- **Celebratory User Experience**: Enhanced satisfaction with clear success indicators
+  - **Emoji Celebration**: 🎉 emoji for visual impact
+  - **Detailed Completion**: "Encontrados X influencers perfectos para tu campaña"
+  - **Smooth Navigation**: Auto-scroll with 300ms delay for optimal user experience
+
+### 🎨 Fixed - Influencer Card Alignment & Visual Consistency
+- **Perfect Card Alignment**: Completely redesigned influencer cards for consistent visual layout
+  - **Header-Stats-Actions Structure**: Organized card sections with clear hierarchy
+  - **Consistent Button Positioning**: Instagram and Buscar buttons perfectly aligned across all cards
+  - **Engagement Rate Alignment**: Properly positioned and consistently displayed
+  - **Profile Information Layout**: Name, handle, and metrics in organized grid
+  - **Responsive Design**: Maintains alignment across different screen sizes
+- **Enhanced Visual Design**: Professional and clean appearance
+  - **Fixed Height Sections**: Ensures consistent card structure regardless of content
+  - **Proper Spacing**: Balanced padding and margins throughout
+  - **Color-Coded Elements**: Consistent badge colors and styling
+  - **Professional Typography**: Improved font weights and sizes for better readability
+
+### 🔧 Fixed - ProposalGenerator Critical Error Resolution
+- **TypeError Resolution**: Fixed "Cannot read properties of undefined (reading 'toLocaleString')" errors
+  - **Null Safety**: Added proper null checks before all `toLocaleString()` calls
+  - **Follower Count Protection**: `(result.influencer.followerCount || 0).toLocaleString()`
+  - **Average Rate Protection**: `(result.influencer.averageRate || 0).toLocaleString()`
+  - **Metrics Safety**: Protected `storyImpressions`, `reelImpressions`, and `totalImpressions`
+  - **CSV Export Fix**: Ensured all numeric fields have fallback values for export
+- **Robust Error Handling**: Prevents crashes when influencer data is incomplete
+  - **Graceful Degradation**: Shows "0" instead of crashing when data is missing
+  - **Enhanced Stability**: ProposalGenerator now works reliably with incomplete datasets
+  - **Better User Experience**: No more sudden crashes during proposal generation
+
+### 🗑️ Removed - Unnecessary UI Elements
+- **Cleaned Button Interface**: Removed redundant and non-functional buttons from search results
+  - **Removed Guardar Button**: All searches auto-save to campaigns, making manual save button redundant
+  - **Removed Contactar Button**: Empty button with no functionality eliminated
+  - **Streamlined Workflow**: Automatic saving removes need for manual save actions
+  - **Cleaner Interface**: More focused and less cluttered search results
+- **Simplified User Experience**: Reduced cognitive load with fewer unnecessary options
+  - **Auto-Save Confirmation**: Users still see confirmation that influencers are saved
+  - **Campaign Tab Access**: All saved influencers available in campaigns tab
+  - **Reduced Confusion**: Eliminates non-working buttons that could confuse users
+
+### 🔄 Enhanced - Landing Page Simplification
+- **Single Entry Point**: Streamlined landing page to focus on core search functionality
+  - **Removed PDF Upload Option**: Eliminated separate "Subir Propuesta PDF" button
+  - **Unified "Comenzar Búsqueda"**: Single entry point that leads to chatbot interface
+  - **Clearer User Journey**: Users understand there's one way to start searching
+  - **Reduced Decision Fatigue**: No choice paralysis between different search methods
+- **Consistent Messaging**: Updated copy to emphasize unified chat experience
+  - **Focus on Chat**: All functionality accessible through conversational interface
+  - **PDF Support Mentioned**: Users know they can upload PDFs within the chat
+  - **Simplified Onboarding**: Clearer path to getting started
+
+### 👩‍💼 Clara's Improved Workflow
+- **Streamlined PDF Processing**: Upload PDF → Get Analysis → Add Context → Start Search (all in chat)
+- **Better Search Completion**: Clear feedback when searches finish with auto-navigation to results
+- **Cleaner Results Interface**: Aligned cards and removed unnecessary buttons for faster scanning
+- **Reliable Proposal Generation**: No more crashes when generating proposals from search results
+- **Unified Interface**: All functionality accessible through single chat interface
+
+### 🔧 Technical Improvements
+- **Component Cleanup**: Removed unused PDF upload components (ProposalUpload.tsx, EnhancedSearchInterface.tsx, ProposalDrivenSearch.tsx)
+- **Error Prevention**: Comprehensive null checking throughout ProposalGenerator component
+- **Code Simplification**: Reduced complexity by consolidating PDF workflow into chatbot
+- **Performance**: Faster load times with fewer components and cleaner code paths
+- **Maintainability**: Easier to maintain with unified workflow in single component
+
+## [2.10.2] - 2025-01-18
+
+### 🤖 Added - Automatic Campaign Creation & Influencer Saving
+- **Smart Campaign Automation**: When users search for brands, system automatically creates campaigns and saves ALL found influencers
+  - **Brand Detection**: Recognizes queries like "influencers para IKEA" and extracts brand name
+  - **Auto-Campaign Creation**: Creates branded campaigns (e.g., "IKEA Campaign") with search metadata
+  - **Batch Influencer Saving**: Automatically saves all found influencers to the campaign with tags ['auto-saved', 'search-result']
+  - **Duplicate Prevention**: Smart checking prevents duplicate influencers when adding to existing campaigns
+  - **Seamless Workflow**: Search → Auto-create campaign → Auto-save influencers → Ready for outreach management
+- **Enhanced Campaign Service**: Upgraded `campaignService.saveSearchResults()` with auto-save capabilities
+  - **Configurable Auto-Save**: `autoSaveInfluencers` parameter (defaults to true)
+  - **Error Resilience**: Individual influencer save failures don't block the entire batch
+  - **Progress Logging**: Detailed console output showing auto-save progress
+  - **Multiple Save Actions**: Different actions for new campaigns vs. existing campaigns
+
+### 🗂️ Enhanced - Monday.com-Style Campaign Management
+- **Reverted to Table UI**: Restored the clean, scannable Monday.com-style interface over tabs
+- **Comprehensive Campaign Table**: All campaign information in organized columns
+  - **Editable Cells**: Click campaign name, brand name, or budget to edit inline
+  - **Status Dropdowns**: Interactive status and priority selectors with color coding
+  - **Date Ranges**: Formatted timeline display (DD/MM/YYYY - DD/MM/YYYY)
+  - **Action Buttons**: Delete, notes, and search modals with hover effects
+- **Saved Searches Column**: Clickable search counter opens detailed search history modal
+  - **Search Counter Badge**: "🔍 3" style buttons showing total searches per campaign
+  - **Search History Modal**: Full details of all saved searches with dates and results
+  - **Query Display**: Shows exact search queries, brand names, and result counts
+  - **Timestamp Tracking**: When each search was performed
+- **Enhanced Dashboard Stats**: Header metrics showing platform usage
+  - **Total Campaigns**: Count of all campaigns in system
+  - **Búsquedas Guardadas**: Total searches across all campaigns
+  - **Influencers Guardados**: Total saved influencers ready for outreach
+  - **Campañas Activas**: Active campaigns currently running
+
+### 🎨 UI/UX Improvements
+- **Professional Table Layout**: Clean Monday.com-inspired design
+  - **Checkbox Selection**: Multi-select campaigns for batch operations
+  - **Hover Effects**: Visual feedback on interactive elements
+  - **Color-Coded Status**: Visual status indicators with appropriate colors
+  - **Responsive Design**: Works across desktop and mobile screen sizes
+- **Modal System**: Professional modal dialogs for detailed views
+  - **Notes Editor**: Full-screen note editing with save/cancel actions
+  - **Search History**: Detailed search display with query and metadata
+  - **Smooth Animations**: Proper modal open/close transitions
+- **Empty State Handling**: Encouraging empty state with call-to-action
+  - **Welcome Message**: Guides users to create their first campaign
+  - **Visual Icons**: Large emoji icons for visual appeal
+  - **Action Prompts**: Clear buttons to get started
+
+### 🔧 Technical Architecture
+- **Database API Enhancement**: Added `create_enhanced` action for campaigns
+  - **Enhanced Campaign Support**: Proper handling of savedSearches, savedInfluencers, searchHistory arrays
+  - **Backward Compatibility**: Works with existing campaign structure
+  - **Field Defaults**: Ensures enhanced fields are properly initialized
+- **Auto-Save Pipeline**: Complete workflow automation
+  - **Brand Extraction**: Smart parsing of search queries for brand names
+  - **Campaign Creation**: Auto-generates campaigns with proper metadata
+  - **Influencer Batch Save**: Efficient saving of multiple influencers with error handling
+  - **Status Tracking**: Comprehensive logging of save operations
+- **Data Integrity**: Proper relationships between campaigns, searches, and influencers
+  - **Foreign Key Relationships**: CampaignId linking between searches and influencers
+  - **Metadata Preservation**: Search parameters and timestamps maintained
+  - **Tag System**: Automatic tagging of auto-saved vs. manually saved influencers
+
+### 👩‍💼 Clara's Enhanced Workflow
+- **Streamlined Process**: One search automatically sets up complete campaign structure
+- **No Manual Campaign Creation**: System recognizes brand searches and auto-creates campaigns
+- **Ready-to-Go Outreach**: All found influencers immediately available for status tracking
+- **Historical Search Access**: Easy access to all previous searches and their results
+- **Campaign Organization**: Clear separation of different brand campaigns
+- **Status Management**: Built-in workflow for tracking influencer outreach progress
+
 ## [2.10.1] - 2025-01-18
 
 ### 🔗 Enhanced - Backend Validation Integration

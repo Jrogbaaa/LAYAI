@@ -1,8 +1,23 @@
-# 🚀 LAYAI - AI-Powered Influencer Marketing Platform v2.10.0
+# 🚀 LAYAI - AI-Powered Influencer Marketing Platform v2.10.3
 
-> **Versión 2.10.0** - Plataforma completa de marketing de influencers con diseño compacto, validación de enlaces de Instagram, seguimiento avanzado de progreso, localización española, y filtrado de marcas.
+> **Versión 2.10.3** - Plataforma completa de marketing de influencers con flujo de trabajo PDF optimizado, experiencia unificada en chatbot, alineación de UI mejorada, y generación de propuestas estable.
 
-## ✨ Últimas Funcionalidades (v2.10.0)
+## ✨ Últimas Funcionalidades (v2.10.3)
+
+### 🚀 **Flujo de Trabajo PDF Optimizado**
+- **Experiencia PDF Unificada**: Toda la funcionalidad de PDF consolidada en el chatbot
+- **Análisis PDF en Chat**: Carga, analiza y genera búsquedas directamente en la conversación
+- **Seguimiento Inteligente**: "¿Hay información adicional que te gustaría agregar?" después del análisis
+- **Botón Iniciar Búsqueda**: Prominente botón verde para comenzar búsquedas después del análisis PDF
+- **Combinación de Consultas**: Sistema combina análisis PDF con entrada adicional del usuario
+
+### 🎯 **Finalización de Búsqueda Mejorada** 
+- **Feedback de Finalización Celebratorio**: "🎉 ¡Búsqueda completada exitosamente!"
+- **Conteo de Resultados**: Muestra número exacto de influencers encontrados
+- **Auto-Scroll a Resultados**: Navegación automática suave a la sección de resultados
+- **Tiempo de Visualización Extendido**: 3 segundos de feedback de finalización para mayor claridad
+
+### 🎨 **Última Funcionalidades (v2.10.0)**
 
 ### 🎨 **Diseño Compacto de Tarjetas de Influencers**
 - **50% Más Compacto**: Visualiza 2-3x más influencers por pantalla
@@ -113,32 +128,38 @@ npm run dev
 
 ## 📱 Cómo Usar la Plataforma
 
-### 1. **Búsqueda de Influencers**
+### 1. **Búsqueda de Influencers (Chat Unificado)**
 ```
 "Encuentra influencers femeninas de España perfectas para IKEA"
 "Busca atletas españoles ideales para Nike"
 "Influencers de lifestyle en Madrid para campaña de moda"
 ```
 
-### 2. **Verificación Automática**
+### 2. **Análisis PDF en Chat**
+- **📄 Cargar PDF**: Haz clic en el botón verde de PDF en el chat
+- **🔍 Análisis Automático**: IA extrae marca, audiencia objetivo, presupuesto, plataformas
+- **💬 Agregar Contexto**: "¿Hay información adicional que te gustaría agregar?"
+- **🚀 Iniciar Búsqueda**: Botón verde "Iniciar Búsqueda" para comenzar con datos combinados
+
+### 3. **Verificación Automática**
 - ✅ **Ubicación Española**: Verificación automática con indicadores visuales
 - 🎂 **Estimación de Edad**: Análisis inteligente con puntuación de confianza
 - 📊 **Métricas Actualizadas**: Seguidores, engagement, y audiencia en tiempo real
 - 🏢 **Filtrado de Marcas**: Exclusión automática de cuentas corporativas
 
-### 3. **Acceso Completo a Resultados**
+### 4. **Acceso Completo a Resultados**
 - **Vista Inicial**: Primeros 20 resultados de mayor calidad
 - **Ver Todos**: Botón para mostrar todos los influencers encontrados (50+)
 - **Navegación Intuitiva**: Expandir/colapsar resultados según necesidad
 - **Sin Limitaciones**: Acceso completo a toda la investigación
 
-### 4. **Generación de Propuestas**
+### 5. **Generación de Propuestas**
 - **Selección de Influencers**: Añadir influencers verificados a propuestas
 - **Análisis IA**: Generación automática de "Por qué perfecto para la marca"
 - **Contexto Español**: Análisis cultural y de mercado localizado
 - **Regeneración**: Mejorar explicaciones con un clic
 
-### 5. **Exportación Flexible**
+### 6. **Exportación Flexible**
 ```bash
 # Formatos Disponibles
 - CSV Hibiki (Estándar internacional)

@@ -8,6 +8,7 @@ import { ProposalViewer } from '@/components/ProposalViewer';
 import { FeedbackPanel } from '@/components/FeedbackPanel';
 import DiscoveryGrid from '@/components/DiscoveryGrid';
 import CampaignManager from '@/components/CampaignManager';
+import { EnhancedCampaignManager } from '@/components/EnhancedCampaignManager';
 import NotesManager from '@/components/NotesManager';
 import LandingPage from '@/components/LandingPage';
 
@@ -18,6 +19,7 @@ import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/newExportUtils
 import { generateSessionId } from '@/lib/database';
 import Sidebar, { PageView } from '@/components/Sidebar';
 import EnhancedFeedbackPanel from '@/components/EnhancedFeedbackPanel';
+import { campaignService } from '@/lib/enhancedCampaignService';
 
 type ExtendedPageView = PageView | 'landing' | 'chat' | 'campaigns' | 'proposal';
 
@@ -40,6 +42,36 @@ export default function Home() {
   useEffect(() => {
     setSessionId(generateSessionId());
   }, []);
+
+  // Helper function to extract brand name from search message
+  const extractBrandFromMessage = (message: string): string => {
+    const brandKeywords = ['ikea', 'nike', 'adidas', 'zara', 'h&m', 'mango', 'inditex', 'pull&bear', 'bershka', 'stradivarius'];
+    const lowerMessage = message.toLowerCase();
+    
+    for (const brand of brandKeywords) {
+      if (lowerMessage.includes(brand)) {
+        return brand.toUpperCase();
+      }
+    }
+    
+    // Try to extract from common patterns like "influencers para X" or "X style influencers"
+    const patterns = [
+      /influencers?\s+(?:para|for|de|del|como|estilo)\s+([a-zA-Z][a-zA-Z0-9&\s]+?)(?:\s|$)/i,
+      /([a-zA-Z][a-zA-Z0-9&\s]+?)\s+(?:influencers?|style|compatible|brand)/i,
+      /estilo\s+([a-zA-Z][a-zA-Z0-9&\s]+?)(?:\s|$)/i
+    ];
+    
+    for (const pattern of patterns) {
+      const match = message.match(pattern);
+      if (match && match[1] && match[1].length > 2) {
+        return match[1].trim().toUpperCase();
+      }
+    }
+    
+    // Fallback to first meaningful word
+    const words = message.split(' ').filter(word => word.length > 3);
+    return words[0] || 'UNKNOWN_BRAND';
+  };
 
   const handleSendMessage = async (message: string, history: any[]) => {
     setIsLoading(true);
@@ -111,6 +143,25 @@ export default function Home() {
               totalFound: searchData.data?.totalFound || searchData.totalFound || 0
             });
             setShowAllResults(false); // Reset expanded view for new search
+            
+            // 📚 Automatically save search to campaigns
+            try {
+              const brandName = extractBrandFromMessage(message);
+              const searchParams = data.data; // Enhanced search parameters
+              const allResults = [...convertedResults, ...discoveryResults];
+              
+              const saveResult = await campaignService.saveSearchResults(
+                message,
+                brandName,
+                allResults,
+                searchParams
+              );
+              
+              console.log(`📚 Search automatically saved: ${saveResult.action} for ${brandName}`, saveResult);
+            } catch (error) {
+              console.error('Error saving search to campaigns:', error);
+              // Non-blocking error - search results still work
+            }
           }
           
           setCurrentSearchId(searchData.searchId);
@@ -303,6 +354,11 @@ export default function Home() {
     setShowSidebar(true);
   };
 
+  const handleBackToLanding = () => {
+    setCurrentView('landing');
+    setShowSidebar(false);
+  };
+
   const handleClearResults = () => {
     setSearchResults(null);
     setCurrentSearchId(null);
@@ -487,7 +543,7 @@ export default function Home() {
           </div>
         );
       case 'campaigns':
-        return <CampaignManager />;
+        return <EnhancedCampaignManager />;
       case 'notes':
         return <NotesManager />;
 

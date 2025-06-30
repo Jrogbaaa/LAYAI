@@ -168,144 +168,134 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
         <p className="text-gray-600 mt-1 text-sm">
           Clasificados por puntuación de compatibilidad y rendimiento de campañas anteriores
         </p>
+        
+
       </div>
 
-      <div className="grid gap-3">
+      <div className="grid gap-3" data-testid="influencer-results">
         {results.map((result, index) => {
           const validation = isValidInstagramHandle(result.influencer);
           
           return (
-            <div key={`${result.influencer.handle}-${index}`} data-testid="influencer-card" className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 p-4">
-              <div className="flex items-start space-x-4">
-                {/* Profile Section - Compact */}
-                <div className="flex-shrink-0">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                      {result.influencer.name.charAt(0)}
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-gray-900 leading-tight">
-                        {result.influencer.name || 'Unknown Name'}
-                      </h3>
-                      <p className="text-sm text-gray-600">@{result.influencer.handle || 'unknown'}</p>
-                      <div className="flex items-center space-x-2 mt-1">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getMatchScoreColor(result.matchScore)}`}>
-                          #{index + 1} • {(result.matchScore * 100).toFixed(0)}%
-                        </span>
-                      </div>
-                    </div>
+            <div key={`${result.influencer.handle}-${index}`} data-testid="influencer-card" className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 p-5">
+              {/* Header Section */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    {result.influencer.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 leading-tight">
+                      {result.influencer.name || 'Unknown Name'}
+                    </h3>
+                    <p className="text-sm text-gray-600">@{result.influencer.handle || 'unknown'}</p>
                   </div>
                 </div>
+                <div className="text-right">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getMatchScoreColor(result.matchScore)}`}>
+                    #{index + 1} • {(result.matchScore * 100).toFixed(0)}%
+                  </span>
+                </div>
+              </div>
 
-                {/* Stats Grid - Horizontal Layout */}
-                <div className="flex-grow min-w-0">
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-3">
-                    {/* Followers */}
-                    <div className="text-center">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Seguidores</p>
-                      <p className="text-lg font-bold text-gray-900">{formatNumber(result.influencer.followerCount)}</p>
-                    </div>
-                    
-                    {/* Engagement */}
-                    <div className="text-center">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Engagement</p>
-                      <p className="text-lg font-bold text-green-600">{((result.influencer.engagementRate || 0) * 100).toFixed(1)}%</p>
-                    </div>
-                    
-                    {/* Cost */}
-                    <div className="text-center">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Tarifa Est.</p>
-                      <p className="text-lg font-bold text-blue-600">${(result.estimatedCost || 0).toLocaleString()}</p>
-                    </div>
-                    
-                    {/* Platform */}
-                    <div className="text-center">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Plataforma</p>
-                      <p className="text-sm font-medium text-gray-700">{result.influencer.platform || 'Unknown'}</p>
-                    </div>
+              {/* Stats Grid - Fixed Height for Consistency */}
+              <div className="grid grid-cols-4 gap-4 mb-4 py-3 bg-gray-50 rounded-lg">
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Seguidores</p>
+                  <p className="text-base font-bold text-gray-900 mt-1">{formatNumber(result.influencer.followerCount)}</p>
+                </div>
+                
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Engagement</p>
+                  <p className="text-base font-bold text-green-600 mt-1">{((result.influencer.engagementRate || 0) * 100).toFixed(1)}%</p>
+                </div>
+                
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Tarifa Est.</p>
+                  <p className="text-base font-bold text-blue-600 mt-1">${(result.estimatedCost || 0).toLocaleString()}</p>
+                </div>
+                
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Plataforma</p>
+                  <p className="text-sm font-medium text-gray-700 mt-1">{result.influencer.platform || 'Unknown'}</p>
+                </div>
+              </div>
+
+              {/* Tags Row - Fixed Height */}
+              <div className="flex flex-wrap items-center gap-2 mb-4 min-h-[2rem]">
+                {/* Niches */}
+                {(result.influencer.niche || []).slice(0, 2).map((niche, nicheIndex) => (
+                  <span 
+                    key={`${niche}-${nicheIndex}`}
+                    className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium"
+                  >
+                    {niche}
+                  </span>
+                ))}
+                
+                {/* Location */}
+                {result.influencer.location && (
+                  <span className="text-xs text-gray-600 flex items-center">
+                    📍 {result.influencer.location}
+                  </span>
+                )}
+                
+                {/* Cost Level */}
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCostLevelColor(result.influencer.costLevel || 'budget')}`}>
+                  {result.influencer.costLevel || 'Budget'}
+                </span>
+              </div>
+
+              {/* Match Reason - Fixed Height */}
+              <div className="mb-4 min-h-[2.5rem] flex items-center">
+                {(result.matchReasons || []).length > 0 && (
+                  <div className="w-full p-2 bg-green-50 rounded-md border border-green-200">
+                    <p className="text-xs text-green-700 flex items-center">
+                      <svg className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      {result.matchReasons[0]}
+                    </p>
                   </div>
+                )}
+              </div>
 
-                  {/* Quick Info */}
-                  <div className="flex flex-wrap items-center gap-2 mb-3">
-                    {/* Niches */}
-                    {(result.influencer.niche || []).slice(0, 2).map((niche, nicheIndex) => (
-                      <span 
-                        key={`${niche}-${nicheIndex}`}
-                        className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium"
-                      >
-                        {niche}
-                      </span>
-                    ))}
-                    
-                    {/* Location */}
-                    {result.influencer.location && (
-                      <span className="text-xs text-gray-600 flex items-center">
-                        📍 {result.influencer.location}
-                      </span>
-                    )}
-                    
-                    {/* Cost Level */}
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCostLevelColor(result.influencer.costLevel || 'budget')}`}>
-                      {result.influencer.costLevel || 'Budget'}
+              {/* Action Buttons - Fixed Alignment */}
+              <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
+                {validation.isValid ? (
+                  <a
+                    href={getProfileLink(result.influencer.handle, result.influencer.name)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2.5 rounded-md font-medium hover:from-pink-600 hover:to-purple-700 transition-all text-sm flex items-center justify-center shadow-sm"
+                    title="Ver perfil de Instagram"
+                  >
+                    📸 Instagram
+                  </a>
+                ) : (
+                  <div className="flex-1">
+                    <span className="w-full bg-gray-300 text-gray-500 px-4 py-2.5 rounded-md text-sm cursor-not-allowed flex items-center justify-center" title={validation.reason}>
+                      ⚠️ Perfil No Válido
                     </span>
                   </div>
-
-                  {/* Top Match Reason */}
-                  {(result.matchReasons || []).length > 0 && (
-                    <div className="mb-3 p-2 bg-green-50 rounded-md">
-                      <p className="text-xs text-green-700 flex items-center">
-                        <svg className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                        {result.matchReasons[0]}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Action Buttons - Fixed Alignment */}
-                  <div className="flex flex-wrap items-center gap-2">
-                    {validation.isValid ? (
-                      <a
-                        href={getProfileLink(result.influencer.handle, result.influencer.name)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-3 py-2 rounded-md font-medium hover:from-pink-600 hover:to-purple-700 transition-all text-sm flex items-center shadow-sm"
-                        title="Ver perfil de Instagram"
-                      >
-                        📸 Instagram
-                      </a>
-                    ) : (
-                      <div className="flex items-center">
-                        <span className="bg-gray-300 text-gray-500 px-3 py-2 rounded-md text-sm cursor-not-allowed flex items-center" title={validation.reason}>
-                          ⚠️ Perfil No Válido
-                        </span>
-                      </div>
-                    )}
-                    
-                    <a
-                      href={getGoogleSearchLink(result.influencer.handle, result.influencer.name)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-gray-600 text-white px-3 py-2 rounded-md font-medium hover:bg-gray-700 transition-colors text-sm flex items-center shadow-sm"
-                      title="Buscar en Google"
-                    >
-                      🔍 Buscar
-                    </a>
-                    
-                    <button className="bg-green-600 text-white px-3 py-2 rounded-md font-medium hover:bg-green-700 transition-colors text-sm shadow-sm">
-                      Contactar
-                    </button>
-                    
-                    <button className="border border-gray-300 text-gray-700 px-3 py-2 rounded-md font-medium hover:bg-gray-50 transition-colors text-sm">
-                      Guardar
-                    </button>
-                  </div>
-                </div>
+                )}
+                
+                <a
+                  href={getGoogleSearchLink(result.influencer.handle, result.influencer.name)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 bg-gray-600 text-white px-4 py-2.5 rounded-md font-medium hover:bg-gray-700 transition-colors text-sm flex items-center justify-center shadow-sm"
+                  title="Buscar en Google"
+                >
+                  🔍 Buscar
+                </a>
               </div>
             </div>
           );
         })}
       </div>
+
+
     </div>
   );
 };

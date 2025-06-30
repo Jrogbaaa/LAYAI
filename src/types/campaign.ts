@@ -102,4 +102,91 @@ export interface ProposalExportSettings {
   format: 'csv' | 'pdf' | 'excel';
   language: 'es' | 'en';
   customFields: string[];
+}
+
+// Enhanced Campaign Management Types
+export interface SavedSearch {
+  id: string;
+  query: string;
+  brandName: string;
+  timestamp: Date;
+  parameters: {
+    niches?: string[];
+    location?: string;
+    gender?: string;
+    minFollowers?: number;
+    maxFollowers?: number;
+    platform?: string[];
+  };
+  resultsCount: number;
+  influencerIds: string[]; // IDs of influencers found in this search
+}
+
+export interface SavedInfluencer {
+  id: string;
+  campaignId: string;
+  influencerData: {
+    name: string;
+    handle: string;
+    platform: string;
+    followers: number;
+    engagementRate: number;
+    location?: string;
+    niche: string[];
+    estimatedCost: number;
+    validationStatus?: {
+      isValidProfile: boolean;
+      isBrandAccount: boolean;
+      validationReason?: string;
+      apifyVerified: boolean;
+    };
+  };
+  savedAt: Date;
+  notes?: string;
+  status: 'saved' | 'contacted' | 'confirmed' | 'rejected';
+  tags: string[];
+}
+
+export interface EnhancedCampaign {
+  id: string;
+  name: string;
+  brandName: string;
+  owner: string;
+  status: 'Planning' | 'Active' | 'Completed' | 'Paused';
+  priority: 'Low' | 'Medium' | 'High' | 'Critical';
+  startDate: string;
+  endDate: string;
+  budget: number;
+  platform: string[];
+  notes: string;
+  createdAt: Date;
+  updatedAt: Date;
+  
+  // Enhanced fields
+  savedSearches: SavedSearch[];
+  savedInfluencers: SavedInfluencer[];
+  searchHistory: SearchHistoryEntry[];
+  autoCreatedFromSearch?: boolean;
+  originalSearchQuery?: string;
+  customTimeline?: string; // Custom timeline text field
+}
+
+export interface SearchHistoryEntry {
+  id: string;
+  query: string;
+  brandName: string;
+  timestamp: Date;
+  resultsCount: number;
+  savedToExistingCampaign?: string; // Campaign ID if added to existing campaign
+  createdNewCampaign?: string; // Campaign ID if created new campaign
+}
+
+export interface CampaignSearchStats {
+  totalSearches: number;
+  uniqueBrands: number;
+  totalInfluencersFound: number;
+  totalInfluencersSaved: number;
+  averageResultsPerSearch: number;
+  mostSearchedBrand: string;
+  recentActivity: SearchHistoryEntry[];
 } 
