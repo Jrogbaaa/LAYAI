@@ -1525,7 +1525,7 @@ function transformProfileResults(items: any[], platform: string, params: ApifySe
       // Enhance with brand compatibility score
       if (params.brandName) {
         let score = 50; // Base score
-        const detectedNiche = detectNicheFromProfile(transformed.username, params.niches);
+        const detectedNiche = detectNicheFromProfile(transformed.username, params.niches || []);
         score += (nicheScores as Record<string, number>)[detectedNiche] || 0;
         if (transformed.verified) score += 10;
         transformed.brandCompatibilityScore = Math.min(score, 100);
@@ -2119,7 +2119,7 @@ export async function searchInfluencersWithTwoTierDiscovery(params: ApifySearchP
         fullName: 'Search Configuration Needed',
         followers: 0,
         platform: params.platforms[0] || 'Instagram',
-        niche: params.niches[0] || 'lifestyle',
+        niche: (params.niches && params.niches.length > 0) ? params.niches[0] : 'lifestyle',
         profileUrl: '#',
         source: 'verified-discovery' as const
       };
@@ -2445,7 +2445,7 @@ function createDiscoveryResults(profileUrls: {url: string, platform: string}[], 
     // Generate consistent display name based on actual username
     const displayName = generateConsistentDisplayName(username, params);
     const estimatedFollowers = estimateFollowersFromRange(params.minFollowers, params.maxFollowers);
-    const detectedNiche = detectNicheFromProfile(username, params.niches);
+    const detectedNiche = detectNicheFromProfile(username, params.niches || []);
     
     const discoveryProfile: BasicInfluencerProfile = {
       username,

@@ -102,11 +102,16 @@ class SearchMemoryStore {
         limit(100) // Load last 100 searches
       );
       const searchSnapshot = await getDocs(searchQuery);
-      this.searchHistory = searchSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        timestamp: doc.data().timestamp?.toDate() || new Date(),
-      } as SearchHistory));
+      this.searchHistory = searchSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          timestamp: data.timestamp && typeof data.timestamp.toDate === 'function' 
+            ? data.timestamp.toDate() 
+            : (data.timestamp instanceof Date ? data.timestamp : new Date()),
+        } as SearchHistory;
+      });
 
       // Load feedback
       const feedbackQuery = query(
@@ -115,11 +120,16 @@ class SearchMemoryStore {
         limit(200) // Load last 200 feedback entries
       );
       const feedbackSnapshot = await getDocs(feedbackQuery);
-      this.userFeedback = feedbackSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        timestamp: doc.data().timestamp?.toDate() || new Date(),
-      } as UserFeedback));
+      this.userFeedback = feedbackSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          timestamp: data.timestamp && typeof data.timestamp.toDate === 'function' 
+            ? data.timestamp.toDate() 
+            : (data.timestamp instanceof Date ? data.timestamp : new Date()),
+        } as UserFeedback;
+      });
 
       // Load learning patterns
       const patternsQuery = query(
@@ -127,11 +137,16 @@ class SearchMemoryStore {
         orderBy('lastUpdated', 'desc')
       );
       const patternsSnapshot = await getDocs(patternsQuery);
-      this.learningPatterns = patternsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        lastUpdated: doc.data().lastUpdated?.toDate() || new Date(),
-      } as LearningPattern));
+      this.learningPatterns = patternsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          lastUpdated: data.lastUpdated && typeof data.lastUpdated.toDate === 'function' 
+            ? data.lastUpdated.toDate() 
+            : (data.lastUpdated instanceof Date ? data.lastUpdated : new Date()),
+        } as LearningPattern;
+      });
 
       this.isInitialized = true;
       console.log(`✅ Loaded ${this.searchHistory.length} searches, ${this.userFeedback.length} feedback, ${this.learningPatterns.length} patterns`);

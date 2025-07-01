@@ -190,7 +190,9 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
     const isVipsBrand = brandName.toLowerCase().includes('vips') || queryText.includes('vips');
     const isLifestyleBrand = isVipsBrand || queryText.includes('lifestyle') || queryText.includes('casual');
     
-    const hasKnownBrand = isIkeaBrand || isVipsBrand;
+    // Universal brand detection - ANY brand name triggers intelligent processing
+    const hasAnyBrand = brandName.length > 2; // Minimum 3 chars to avoid false positives
+    const hasKnownBrand = isIkeaBrand || isVipsBrand || hasAnyBrand;
     
     if (!isSpainRelated(params.location, params.userQuery, params.brandName) && !hasKnownBrand) {
       console.log('❌ Not a Spain-related query or known brand, skipping vetted database');
@@ -331,6 +333,15 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
       })).sort((a, b) => (b.brandCompatibilityScore || 0) - (a.brandCompatibilityScore || 0));
       
       console.log(`🏆 Top VIPS compatibility scores: ${filteredInfluencers.slice(0, 3).map(inf => `${inf.username}: ${inf.brandCompatibilityScore}`).join(', ')}`);
+    } else if (hasAnyBrand) {
+      // Universal brand intelligence for any brand not specifically handled
+      console.log(`🎯 Applying Universal brand compatibility scoring for: ${brandName}...`);
+      filteredInfluencers = filteredInfluencers.map(inf => ({
+        ...inf,
+        brandCompatibilityScore: calculateUniversalBrandCompatibility(inf, brandName)
+      })).sort((a, b) => (b.brandCompatibilityScore || 0) - (a.brandCompatibilityScore || 0));
+      
+      console.log(`🏆 Top ${brandName} compatibility scores: ${filteredInfluencers.slice(0, 3).map(inf => `${inf.username}: ${inf.brandCompatibilityScore}`).join(', ')}`);
     } else {
       // Sort by engagement rate first (higher is better), then by follower count descending
       filteredInfluencers.sort((a, b) => {
@@ -534,6 +545,108 @@ function calculateVipsBrandCompatibility(influencer: VettedInfluencer): number {
   }
 
   return Math.min(score, 100); // Cap at 100
+}
+
+/**
+ * Calculate Universal Brand Compatibility Score
+ * Works with any brand by analyzing brand category and influencer fit
+ */
+function calculateUniversalBrandCompatibility(influencer: VettedInfluencer, brandName: string): number {
+  let score = 0;
+  const brand = brandName.toLowerCase();
+
+  // Determine brand category and compatible genres
+  let brandCategory = 'general';
+  let compatibleGenres: string[] = [];
+  let optimalFollowerRange = { min: 10000, max: 1000000 };
+  let optimalEngagement = 0.03;
+
+  // Tech/Gaming brands
+  if (/\b(apple|samsung|google|microsoft|sony|nintendo|tesla|uber|meta|tiktok|instagram)\b/.test(brand)) {
+    brandCategory = 'tech';
+    compatibleGenres = ['tech', 'gaming', 'lifestyle', 'entertainment', 'innovation'];
+    optimalFollowerRange = { min: 50000, max: 2000000 };
+    optimalEngagement = 0.04;
+  }
+  // Fashion/Beauty brands
+  else if (/\b(zara|h&m|mango|nike|adidas|chanel|dior|sephora|loreal|maybelline)\b/.test(brand)) {
+    brandCategory = 'fashion';
+    compatibleGenres = ['fashion', 'beauty', 'lifestyle', 'style', 'trends'];
+    optimalFollowerRange = { min: 25000, max: 500000 };
+    optimalEngagement = 0.05;
+  }
+  // Food/Restaurant brands
+  else if (/\b(mcdonalds|kfc|starbucks|dominos|pizza|cocacola|pepsi|nestle|danone)\b/.test(brand)) {
+    brandCategory = 'food';
+    compatibleGenres = ['food', 'lifestyle', 'entertainment', 'casual', 'cooking'];
+    optimalFollowerRange = { min: 15000, max: 300000 };
+    optimalEngagement = 0.06;
+  }
+  // Travel/Tourism brands  
+  else if (/\b(airbnb|booking|expedia|ryanair|vueling|renfe|iberia|trivago)\b/.test(brand)) {
+    brandCategory = 'travel';
+    compatibleGenres = ['travel', 'lifestyle', 'adventure', 'photography', 'culture'];
+    optimalFollowerRange = { min: 20000, max: 800000 };
+    optimalEngagement = 0.04;
+  }
+  // Automotive brands
+  else if (/\b(bmw|mercedes|audi|volkswagen|seat|renault|toyota|ford)\b/.test(brand)) {
+    brandCategory = 'automotive';
+    compatibleGenres = ['automotive', 'lifestyle', 'tech', 'luxury', 'travel'];
+    optimalFollowerRange = { min: 30000, max: 1000000 };
+    optimalEngagement = 0.03;
+  }
+  // Financial/Banking brands
+  else if (/\b(bbva|santander|caixabank|paypal|revolut|wise|n26)\b/.test(brand)) {
+    brandCategory = 'finance';
+    compatibleGenres = ['business', 'tech', 'lifestyle', 'education', 'professional'];
+    optimalFollowerRange = { min: 50000, max: 500000 };
+    optimalEngagement = 0.03;
+  }
+  // Default: Lifestyle brand approach
+  else {
+    brandCategory = 'lifestyle';
+    compatibleGenres = ['lifestyle', 'entertainment', 'fashion', 'general'];
+    optimalFollowerRange = { min: 20000, max: 400000 };
+    optimalEngagement = 0.04;
+  }
+
+  // Genre compatibility (40% of score)
+  const genreMatches = influencer.genres.filter(genre => 
+    compatibleGenres.some(compatible => 
+      genre.toLowerCase().includes(compatible) || compatible.includes(genre.toLowerCase())
+    )
+  );
+  score += (genreMatches.length / Math.max(influencer.genres.length, 1)) * 40;
+
+  // Follower count optimization (30% of score)
+  if (influencer.followerCount >= optimalFollowerRange.min && influencer.followerCount <= optimalFollowerRange.max) {
+    score += 30; // Perfect range for this brand category
+  } else if (influencer.followerCount >= optimalFollowerRange.min * 0.5 && influencer.followerCount < optimalFollowerRange.min) {
+    score += 20; // Good for micro-campaigns
+  } else if (influencer.followerCount > optimalFollowerRange.max && influencer.followerCount <= optimalFollowerRange.max * 2) {
+    score += 15; // Good for macro campaigns
+  }
+
+  // Engagement rate scoring (20% of score)
+  if (influencer.engagementRate > optimalEngagement * 1.5) {
+    score += 20; // Excellent engagement
+  } else if (influencer.engagementRate > optimalEngagement) {
+    score += 15; // Good engagement
+  } else if (influencer.engagementRate > optimalEngagement * 0.7) {
+    score += 10; // Acceptable engagement
+  }
+
+  // Category bonus (10% of score)
+  if (influencer.category === 'Micro' || influencer.category === 'Macro') {
+    score += 8; // Best categories for most brand campaigns
+  } else if (influencer.category === 'Nano') {
+    score += 6; // Good for local/niche campaigns
+  } else if (influencer.category === 'Mega') {
+    score += 5; // Good for mass reach campaigns
+  }
+
+  return Math.min(score, 100);
 }
 
 // Generate personalized match reasons based on influencer profile and search parameters
