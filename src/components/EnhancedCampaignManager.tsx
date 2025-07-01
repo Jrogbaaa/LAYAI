@@ -458,11 +458,11 @@ export const EnhancedCampaignManager: React.FC = () => {
                   />
                 </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-32">
-                  Campaña
-                </th>
+                   Campaña
+                 </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20">
-                  Propietario
-                </th>
+                   Propietario
+                 </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-24">
                   Estado
                 </th>
@@ -504,17 +504,17 @@ export const EnhancedCampaignManager: React.FC = () => {
                     />
                   </td>
                   <td className="px-2 py-3">
-                    <EditableCell 
-                      campaign={campaign} 
-                      field="name" 
-                      value={campaign.name}
+                     <EditableCell 
+                       campaign={campaign} 
+                       field="name" 
+                       value={campaign.name}
                       className="font-medium text-gray-900 text-sm"
-                      placeholder="Nombre de campaña"
-                    />
-                  </td>
+                       placeholder="Nombre de campaña"
+                     />
+                   </td>
                   <td className="px-2 py-3 text-sm text-gray-700">
-                    {campaign.owner}
-                  </td>
+                     {campaign.owner}
+                   </td>
                   <td className="px-2 py-3">
                     <StatusCell campaign={campaign} />
                   </td>
@@ -522,14 +522,14 @@ export const EnhancedCampaignManager: React.FC = () => {
                     <PriorityCell campaign={campaign} />
                   </td>
                   <td className="px-2 py-3">
-                    <EditableCell 
-                      campaign={campaign} 
-                      field="timeline" 
-                      value={campaign.customTimeline || formatDateRange(campaign.startDate, campaign.endDate)}
+                     <EditableCell 
+                       campaign={campaign} 
+                       field="timeline" 
+                       value={campaign.customTimeline || formatDateRange(campaign.startDate, campaign.endDate)}
                       className="text-gray-700 text-sm"
                       placeholder="Jun 2025"
-                    />
-                  </td>
+                     />
+                   </td>
                   <td className="px-2 py-3">
                     <EditableCell 
                       campaign={campaign} 

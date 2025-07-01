@@ -77,18 +77,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
           }`}
         >
           <div className="flex flex-col items-center justify-center">
-            <button 
-              onClick={onGetStarted}
+          <button 
+            onClick={onGetStarted}
               className="group relative px-12 py-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold text-xl rounded-xl border border-white/20 hover:from-blue-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25"
-            >
-              <span className="relative z-10 flex items-center gap-3">
+          >
+            <span className="relative z-10 flex items-center gap-3">
                 Comenzar Búsqueda
                 <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </button>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </button>
           </div>
           
           <div className="mt-8 text-white/60 text-lg max-w-3xl mx-auto text-center">

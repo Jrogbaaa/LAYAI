@@ -9,7 +9,7 @@ const apifyClient = new ApifyClient({
 interface CollaborationCheckRequest {
   influencerHandle: string;
   brandName: string;
-  postsToCheck?: number; // Default 20 recent posts
+  postsToCheck?: number; // Default 50 recent posts (max 200)
 }
 
 interface CollaborationResult {
@@ -23,9 +23,12 @@ interface CollaborationResult {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { influencerHandle, brandName, postsToCheck = 20 } = body;
+      const { influencerHandle, brandName, postsToCheck = 50 } = body;
 
-    if (!influencerHandle || !brandName) {
+  // Limit maximum posts to check (Apify has limits)
+  const limitedPostsToCheck = Math.min(postsToCheck, 200);
+
+  if (!influencerHandle || !brandName) {
       return NextResponse.json(
         { 
           success: false, 
@@ -46,7 +49,7 @@ export async function POST(request: NextRequest) {
     // Correct parameter format based on official documentation
     const apifyInput = {
       username: [cleanHandle], // Note: singular 'username' parameter, array value
-      resultsLimit: postsToCheck
+      resultsLimit: limitedPostsToCheck
     };
 
     console.log(`📱 Scraping recent posts from @${cleanHandle} using Instagram Post Scraper...`);
@@ -217,8 +220,15 @@ function analyzeBrandCollaboration(posts: any[], brandName: string): Collaborati
 
     if (brandMentioned) {
       const postDate = post.timestamp || post.taken_at_timestamp;
-      if (postDate && (!lastCollabDate || postDate > lastCollabDate)) {
-        lastCollabDate = new Date(postDate * 1000).toISOString().split('T')[0];
+      if (postDate && typeof postDate === 'number' && !isNaN(postDate)) {
+        const shouldUpdate = !lastCollabDate || postDate > (new Date(lastCollabDate).getTime() / 1000);
+        if (shouldUpdate) {
+          try {
+            lastCollabDate = new Date(postDate * 1000).toISOString().split('T')[0];
+          } catch {
+            console.log(`⚠️ Invalid date format for post: ${postDate}`);
+          }
+        }
       }
 
       // Check for partnership indicators

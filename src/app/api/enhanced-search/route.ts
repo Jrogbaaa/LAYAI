@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { searchInfluencersWithApify, type ApifySearchParams } from '@/lib/apifyService';
 import { searchVettedInfluencers, convertVettedToMatchResult } from '@/lib/vettedInfluencersService';
+import { searchMemory } from '@/lib/database';
 
 interface EnhancedSearchRequest {
   query: string;
@@ -408,6 +409,45 @@ export async function POST(req: Request) {
     // Don't limit results here - let frontend handle pagination
     console.log(`🎯 Returning ${resultsWithCollaboration.length} unique results from sources: ${searchSources.join(', ')}`);
     
+    // 🧠 Save search to memory for Clara's AI learning system
+    try {
+      const searchId = await searchMemory.saveSearch({
+        userId: req.headers.get('x-user-id') || `user_${Date.now()}`,
+        sessionId: req.headers.get('x-session-id') || `session_${Date.now()}`,
+        query: searchParams.userQuery || 'Enhanced search',
+        searchParams: {
+          platforms: searchParams.platforms || ['Instagram'],
+          niches: searchParams.niches || [],
+          minFollowers: searchParams.minFollowers || 0,
+          maxFollowers: searchParams.maxFollowers || 10000000,
+          location: searchParams.location,
+          gender: searchParams.gender,
+          userQuery: searchParams.userQuery || 'Enhanced search',
+        },
+        results: {
+          totalFound: resultsWithCollaboration.length,
+          premiumResults: resultsWithCollaboration,
+          discoveryResults: [],
+        },
+        campaignId: req.headers.get('x-campaign-id') || undefined,
+        campaignStatus: req.headers.get('x-campaign-status') as any || undefined,
+        brandName: brandName || undefined,
+      });
+
+      // Get learning insights for continuous improvement
+      const insights = await searchMemory.getLearningInsights(
+        searchParams.userQuery || '',
+        {
+          brandName: brandName || undefined,
+          activeCampaigns: req.headers.get('x-campaign-id') ? [req.headers.get('x-campaign-id')!] : undefined,
+        }
+      );
+
+      console.log(`🧠 Enhanced search saved to memory: ${searchId}. Learning patterns: ${insights.campaignSpecificInsights?.length || 0}`);
+    } catch (memoryError) {
+      console.error('⚠️ Memory save failed (non-critical):', memoryError);
+    }
+
     // Enhanced response format
     return NextResponse.json({
       success: true,

@@ -285,3 +285,240 @@ Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
 ---
 
 > **LAYAI v2.9.0** - La plataforma de marketing de influencers más avanzada para el mercado español con seguimiento de progreso en tiempo real. 🇪🇸 
+
+## 🚀 **Latest Updates (December 2024)**
+
+### **Major Enhancements:**
+- ✅ **5,483 Premium Spanish Influencers** - Comprehensive database with detailed categorization
+- 🤖 **AI Collaboration Detection** - Chatbot recognizes brand collaboration queries in English/Spanish
+- 🧠 **Enhanced Learning System** - Firebase-backed pattern recognition and campaign insights
+- 🔗 **Context7 MCP Integration** - Advanced documentation lookup for Firebase, Serply, and Apify services
+- 📝 **Notes Management** - Full CRUD operations with delete functionality and confirmation dialogs
+- 🎯 **Smart Search Algorithms** - Automatic follower range optimization for premium database
+
+## 🌟 **Key Features**
+
+### **🇪🇸 Spanish Influencer Database**
+- **5,483 verified Spanish influencers** across all major categories
+- **Detailed categorization**: Fashion, Lifestyle, Sports, Entertainment, Fitness, Beauty
+- **Premium quality profiles**: High engagement rates (10-15%) and authentic audiences
+- **Size classifications**: Nano, Micro, Macro, Mega, Celebrity (100K-43M followers)
+- **Real-time data**: Instagram follower counts, engagement metrics, verification status
+
+### **🤖 AI-Powered Collaboration Detection**
+- **Natural language queries**: "Has @influencer worked with Brand?"
+- **Multi-language support**: English and Spanish collaboration detection
+- **Deep analysis**: Scrapes 50-200 posts for comprehensive brand mention detection
+- **Smart entity extraction**: Automatically identifies influencer handles and brand names
+- **Confidence scoring**: Provides evidence-based collaboration assessments
+
+### **🧠 Advanced Learning System**
+- **Pattern recognition**: Learns from successful searches and user feedback
+- **Campaign insights**: Tracks brand performance and influencer match success rates
+- **Firebase-backed memory**: Persistent learning across sessions
+- **Smart recommendations**: Suggests optimized search parameters based on historical data
+- **Performance analytics**: Detailed stats on search effectiveness and user satisfaction
+
+### **🔍 Hybrid Search Technology**
+- **Premium database + Real-time discovery**: Best of both worlds approach
+- **Multi-platform support**: Instagram, TikTok, YouTube integration
+- **Advanced filtering**: Gender, location, follower count, engagement rate, niche
+- **Smart deduplication**: Removes duplicate profiles across search sources
+- **Brand detection**: Automatically filters out business accounts when needed
+
+## 🛠 **Technology Stack**
+
+### **Frontend**
+- **Next.js 15.3.3** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first styling
+- **Shadcn/UI** - Modern component library
+
+### **Backend & APIs**
+- **Firebase Firestore** - Real-time database for influencers and learning data
+- **Apify** - Instagram/TikTok/YouTube profile scraping
+- **Serply API** - Enhanced web search with Spanish support
+- **Context7 MCP** - Documentation and API reference integration
+
+### **AI & Learning**
+- **Pattern Recognition** - Machine learning for search optimization
+- **Natural Language Processing** - Query understanding and entity extraction
+- **Collaboration Detection** - AI-powered brand mention analysis
+- **Multi-language Support** - English and Spanish processing
+
+## 🚀 **Getting Started**
+
+### **Prerequisites**
+- Node.js 18+ and npm
+- Firebase project with Firestore enabled
+- API keys for Apify and Serply
+
+### **Installation**
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/LAYAI.git
+cd LAYAI
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+# Add your API keys and Firebase configuration
+
+# Start development server
+npm run dev
+```
+
+### **Environment Variables**
+```env
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+
+# API Keys
+APIFY_API_KEY=your_apify_key
+SERPLY_API_KEY=your_serply_key
+```
+
+## 📊 **Database Structure**
+
+### **Vetted Influencers Collection**
+```javascript
+{
+  username: "lauraescanes",
+  displayName: "Laura Escanes",
+  followerCount: 2000000,
+  engagementRate: 0.15,
+  primaryGenre: "Lifestyle",
+  genres: ["Lifestyle", "Fashion", "Entertainment"],
+  category: "Mega",
+  country: "Spain",
+  platform: "Instagram",
+  isVerified: true,
+  isActive: true,
+  source: "Top 1000 Spanish Influencers 2024",
+  rank: 45
+}
+```
+
+### **Learning Patterns Collection**
+```javascript
+{
+  pattern: "fitness + female + spain",
+  successfulQueries: ["Spanish fitness influencers", "Influencers deportivos"],
+  avgRating: 4.2,
+  totalSearches: 127,
+  brandNames: ["Nike", "Adidas", "Gymshark"],
+  lastUpdated: "2024-12-31"
+}
+```
+
+## 🎯 **Usage Examples**
+
+### **Basic Influencer Search**
+```javascript
+// Search for Spanish lifestyle influencers
+const results = await fetch('/api/enhanced-search', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    userQuery: "Spanish lifestyle influencers female",
+    niches: ["Lifestyle"],
+    platforms: ["Instagram"],
+    minFollowers: 100000,
+    maxFollowers: 1000000,
+    location: "Spain",
+    gender: "female"
+  })
+});
+```
+
+### **Collaboration Detection**
+```javascript
+// Check if an influencer worked with a brand
+const collaborationCheck = await fetch('/api/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    message: "Has @lauraescanes collaborated with Zara?"
+  })
+});
+```
+
+## 📈 **Performance & Analytics**
+
+### **Database Statistics**
+- **5,483 Spanish influencers** with complete profile data
+- **139 lifestyle influencers** including celebrities and athletes
+- **Premium engagement rates**: 10-15% average across database
+- **Geographic coverage**: All Spanish regions and major cities
+
+### **Search Performance**
+- **Hybrid search results**: Premium database + real-time discovery
+- **Smart filtering**: Automatic optimization for follower ranges
+- **Learning optimization**: Improves search quality over time
+- **Multi-source deduplication**: Ensures unique, high-quality results
+
+## 🔧 **API Endpoints**
+
+### **Core Search APIs**
+- `POST /api/enhanced-search` - Main influencer discovery
+- `POST /api/chat` - AI chatbot with collaboration detection
+- `POST /api/check-brand-collaboration` - Detailed collaboration analysis
+- `GET /api/campaign-insights` - Learning analytics and patterns
+
+### **Data Management APIs**
+- `GET /api/database/campaigns` - Campaign management
+- `POST /api/database/notes` - Notes and annotations
+- `POST /api/verify-profiles` - Profile verification pipeline
+- `POST /api/scrape-instagram-profiles` - Real-time profile data
+
+## 🧪 **Testing**
+
+```bash
+# Run unit tests
+npm test
+
+# Run E2E tests
+npm run test:e2e
+
+# Run specific test suites
+npm run test:unit
+npm run test:integration
+```
+
+## 📚 **Documentation**
+
+- **[API Documentation](./API_DOCUMENTATION.md)** - Detailed API reference
+- **[Technical Documentation](./TECHNICAL_DOCUMENTATION.md)** - Architecture overview
+- **[Spanish Localization Guide](./SPANISH_LOCALIZATION_GUIDE.md)** - Multi-language features
+- **[Verification System](./VERIFICATION_SYSTEM_DOCUMENTATION.md)** - Profile verification process
+
+## 🤝 **Contributing**
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 **Acknowledgments**
+
+- **Firebase** for robust backend infrastructure
+- **Apify** for reliable social media scraping
+- **Serply** for enhanced web search capabilities
+- **Context7** for comprehensive API documentation
+- **Spanish Influencer Community** for inspiration and validation
+
+---
+
+**Built with ❤️ for the Spanish influencer marketing ecosystem** 

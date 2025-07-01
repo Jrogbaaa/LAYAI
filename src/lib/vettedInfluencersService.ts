@@ -260,22 +260,33 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
       console.log(`📊 After niche filter: ${filteredInfluencers.length} influencers`);
     }
 
-    // Enhanced follower count filtering
+    // Enhanced follower count filtering - Adjusted for premium Spanish database
     const minFollowers = parsedQuery.minFollowers || params.minFollowers;
     const maxFollowers = parsedQuery.maxFollowers || params.maxFollowers;
     
-    if (minFollowers) {
-      console.log(`📊 Filtering by minFollowers: ${minFollowers}`);
+    // Smart follower filtering: If the range is too restrictive for our premium database, adjust it
+    let effectiveMinFollowers = minFollowers;
+    let effectiveMaxFollowers = maxFollowers;
+    
+    // If searching for small influencers (under 100K) but our DB has premium influencers (100K+), 
+    // adjust the range to include our quality database
+    if (maxFollowers && maxFollowers < 100000) {
+      console.log(`💡 Adjusting restrictive maxFollowers from ${maxFollowers} to 500K for premium Spanish database`);
+      effectiveMaxFollowers = 500000; // Extend to include macro influencers
+    }
+    
+    if (effectiveMinFollowers) {
+      console.log(`📊 Filtering by minFollowers: ${effectiveMinFollowers}`);
       filteredInfluencers = filteredInfluencers.filter(inf => 
-        inf.followerCount >= minFollowers
+        inf.followerCount >= effectiveMinFollowers
       );
       console.log(`📊 After minFollowers filter: ${filteredInfluencers.length} influencers`);
     }
 
-    if (maxFollowers) {
-      console.log(`📊 Filtering by maxFollowers: ${maxFollowers}`);
+    if (effectiveMaxFollowers) {
+      console.log(`📊 Filtering by maxFollowers: ${effectiveMaxFollowers}`);
       filteredInfluencers = filteredInfluencers.filter(inf => 
-        inf.followerCount <= maxFollowers
+        inf.followerCount <= effectiveMaxFollowers
       );
       console.log(`📊 After maxFollowers filter: ${filteredInfluencers.length} influencers`);
     }

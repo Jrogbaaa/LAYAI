@@ -25,7 +25,10 @@ function parseSearchQuery(message: string): {
     'check if', 'verify if', 'has worked', 'collaboration history', 'brand partnership',
     'verificar colaboración', 'verificar colaboracion', 'colaboró con', 'colaboro con',
     'trabajó con', 'trabajo con', 'patrocinado por', 'embajador de',
-    'check brand', 'verify brand', 'collaboration check', 'partnership check'
+    'check brand', 'verify brand', 'collaboration check', 'partnership check',
+    'mentioned', 'talked about', 'used', 'promoted', 'featuring', 'showcased',
+    'mencionó', 'habló de', 'usó', 'promocionó', 'mostró', 'presentó',
+    'has mentioned', 'ever mentioned', 'mentioned in posts', 'talked about in posts'
   ];
   
   const isCollaboration = collaborationKeywords.some(keyword => lowerMessage.includes(keyword)) ||
@@ -351,6 +354,8 @@ function parseCollaborationQuery(message: string): CollaborationParams {
     /@([a-zA-Z0-9._]+)/g, // @username pattern
     /influencer\s+([a-zA-Z0-9._]+)/gi, // "influencer username"
     /username\s+([a-zA-Z0-9._]+)/gi, // "username xyz"
+    /has\s+([a-zA-Z0-9._]+)\s+(?:mentioned|talked|used|worked|collaborated|promoted)/gi, // "has cristiano mentioned"
+    /(?:check|verify|did)\s+([a-zA-Z0-9._]+)\s+(?:mention|talk|use|work|collaborate|promote)/gi, // "did cristiano mention"
   ];
   
   for (const pattern of handlePatterns) {
@@ -364,7 +369,8 @@ function parseCollaborationQuery(message: string): CollaborationParams {
   // Extract brand name patterns
   const brandPatterns = [
     /(?:with|con|collaborated with|trabajó con|sponsored by|patrocinado por|brand|marca)\s+([A-Za-z0-9\s&.-]+?)(?:\s|$|\?|!|\.)/gi,
-    /(?:Nike|Adidas|Zara|H&M|McDonald's|Coca-Cola|Pepsi|Samsung|Apple|Google|Amazon|Microsoft|Facebook|Instagram|TikTok|YouTube|Twitter|Spotify|Netflix|Disney|Marvel|DC|PlayStation|Xbox|Nintendo|Tesla|BMW|Mercedes|Audi|Volkswagen|Toyota|Honda|Ford|Chevrolet|Uber|Airbnb|Starbucks|KFC|Burger King|Subway|Pizza Hut|Domino's|Walmart|Target|Best Buy|GameStop|Sephora|Ulta|Victoria's Secret|Calvin Klein|Tommy Hilfiger|Ralph Lauren|Gucci|Prada|Louis Vuitton|Chanel|Hermès|Rolex|Cartier|Tiffany)/gi
+    /(?:mentioned|talked about|used|promoted|featuring|showcased|mencionó|habló de|usó|promocionó|mostró|presentó)\s+([A-Za-z0-9\s&.-]+?)(?:\s+ever|\s+in|\s+on|\s|$|\?|!|\.)/gi,
+    /(?:Nike|Adidas|Zara|H&M|McDonald's|Coca-Cola|Pepsi|Samsung|Apple|Google|Amazon|Microsoft|Facebook|Instagram|TikTok|YouTube|Twitter|Spotify|Netflix|Disney|Marvel|DC|PlayStation|Xbox|Nintendo|Tesla|BMW|Mercedes|Audi|Volkswagen|Toyota|Honda|Ford|Chevrolet|Uber|Airbnb|Starbucks|KFC|Burger King|Subway|Pizza Hut|Domino's|Walmart|Target|Best Buy|GameStop|Sephora|Ulta|Victoria's Secret|Calvin Klein|Tommy Hilfiger|Ralph Lauren|Gucci|Prada|Louis Vuitton|Chanel|Hermès|Rolex|Cartier|Tiffany|IKEA|Ikea)/gi
   ];
   
   for (const pattern of brandPatterns) {
@@ -387,7 +393,7 @@ function parseCollaborationQuery(message: string): CollaborationParams {
   return {
     influencerHandle,
     brandName,
-    postsToCheck: 20 // Default value
+    postsToCheck: 100 // Default value for deeper analysis
   };
 }
 

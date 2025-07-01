@@ -157,11 +157,12 @@ class SearchMemoryStore {
     
     // Persist to Firebase
     try {
-      const docData = {
+      // Clean data by removing undefined values (Firebase doesn't allow them)
+      const cleanData = this.removeUndefinedValues({
         ...searchRecord,
         timestamp: Timestamp.fromDate(searchRecord.timestamp),
-      };
-      const docRef = await addDoc(collection(db, 'search_history'), docData);
+      });
+      const docRef = await addDoc(collection(db, 'search_history'), cleanData);
       searchRecord.id = docRef.id; // Use Firebase ID
       console.log(`💾 Saved search to Firebase: ${searchRecord.id}`);
     } catch (error) {
@@ -362,6 +363,25 @@ class SearchMemoryStore {
       params.location || 'global',
       params.platforms[0] || 'instagram'
     ].join(' + ');
+  }
+
+  // Helper method to remove undefined values from objects before saving to Firebase
+  private removeUndefinedValues(obj: any): any {
+    if (obj === null || typeof obj !== 'object') {
+      return obj;
+    }
+    
+    if (Array.isArray(obj)) {
+      return obj.map(item => this.removeUndefinedValues(item));
+    }
+    
+    const cleaned: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (value !== undefined) {
+        cleaned[key] = this.removeUndefinedValues(value);
+      }
+    }
+    return cleaned;
   }
 
   // Get statistics with campaign insights
