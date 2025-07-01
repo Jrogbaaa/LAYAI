@@ -403,6 +403,24 @@ export async function POST(req: Request) {
     const { message } = body;
 
     console.log('🔍 Chat API received message:', message);
+    
+    // Check if this is a structured search from the enhanced parser
+    if (message.startsWith('STRUCTURED_SEARCH:')) {
+      const structuredData = message.replace('STRUCTURED_SEARCH:', '');
+      try {
+        const parsedParams = JSON.parse(structuredData);
+        console.log('🎯 Using structured search parameters:', parsedParams);
+        return NextResponse.json({ 
+          success: true, 
+          type: 'search', 
+          data: parsedParams 
+        });
+      } catch (parseError) {
+        console.error('Error parsing structured search:', parseError);
+        // Fall back to regular parsing
+      }
+    }
+    
     const parseResult = parseSearchQuery(message);
     console.log('🔍 Parse result:', parseResult);
 

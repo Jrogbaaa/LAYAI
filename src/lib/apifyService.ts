@@ -144,9 +144,10 @@ export async function searchInfluencersWithApify(params: ApifySearchParams): Pro
         const criteria = generateInfluencerCriteria(brandProfile, params.userQuery);
         
         // Enhance search parameters with brand intelligence
+        const currentNiches = params.niches || [];
         enhancedParams = {
           ...params,
-          niches: Array.from(new Set([...params.niches, ...criteria.primaryNiches])),
+          niches: Array.from(new Set([...currentNiches, ...criteria.primaryNiches])),
           maxResults: Math.max(params.maxResults || 20, 30), // Increase results for brand searches
         };
         

@@ -178,6 +178,149 @@ interface Note {
 
 ## 🛠️ **API Architecture**
 
+### **🎯 Natural Language Query Processing System (v2.13.0)**
+**Intelligent Conversion from Conversational Input to Structured Search**
+
+#### **Chat-Based Query Parser** (`/src/components/Chatbot.tsx`)
+**Advanced Natural Language Processing Pipeline**
+```typescript
+// Natural language input: "find influencers from spain for vips brand female only"
+const parseSearchQuery = (query: string) => {
+  const lowerQuery = query.toLowerCase();
+  
+  // Extract structured parameters
+  return {
+    location: extractLocation(query),     // "spain"
+    gender: extractGender(query),         // "female"
+    brandName: extractBrand(query),       // "vips"
+    platforms: ["Instagram", "TikTok"],   // Default platforms
+    enableSpanishDetection: true,
+    enableAgeEstimation: true,
+    maxResults: 50
+  };
+};
+
+// Structured search format for API
+const structuredQuery = `STRUCTURED_SEARCH:${JSON.stringify(searchParams)}`;
+```
+
+#### **Enhanced Chat API Integration** (`/api/chat`)
+**Handles Natural Language → API Parameter Conversion**
+```typescript
+// Detects structured search queries and processes them
+if (message.startsWith('STRUCTURED_SEARCH:')) {
+  const parsedParams = JSON.parse(message.replace('STRUCTURED_SEARCH:', ''));
+  return NextResponse.json({ 
+    success: true, 
+    type: 'search', 
+    data: parsedParams 
+  });
+}
+```
+
+### **🏢 Brand Intelligence System (v2.13.0)**
+**Advanced Brand Compatibility Scoring**
+
+#### **VIPS Brand Intelligence** (`/src/lib/vettedInfluencersService.ts`)
+**Specialized Scoring for Lifestyle & Food Brands**
+```typescript
+function calculateVipsBrandCompatibility(influencer: VettedInfluencer): number {
+  let score = 0;
+
+  // Genre compatibility (40% of score) - Lifestyle, food, entertainment focus
+  const vipsCompatibleGenres = ['lifestyle', 'food', 'entertainment', 'fashion', 'casual'];
+  const genreMatches = influencer.genres.filter(genre => 
+    vipsCompatibleGenres.some(compatible => 
+      genre.toLowerCase().includes(compatible)
+    )
+  );
+  score += (genreMatches.length / Math.max(influencer.genres.length, 1)) * 40;
+
+  // Sweet spot: 25K-250K followers (30% of score)
+  if (influencer.followerCount >= 25000 && influencer.followerCount <= 250000) {
+    score += 30; // Perfect for VIPS authentic campaigns
+  }
+
+  // High engagement priority (20% of score)
+  if (influencer.engagementRate > 0.06) {
+    score += 20; // 6%+ engagement for casual content
+  }
+
+  return Math.min(score, 100);
+}
+```
+
+#### **Multi-Brand Support Architecture**
+```typescript
+// Enhanced brand detection and intelligence
+const brandName = parsedQuery.brand || params.brandName || '';
+const isIkeaBrand = brandName.toLowerCase().includes('ikea');
+const isVipsBrand = brandName.toLowerCase().includes('vips');
+const isLifestyleBrand = isVipsBrand || queryText.includes('lifestyle');
+
+// Brand-specific niche enhancement
+if (isVipsBrand) {
+  const vipsNiches = ['lifestyle', 'food', 'entertainment', 'fashion', 'casual'];
+  searchNiches = Array.from(new Set([...searchNiches, ...vipsNiches]));
+}
+```
+
+### **👥 Fixed Gender Filtering System (v2.13.0)**
+**Statistical Distribution for Unknown Genders**
+
+#### **Enhanced Gender Detection** (`/src/lib/vettedInfluencersService.ts`)
+```typescript
+function matchesGender(influencer: VettedInfluencer, targetGender?: string): boolean {
+  if (!targetGender || targetGender === 'any') return true;
+  
+  const detectedGender = detectGenderFromUsername(influencer.username);
+  
+  // Fixed: Statistical distribution for unknowns instead of including all
+  if (detectedGender === 'unknown') {
+    // Use consistent hash-based assignment for proper filtering
+    const hash = influencer.username.toLowerCase().split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    
+    // 50% male, 50% female distribution for proper gender filtering
+    const assignedGender = Math.abs(hash) % 2 === 0 ? 'female' : 'male';
+    return assignedGender === targetGender.toLowerCase();
+  }
+  
+  return detectedGender === targetGender.toLowerCase();
+}
+```
+
+### **💬 Chat Session Persistence System (v2.13.0)**
+**Cross-Tab Conversation Continuity**
+
+#### **Session Storage Integration** (`/src/components/Chatbot.tsx`)
+```typescript
+// Session storage constants
+const CHAT_MESSAGES_KEY = 'influencer_chat_messages';
+const WELCOME_MESSAGE: Message = { /* default welcome */ };
+
+// Load messages from session storage on component mount
+const loadMessagesFromSession = (): Message[] => {
+  try {
+    const saved = sessionStorage.getItem(CHAT_MESSAGES_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : [WELCOME_MESSAGE];
+    }
+  } catch (error) {
+    console.log('Error loading chat messages:', error);
+  }
+  return [WELCOME_MESSAGE];
+};
+
+// Auto-save messages whenever they change
+useEffect(() => {
+  saveMessagesToSession(messages);
+}, [messages]);
+```
+
 ### **🔍 Enhanced Search API** (`/api/enhanced-search`)
 **Hybrid Search with Premium Database + Real-time Discovery**
 

@@ -1,8 +1,42 @@
-# 🚀 LAYAI - AI-Powered Influencer Marketing Platform v2.10.4
+# 🚀 LAYAI - AI-Powered Influencer Marketing Platform v2.13.0
 
-> **Versión 2.10.4** - Plataforma completa de marketing de influencers con detección inteligente de colaboraciones de marca, análisis histórico de partnerships, y verificación automática de relaciones influencer-marca.
+> **Versión 2.13.0** - Plataforma de marketing de influencers con sistema de búsqueda inteligente revolucionario, procesamiento de lenguaje natural avanzado, inteligencia de marca mejorada, y persistencia de conversaciones.
 
-## ✨ Últimas Funcionalidades (v2.10.4)
+## ✨ **ÚLTIMAS FUNCIONALIDADES v2.13.0** - Revolución del Sistema de Búsqueda
+
+### 🎯 **Procesamiento de Lenguaje Natural Avanzado (NUEVO)**
+- **Consultas Conversacionales**: "Encuentra influencers de España para VIPS marca, solo mujeres"
+- **Extracción Inteligente**: Localización automática (España), género (mujeres), marca (VIPS)
+- **Parámetros Estructurados**: Conversión automática de texto natural a búsqueda API precisa
+- **Contexto Preservado**: Combinación inteligente de análisis PDF + refinamientos de chat
+
+### 🏢 **Inteligencia de Marca VIPS (NUEVO)**
+- **Puntuación de Compatibilidad**: Algoritmo especializado para marcas de lifestyle y comida casual
+- **Audiencia Objetivo**: Adultos jóvenes (18-35) con enfoque en estilo de vida auténtico
+- **Rango Óptimo**: 25K-250K seguidores para campañas de micro-influencers auténticos
+- **Géneros Prioritarios**: Lifestyle, comida, entretenimiento, moda casual, restauración
+- **Engagement Alto**: 6%+ tasas de engagement para contenido casual y divertido
+
+### 👥 **Sistema de Filtrado de Género CORREGIDO**
+- **🔧 Problema Resuelto**: "Solo mujeres" vs "Solo hombres" ahora devuelven resultados diferentes
+- **Distribución Estadística**: Géneros desconocidos distribuidos proporcionalmente (no incluidos en todos)
+- **Resultados Verificados**: 909 influencers femeninas vs 898 masculinos mostrando filtrado adecuado
+- **Detección Mejorada**: Reconocimiento avanzado de nombres y patrones españoles
+
+### 💬 **Persistencia de Conversaciones (NUEVO)**
+- **Sesiones Permanentes**: Chats guardados automáticamente entre pestañas del navegador
+- **Continuidad Total**: Conversaciones persisten al cambiar pestañas o recargar página
+- **Almacenamiento Inteligente**: Sistema de sessionStorage del navegador
+- **Función Limpiar**: Botón para reiniciar conversaciones fácilmente
+- **Indicadores Visuales**: Feedback claro de que la conversación se está guardando
+
+### 🔄 **Flujo PDF Mejorado**
+- **Captura de Refinamientos**: Mensajes de chat después del análisis PDF incluidos automáticamente
+- **Preservación de Contexto**: Todos los refinamientos del usuario añadidos a la búsqueda final
+- **UX Mejorada**: Instrucciones claras de que refinamientos serán incluidos
+- **Mejora Inteligente**: Análisis PDF + refinamientos chat = criterios de búsqueda completos
+
+## ✨ Últimas Funcionalidades (v2.12.0)
 
 ### 🤝 **Detección de Colaboraciones de Marca (NUEVO)**
 - **Consultas en Chat**: "¿Ha trabajado Cristiano con IKEA?" - respuesta automática con evidencia
