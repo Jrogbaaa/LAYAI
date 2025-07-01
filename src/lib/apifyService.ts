@@ -6,10 +6,32 @@ const apifyClient = new ApifyClient({
   token: process.env.APIFY_API_TOKEN || process.env.APIFY_TOKEN,
 });
 
-// Serply API Key
+// Serply API Key (keeping existing integration)
 const serplyApiKey = process.env.SERPLY_API_KEY;
 
+// Optional SerpApi Key (new enhancement)
+const serpApiKey = process.env.SERPAPI_KEY;
+
+// Multi-Platform Actor Configuration (Enhanced Organization)
+const PLATFORM_ACTORS = {
+  instagram: {
+    profile: 'apify/instagram-profile-scraper',
+    posts: 'apify/instagram-post-scraper',
+    collaboration: 'shu8hvrXbJbY3Eb9W' // Brand collaboration checker
+  },
+  tiktok: {
+    profile: 'clockworks/tiktok-scraper',
+    posts: 'clockworks/free-tiktok-scraper'
+  },
+  youtube: {
+    channel: 'apify/youtube-scraper',
+    videos: 'streamers/youtube-scraper'
+  }
+} as const;
+
+// Enhanced ScrapedInfluencer interface based on Instagram Private API documentation
 export interface ScrapedInfluencer {
+  // Basic Profile Info
   username: string;
   fullName: string;
   followers: number;
@@ -28,12 +50,46 @@ export interface ScrapedInfluencer {
   website?: string;
   collaborationRate?: number;
   brandCompatibilityScore?: number;
+  
+  // Enhanced fields from Instagram Private API
+  profilePicId?: string;
+  isPrivate?: boolean;
+  isBusiness?: boolean;
+  businessCategory?: string;
+  contactPhone?: string;
+  externalUrl?: string;
+  hasHighlightReels?: boolean;
+  latestReelMedia?: number;
+  mediaCount?: number;
+  geoMediaCount?: number;
+  followingTagCount?: number;
+  hasBiographyTranslation?: boolean;
+  isVideoCreator?: boolean;
+  hasProfileVideoFeed?: boolean;
+  
+  // Enhanced engagement metrics
+  avgShares?: number;
+  avgViews?: number;
+  totalEngagement?: number;
+  engagementGrowthRate?: number;
+  contentTypes?: string[]; // ['photo', 'video', 'carousel', 'reel', 'story']
+  
+  // Age and demographic estimation
+  estimatedAge?: number;
+  ageConfidence?: number;
+  
+  // Spanish localization enhancements
+  isSpanishInfluencer?: boolean;
+  spanishConfidence?: number;
+  spanishIndicators?: string[];
+  
   // Validation status from backend processing
   validationStatus?: {
     isValidProfile: boolean;
     isBrandAccount: boolean;
     validationReason?: string;
     apifyVerified: boolean;
+    serpApiVerified?: boolean;
   };
 }
 
@@ -441,26 +497,42 @@ function generateProfileSuggestions(location?: string, gender?: string, niches?:
  * Perform web search using available methods.
  */
 async function performWebSearch(query: string, platform: string): Promise<any[]> {
-  // If Serply isn't configured, we cannot perform a web search.
-  if (!serplyApiKey) {
-    console.log('Skipping web search: Serply API key not configured.');
-    return [];
-  }
-
   try {
-    console.log('Performing real web search with Serply...');
-    const searchResults = await searchWithSerply(query);
+    console.log(`🔍 Performing enhanced web search for: "${query}" on platform: ${platform}`);
     
-    if (searchResults && searchResults.length > 0) {
-      console.log(`Found ${searchResults.length} real search results for: "${query}"`);
-      return searchResults.map(result => ({ ...result, source: 'serply' }));
+    // Priority 1: Use SerpApi for enhanced search results (best quality)
+    if (serpApiKey) {
+      console.log('🚀 Using SerpApi for enhanced search results');
+      const results = await searchWithSerpApi(query, 15);
+      if (results && results.length > 0) {
+        console.log(`✅ SerpApi search returned ${results.length} results`);
+        return results.map(result => ({ ...result, source: 'serpapi' }));
+      } else {
+        console.log('⚠️ SerpApi search returned no results, trying Serply');
+      }
     }
     
-    console.log('No results from Serply for this query.');
+    // Priority 2: Use Serply search as fallback or primary if no SerpApi
+    if (serplyApiKey) {
+      console.log('🔄 Using Serply for search results');
+      const results = await searchWithSerply(query, 15);
+      if (results && results.length > 0) {
+        console.log(`✅ Serply search returned ${results.length} results`);
+        return results.map(result => ({ ...result, source: 'serply' }));
+      } else {
+        console.log('⚠️ Serply search returned no results');
+      }
+    } else {
+      console.log('⚠️ No Serply API key available');
+    }
+    
+    // Fallback: return empty results if no search API is available
+    console.log('❌ No search results available - no valid API keys found');
+    console.log('💡 To enable web search, add SERPAPI_KEY or SERPLY_API_KEY to your environment variables');
     return [];
-
+    
   } catch (error) {
-    // Error is already logged in searchWithSerply, just return empty
+    console.error('❌ Error in performWebSearch:', error);
     return [];
   }
 }
@@ -548,6 +620,87 @@ async function searchWithSerply(query: string, limit: number = 15): Promise<any[
       console.error("Stack trace:", error.stack);
     }
     return [];
+  }
+}
+
+/**
+ * Enhanced search using SerpApi (Google Search Engine Results API)
+ * This provides higher quality results but requires a SerpApi key
+ */
+async function searchWithSerpApi(query: string, limit: number = 15): Promise<any[]> {
+  console.log('🔑 SerpApi Key status:', serpApiKey ? `Present (${serpApiKey.substring(0, 8)}...)` : 'NOT FOUND');
+  
+  if (!serpApiKey) {
+    console.log('ℹ️ SerpApi key not provided, falling back to Serply');
+    return searchWithSerply(query, limit);
+  }
+
+  try {
+    const params = new URLSearchParams({
+      engine: 'google',
+      q: query,
+      api_key: serpApiKey,
+      num: limit.toString(),
+      location: 'Spain', // Enhanced for Spanish localization
+      hl: 'es', // Spanish language interface
+      gl: 'es', // Spanish country
+      safe: 'off' // Include all results
+    });
+
+    const url = `https://serpapi.com/search?${params}`;
+    console.log(`🌐 SerpApi URL: ${url.replace(serpApiKey, 'HIDDEN')}`);
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      signal: AbortSignal.timeout(30000) // 30 second timeout
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error(`❌ SerpApi error: ${response.status} ${response.statusText}`, errorData);
+      
+      // Fallback to Serply on SerpApi failure
+      console.log('🔄 Falling back to Serply due to SerpApi error');
+      return searchWithSerply(query, limit);
+    }
+
+    const data = await response.json();
+    
+    console.log('🔍 Raw SerpApi Response Structure:');
+    console.log('Response keys:', Object.keys(data));
+    
+    if (data && Array.isArray(data.organic_results)) {
+      console.log(`📊 SerpApi returned ${data.organic_results.length} organic results`);
+      
+      // Transform SerpApi results to match Serply format for compatibility
+      const transformedResults = data.organic_results.map((result: any) => ({
+        title: result.title,
+        link: result.link,
+        snippet: result.snippet,
+        displayLink: result.displayed_link,
+        // Add SerpApi verification flag
+        serpApiVerified: true
+      }));
+      
+      return transformedResults;
+    }
+    
+    console.warn('⚠️ SerpApi search did not return expected organic_results array. Response:', data);
+    
+    // Fallback to Serply if SerpApi structure is unexpected
+    console.log('🔄 Falling back to Serply due to unexpected SerpApi response structure');
+    return searchWithSerply(query, limit);
+
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    console.error(`❌ Error during SerpApi search for query "${query}": ${errorMessage}`);
+    
+    // Fallback to Serply on any SerpApi error
+    console.log('🔄 Falling back to Serply due to SerpApi error:', errorMessage);
+    return searchWithSerply(query, limit);
   }
 }
 
@@ -1226,40 +1379,53 @@ async function scrapeProfilesWithApify(profileUrls: {url: string, platform: stri
     // Get URLs for this platform
     const urls = profileUrls.map(p => p.url);
     
-          switch (platform.toLowerCase()) {
-        case 'instagram':
-          actorId = 'apify/instagram-profile-scraper';
-          // Extract usernames properly using the extractUsernameFromUrl function
-          const usernames = urls.map(url => extractUsernameFromUrl(url, 'instagram'))
-            .filter(username => username !== 'unknown' && username.length > 0 && !username.includes('.com'));
-          input = {
-            usernames: usernames,
-            resultsType: 'profiles',
-            resultsLimit: usernames.length,
-            addParentData: false,
-          };
-          break;
-          
-        case 'tiktok':
-          actorId = 'clockworks/free-tiktok-scraper';
-          // Extract usernames properly using the extractUsernameFromUrl function
-          const tiktokUsernames = urls.map(url => extractUsernameFromUrl(url, 'tiktok'))
-            .filter(username => username !== 'unknown' && username.length > 0 && !username.includes('.com'));
-          input = {
-            profiles: tiktokUsernames,
-            resultsPerPage: tiktokUsernames.length,
-          };
-          break;
-          
-        case 'youtube':
-          actorId = 'apify/youtube-scraper';
-          input = {
-            startUrls: urls.map(url => ({ url })),
-            includeChannelInfo: true,
-            maxResults: urls.length,
-          };
-          break;
+    // Enhanced platform actor mapping using PLATFORM_ACTORS configuration
+    switch (platform.toLowerCase()) {
+      case 'instagram':
+        actorId = PLATFORM_ACTORS.instagram.profile;
+        // Extract usernames properly using the extractUsernameFromUrl function
+        const usernames = urls.map(url => extractUsernameFromUrl(url, 'instagram'))
+          .filter(username => username !== 'unknown' && username.length > 0 && !username.includes('.com'));
+        input = {
+          usernames: usernames,
+          resultsType: 'profiles',
+          resultsLimit: usernames.length,
+          addParentData: false,
+          // Enhanced Instagram API parameters based on documentation
+          includeFullProfileInfo: true,
+          includePostsCount: true,
+          includeEngagementMetrics: true,
+          includeBiographyTranslation: params.location?.includes('Spain') || false,
+        };
+        break;
         
+      case 'tiktok':
+        actorId = PLATFORM_ACTORS.tiktok.posts; // Use the enhanced scraper
+        // Extract usernames properly using the extractUsernameFromUrl function
+        const tiktokUsernames = urls.map(url => extractUsernameFromUrl(url, 'tiktok'))
+          .filter(username => username !== 'unknown' && username.length > 0 && !username.includes('.com'));
+        input = {
+          profiles: tiktokUsernames,
+          resultsPerPage: tiktokUsernames.length,
+          // Enhanced TikTok parameters
+          includeStats: true,
+          includeAuthorDetails: true,
+        };
+        break;
+        
+      case 'youtube':
+        actorId = PLATFORM_ACTORS.youtube.channel;
+        input = {
+          startUrls: urls.map(url => ({ url })),
+          includeChannelInfo: true,
+          maxResults: urls.length,
+          // Enhanced YouTube parameters
+          includeSubscriberCount: true,
+          includeVideoCount: true,
+          includeChannelStats: true,
+        };
+        break;
+      
       default:
         console.warn(`Platform ${platform} profile scraping not supported yet`);
         return [];
@@ -1430,23 +1596,62 @@ function transformProfileToInfluencer(item: any, platform: string): ScrapedInflu
         switch (platform.toLowerCase()) {
             case 'instagram':
                 if (!item.username) return null;
+                
+                // Enhanced Instagram profile mapping with Instagram Private API fields
                 profile = {
                     ...profile,
+                    // Basic info
                     username: item.username,
-                    fullName: item.fullName,
-                    followers: item.followersCount,
-                    following: item.followsCount,
-                    postsCount: item.postsCount,
-                    verified: item.verified,
+                    fullName: item.fullName || item.full_name,
+                    followers: item.followersCount || item.follower_count,
+                    following: item.followsCount || item.following_count,
+                    postsCount: item.postsCount || item.media_count,
+                    verified: item.verified || item.is_verified,
                     biography: item.biography,
-                    profilePicUrl: item.profilePicUrl,
+                    profilePicUrl: item.profilePicUrl || item.profile_pic_url,
                     avgLikes: item.avgLikes,
                     avgComments: item.avgComments,
-                    category: item.businessCategoryName || extractCategory(item),
-                    location: item.city_name || '',
-                    email: item.public_email,
-                    website: item.external_url,
+                    category: item.businessCategoryName || item.category || extractCategory(item),
+                    location: item.city_name || item.location || '',
+                    email: item.public_email || item.email,
+                    website: item.external_url || item.external_lynx_url,
+                    
+                    // Enhanced Instagram Private API fields
+                    profilePicId: item.profile_pic_id,
+                    isPrivate: item.is_private,
+                    isBusiness: item.is_business || item.is_potential_business,
+                    businessCategory: item.businessCategoryName || item.category,
+                    contactPhone: item.contact_phone_number || item.public_phone_number,
+                    externalUrl: item.external_url || item.external_lynx_url,
+                    hasHighlightReels: item.has_highlight_reels,
+                    latestReelMedia: item.latest_reel_media,
+                    mediaCount: item.media_count,
+                    geoMediaCount: item.geo_media_count,
+                    followingTagCount: item.following_tag_count,
+                    hasBiographyTranslation: item.has_biography_translation,
+                    isVideoCreator: item.is_video_creator,
+                    hasProfileVideoFeed: item.has_profile_video_feed,
+                    
+                    // Enhanced engagement metrics
+                    avgShares: item.avgShares || 0,
+                    avgViews: item.avgViews || 0,
+                    totalEngagement: (item.avgLikes || 0) + (item.avgComments || 0) + (item.avgShares || 0),
+                    
+                    // Detect content types from available data
+                    contentTypes: detectContentTypes(item),
                 };
+                
+                // Spanish localization detection
+                const spanishDetection = detectSpanishInfluencer(profile);
+                profile.isSpanishInfluencer = spanishDetection.isSpanish;
+                profile.spanishConfidence = spanishDetection.confidence;
+                profile.spanishIndicators = spanishDetection.indicators;
+                
+                // Age estimation
+                const ageEstimation = estimateInfluencerAge(profile);
+                profile.estimatedAge = ageEstimation.age;
+                profile.ageConfidence = ageEstimation.confidence;
+                
                 break;
 
             case 'tiktok':
@@ -2320,4 +2525,162 @@ function extractUsernameFromUrl(url: string, platform: string): string {
     console.error('Error extracting username from URL:', url, error);
     return 'unknown';
   }
+}
+
+/**
+ * Detect content types from Instagram data
+ */
+function detectContentTypes(item: any): string[] {
+  const contentTypes: string[] = [];
+  
+  if (item.has_reels || item.hasReels) contentTypes.push('reel');
+  if (item.has_videos || item.hasVideos) contentTypes.push('video');
+  if (item.has_photos || item.hasPhotos) contentTypes.push('photo');
+  if (item.has_carousel || item.hasCarousel) contentTypes.push('carousel');
+  if (item.has_stories || item.hasStories) contentTypes.push('story');
+  
+  // Default fallback
+  if (contentTypes.length === 0) {
+    contentTypes.push('photo', 'video');
+  }
+  
+  return contentTypes;
+}
+
+/**
+ * Enhanced Spanish influencer detection based on multiple indicators
+ */
+function detectSpanishInfluencer(profile: Partial<ScrapedInfluencer>): {
+  isSpanish: boolean;
+  confidence: number;
+  indicators: string[];
+} {
+  const indicators: string[] = [];
+  let score = 0;
+  
+  // Location indicators (highest weight)
+  const location = (profile.location || '').toLowerCase();
+  if (location.includes('spain') || location.includes('españa') || 
+      location.includes('madrid') || location.includes('barcelona') ||
+      location.includes('valencia') || location.includes('sevilla')) {
+    score += 40;
+    indicators.push('Ubicación española');
+  }
+  
+  // Biography indicators
+  const bio = (profile.biography || '').toLowerCase();
+  const spanishWords = ['española', 'español', 'madrid', 'barcelona', 'valencia', 
+                        'sevilla', 'málaga', 'bilbao', 'murcia', 'palma'];
+  
+  for (const word of spanishWords) {
+    if (bio.includes(word)) {
+      score += 15;
+      indicators.push(`Palabra española en biografía: ${word}`);
+      break;
+    }
+  }
+  
+  // Name indicators (Spanish names)
+  const fullName = (profile.fullName || '').toLowerCase();
+  const spanishNames = ['maría', 'carlos', 'ana', 'luis', 'carmen', 'antonio', 
+                        'laura', 'francisco', 'elena', 'javier', 'marta', 'david',
+                        'sara', 'manuel', 'raquel', 'sergio', 'natalia'];
+  
+  for (const name of spanishNames) {
+    if (fullName.includes(name)) {
+      score += 10;
+      indicators.push(`Nombre español detectado: ${name}`);
+      break;
+    }
+  }
+  
+  // Username indicators
+  const username = (profile.username || '').toLowerCase();
+  if (username.includes('spain') || username.includes('esp') || username.includes('madrid')) {
+    score += 20;
+    indicators.push('Username con referencia española');
+  }
+  
+  // Website/email indicators
+  const website = (profile.website || '').toLowerCase();
+  const email = (profile.email || '').toLowerCase();
+  if (website.includes('.es') || email.includes('.es')) {
+    score += 25;
+    indicators.push('Dominio .es detectado');
+  }
+  
+  const confidence = Math.min(score, 100);
+  const isSpanish = confidence >= 50; // Threshold for Spanish detection
+  
+  return { isSpanish, confidence, indicators };
+}
+
+/**
+ * Estimate influencer age based on profile data and username patterns
+ */
+function estimateInfluencerAge(profile: Partial<ScrapedInfluencer>): {
+  age?: number;
+  confidence: number;
+} {
+  let estimatedAge: number | undefined;
+  let confidence = 0;
+  
+  // Extract birth year from username (common pattern: name95, user98, etc.)
+  const username = profile.username || '';
+  const yearMatch = username.match(/(\d{2,4})$/);
+  
+  if (yearMatch) {
+    let year = parseInt(yearMatch[1]);
+    
+    // Convert 2-digit years to 4-digit (assume 90s-00s birth years)
+    if (year >= 90 && year <= 99) {
+      year += 1900;
+    } else if (year >= 0 && year <= 30) {
+      year += 2000;
+    }
+    
+    // Calculate age if year makes sense
+    if (year >= 1980 && year <= 2010) {
+      estimatedAge = new Date().getFullYear() - year;
+      confidence = 70;
+    }
+  }
+  
+  // Analyze biography for age-related keywords
+  const bio = (profile.biography || '').toLowerCase();
+  
+  // Young indicators (18-25)
+  if (bio.includes('student') || bio.includes('university') || bio.includes('college') ||
+      bio.includes('estudiante') || bio.includes('universidad')) {
+    if (!estimatedAge) estimatedAge = 22;
+    confidence = Math.max(confidence, 60);
+  }
+  
+  // Professional indicators (25-35)
+  if (bio.includes('ceo') || bio.includes('founder') || bio.includes('manager') ||
+      bio.includes('director') || bio.includes('entrepreneur')) {
+    if (!estimatedAge) estimatedAge = 30;
+    confidence = Math.max(confidence, 50);
+  }
+  
+  // Parent indicators (28-45)
+  if (bio.includes('mom') || bio.includes('dad') || bio.includes('parent') ||
+      bio.includes('mamá') || bio.includes('papá') || bio.includes('madre') || bio.includes('padre')) {
+    if (!estimatedAge) estimatedAge = 33;
+    confidence = Math.max(confidence, 55);
+  }
+  
+  // Default estimation based on follower count (general trend)
+  if (!estimatedAge && profile.followers) {
+    if (profile.followers < 10000) {
+      estimatedAge = 24; // Younger users typically have fewer followers
+    } else if (profile.followers < 100000) {
+      estimatedAge = 28;
+    } else {
+      estimatedAge = 32; // Established influencers tend to be older
+    }
+    confidence = 25; // Low confidence for follower-based estimation
+  }
+  
+  return { age: estimatedAge, confidence };
 }

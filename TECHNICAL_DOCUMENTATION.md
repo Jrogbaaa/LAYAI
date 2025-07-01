@@ -21,28 +21,39 @@ LAYAI is built on a modern Next.js 15 architecture with TypeScript, utilizing th
 - **APIs**: Apify (Instagram), Serply (Web Search)
 - **Data**: JSON-based storage with RESTful API endpoints
 
-### Recent Architecture Improvements (v2.10.4)
+### Recent Architecture Improvements (v2.11.0)
 
-#### Brand Collaboration Detection System (NEW)
+#### Context7 MCP Documentation Integration (NEW)
+- **Enhanced API Documentation**: Complete documentation research using Context7 MCP for all search services
+- **Optimized Apify Integration**: 15+ new Instagram data fields with enhanced profile transformation
+- **SerpApi Enhancement**: Optional dual search API support with Serply fallback system
+- **Multi-Platform Actor Configuration**: Organized actor mapping for Instagram, TikTok, and YouTube
+- **Spanish Influencer Detection**: Advanced Spanish location and language detection algorithms
+- **Enhanced Error Handling**: Comprehensive timeout management and fallback mechanisms
+
+#### Chatbot Collaboration Recognition (NEW) 
+- **Intelligent Query Classification**: Advanced NLP engine detecting collaboration vs. search intent
+- **Multi-Language Support**: Recognition for English and Spanish collaboration keywords
+- **Brand Extraction Engine**: Regex-based parsing for influencer handles and brand names
+- **Internal API Integration**: Seamless connection to brand collaboration checking endpoint
+- **Rich Response Formatting**: Structured collaboration reports with confidence scores and evidence
+- **Error Graceful Handling**: Comprehensive fallbacks for parsing and API failures
+
+#### Previous Architecture Improvements (v2.10.4)
+
+##### Brand Collaboration Detection System
 - **New API Endpoint**: `/api/check-brand-collaboration` for real-time collaboration analysis
 - **Apify Integration**: Enhanced Instagram post scraping with 20-post analysis window
 - **AI Pattern Recognition**: Multi-language detection engine for partnerships and sponsorships
 - **Evidence Extraction**: Advanced content analysis with confidence scoring (30-90%)
 - **Performance Optimization**: 2-minute timeout with AbortController for stability
 
-#### Enhanced Search Intelligence
+##### Enhanced Search Intelligence
 - **Automatic Brand Extraction**: Smart parsing engine for brand names from search queries
 - **Real-time Collaboration Status**: Integration of collaboration checking during search flow
 - **Visual Status Indicators**: Dynamic green/gray badges showing collaboration history
 - **Confidence Metrics**: Algorithm-based reliability scoring using evidence strength
 - **Historical Data Tracking**: Last collaboration date extraction and display
-
-#### Chatbot AI Enhancement
-- **Query Classification Engine**: Automatic detection of collaboration vs. search intent
-- **Multi-Pattern NLP**: Recognition system for various query formats and languages
-- **Rich Response System**: Structured collaboration reports with evidence summaries
-- **Context Preservation**: Maintains search conversation flow while adding collaboration features
-- **Error Resilience**: Comprehensive fallbacks for API timeouts and parsing failures
 
 #### Previous Improvements (v2.10.3)
 

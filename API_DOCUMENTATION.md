@@ -195,7 +195,224 @@ OPENAI_API_KEY=your_openai_key (optional)
 }
 ```
 
-### 3. Standard Search Influencers
+### 3. Enhanced Chat API with Collaboration Detection
+
+**Endpoint:** `POST /api/chat`
+
+**Description:** Intelligent chat interface that automatically detects and processes both influencer search queries and brand collaboration verification requests.
+
+#### Request Body
+
+```typescript
+{
+  message: string;  // Natural language query in English or Spanish
+}
+```
+
+#### Query Types Supported
+
+##### Search Queries
+- "Find fashion influencers in Madrid"
+- "Busca influencers de lifestyle con 50k seguidores"
+- "Show me tech YouTubers with over 100k subscribers"
+
+##### Collaboration Queries
+- "Check if @username collaborated with Nike"
+- "Verifica si @influencer trabajó con Zara"
+- "Has @handle worked with brand partnership"
+
+#### Example Requests
+
+**Search Query:**
+```json
+{
+  "message": "Find female lifestyle influencers in Spain with 10k-100k followers"
+}
+```
+
+**Collaboration Query:**
+```json
+{
+  "message": "Check if @morganinspain collaborated with Nike"
+}
+```
+
+#### Response Types
+
+##### Search Response
+```typescript
+{
+  success: boolean;
+  type: "search";
+  data: ApifySearchParams;  // Parsed search parameters
+}
+```
+
+##### Collaboration Response
+```typescript
+{
+  success: boolean;
+  type: "collaboration";
+  data: string;  // Formatted collaboration report
+  rawData: {
+    collaboration: {
+      hasWorkedTogether: boolean;
+      collaborationType: "partnership" | "mention" | "none";
+      confidence: number;
+      evidence: string[];
+      reason: string;
+      lastCollabDate?: string;
+    };
+    brandName: string;
+    influencerHandle: string;
+    postsAnalyzed: number;
+  };
+}
+```
+
+##### Chat Response
+```typescript
+{
+  success: boolean;
+  type: "chat";
+  data: string;  // Conversational response
+}
+```
+
+#### Example Responses
+
+**Search Response:**
+```json
+{
+  "success": true,
+  "type": "search",
+  "data": {
+    "platforms": ["Instagram"],
+    "niches": ["lifestyle"],
+    "minFollowers": 10000,
+    "maxFollowers": 100000,
+    "location": "Spain",
+    "gender": "female",
+    "maxResults": 20,
+    "userQuery": "Find female lifestyle influencers in Spain with 10k-100k followers"
+  }
+}
+```
+
+**Collaboration Found:**
+```json
+{
+  "success": true,
+  "type": "collaboration",
+  "data": "✅ **Colaboración confirmada!**\n\n🤝 **@username** ha trabajado con **Nike**\n📊 **Confianza:** 85%\n🎯 **Tipo:** Colaboración patrocinada\n\n📝 **Evidencia encontrada:**\n• Sponsored post with #NikePartner hashtag\n• Product mention in bio\n• Tagged Nike account in multiple posts\n\n📅 **Última colaboración:** 2024-01-15",
+  "rawData": {
+    "collaboration": {
+      "hasWorkedTogether": true,
+      "collaborationType": "partnership",
+      "confidence": 85,
+      "evidence": [
+        "Sponsored post with #NikePartner hashtag",
+        "Product mention in bio",
+        "Tagged Nike account in multiple posts"
+      ],
+      "reason": "Analyzed from recent posts",
+      "lastCollabDate": "2024-01-15"
+    },
+    "brandName": "Nike",
+    "influencerHandle": "username",
+    "postsAnalyzed": 20
+  }
+}
+```
+
+**No Collaboration Found:**
+```json
+{
+  "success": true,
+  "type": "collaboration",
+  "data": "❌ **No se encontró evidencia de colaboración**\n\n🔍 **@username** y **Nike**\n📊 **Posts analizados:** 20\n📝 **Razón:** Sin evidencia en posts recientes",
+  "rawData": {
+    "collaboration": {
+      "hasWorkedTogether": false,
+      "collaborationType": "none",
+      "confidence": 0,
+      "evidence": [],
+      "reason": "Analyzed from recent posts"
+    },
+    "brandName": "Nike",
+    "influencerHandle": "username",
+    "postsAnalyzed": 20
+  }
+}
+```
+
+**Chat Response:**
+```json
+{
+  "success": true,
+  "type": "chat",
+  "data": "¡Hola! Puedo ayudarte a:\n• Encontrar influencers perfectos para tu marca\n• Verificar colaboraciones entre influencers y marcas\n\n¿Qué necesitas hoy?"
+}
+```
+
+#### Supported Languages
+- **English**: Full search and collaboration detection
+- **Spanish**: Native support for both query types
+
+#### Key Features
+- **Automatic Intent Detection**: Distinguishes between search, collaboration, and conversational queries
+- **Brand Name Extraction**: Recognizes major brands and custom brand names
+- **Influencer Handle Parsing**: Extracts @username mentions automatically
+- **Error Guidance**: Provides helpful prompts when missing required information
+- **Multi-language Support**: Works seamlessly in English and Spanish
+
+### 4. Brand Collaboration Verification
+
+**Endpoint:** `POST /api/check-brand-collaboration`
+
+**Description:** Dedicated endpoint for verifying brand collaborations between influencers and companies.
+
+#### Request Body
+
+```typescript
+{
+  influencerHandle: string;    // Without @ symbol
+  brandName: string;           // Brand or company name
+  postsToCheck?: number;       // Default: 20
+}
+```
+
+#### Example Request
+
+```json
+{
+  "influencerHandle": "morganinspain",
+  "brandName": "Nike",
+  "postsToCheck": 20
+}
+```
+
+#### Response
+
+```typescript
+{
+  success: boolean;
+  collaboration: {
+    hasWorkedTogether: boolean;
+    collaborationType: "partnership" | "mention" | "none";
+    confidence: number;        // 0-100
+    evidence: string[];
+    reason: string;
+    lastCollabDate?: string;
+  };
+  brandName: string;
+  influencerHandle: string;
+  postsAnalyzed: number;
+  fallbackMethod?: string;     // If posts unavailable
+}
+```
+
+### 5. Standard Search Influencers
 
 **Endpoint:** `POST /api/search-apify`
 

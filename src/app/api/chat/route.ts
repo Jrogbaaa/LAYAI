@@ -1,9 +1,55 @@
 import { NextResponse } from 'next/server';
 import { ApifySearchParams } from '@/lib/apifyService';
 
+// Interface for collaboration query parameters
+interface CollaborationParams {
+  influencerHandle: string;
+  brandName: string;
+  postsToCheck?: number;
+}
+
 // Keyword-based parser for extracting search parameters
-function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifySearchParams; response?: string } {
+function parseSearchQuery(message: string): { 
+  isSearch: boolean; 
+  isCollaboration: boolean;
+  params?: ApifySearchParams; 
+  collaborationParams?: CollaborationParams;
+  response?: string 
+} {
   const lowerMessage = message.toLowerCase();
+  
+  // Check for collaboration keywords first
+  const collaborationKeywords = [
+    'check collaboration', 'verify collaboration', 'brand collaboration', 'worked with',
+    'collaborated with', 'partnership with', 'sponsored by', 'brand ambassador',
+    'check if', 'verify if', 'has worked', 'collaboration history', 'brand partnership',
+    'verificar colaboración', 'verificar colaboracion', 'colaboró con', 'colaboro con',
+    'trabajó con', 'trabajo con', 'patrocinado por', 'embajador de',
+    'check brand', 'verify brand', 'collaboration check', 'partnership check'
+  ];
+  
+  const isCollaboration = collaborationKeywords.some(keyword => lowerMessage.includes(keyword)) ||
+                         (lowerMessage.includes('check') && (lowerMessage.includes('brand') || lowerMessage.includes('sponsored'))) ||
+                         (lowerMessage.includes('verify') && (lowerMessage.includes('partnership') || lowerMessage.includes('collaboration')));
+
+  if (isCollaboration) {
+    // Extract influencer handle and brand name
+    const collaborationParams = parseCollaborationQuery(message);
+    
+    if (!collaborationParams.influencerHandle || !collaborationParams.brandName) {
+      return {
+        isSearch: false,
+        isCollaboration: true,
+        response: "Para verificar una colaboración, necesito el nombre del influencer y la marca. Por ejemplo: 'Verifica si @influencer colaboró con Nike' o 'Check if @username worked with Adidas'."
+      };
+    }
+    
+    return {
+      isSearch: false,
+      isCollaboration: true,
+      collaborationParams
+    };
+  }
   
   // Check if this is a search intent - support both English and Spanish keywords
   const searchKeywords = ['find', 'search', 'show', 'get', 'look for', 'discover', 'recommend', 'buscar', 'encontrar', 'mostrar', 'busca', 'encuentra', 'muestra', 'recomendar', 'descubrir'];
@@ -19,7 +65,8 @@ function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifyS
         lowerMessage.includes('hola') || lowerMessage.includes('buenos') || lowerMessage.includes('buenas')) {
       return {
         isSearch: false,
-        response: "¡Hola! Puedo ayudarte a encontrar los influencers perfectos para tu marca. Solo dime qué estás buscando: el nicho, la plataforma, el número de seguidores o la ubicación, ¡y buscaré influencers que coincidan!"
+        isCollaboration: false,
+        response: "¡Hola! Puedo ayudarte a:\n• Encontrar influencers perfectos para tu marca\n• Verificar colaboraciones entre influencers y marcas\n\n¿Qué necesitas hoy?"
       };
     }
     
@@ -27,20 +74,23 @@ function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifyS
         (lowerMessage.includes('cómo') && (lowerMessage.includes('funciona') || lowerMessage.includes('usar') || lowerMessage.includes('usas')))) {
       return {
         isSearch: false,
-        response: "¡Es simple! Solo describe qué tipo de influencers estás buscando. Por ejemplo: 'Encuentra influencers de moda en Instagram con 10k-100k seguidores en Nueva York' o 'Muéstrame YouTubers de tecnología con más de 50k suscriptores'."
+        isCollaboration: false,
+        response: "¡Es simple! Puedo ayudarte de dos formas:\n\n🔍 **Buscar influencers**: 'Encuentra influencers de moda en Instagram con 10k-100k seguidores'\n\n🤝 **Verificar colaboraciones**: 'Verifica si @username colaboró con Nike'\n\n¿Qué necesitas?"
       };
     }
     
     if (lowerMessage.includes('help') || lowerMessage.includes('ayuda') || lowerMessage.includes('ayudar')) {
       return {
         isSearch: false,
-        response: "¡Puedo ayudarte a buscar influencers! Puedes especificar:\n• Plataforma (Instagram, TikTok, YouTube, Twitter)\n• Nicho (moda, fitness, tecnología, belleza, etc.)\n• Número de seguidores (10k, 100k, 1M, etc.)\n• Ubicación (ciudad o país)\n• Género (masculino, femenino)\n• Rango de edad (18-24, 25-34, etc.)\n\n¡Solo dime qué estás buscando!"
+        isCollaboration: false,
+        response: "¡Puedo ayudarte con dos funciones principales!\n\n🔍 **Búsqueda de influencers:**\n• Plataforma (Instagram, TikTok, YouTube)\n• Nicho (moda, fitness, tecnología, etc.)\n• Seguidores (10k, 100k, 1M, etc.)\n• Ubicación y género\n\n🤝 **Verificación de colaboraciones:**\n• Escribe: 'Verifica si @influencer trabajó con [marca]'\n• Ejemplo: 'Check if @username collaborated with Nike'\n\n¿Qué necesitas?"
       };
     }
     
     return {
       isSearch: false,
-      response: "¡Estoy aquí para ayudarte a encontrar influencers! Prueba preguntando algo como 'Encuentra influencers de fitness en Instagram' o 'Muéstrame YouTubers de tecnología con más de 50k seguidores'."
+      isCollaboration: false,
+      response: "¡Estoy aquí para ayudarte! Puedo:\n• Encontrar influencers: 'Busca influencers de fitness en Instagram'\n• Verificar colaboraciones: 'Verifica si @username trabajó con Nike'\n\n¿Qué necesitas?"
     };
   }
 
@@ -288,7 +338,57 @@ function parseSearchQuery(message: string): { isSearch: boolean; params?: ApifyS
   };
 
   console.log('🔍 Parsed search parameters:', params);
-  return { isSearch: true, params };
+  return { isSearch: true, isCollaboration: false, params };
+}
+
+// Function to parse collaboration queries and extract influencer handle and brand name
+function parseCollaborationQuery(message: string): CollaborationParams {
+  let influencerHandle = '';
+  let brandName = '';
+  
+  // Extract influencer handle patterns
+  const handlePatterns = [
+    /@([a-zA-Z0-9._]+)/g, // @username pattern
+    /influencer\s+([a-zA-Z0-9._]+)/gi, // "influencer username"
+    /username\s+([a-zA-Z0-9._]+)/gi, // "username xyz"
+  ];
+  
+  for (const pattern of handlePatterns) {
+    const match = pattern.exec(message);
+    if (match) {
+      influencerHandle = match[1];
+      break;
+    }
+  }
+  
+  // Extract brand name patterns
+  const brandPatterns = [
+    /(?:with|con|collaborated with|trabajó con|sponsored by|patrocinado por|brand|marca)\s+([A-Za-z0-9\s&.-]+?)(?:\s|$|\?|!|\.)/gi,
+    /(?:Nike|Adidas|Zara|H&M|McDonald's|Coca-Cola|Pepsi|Samsung|Apple|Google|Amazon|Microsoft|Facebook|Instagram|TikTok|YouTube|Twitter|Spotify|Netflix|Disney|Marvel|DC|PlayStation|Xbox|Nintendo|Tesla|BMW|Mercedes|Audi|Volkswagen|Toyota|Honda|Ford|Chevrolet|Uber|Airbnb|Starbucks|KFC|Burger King|Subway|Pizza Hut|Domino's|Walmart|Target|Best Buy|GameStop|Sephora|Ulta|Victoria's Secret|Calvin Klein|Tommy Hilfiger|Ralph Lauren|Gucci|Prada|Louis Vuitton|Chanel|Hermès|Rolex|Cartier|Tiffany)/gi
+  ];
+  
+  for (const pattern of brandPatterns) {
+    const match = pattern.exec(message);
+    if (match) {
+      if (match[1]) {
+        // First pattern with capture group
+        brandName = match[1].trim();
+      } else {
+        // Second pattern (direct brand names)
+        brandName = match[0].trim();
+      }
+      break;
+    }
+  }
+  
+  // Clean up brand name
+  brandName = brandName.replace(/^(with|con|collaborated with|trabajó con|sponsored by|patrocinado por|brand|marca)\s+/gi, '').trim();
+  
+  return {
+    influencerHandle,
+    brandName,
+    postsToCheck: 20 // Default value
+  };
 }
 
 export async function POST(req: Request) {
@@ -300,6 +400,69 @@ export async function POST(req: Request) {
     const parseResult = parseSearchQuery(message);
     console.log('🔍 Parse result:', parseResult);
 
+    // Handle collaboration queries
+    if (parseResult.isCollaboration) {
+      if (!parseResult.collaborationParams) {
+        return NextResponse.json({ 
+          success: true, 
+          type: 'chat', 
+          data: parseResult.response 
+        });
+      }
+
+      // Call the brand collaboration API internally
+      try {
+        const collaborationResponse = await fetch(new URL('/api/check-brand-collaboration', req.url).toString(), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(parseResult.collaborationParams)
+        });
+
+        const collaborationData = await collaborationResponse.json();
+        
+        if (collaborationData.success) {
+          const { collaboration, influencerHandle, brandName } = collaborationData;
+          
+          let responseMessage = '';
+          if (collaboration.hasWorkedTogether) {
+            responseMessage = `✅ **Colaboración confirmada!**\n\n` +
+              `🤝 **@${influencerHandle}** ha trabajado con **${brandName}**\n` +
+              `📊 **Confianza:** ${collaboration.confidence}%\n` +
+              `🎯 **Tipo:** ${collaboration.collaborationType === 'partnership' ? 'Colaboración patrocinada' : 'Mención/Referencia'}\n\n` +
+              `📝 **Evidencia encontrada:**\n${collaboration.evidence.map((e: string) => `• ${e}`).join('\n')}`;
+            
+            if (collaboration.lastCollabDate) {
+              responseMessage += `\n\n📅 **Última colaboración:** ${collaboration.lastCollabDate}`;
+            }
+          } else {
+            responseMessage = `❌ **No se encontró evidencia de colaboración**\n\n` +
+              `🔍 **@${influencerHandle}** y **${brandName}**\n` +
+              `📊 **Posts analizados:** ${collaborationData.postsAnalyzed || 0}\n` +
+              `📝 **Razón:** ${collaboration.reason || 'Sin evidencia en posts recientes'}`;
+          }
+
+          return NextResponse.json({ 
+            success: true, 
+            type: 'collaboration', 
+            data: responseMessage,
+            rawData: collaborationData
+          });
+        } else {
+          throw new Error(collaborationData.error || 'Failed to check collaboration');
+        }
+      } catch (collaborationError) {
+        console.error('Error checking collaboration:', collaborationError);
+        return NextResponse.json({ 
+          success: true, 
+          type: 'chat', 
+          data: `❌ Error al verificar la colaboración: ${collaborationError instanceof Error ? collaborationError.message : 'Error desconocido'}`
+        });
+      }
+    }
+
+    // Handle regular chat responses
     if (!parseResult.isSearch) {
       return NextResponse.json({ 
         success: true, 
@@ -308,6 +471,7 @@ export async function POST(req: Request) {
       });
     }
 
+    // Handle search queries
     return NextResponse.json({ 
       success: true, 
       type: 'search', 

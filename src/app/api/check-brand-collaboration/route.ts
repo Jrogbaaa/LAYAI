@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ApifyClient } from 'apify-client';
+
+// Initialize Apify client
+const apifyClient = new ApifyClient({
+  token: process.env.APIFY_API_TOKEN,
+});
 
 interface CollaborationCheckRequest {
   influencerHandle: string;
@@ -16,11 +22,15 @@ interface CollaborationResult {
 
 export async function POST(request: NextRequest) {
   try {
-    const { influencerHandle, brandName, postsToCheck = 20 }: CollaborationCheckRequest = await request.json();
+    const body = await request.json();
+    const { influencerHandle, brandName, postsToCheck = 20 } = body;
 
     if (!influencerHandle || !brandName) {
       return NextResponse.json(
-        { error: 'Influencer handle and brand name are required' },
+        { 
+          success: false, 
+          error: 'Missing required parameters: influencerHandle and brandName' 
+        },
         { status: 400 }
       );
     }
@@ -28,71 +38,130 @@ export async function POST(request: NextRequest) {
     console.log(`🔍 Checking collaboration history: ${influencerHandle} x ${brandName}`);
 
     // Clean the influencer handle
-    const cleanHandle = influencerHandle.replace('@', '').toLowerCase();
-    
-    // Prepare Apify request for Instagram post scraping
-    const apifyToken = process.env.APIFY_API_TOKEN;
-    if (!apifyToken) {
-      throw new Error('APIFY_API_TOKEN not configured');
-    }
+    const cleanHandle = influencerHandle.replace(/^@/, '').trim();
 
+    // Use Apify Instagram Post Scraper 
+    const actorId = 'apify/instagram-post-scraper';
+    
+    // Correct parameter format based on official documentation
     const apifyInput = {
-      usernames: [cleanHandle],
-      resultsType: "posts",
-      resultsLimit: postsToCheck,
-      addParentData: false
+      username: [cleanHandle], // Note: singular 'username' parameter, array value
+      resultsLimit: postsToCheck
     };
 
-    console.log(`📱 Scraping ${postsToCheck} recent posts from @${cleanHandle}...`);
+    console.log(`📱 Scraping recent posts from @${cleanHandle} using Instagram Post Scraper...`);
+    console.log(`🔧 Apify Input:`, JSON.stringify(apifyInput, null, 2));
 
-    // Call Apify Instagram scraper for posts
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minutes timeout
-    
-    const apifyResponse = await fetch(
-      `https://api.apify.com/v2/acts/apify~instagram-profile-scraper/run-sync-get-dataset-items?token=${apifyToken}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(apifyInput),
-        signal: controller.signal,
+    try {
+      // Call Apify Instagram Post Scraper
+      const run = await apifyClient.actor(actorId).call(apifyInput, {
+        timeout: 120000, // 2 minutes timeout
+      });
+
+      console.log(`⏳ Apify run completed with ID: ${run.id}`);
+
+      // Get the results
+      const { items } = await apifyClient.dataset(run.defaultDatasetId).listItems();
+      
+      console.log(`📊 Retrieved ${items.length} posts for analysis`);
+
+      if (items.length === 0) {
+        return NextResponse.json({
+          success: true,
+          collaboration: {
+            hasWorkedTogether: false,
+            collaborationType: 'none',
+            confidence: 0,
+            evidence: [],
+            reason: 'No posts found to analyze',
+            postsAnalyzed: 0
+          },
+          brandName,
+          influencerHandle: cleanHandle
+        });
       }
-    );
-    
-    clearTimeout(timeoutId);
 
-    if (!apifyResponse.ok) {
-      throw new Error(`Apify API error: ${apifyResponse.status}`);
+      // Analyze posts for brand collaboration
+      const analysisResult = analyzeBrandCollaboration(items, brandName);
+
+      return NextResponse.json({
+        success: true,
+        collaboration: {
+          hasWorkedTogether: analysisResult.hasCollaborated,
+          collaborationType: analysisResult.collaborationType,
+          confidence: analysisResult.confidenceScore,
+          evidence: analysisResult.evidence,
+          reason: 'Analyzed from recent posts',
+          lastCollabDate: analysisResult.lastCollabDate
+        },
+        brandName,
+        influencerHandle: cleanHandle,
+        postsAnalyzed: items.length
+      });
+
+    } catch (apifyError) {
+      console.error(`❌ Apify scraping failed:`, apifyError);
+      
+      // Fallback: Try to get basic profile info for bio analysis
+      console.log(`🔄 Falling back to profile bio analysis...`);
+      
+      try {
+        const profileRun = await apifyClient.actor('apify/instagram-profile-scraper').call({
+          usernames: [cleanHandle],
+          resultsType: 'profiles',
+          resultsLimit: 1
+        });
+
+        const { items: profileItems } = await apifyClient.dataset(profileRun.defaultDatasetId).listItems();
+        
+        if (profileItems.length > 0) {
+          const profile = profileItems[0];
+          const bioAnalysis = analyzeBioForCollaboration(profile.biography || '', brandName);
+          
+          return NextResponse.json({
+            success: true,
+            collaboration: {
+              hasWorkedTogether: bioAnalysis.hasCollaboration,
+              collaborationType: bioAnalysis.collaborationType,
+              confidence: bioAnalysis.confidence,
+              evidence: bioAnalysis.evidence,
+              reason: 'Analyzed from profile bio (posts unavailable)',
+              postsAnalyzed: 0
+            },
+            brandName,
+            influencerHandle: cleanHandle,
+            fallbackMethod: 'bio-analysis'
+          });
+        }
+      } catch (fallbackError) {
+        console.error(`❌ Fallback analysis also failed:`, fallbackError);
+      }
+
+      // Return negative result if everything fails
+      return NextResponse.json({
+        success: true,
+        collaboration: {
+          hasWorkedTogether: false,
+          collaborationType: 'none',
+          confidence: 0,
+          evidence: [],
+          reason: 'Unable to scrape posts for analysis',
+          postsAnalyzed: 0
+        },
+        brandName,
+        influencerHandle: cleanHandle,
+        error: 'Scraping failed'
+      });
     }
 
-    const posts = await apifyResponse.json();
-    console.log(`📊 Retrieved ${posts.length} posts for analysis`);
-
-    // Analyze posts for brand mentions and collaborations
-    const collaborationAnalysis = analyzeBrandCollaboration(posts, brandName);
-    
-    return NextResponse.json({
-      success: true,
-      influencer: cleanHandle,
-      brand: brandName,
-      collaboration: collaborationAnalysis,
-      postsAnalyzed: posts.length
-    });
-
   } catch (error) {
-    console.error('❌ Brand collaboration check failed:', error);
+    console.error('❌ Brand collaboration check error:', error);
+    
     return NextResponse.json(
       { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error',
-        collaboration: {
-          hasCollaborated: false,
-          collaborationType: 'none',
-          evidence: [],
-          confidenceScore: 0
-        }
+        error: 'Failed to check brand collaboration',
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );
@@ -129,8 +198,17 @@ function analyzeBrandCollaboration(posts: any[], brandName: string): Collaborati
 
   for (const post of posts) {
     const caption = (post.caption || '').toLowerCase();
-    const hashtags = (post.hashtags || []).map((h: any) => h.toLowerCase());
+    const hashtags = (post.hashtags || []).map((h: any) => {
+      if (typeof h === 'string') {
+        return h.toLowerCase();
+      } else if (h && typeof h === 'object' && h.name) {
+        return h.name.toLowerCase();
+      }
+      return '';
+    }).filter(Boolean);
     const allText = `${caption} ${hashtags.join(' ')}`;
+
+    console.log(`🔎 Analyzing post: Caption "${caption.substring(0, 100)}..." | Hashtags: [${hashtags.slice(0, 5).join(', ')}]`);
 
     // Check if brand is mentioned
     const brandMentioned = brandVariations.some(variation => 
@@ -194,7 +272,9 @@ function generateBrandVariations(brandName: string): string[] {
   if (brandName === 'ikea') {
     variations.push('ikeaspain', 'ikeaes', 'ikea_spain');
   } else if (brandName === 'nike') {
-    variations.push('nikespain', 'nikees', 'justdoit');
+    variations.push('nikespain', 'nikees', 'justdoit', 'swoosh', 'nikeair', 
+                   'nikefootball', 'nikesoccer', 'niketraining', 'nikesb',
+                   'mercurial', 'phantom', 'tiempo', 'nikeid', 'nikesportswear');
   } else if (brandName === 'adidas') {
     variations.push('adidasspain', 'adidases', 'adidasoriginals');
   } else if (brandName === 'zara') {
@@ -208,4 +288,50 @@ function generateBrandVariations(brandName: string): string[] {
   variations.push(`#${brandName}`);
   
   return variations;
+}
+
+function analyzeBioForCollaboration(bio: string, brandName: string): {
+  hasCollaboration: boolean;
+  collaborationType: 'partnership' | 'mention' | 'none';
+  confidence: number;
+  evidence: string[];
+} {
+  const lowerBio = bio.toLowerCase();
+  const brand = brandName.toLowerCase();
+  const brandVariations = generateBrandVariations(brand);
+  
+  const evidence: string[] = [];
+  let collaborationType: 'partnership' | 'mention' | 'none' = 'none';
+  let confidence = 0;
+
+  // Check if brand is mentioned in bio
+  const brandMentioned = brandVariations.some(variation => lowerBio.includes(variation));
+  
+  if (brandMentioned) {
+    // Check for partnership/ambassador keywords
+    const partnershipKeywords = [
+      'ambassador', 'embajador', 'embajadora', 'brand ambassador',
+      'partner', 'socio', 'partnership', 'colaboración', 'colaboracion',
+      'sponsored by', 'patrocinado por', 'thanks to', 'gracias a'
+    ];
+    
+    const hasPartnershipKeywords = partnershipKeywords.some(keyword => lowerBio.includes(keyword));
+    
+    if (hasPartnershipKeywords) {
+      collaborationType = 'partnership';
+      confidence = 80;
+      evidence.push(`Partnership mentioned in bio: "${bio}"`);
+    } else {
+      collaborationType = 'mention';
+      confidence = 40;
+      evidence.push(`Brand mentioned in bio: "${bio}"`);
+    }
+  }
+
+  return {
+    hasCollaboration: confidence > 0,
+    collaborationType,
+    confidence,
+    evidence
+  };
 } 
