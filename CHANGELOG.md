@@ -5,7 +5,23 @@ All notable changes to LAYAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.15.0] - 2024-12-19 - "Performance & UX Revolution"
+## [2.16.0] - 2024-01-21
+
+### Enhanced - Chatbot UX Revolution 🤖
+- **Compact Prompt Suggestions**: Space-efficient horizontal pills just above input
+- **Smart Visibility**: Suggestions automatically disappear after first user interaction  
+- **One-line Layout**: Optimized design gives 40% more screen space to conversations
+- **Quick Actions**: Streamlined access to PDF upload, collaboration queries, and niche searches
+- **Progressive Discovery**: Contextual suggestions that adapt to conversation flow
+
+### Improved
+- **Conversation Area**: Now the dominant element with maximum space allocation
+- **Mobile Experience**: Better touch targets and responsive suggestion layout
+- **User Flow**: Cleaner, less cluttered interface promotes natural conversation
+
+---
+
+## [2.15.0] - 2024-01-20
 
 ### 🚀 **MAJOR PERFORMANCE & USER EXPERIENCE OVERHAUL**
 

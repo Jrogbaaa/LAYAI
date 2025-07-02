@@ -1124,181 +1124,73 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
             </div>
           </div>
         ))}
-
-        {/* Suggested Prompts - Show when no conversation has started */}
-        {messages.length === 0 && (
-          <div className="space-y-4">
-            <div className="text-center mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">💡 Prueba estas búsquedas:</h3>
-              <p className="text-sm text-gray-600">Haz clic en cualquier sugerencia para comenzar</p>
-            </div>
-            
-            <div className="grid grid-cols-1 gap-3 max-w-lg mx-auto">
-              {[
-                {
-                  text: "Encuentra micro influencers fitness en Madrid",
-                  category: "🎯 Búsqueda específica",
-                  description: "Búsqueda targeted por ubicación y nicho"
-                },
-                {
-                  text: "Busca beauty creators femeninos con más de 50K seguidores",
-                  category: "👩 Demografía",
-                  description: "Filtros de género y audiencia"
-                },
-                {
-                  text: "¿Qué influencers han trabajado con Nike recientemente?",
-                  category: "🔍 Colaboraciones",
-                  description: "Análisis de partnerships pasados"
-                },
-                {
-                  text: "Encuentra TikTokers de tecnología en Latinoamérica",
-                  category: "📱 Plataforma",
-                  description: "Búsqueda por plataforma específica"
-                },
-                {
-                  text: "Busca influencers sostenibles para campaña eco-friendly",
-                  category: "🌱 Nicho específico",
-                  description: "Valores y causas específicas"
-                },
-                {
-                  text: "Analiza esta propuesta de campaña [sube PDF]",
-                  category: "📄 Análisis PDF",
-                  description: "Análisis inteligente de documentos"
-                }
-              ].map((prompt, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    setInputMessage(prompt.text);
-                    // Auto-focus input after setting message
-                    setTimeout(() => {
-                      const textarea = document.querySelector('textarea') as HTMLTextAreaElement;
-                      if (textarea) {
-                        textarea.focus();
-                        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-                      }
-                    }, 100);
-                  }}
-                  className="group p-3 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-md transition-all duration-200 text-left"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 mt-0.5">
-                      <div className="w-8 h-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg flex items-center justify-center border border-blue-100 group-hover:border-blue-200 transition-colors">
-                        <span className="text-sm">{prompt.category.split(' ')[0]}</span>
-                      </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-gray-900 mb-1 group-hover:text-blue-700 transition-colors">
-                        {prompt.text}
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        {prompt.category} • {prompt.description}
-                      </div>
-                    </div>
-                    <div className="flex-shrink-0">
-                      <svg className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
+        
+        {/* Progress Bar for Search */}
+        {searchProgress && (
+          <div className="flex justify-start">
+            <div className="bg-white text-gray-800 border border-gray-200 px-5 py-4 rounded-2xl shadow-lg max-w-md w-full">
+              <div className="space-y-4">
+                {/* Header with icon and stage */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="text-lg">🔍</div>
+                    <span className="text-sm font-semibold text-gray-800">{searchProgress.stage}</span>
                   </div>
-                </button>
-              ))}
-            </div>
-            
-            {/* Quick tips */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 border border-blue-100 max-w-lg mx-auto mt-6">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-lg">🚀</span>
-                <span className="font-medium text-gray-800">Tips rápidos:</span>
-              </div>
-              <div className="grid grid-cols-1 gap-2 text-sm text-gray-700">
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-500">•</span>
-                  <span>Usa ubicaciones específicas: "Madrid", "CDMX"</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs font-medium text-gray-600">{Math.round(searchProgress.progress)}%</span>
+                    {searchProgress.isComplete && <span className="text-green-500 text-sm">✅</span>}
+                    {/* Cancel button for active collaboration checks */}
+                    {activeCollaborationCheck && !searchProgress.isComplete && (
+                      <button
+                        onClick={cancelCollaborationCheck}
+                        className="text-red-500 hover:text-red-700 text-xs font-medium underline ml-2"
+                        title="Cancelar verificación"
+                      >
+                        Cancelar
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-purple-500">•</span>
-                  <span>Especifica tamaño: "micro", "macro" influencers</span>
+                
+                {/* Progress Bar */}
+                <div className="w-full bg-gray-200 rounded-full h-3 shadow-inner">
+                  <div 
+                    className={`h-3 rounded-full transition-all duration-500 ease-out ${
+                      searchProgress.isComplete 
+                        ? 'bg-gradient-to-r from-green-500 to-green-600 shadow-lg' 
+                        : 'bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 shadow-md'
+                    }`}
+                    style={{ width: `${searchProgress.progress}%` }}
+                  >
+                    {/* Animated shine effect */}
+                    {!searchProgress.isComplete && (
+                      <div className="h-full w-full rounded-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-green-500">•</span>
-                  <span>Menciona plataformas: "Instagram", "TikTok"</span>
+                
+                {/* Details */}
+                <div className="flex items-center space-x-2">
+                  {!searchProgress.isComplete && (
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
+                  )}
+                  <span className="text-xs text-gray-600 leading-relaxed">{searchProgress.details}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-orange-500">•</span>
-                  <span>Incluye nichos: "fitness", "beauty", "tech"</span>
-                </div>
+                
+                {/* Estimated time remaining (only for active searches) */}
+                {!searchProgress.isComplete && searchProgress.progress > 10 && (
+                  <div className="text-xs text-gray-500 italic">
+                    ⏱️ Tiempo estimado: {searchProgress.progress < 60 ? '60-90 segundos' : '30-45 segundos'}
+                  </div>
+                )}
               </div>
             </div>
           </div>
         )}
-        
-                 {/* Progress Bar for Search */}
-         {searchProgress && (
-           <div className="flex justify-start">
-             <div className="bg-white text-gray-800 border border-gray-200 px-5 py-4 rounded-2xl shadow-lg max-w-md w-full">
-               <div className="space-y-4">
-                 {/* Header with icon and stage */}
-                 <div className="flex items-center justify-between">
-                   <div className="flex items-center space-x-2">
-                     <div className="text-lg">🔍</div>
-                     <span className="text-sm font-semibold text-gray-800">{searchProgress.stage}</span>
-                   </div>
-                   <div className="flex items-center space-x-2">
-                     <span className="text-xs font-medium text-gray-600">{Math.round(searchProgress.progress)}%</span>
-                     {searchProgress.isComplete && <span className="text-green-500 text-sm">✅</span>}
-                     {/* Cancel button for active collaboration checks */}
-                     {activeCollaborationCheck && !searchProgress.isComplete && (
-                       <button
-                         onClick={cancelCollaborationCheck}
-                         className="text-red-500 hover:text-red-700 text-xs font-medium underline ml-2"
-                         title="Cancelar verificación"
-                       >
-                         Cancelar
-                       </button>
-                     )}
-                   </div>
-                 </div>
-                 
-                 {/* Progress Bar */}
-                 <div className="w-full bg-gray-200 rounded-full h-3 shadow-inner">
-                   <div 
-                     className={`h-3 rounded-full transition-all duration-500 ease-out ${
-                       searchProgress.isComplete 
-                         ? 'bg-gradient-to-r from-green-500 to-green-600 shadow-lg' 
-                         : 'bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 shadow-md'
-                     }`}
-                     style={{ width: `${searchProgress.progress}%` }}
-                   >
-                     {/* Animated shine effect */}
-                     {!searchProgress.isComplete && (
-                       <div className="h-full w-full rounded-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
-                     )}
-                   </div>
-                 </div>
-                 
-                 {/* Details */}
-                 <div className="flex items-center space-x-2">
-                   {!searchProgress.isComplete && (
-                     <div className="flex space-x-1">
-                       <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-                       <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                       <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                     </div>
-                   )}
-                   <span className="text-xs text-gray-600 leading-relaxed">{searchProgress.details}</span>
-                 </div>
-                 
-                 {/* Estimated time remaining (only for active searches) */}
-                 {!searchProgress.isComplete && searchProgress.progress > 10 && (
-                   <div className="text-xs text-gray-500 italic">
-                     ⏱️ Tiempo estimado: {searchProgress.progress < 60 ? '60-90 segundos' : '30-45 segundos'}
-                   </div>
-                 )}
-               </div>
-             </div>
-           </div>
-         )}
         
         {/* Simple loading for non-search queries */}
         {isLoading && !searchProgress && (
@@ -1317,6 +1209,44 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
         )}
         <div ref={messagesEndRef} />
       </div>
+
+      {/* Compact Suggested Prompts - Only show until first user message */}
+      {messages.length <= 1 && (
+        <div className="px-4 py-2 bg-gray-50 border-t border-gray-200 flex-shrink-0">
+          <div className="text-xs text-gray-600 mb-1.5 font-medium">💡 Prueba estas búsquedas:</div>
+          <div className="flex gap-2 overflow-x-auto">
+            {[
+              { text: "🎯 Influencers fitness Madrid", icon: "🎯" },
+              { text: "👩 Beauty +50K seguidores", icon: "👩" },
+              { text: "🔍 ¿Cristiano con IKEA?", icon: "🔍" },
+              { text: "📄 Subir PDF", icon: "📄" }
+            ].map((prompt, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  if (prompt.text.includes("PDF")) {
+                    handlePDFUploadClick();
+                  } else {
+                    setInputMessage(prompt.text.substring(2)); // Remove emoji prefix
+                    // Auto-focus input after setting message
+                    setTimeout(() => {
+                      const textarea = document.querySelector('textarea') as HTMLTextAreaElement;
+                      if (textarea) {
+                        textarea.focus();
+                        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+                      }
+                    }, 100);
+                  }
+                }}
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs bg-white border border-gray-200 rounded-md hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 text-gray-700 hover:text-blue-700 whitespace-nowrap flex-shrink-0"
+              >
+                <span>{prompt.icon}</span>
+                <span>{prompt.text.substring(2)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Input */}
       <div className="p-6 bg-white border-t border-gray-100 flex-shrink-0">
