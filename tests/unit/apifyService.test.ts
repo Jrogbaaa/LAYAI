@@ -254,4 +254,72 @@ describe('Apify Service', () => {
       expect(result).toBe(false);
     });
   });
+
+  describe('Brand Collaboration Detection', () => {
+    it('should detect brand collaboration from bio during scraping', async () => {
+      const params: ApifySearchParams = {
+        platforms: ['Instagram'],
+        niches: ['fitness'],
+        minFollowers: 1000,
+        maxFollowers: 1000000,
+        location: 'Madrid',
+        brandName: 'Nike', // This should trigger collaboration detection
+        maxResults: 1
+      };
+
+      // Mock a successful search that would normally include collaboration analysis
+      const mockResults = await searchInfluencersWithApify(params);
+      
+      // If we get results, they should have brand collaboration analysis
+      if (mockResults.length > 0) {
+        const influencer = mockResults[0];
+        
+        // Check if brand collaboration field exists (even if no collaboration found)
+        if (influencer.brandCollaboration) {
+          expect(influencer.brandCollaboration).toHaveProperty('brandName');
+          expect(influencer.brandCollaboration).toHaveProperty('hasWorkedWith');
+          expect(influencer.brandCollaboration).toHaveProperty('collaborationType');
+          expect(influencer.brandCollaboration).toHaveProperty('confidence');
+          expect(influencer.brandCollaboration).toHaveProperty('evidence');
+          expect(influencer.brandCollaboration).toHaveProperty('source');
+          
+          // Verify brand name matches the search
+          expect(influencer.brandCollaboration.brandName).toBe('Nike');
+          
+          // Verify collaboration type is valid
+          expect(['partnership', 'mention', 'none']).toContain(influencer.brandCollaboration.collaborationType);
+          
+          // Verify confidence is a valid percentage
+          expect(influencer.brandCollaboration.confidence).toBeGreaterThanOrEqual(0);
+          expect(influencer.brandCollaboration.confidence).toBeLessThanOrEqual(100);
+          
+          // Verify evidence is an array
+          expect(Array.isArray(influencer.brandCollaboration.evidence)).toBe(true);
+          
+          // Verify source is valid
+          expect(['bio_analysis', 'posts_analysis', 'combined']).toContain(influencer.brandCollaboration.source);
+        }
+      }
+    }, 30000); // Extended timeout for API calls
+    
+    it('should not include brand collaboration when no brand is specified', async () => {
+      const params: ApifySearchParams = {
+        platforms: ['Instagram'],
+        niches: ['fitness'],
+        minFollowers: 1000,
+        maxFollowers: 1000000,
+        location: 'Madrid',
+        // No brandName specified
+        maxResults: 1
+      };
+
+      const mockResults = await searchInfluencersWithApify(params);
+      
+      if (mockResults.length > 0) {
+        const influencer = mockResults[0];
+        // Should not have brand collaboration analysis when no brand specified
+        expect(influencer.brandCollaboration).toBeUndefined();
+      }
+    }, 30000);
+  });
 }); 

@@ -38,11 +38,20 @@ const TIKTOK_URL_PATTERNS = {
   // Modern share URLs (www.tiktok.com/t/)
   MODERN_SHARE: /^https?:\/\/(www\.)?tiktok\.com\/t\/([a-zA-Z0-9]+)\/?$/,
   
+  // Discovery URLs (not profile-specific) - check before profile to prevent false matches
+  DISCOVER_URL: /^https?:\/\/(www\.)?tiktok\.com\/discover\/([^/?]+)(?:\/.*)?$/,
+  
   // Discovery/hashtag URLs (not profile-specific)
   HASHTAG_URL: /^https?:\/\/(www\.)?tiktok\.com\/tag\/([^/?]+)(?:\/.*)?$/,
   
   // Sound/music URLs (not profile-specific)
-  SOUND_URL: /^https?:\/\/(www\.)?tiktok\.com\/music\/([^/?]+)(?:\/.*)?$/
+  SOUND_URL: /^https?:\/\/(www\.)?tiktok\.com\/music\/([^/?]+)(?:\/.*)?$/,
+  
+  // Trending/foryou URLs (not profile-specific)
+  TRENDING_URL: /^https?:\/\/(www\.)?tiktok\.com\/(trending|foryou|following)(?:\/.*)?$/,
+  
+  // Search URLs (not profile-specific)
+  SEARCH_URL: /^https?:\/\/(www\.)?tiktok\.com\/search\?q=([^&]+)(?:&.*)?$/
 };
 
 /**
@@ -211,7 +220,18 @@ function matchTikTokUrl(url: string): TikTokUrlInfo | null {
     };
   }
 
-  // Handle non-profile URLs (hashtags, sounds, etc.)
+  // Handle non-profile URLs (check BEFORE profile pattern to prevent false matches)
+  if (url.match(TIKTOK_URL_PATTERNS.DISCOVER_URL)) {
+    return {
+      username: '',
+      isValid: false,
+      originalUrl: url,
+      normalizedUrl: url,
+      urlType: 'unknown',
+      errors: ['Discovery URLs do not contain profile information']
+    };
+  }
+
   if (url.match(TIKTOK_URL_PATTERNS.HASHTAG_URL)) {
     return {
       username: '',
@@ -231,6 +251,28 @@ function matchTikTokUrl(url: string): TikTokUrlInfo | null {
       normalizedUrl: url,
       urlType: 'unknown',
       errors: ['Sound URLs do not contain profile information']
+    };
+  }
+
+  if (url.match(TIKTOK_URL_PATTERNS.TRENDING_URL)) {
+    return {
+      username: '',
+      isValid: false,
+      originalUrl: url,
+      normalizedUrl: url,
+      urlType: 'unknown',
+      errors: ['Trending/feed URLs do not contain profile information']
+    };
+  }
+
+  if (url.match(TIKTOK_URL_PATTERNS.SEARCH_URL)) {
+    return {
+      username: '',
+      isValid: false,
+      originalUrl: url,
+      normalizedUrl: url,
+      urlType: 'unknown',
+      errors: ['Search URLs do not contain profile information']
     };
   }
 
@@ -256,23 +298,35 @@ function matchTikTokUrl(url: string): TikTokUrlInfo | null {
 function validateTikTokUsername(username: string): { isValid: boolean; errors?: string[] } {
   const errors: string[] = [];
 
-  // Check length and basic pattern
-  if (!USERNAME_VALIDATION.VALID_PATTERN.test(username)) {
-    errors.push('Username must be 1-24 characters and contain only letters, numbers, periods, and underscores');
+  // Check basic requirements
+  if (!username || username.length === 0) {
+    errors.push('Username cannot be empty');
+    return { isValid: false, errors };
   }
 
-  // Check for invalid start/end characters
-  if (USERNAME_VALIDATION.INVALID_START_END.test(username)) {
-    errors.push('Username cannot start or end with periods or underscores');
+  // Check length and basic pattern (more lenient)
+  if (username.length > 24) {
+    errors.push('Username must be 24 characters or less');
   }
 
-  // Check for consecutive special characters
-  if (USERNAME_VALIDATION.CONSECUTIVE_SPECIAL.test(username)) {
-    errors.push('Username cannot contain consecutive periods or underscores');
+  // Allow alphanumeric + periods + underscores (more lenient pattern)
+  if (!/^[a-zA-Z0-9._]+$/.test(username)) {
+    errors.push('Username can only contain letters, numbers, periods, and underscores');
   }
 
-  // Check against reserved usernames
-  if (USERNAME_VALIDATION.RESERVED_USERNAMES.includes(username.toLowerCase())) {
+  // Check for invalid start/end characters (less strict - allow more patterns)
+  if (/^[._]{2,}|[._]{2,}$/.test(username)) {
+    errors.push('Username cannot start or end with multiple periods or underscores');
+  }
+
+  // Check for excessive consecutive special characters
+  if (/[._]{4,}/.test(username)) {
+    errors.push('Username cannot contain 4 or more consecutive periods or underscores');
+  }
+
+  // Check against reserved usernames (reduced list)
+  const restrictedUsernames = ['www', 'api', 'admin', 'tiktok', 'discover', 'trending'];
+  if (restrictedUsernames.includes(username.toLowerCase())) {
     errors.push('Username is reserved and cannot be used');
   }
 

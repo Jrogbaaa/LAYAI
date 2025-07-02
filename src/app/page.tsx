@@ -79,6 +79,10 @@ export default function Home() {
     try {
       console.log('🔄 Sending message to chat API:', message);
       
+      // Skip campaign saving for partial results messages
+      const isPartialResultsMessage = message.startsWith('PARTIAL_RESULTS:');
+      const isStructuredSearchMessage = message.startsWith('STRUCTURED_SEARCH:');
+      
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
@@ -144,23 +148,32 @@ export default function Home() {
             });
             setShowAllResults(false); // Reset expanded view for new search
             
-            // 📚 Automatically save search to campaigns
-            try {
-              const brandName = extractBrandFromMessage(message);
-              const searchParams = data.data; // Enhanced search parameters
-              const allResults = [...convertedResults, ...discoveryResults];
-              
-              const saveResult = await campaignService.saveSearchResults(
-                message,
-                brandName,
-                allResults,
-                searchParams
-              );
-              
-              console.log(`📚 Search automatically saved: ${saveResult.action} for ${brandName}`, saveResult);
-            } catch (error) {
-              console.error('Error saving search to campaigns:', error);
-              // Non-blocking error - search results still work
+            // 📚 Automatically save search to campaigns (only for user queries, not partial results)
+            if (!isPartialResultsMessage && !isStructuredSearchMessage && message.trim().length > 0) {
+              try {
+                const brandName = extractBrandFromMessage(message);
+                const searchParams = data.data; // Enhanced search parameters
+                const allResults = [...convertedResults, ...discoveryResults];
+                
+                // Additional validation to prevent saving invalid data
+                if (brandName && !brandName.includes('{') && !brandName.includes('PARTIAL_RESULTS') && brandName.length < 100) {
+                  const saveResult = await campaignService.saveSearchResults(
+                    message,
+                    brandName,
+                    allResults,
+                    searchParams
+                  );
+                  
+                  console.log(`📚 Search automatically saved: ${saveResult.action} for ${brandName}`, saveResult);
+                } else {
+                  console.log('📚 Skipped saving search due to invalid brand name:', brandName);
+                }
+              } catch (error) {
+                console.error('Error saving search to campaigns:', error);
+                // Non-blocking error - search results still work
+              }
+            } else {
+              console.log('📚 Skipped saving search (partial results or structured message)');
             }
           }
           

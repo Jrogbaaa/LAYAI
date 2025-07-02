@@ -25,6 +25,17 @@ export interface Influencer {
     validationReason?: string;
     apifyVerified: boolean;
   };
+  
+  // Brand collaboration status (extracted during scraping)
+  brandCollaboration?: {
+    brandName: string;
+    hasWorkedWith: boolean;
+    collaborationType: 'partnership' | 'mention' | 'none';
+    confidence: number;
+    evidence: string[];
+    lastCollabDate?: string;
+    source: 'bio_analysis' | 'posts_analysis' | 'combined';
+  };
 }
 
 export interface BrandCollaboration {

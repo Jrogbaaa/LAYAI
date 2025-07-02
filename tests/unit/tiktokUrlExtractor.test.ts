@@ -100,6 +100,64 @@ describe('TikTok URL Extraction Utility', () => {
       expect(result.data?.username).toBe('mobile_user');
       expect(result.data?.normalizedUrl).toBe('https://www.tiktok.com/@mobile_user');
     });
+
+    it('should clean tracking parameters from URLs', () => {
+      const url = 'https://www.tiktok.com/@user123?utm_source=test&fbclid=123&gclid=456&lang=en';
+      const result = extractTikTokUrl(url);
+      
+      expect(result.success).toBe(true);
+      expect(result.data?.username).toBe('user123');
+      // The cleaned URL should preserve important params like lang but remove tracking
+      expect(result.data?.originalUrl).toContain('lang=en');
+      expect(result.data?.originalUrl).not.toContain('utm_source');
+      expect(result.data?.originalUrl).not.toContain('fbclid');
+    });
+
+    it('should reject TikTok discovery URLs', () => {
+      const discoveryUrls = [
+        'https://www.tiktok.com/discover/tik-tokers-gym-espa%C3%B1a',
+        'https://www.tiktok.com/discover/fitness-madrid',
+        'https://www.tiktok.com/discover/influencers-fitness',
+        'https://tiktok.com/discover/trending-topic'
+      ];
+      
+      discoveryUrls.forEach(url => {
+        const result = extractTikTokUrl(url);
+        expect(result.success).toBe(false);
+        expect(result.error).toContain('Discovery URLs do not contain profile information');
+      });
+    });
+
+    it('should reject TikTok trending and search URLs', () => {
+      const nonProfileUrls = [
+        'https://www.tiktok.com/trending',
+        'https://www.tiktok.com/foryou',
+        'https://www.tiktok.com/following',
+        'https://www.tiktok.com/search?q=fitness+madrid',
+        'https://tiktok.com/trending',
+        'https://tiktok.com/search?q=influencers'
+      ];
+      
+      nonProfileUrls.forEach(url => {
+        const result = extractTikTokUrl(url);
+        expect(result.success).toBe(false);
+        expect(result.error).toMatch(/(Trending\/feed URLs|Search URLs) do not contain profile information/);
+      });
+    });
+
+    it('should handle edge cases in discovery URL patterns', () => {
+      const edgeCases = [
+        'https://www.tiktok.com/discover/fitness-park-madrid-principe-pio-influencer-pelo-blanco',
+        'https://www.tiktok.com/discover/fitness-park-madrid-principe-pio-influencer-proxis',
+        'https://www.tiktok.com/discover/influenciadora-fitness-%C3%A1rabe-leana'
+      ];
+      
+      edgeCases.forEach(url => {
+        const result = extractTikTokUrl(url);
+        expect(result.success).toBe(false);
+        expect(result.error).toContain('Discovery URLs do not contain profile information');
+      });
+    });
   });
 
   describe('extractTikTokUsername', () => {
@@ -298,18 +356,6 @@ describe('TikTok URL Extraction Utility', () => {
       
       expect(result.success).toBe(true);
       expect(result.data?.username).toBe('user123');
-    });
-
-    it('should clean tracking parameters from URLs', () => {
-      const url = 'https://www.tiktok.com/@user123?utm_source=test&fbclid=123&gclid=456&lang=en';
-      const result = extractTikTokUrl(url);
-      
-      expect(result.success).toBe(true);
-      expect(result.data?.username).toBe('user123');
-      // The cleaned URL should preserve important params like lang but remove tracking
-      expect(result.data?.originalUrl).toContain('lang=en');
-      expect(result.data?.originalUrl).not.toContain('utm_source');
-      expect(result.data?.originalUrl).not.toContain('fbclid');
     });
   });
 }); 

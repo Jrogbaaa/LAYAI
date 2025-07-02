@@ -1,7 +1,8 @@
 'use client';
 
 import { MatchResult, Influencer } from '@/types/influencer';
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 interface InfluencerResultsProps {
   results: MatchResult[];
@@ -47,29 +48,60 @@ interface MatchResultWithVerification extends MatchResult {
 }
 
 export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results }) => {
-  const [viewMode, setViewMode] = React.useState<'standard' | 'enhanced'>('standard');
+  const [viewMode, setViewMode] = useState<'standard' | 'enhanced'>('standard');
   
-  // Calculate performance metrics for the summary
-  const performanceMetrics = React.useMemo(() => {
-    const totalResults = results.length;
-    const avgMatchScore = results.reduce((sum, r) => sum + r.matchScore, 0) / totalResults;
-    const avgEngagement = results.reduce((sum, r) => sum + (r.influencer.engagementRate || 0), 0) / totalResults;
-    const verifiedCount = results.filter(r => r.influencer.validationStatus?.apifyVerified).length;
-    const premiumCount = results.filter(r => r.influencer.costLevel === 'Premium' || r.influencer.costLevel === 'Celebrity').length;
+  // Pre-filter results to remove invalid profiles before any rendering
+  const validResults = useMemo(() => {
+    return results.filter(result => {
+      const validation = isValidInstagramHandle(result.influencer);
+      if (!validation.isValid) {
+        console.log(`🚫 Filtering out invalid profile: ${result.influencer.handle} - ${validation.reason}`);
+        return false;
+      }
+      return true;
+    });
+  }, [results]);
+  
+  // Performance metrics calculation
+  const performanceMetrics = useMemo(() => {
+    if (validResults.length === 0) {
+      return {
+        avgMatchScore: 0,
+        avgEngagement: 0,
+        verifiedCount: 0,
+        premiumCount: 0,
+        qualityDistribution: { excellent: 0, good: 0, fair: 0 }
+      };
+    }
+
+    const avgMatchScore = Math.round(
+      validResults.reduce((sum, result) => sum + (result.matchScore || 0), 0) / validResults.length * 100
+    );
     
+    const avgEngagement = Math.round(
+      validResults.reduce((sum, result) => sum + (result.influencer.engagementRate || 0), 0) / validResults.length * 100
+    );
+    
+    const verifiedCount = validResults.filter(result => result.influencer.validationStatus?.apifyVerified).length;
+    const premiumCount = validResults.filter(result => 
+      result.influencer.costLevel === 'Premium' || result.influencer.costLevel === 'Celebrity'
+    ).length;
+    
+    // Quality distribution based on match scores
+    const qualityDistribution = {
+      excellent: validResults.filter(result => (result.matchScore || 0) >= 0.8).length,
+      good: validResults.filter(result => (result.matchScore || 0) >= 0.6 && (result.matchScore || 0) < 0.8).length,
+      fair: validResults.filter(result => (result.matchScore || 0) < 0.6).length
+    };
+
     return {
-      totalResults,
-      avgMatchScore: Math.round(avgMatchScore * 100),
-      avgEngagement: Math.round(avgEngagement * 10000) / 100,
+      avgMatchScore,
+      avgEngagement,
       verifiedCount,
       premiumCount,
-      qualityDistribution: {
-        excellent: results.filter(r => r.matchScore >= 0.8).length,
-        good: results.filter(r => r.matchScore >= 0.6 && r.matchScore < 0.8).length,
-        fair: results.filter(r => r.matchScore < 0.6).length,
-      }
+      qualityDistribution
     };
-  }, [results]);
+  }, [validResults]);
 
   const isValidInstagramHandle = (influencer: any): { isValid: boolean; reason?: string } => {
     // First check if we have Apify validation data (most reliable)
@@ -86,8 +118,9 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
       return { isValid: false, reason: 'Handle no disponible' };
     }
     
-    // Check for obvious invalid patterns
+    // Enhanced invalid patterns detection
     const invalidPatterns = [
+      // Known problematic patterns from recent searches
       /techblockproject/i,
       /gmail\.com/i,
       /yahoo\.com/i,
@@ -108,22 +141,48 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
       /\.com/i,
       /\.net/i,
       /\.org/i,
-      // Common invalid usernames from search results
+      
+      // Enhanced pattern detection for common issues
       /reserved/i,
       /global_mrm/i,
       /worldarchitecturedesign/i,
       /studiomcgee/i,
       /westwingcom/i,
       /pullandbear/i,
-      /patrikssontalent/i
+      /patrikssontalent/i,
+      
+      // Invalid username ending patterns (like jaykarafit_, laschicasdelgym_)
+      /^[._]/,  // Starts with period or underscore
+      /[._]$/,  // Ends with period or underscore
+      /[._]{2,}/, // Consecutive periods/underscores
+      
+      // Additional spam/invalid patterns
+      /^(spam|bot|fake|clone|temp|tmp|guest|admin|support|help)\d*$/i,
+      /^(user|profile|account|test|demo|sample)\d*$/i,
+      
+      // Domain-like patterns
+      /\.(es|com|net|org|uk|de|fr|it)$/i,
+      
+      // Email-like patterns
+      /@.*\./,
+      
+      // Generic fitness/business account patterns
+      /^fitness(park|gym|center|studio)/i,
+      /^gym\w+official/i,
+      /official\w+$/i,
+      /\d{5,}/,  // Long sequences of numbers
     ];
     
     // Must be reasonable length and contain valid characters
-    const isValidLength = handle.length > 2 && handle.length < 30;
+    const isValidLength = handle.length >= 3 && handle.length <= 30;
     const hasValidChars = /^[a-zA-Z0-9._]+$/.test(handle);
     const noConsecutiveDots = !handle.includes('..');
     const notStartsWithDot = !handle.startsWith('.');
     const notEndsWithDot = !handle.endsWith('.');
+    const notStartsWithUnderscore = !handle.startsWith('_');
+    const notEndsWithUnderscore = !handle.endsWith('_');
+    const notAllNumbers = !/^\d+$/.test(handle);
+    const notTooManyNumbers = !(/\d{4,}/.test(handle)); // No more than 3 consecutive numbers
     
     const hasInvalidPattern = invalidPatterns.some(pattern => pattern.test(handle));
     
@@ -131,8 +190,25 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
       return { isValid: false, reason: 'Patrón de handle inválido detectado' };
     }
     
-    if (!isValidLength || !hasValidChars || !noConsecutiveDots || !notStartsWithDot || !notEndsWithDot) {
-      return { isValid: false, reason: 'Formato de handle inválido' };
+    if (!isValidLength) {
+      return { isValid: false, reason: 'Longitud de handle inválida (debe tener 3-30 caracteres)' };
+    }
+    
+    if (!hasValidChars) {
+      return { isValid: false, reason: 'Caracteres no válidos en el handle' };
+    }
+    
+    if (!noConsecutiveDots || !notStartsWithDot || !notEndsWithDot || 
+        !notStartsWithUnderscore || !notEndsWithUnderscore) {
+      return { isValid: false, reason: 'Formato de handle inválido (puntos/guiones al inicio/final)' };
+    }
+    
+    if (!notAllNumbers) {
+      return { isValid: false, reason: 'Handle no puede ser solo números' };
+    }
+    
+    if (!notTooManyNumbers) {
+      return { isValid: false, reason: 'Demasiados números consecutivos en el handle' };
     }
     
     return { isValid: true };
@@ -180,7 +256,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
     }
   };
 
-  if (results.length === 0) {
+  if (validResults.length === 0) {
     return null; // Don't render anything if no premium results
   }
 
@@ -191,7 +267,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-xl font-bold text-gray-900">
-              {results.length} Coincidencia{results.length !== 1 ? 's' : ''} Perfecta{results.length !== 1 ? 's' : ''} Encontrada{results.length !== 1 ? 's' : ''}
+              {validResults.length} Coincidencia{validResults.length !== 1 ? 's' : ''} Perfecta{validResults.length !== 1 ? 's' : ''} Encontrada{validResults.length !== 1 ? 's' : ''}
             </h2>
             <p className="text-gray-600 mt-1 text-sm">
               Clasificados por puntuación de compatibilidad y rendimiento
@@ -252,7 +328,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
 
       {/* Results Grid */}
       <div className={viewMode === 'enhanced' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'grid gap-3'} data-testid="influencer-results">
-        {results.map((result, index) => {
+        {validResults.map((result, index) => {
           const validation = isValidInstagramHandle(result.influencer);
           
           // Enhanced View

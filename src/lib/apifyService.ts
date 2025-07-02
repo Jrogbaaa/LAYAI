@@ -53,6 +53,17 @@ export interface ScrapedInfluencer {
   collaborationRate?: number;
   brandCompatibilityScore?: number;
   
+  // Brand collaboration status (extracted during scraping)
+  brandCollaboration?: {
+    brandName: string;
+    hasWorkedWith: boolean;
+    collaborationType: 'partnership' | 'mention' | 'none';
+    confidence: number;
+    evidence: string[];
+    lastCollabDate?: string;
+    source: 'bio_analysis' | 'posts_analysis' | 'combined';
+  };
+  
   // Enhanced fields from Instagram Private API
   profilePicId?: string;
   isPrivate?: boolean;
@@ -1334,7 +1345,7 @@ function deduplicateProfiles(profiles: {url: string, platform: string}[]): {url:
 }
 
 /**
- * Enhanced profile URL extraction with validation
+ * Enhanced profile URL extraction with early filtering
  */
 function extractProfileUrls(searchResults: any[], platform: string): {url: string, platform: string}[] {
   const urls: {url: string, platform: string}[] = [];
@@ -1351,6 +1362,30 @@ function extractProfileUrls(searchResults: any[], platform: string): {url: strin
     if (result.link && result.link.includes(platformDomain)) {
       console.log(`   ✅ Main link matches platform domain`);
       
+      // Early filtering for TikTok discover/hashtag URLs
+      if (platform.toLowerCase() === 'tiktok') {
+        if (result.link.includes('/discover/') || 
+            result.link.includes('/tag/') || 
+            result.link.includes('/hashtag/') ||
+            result.link.includes('/music/') ||
+            result.link.includes('/sound/')) {
+          console.log(`   ❌ TikTok non-profile URL detected (discover/hashtag): ${result.link}`);
+          continue;
+        }
+      }
+      
+      // Early filtering for Instagram explore/post URLs  
+      if (platform.toLowerCase() === 'instagram') {
+        if (result.link.includes('/explore/') || 
+            result.link.includes('/p/') || 
+            result.link.includes('/reel/') ||
+            result.link.includes('/tv/') ||
+            result.link.includes('/stories/')) {
+          console.log(`   ❌ Instagram non-profile URL detected: ${result.link}`);
+          continue;
+        }
+      }
+      
       // Validate URL structure
       const validation = validateProfileUrl(result.link, platform);
       if (!validation.isValid) {
@@ -1359,12 +1394,49 @@ function extractProfileUrls(searchResults: any[], platform: string): {url: strin
       }
       
       const username = extractUsernameFromUrl(result.link, platform);
-      if (isKnownInvalidProfile(username, result.link)) {
+      
+      // Enhanced logging for debugging
+      console.log(`   🔍 Extracted username: "${username}" from URL: ${result.link}`);
+      
+      // Early username quality check with improved validation
+      const isInvalidProfile = isKnownInvalidProfile(username, result.link);
+      if (isInvalidProfile && username !== 'unknown') {
         console.log(`   ❌ Known invalid profile pattern: ${username}`);
         continue;
       }
       
-      // Check if it's a brand account
+      // If username extraction failed, try alternative methods for TikTok
+      if (username === 'unknown' && platform.toLowerCase() === 'tiktok') {
+        console.log(`   🔄 Username extraction failed, trying alternative TikTok extraction...`);
+        
+        // Try direct regex extraction for TikTok video URLs
+        const tikTokVideoMatch = result.link.match(/tiktok\.com\/@([a-zA-Z0-9._]+)\/video\/\d+/);
+        if (tikTokVideoMatch) {
+          const extractedUsername = tikTokVideoMatch[1];
+          console.log(`   ✅ Alternative extraction successful: ${extractedUsername}`);
+          
+          // Validate the extracted username
+          if (!isKnownInvalidProfile(extractedUsername, result.link) && 
+              !isGenericProfile(extractedUsername) && 
+              !isBrandAccount(extractedUsername)) {
+            const cleanUrl = `https://www.tiktok.com/@${extractedUsername}`;
+            urls.push({ url: cleanUrl, platform });
+            console.log(`   ✅ Added TikTok profile via alternative extraction: ${cleanUrl}`);
+            continue;
+          }
+        }
+        
+        console.log(`   ❌ Failed to extract valid username, skipping: ${result.link}`);
+        continue;
+      }
+      
+      // Enhanced generic profile detection
+      if (isGenericProfile(username)) {
+        console.log(`   ❌ Generic profile detected: ${username}`);
+        continue;
+      }
+      
+      // Check if it's a brand account early
       if (isBrandAccount(username)) {
         console.log(`   ❌ Brand account detected: ${username}`);
         continue;
@@ -1375,25 +1447,46 @@ function extractProfileUrls(searchResults: any[], platform: string): {url: strin
       console.log(`   ✅ Added validated link: ${cleanUrl}`);
     }
     
-    // Check additional_links
+    // Check additional_links with same filtering
     if (result.additional_links && Array.isArray(result.additional_links)) {
       console.log(`   📎 Checking ${result.additional_links.length} additional links...`);
       for (const additionalLink of result.additional_links) {
         if (additionalLink.href && additionalLink.href.includes(platformDomain)) {
+          
+          // Apply same early filtering
+          let skipLink = false;
+          if (platform.toLowerCase() === 'tiktok' && 
+              (additionalLink.href.includes('/discover/') || additionalLink.href.includes('/tag/'))) {
+            skipLink = true;
+          }
+          if (platform.toLowerCase() === 'instagram' && 
+              (additionalLink.href.includes('/explore/') || additionalLink.href.includes('/p/'))) {
+            skipLink = true;
+          }
+          
+          if (skipLink) {
+            console.log(`   ❌ Skipping non-profile additional link: ${additionalLink.href}`);
+            continue;
+          }
+          
           const validation = validateProfileUrl(additionalLink.href, platform);
           if (validation.isValid) {
             const username = extractUsernameFromUrl(additionalLink.href, platform);
-            if (!isKnownInvalidProfile(username, additionalLink.href) && !isBrandAccount(username)) {
+            if (!isKnownInvalidProfile(username, additionalLink.href) && 
+                !isBrandAccount(username) && 
+                !isGenericProfile(username)) {
               const cleanUrl = additionalLink.href.split('?')[0];
               urls.push({ url: cleanUrl, platform });
               console.log(`   ✅ Added validated additional link: ${cleanUrl}`);
+            } else {
+              console.log(`   ❌ Additional link failed quality checks: ${username}`);
             }
           }
         }
       }
     }
     
-    // Check description for @mentions (Instagram only for now)
+    // Check description for @mentions (Instagram only for now) with enhanced filtering
     if (result.description && platform.toLowerCase() === 'instagram') {
       console.log(`   📝 Checking description for mentions...`);
       
@@ -1402,10 +1495,17 @@ function extractProfileUrls(searchResults: any[], platform: string): {url: strin
         console.log(`   📢 Found mentions: ${mentions.join(', ')}`);
         mentions.forEach((mention: string) => {
           const username = mention.replace('@', '');
-          if (!isKnownInvalidProfile(username, '') && !isBrandAccount(username)) {
+          if (!isKnownInvalidProfile(username, '') && 
+              !isBrandAccount(username) && 
+              !isGenericProfile(username) &&
+              username.length >= 3 && // Minimum length check
+              username.length <= 30 && // Maximum length check
+              !/^[0-9]+$/.test(username)) { // Not all numbers
             const profileUrl = `https://www.instagram.com/${username}`;
             urls.push({ url: profileUrl, platform });
             console.log(`   ✅ Added from mention: ${profileUrl}`);
+          } else {
+            console.log(`   ❌ Mention failed quality checks: ${username}`);
           }
         });
       }
@@ -1640,6 +1740,19 @@ function transformProfileResults(items: any[], platform: string, params: ApifySe
         score += (nicheScores as Record<string, number>)[detectedNiche] || 0;
         if (transformed.verified) score += 10;
         transformed.brandCompatibilityScore = Math.min(score, 100);
+
+        // Add brand collaboration analysis during the same scrape
+        console.log(`🤝 Analyzing brand collaboration for @${transformed.username} x ${params.brandName}`);
+        const collaborationAnalysis = analyzeBrandCollaborationFromProfile(
+          transformed, 
+          params.brandName,
+          item // Pass the raw Apify data for potential post analysis
+        );
+        
+        if (collaborationAnalysis) {
+          transformed.brandCollaboration = collaborationAnalysis;
+          console.log(`📊 ${transformed.username}: ${collaborationAnalysis.hasWorkedWith ? 'FOUND' : 'NO'} collaboration (${collaborationAnalysis.confidence}% confidence)`);
+        }
       }
       
       return transformed;
@@ -3047,3 +3160,281 @@ class SearchFallbackSystem {
 
 // Initialize error handling system
 const searchFallbackSystem = new SearchFallbackSystem();
+
+/**
+ * Analyze brand collaboration from profile data during Apify scraping
+ */
+function analyzeBrandCollaborationFromProfile(
+  profile: ScrapedInfluencer, 
+  brandName: string,
+  rawData: any
+): ScrapedInfluencer['brandCollaboration'] | null {
+  if (!brandName) return null;
+
+  const evidence: string[] = [];
+  let collaborationType: 'partnership' | 'mention' | 'none' = 'none';
+  let confidence = 0;
+  let lastCollabDate: string | undefined;
+  let source: 'bio_analysis' | 'posts_analysis' | 'combined' = 'bio_analysis';
+
+  // Generate brand variations to search for
+  const brandVariations = generateBrandVariations(brandName);
+  
+  // 1. Analyze bio for brand mentions
+  const bioAnalysis = analyzeBioForBrandCollaboration(profile.biography || '', brandVariations);
+  if (bioAnalysis.hasCollaboration) {
+    collaborationType = bioAnalysis.collaborationType;
+    confidence = bioAnalysis.confidence;
+    evidence.push(...bioAnalysis.evidence);
+  }
+
+  // 2. Analyze recent posts if available in the raw data
+  const postsAnalysis = analyzePostsForBrandCollaboration(rawData, brandVariations);
+  if (postsAnalysis.hasCollaboration) {
+    // If posts show partnership but bio only shows mention, upgrade to partnership
+    if (postsAnalysis.collaborationType === 'partnership' || collaborationType === 'none') {
+      collaborationType = postsAnalysis.collaborationType;
+    }
+    confidence = Math.max(confidence, postsAnalysis.confidence);
+    evidence.push(...postsAnalysis.evidence);
+    lastCollabDate = postsAnalysis.lastCollabDate;
+    source = bioAnalysis.hasCollaboration ? 'combined' : 'posts_analysis';
+  }
+
+  // Final confidence boost if we found evidence in multiple sources
+  if (bioAnalysis.hasCollaboration && postsAnalysis.hasCollaboration) {
+    confidence = Math.min(confidence + 15, 98);
+  }
+
+  const hasWorkedWith = collaborationType !== 'none';
+
+  return hasWorkedWith ? {
+    brandName,
+    hasWorkedWith,
+    collaborationType,
+    confidence: Math.round(confidence),
+    evidence,
+    lastCollabDate,
+    source
+  } : null;
+}
+
+/**
+ * Generate brand name variations for search
+ */
+function generateBrandVariations(brand: string): string[] {
+  const lowerBrand = brand.toLowerCase();
+  const variations = [
+    lowerBrand,
+    `@${lowerBrand}`,
+    `#${lowerBrand}`,
+    lowerBrand.replace(/\s+/g, ''), // Remove spaces
+    lowerBrand.replace(/\s+/g, '_'), // Replace spaces with underscores
+    lowerBrand.replace(/\s+/g, '.'), // Replace spaces with dots
+    lowerBrand.replace('&', 'and'), // Replace & with 'and'
+    lowerBrand.replace('&', 'y'), // Replace & with 'y' (Spanish)
+  ];
+
+  // Add common brand-specific variations
+  const commonVariations: Record<string, string[]> = {
+    'nike': ['nike', 'nikefootball', 'nikesport', 'justdoit'],
+    'adidas': ['adidas', 'adidasfootball', 'adidasoriginals', '3stripes'],
+    'coca cola': ['cocacola', 'coke', 'coca_cola'],
+    'coca-cola': ['cocacola', 'coke', 'coca_cola'],
+    'mcdonald\'s': ['mcdonalds', 'mcd', 'goldmarches'],
+    'real madrid': ['realmadrid', 'rmadrid', 'halamadrid'],
+    'fc barcelona': ['fcbarcelona', 'barca', 'fcb', 'barcelona'],
+  };
+
+  const specificVariations = commonVariations[lowerBrand];
+  if (specificVariations) {
+    variations.push(...specificVariations);
+  }
+
+  // Remove duplicates and return
+  return Array.from(new Set(variations));
+}
+
+/**
+ * Analyze bio for brand collaboration
+ */
+function analyzeBioForBrandCollaboration(bio: string, brandVariations: string[]): {
+  hasCollaboration: boolean;
+  collaborationType: 'partnership' | 'mention' | 'none';
+  confidence: number;
+  evidence: string[];
+} {
+  const lowerBio = bio.toLowerCase();
+  const evidence: string[] = [];
+  let collaborationType: 'partnership' | 'mention' | 'none' = 'none';
+  let confidence = 0;
+
+  // Check if brand is mentioned in bio
+  const brandMentioned = brandVariations.some(variation => lowerBio.includes(variation));
+  
+  if (brandMentioned) {
+    // Check for partnership/ambassador keywords
+    const partnershipKeywords = [
+      'ambassador', 'embajador', 'embajadora', 'brand ambassador',
+      'partner', 'socio', 'partnership', 'colaboración', 'colaboracion',
+      'sponsored by', 'patrocinado por', 'thanks to', 'gracias a',
+      'official', 'oficial', 'team', 'equipo'
+    ];
+    
+    const hasPartnershipKeywords = partnershipKeywords.some(keyword => lowerBio.includes(keyword));
+    
+    if (hasPartnershipKeywords) {
+      collaborationType = 'partnership';
+      confidence = 80;
+      evidence.push(`Partnership mentioned in bio: "${bio.substring(0, 150)}${bio.length > 150 ? '...' : ''}"`);
+    } else {
+      collaborationType = 'mention';
+      confidence = 40;
+      evidence.push(`Brand mentioned in bio: "${bio.substring(0, 150)}${bio.length > 150 ? '...' : ''}"`);
+    }
+  }
+
+  return {
+    hasCollaboration: confidence > 0,
+    collaborationType,
+    confidence,
+    evidence
+  };
+}
+
+/**
+ * Analyze posts data for brand collaboration (from raw Apify data)
+ */
+function analyzePostsForBrandCollaboration(rawData: any, brandVariations: string[]): {
+  hasCollaboration: boolean;
+  collaborationType: 'partnership' | 'mention' | 'none';
+  confidence: number;
+  evidence: string[];
+  lastCollabDate?: string;
+} {
+  const evidence: string[] = [];
+  let collaborationType: 'partnership' | 'mention' | 'none' = 'none';
+  let confidence = 0;
+  let lastCollabDate: string | undefined;
+
+  // Try to extract posts from different possible fields in the raw data
+  const posts = rawData.posts || rawData.recentPosts || rawData.latestPosts || [];
+  
+  if (!posts || posts.length === 0) {
+    return {
+      hasCollaboration: false,
+      collaborationType: 'none',
+      confidence: 0,
+      evidence: []
+    };
+  }
+
+  // Partnership/collaboration keywords
+  const partnershipKeywords = [
+    'partnership', 'colaboración', 'colaboracion', 'partnership with', 'colaborando con',
+    'sponsored', 'patrocinado', 'ad', 'publicidad', '#ad', '#publicidad', '#sponsored',
+    'thanks to', 'gracias a', 'in collaboration with', 'en colaboración con',
+    'ambassador', 'embajador', 'embajadora', 'brand ambassador',
+    'gifted', 'regalo', 'regalado', 'cortesía', 'cortesia',
+    'challenge', 'duet challenge', 'contest', 'concurso', 'campaign', 'campaña'
+  ];
+
+  // Mention keywords
+  const mentionKeywords = [
+    'love', 'amo', 'encanta', 'amazing', 'increíble', 'increible',
+    'using', 'usando', 'utilizo', 'with', 'con',
+    'from', 'de', 'by', 'por', 'join', 'únete'
+  ];
+
+  posts.forEach((post: any, index: number) => {
+    const postText = (post.caption || post.text || post.description || '').toLowerCase();
+    const postHashtags = (post.hashtags || []).map((h: any) => 
+      typeof h === 'string' ? h.toLowerCase() : (h.text || h.name || '').toLowerCase()
+    );
+
+    // Check for brand variations in caption/text
+    let brandMentioned = false;
+    let mentionType = '';
+    
+    for (const variation of brandVariations) {
+      if (postText.includes(variation)) {
+        brandMentioned = true;
+        mentionType = 'text';
+        break;
+      }
+    }
+
+    // Check for brand in hashtags
+    if (!brandMentioned) {
+      for (const variation of brandVariations) {
+        if (postHashtags.some((tag: string) => tag.includes(variation))) {
+          brandMentioned = true;
+          mentionType = 'hashtag';
+          break;
+        }
+      }
+    }
+
+    if (brandMentioned) {
+      let isPartnership = false;
+      let currentConfidence = 10; // Base confidence for brand mention
+
+      // Check for partnership indicators
+      for (const keyword of partnershipKeywords) {
+        if (postText.includes(keyword.toLowerCase())) {
+          isPartnership = true;
+          currentConfidence += 15;
+          break;
+        }
+      }
+
+      // Check for mention-only indicators if not partnership
+      if (!isPartnership) {
+        for (const keyword of mentionKeywords) {
+          if (postText.includes(keyword.toLowerCase())) {
+            currentConfidence += 5;
+            break;
+          }
+        }
+      }
+
+      // Determine collaboration type and confidence
+      if (isPartnership || currentConfidence >= 30) {
+        collaborationType = 'partnership';
+        confidence = Math.max(confidence, Math.min(currentConfidence, 95));
+        
+        // Extract evidence
+        const evidenceText = (post.caption || post.text || '').substring(0, 200);
+        if (evidenceText.trim()) {
+          evidence.push(`Post: "${evidenceText}${evidenceText.length >= 200 ? '...' : ''}"`);
+        }
+        
+        if (post.createTime || post.timestamp || post.date) {
+          const postDate = new Date((post.createTime || post.timestamp || post.date) * 1000).toLocaleDateString();
+          if (!lastCollabDate || new Date((post.createTime || post.timestamp || post.date) * 1000) > new Date(lastCollabDate)) {
+            lastCollabDate = postDate;
+          }
+        }
+      } else if (currentConfidence >= 15) {
+        // Only set to mention if we haven't already found a partnership
+        if (collaborationType === 'none') {
+          collaborationType = 'mention';
+          confidence = Math.max(confidence, Math.min(currentConfidence, 85));
+          
+          const evidenceText = (post.caption || post.text || '').substring(0, 150);
+          if (evidenceText.trim()) {
+            evidence.push(`Mention: "${evidenceText}${evidenceText.length >= 150 ? '...' : ''}"`);
+          }
+        }
+      }
+    }
+  });
+
+  return {
+    hasCollaboration: collaborationType !== 'none',
+    collaborationType,
+    confidence: Math.round(confidence),
+    evidence,
+    lastCollabDate
+  };
+}

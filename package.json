@@ -1,6 +1,6 @@
 {
   "name": "layai",
-  "version": "2.13.1",
+  "version": "2.13.2",
   "description": "Social Media Talent Matcher - AI-powered influencer matching platform",
   "scripts": {
     "dev": "next dev",

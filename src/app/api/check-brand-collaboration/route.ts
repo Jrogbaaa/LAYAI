@@ -94,7 +94,11 @@ export async function POST(request: NextRequest) {
         console.log(`🔍 Web search query ${i + 1}: "${query}"`);
         
         try {
-          const searchResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/web-search`, {
+          // Get the base URL for API calls - use Vercel URL in production or localhost in development
+          const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                         (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+          
+          const searchResponse = await fetch(`${baseUrl}/api/web-search`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -164,7 +168,7 @@ export async function POST(request: NextRequest) {
         
         if (profileItems.length > 0) {
           const profile = profileItems[0];
-          const bioAnalysis = analyzeBioForCollaboration(profile.biography || '', brandName);
+          const bioAnalysis = analyzeBioForCollaboration(String(profile.biography || ''), brandName);
           
           return NextResponse.json({
             success: true,
