@@ -18,6 +18,7 @@ interface SearchProgress {
 
 interface ChatbotProps {
   onSendMessage: (message: string, history: Message[]) => Promise<any>;
+  onPDFAnalyzed?: (analysis: any) => void;
 }
 
 // Helper function to detect brand collaboration queries
@@ -112,7 +113,7 @@ const saveMessagesToSession = (messages: Message[]) => {
   }
 };
 
-export function Chatbot({ onSendMessage }: ChatbotProps) {
+export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
   const [messages, setMessages] = useState<Message[]>(loadMessagesFromSession);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -293,6 +294,10 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
           type: 'chat',
         };
         setMessages(prev => [...prev, analysisMessage]);
+
+        if (onPDFAnalyzed) {
+          onPDFAnalyzed(result.analysis);
+        }
 
       } else {
         const errorMessage: Message = {

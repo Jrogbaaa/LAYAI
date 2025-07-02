@@ -2046,12 +2046,27 @@ function matchesGender(influencer: ScrapedInfluencer, targetGender: string): boo
     const { fullName, username, biography } = influencer;
     const gender = targetGender.toLowerCase();
 
-    // Common names for gender detection
-    const maleNames = ['pablo', 'sergio', 'david', 'javier', 'daniel', 'mario', 'manuel'];
-    const femaleNames = ['maria', 'lucia', 'paula', 'ana', 'sofia', 'carmen', 'laura'];
+    // Common names for gender detection (expanded lists)
+    const maleNames = [
+        'pablo', 'sergio', 'david', 'javier', 'daniel', 'mario', 'manuel', 'jose', 'antonio', 
+        'francisco', 'juan', 'carlos', 'miguel', 'rafael', 'pedro', 'angel', 'alejandro',
+        'fernando', 'jorge', 'alberto', 'luis', 'alvaro', 'oscar', 'adrian', 'raul',
+        'enrique', 'jesus', 'marcos', 'victor', 'ruben', 'ivan', 'diego', 'andres',
+        'ignacio', 'roberto', 'cristian', 'eduardo', 'ricardo', 'gabriel', 'gonzalo',
+        'nicolas', 'hugo', 'rodrigo', 'felipe', 'santiago', 'jaime', 'emilio', 'lorenzo'
+    ];
+    
+    const femaleNames = [
+        'maria', 'lucia', 'paula', 'ana', 'sofia', 'carmen', 'laura', 'marta', 'silvia',
+        'sara', 'patricia', 'monica', 'raquel', 'natalia', 'beatriz', 'rocio', 'alba',
+        'andrea', 'irene', 'noelia', 'claudia', 'nuria', 'eva', 'susana', 'miriam',
+        'alicia', 'esther', 'yolanda', 'cristina', 'elena', 'pilar', 'teresa', 'rosa',
+        'francisca', 'antonia', 'mercedes', 'julia', 'concepcion', 'manuela', 'dolores'
+    ];
 
     const normalizedName = (fullName || username || '').toLowerCase();
     
+    // Check for exact gender matches first
     if (gender === 'male') {
         if (maleNames.some(name => normalizedName.includes(name))) return true;
         if (femaleNames.some(name => normalizedName.includes(name))) return false;
@@ -2069,8 +2084,10 @@ function matchesGender(influencer: ScrapedInfluencer, targetGender: string): boo
         if (gender === 'female' && (bio.includes('she/her') || bio.includes('ella'))) return true;
     }
 
-    // If no specific indicators, it's an inclusive match
-    return true; 
+    // 🔥 FIXED: When gender is specifically requested but can't be determined, 
+    // filter them out instead of including them all
+    // This ensures "male only" actually returns only males, not everyone
+    return false;
 }
 
 

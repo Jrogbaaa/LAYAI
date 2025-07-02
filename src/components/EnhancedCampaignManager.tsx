@@ -14,13 +14,23 @@ export const EnhancedCampaignManager: React.FC = () => {
   const [showNotesModal, setShowNotesModal] = useState<{campaignId: string, notes: string} | null>(null);
   const [showSearchesModal, setShowSearchesModal] = useState<{campaignId: string, searches: SavedSearch[]} | null>(null);
   const [showInfluencersModal, setShowInfluencersModal] = useState<{campaignId: string, influencers: SavedInfluencer[]} | null>(null);
+  
+  // 🔥 NEW: Add request deduplication to prevent API spam
+  const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(false);
 
   useEffect(() => {
     loadCampaigns();
   }, []);
 
   const loadCampaigns = async () => {
+    // 🛡️ SPAM PROTECTION: Prevent multiple simultaneous requests
+    if (isLoadingCampaigns) {
+      console.log('⚠️ Campaign load already in progress, skipping...');
+      return;
+    }
+    
     try {
+      setIsLoadingCampaigns(true);
       setIsLoading(true);
       const campaignList = await campaignService.getAllCampaigns();
       
@@ -56,6 +66,7 @@ export const EnhancedCampaignManager: React.FC = () => {
       console.error('Error loading campaigns:', error);
     } finally {
       setIsLoading(false);
+      setIsLoadingCampaigns(false);
     }
   };
 

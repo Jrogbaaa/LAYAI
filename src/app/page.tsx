@@ -38,18 +38,27 @@ export default function Home() {
   const [currentSearchId, setCurrentSearchId] = useState<string | null>(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [showAllResults, setShowAllResults] = useState(false);
+  const [pdfAnalysisContext, setPdfAnalysisContext] = useState<any>(null);
 
   useEffect(() => {
     setSessionId(generateSessionId());
   }, []);
 
-  // Helper function to extract brand name from search message
+  // Helper function to extract brand name from search message OR PDF context
   const extractBrandFromMessage = (message: string): string => {
+    // 🎯 PRIORITY 1: Use brand name from PDF analysis if available
+    if (pdfAnalysisContext?.brandName) {
+      console.log(`📄 Using brand from PDF analysis: ${pdfAnalysisContext.brandName}`);
+      return pdfAnalysisContext.brandName;
+    }
+
+    // 🎯 PRIORITY 2: Extract from chat message as fallback
     const brandKeywords = ['ikea', 'nike', 'adidas', 'zara', 'h&m', 'mango', 'inditex', 'pull&bear', 'bershka', 'stradivarius'];
     const lowerMessage = message.toLowerCase();
     
     for (const brand of brandKeywords) {
       if (lowerMessage.includes(brand)) {
+        console.log(`💬 Extracted brand from message: ${brand.toUpperCase()}`);
         return brand.toUpperCase();
       }
     }
@@ -64,13 +73,25 @@ export default function Home() {
     for (const pattern of patterns) {
       const match = message.match(pattern);
       if (match && match[1] && match[1].length > 2) {
+        console.log(`📝 Extracted brand from pattern: ${match[1].trim().toUpperCase()}`);
         return match[1].trim().toUpperCase();
       }
     }
     
-    // Fallback to first meaningful word
+    // 🎯 PRIORITY 3: If we have PDF context but no brandName, try to extract from summary
+    if (pdfAnalysisContext?.summary) {
+      const summaryBrandMatch = pdfAnalysisContext.summary.match(/para\s+([A-Z][A-Z0-9&\s]*?)(?:\s|$)/i);
+      if (summaryBrandMatch && summaryBrandMatch[1]) {
+        console.log(`📋 Extracted brand from PDF summary: ${summaryBrandMatch[1].trim()}`);
+        return summaryBrandMatch[1].trim();
+      }
+    }
+    
+    // 🎯 LAST RESORT: Only if no PDF context available
     const words = message.split(' ').filter(word => word.length > 3);
-    return words[0] || 'UNKNOWN_BRAND';
+    const fallback = words[0] || 'UNKNOWN_BRAND';
+    console.log(`⚠️ Using fallback brand extraction: ${fallback}`);
+    return fallback;
   };
 
   const handleSendMessage = async (message: string, history: any[]) => {
@@ -395,7 +416,10 @@ export default function Home() {
           <div className="min-h-screen overflow-y-auto bg-gray-50">
             {/* Chat Section - Always visible at top */}
             <div className="w-full max-w-4xl mx-auto px-6 py-8">
-              <Chatbot onSendMessage={handleSendMessage} />
+              <Chatbot 
+                onSendMessage={handleSendMessage} 
+                onPDFAnalyzed={setPdfAnalysisContext}
+              />
             </div>
             
             {/* Results Section - Flows naturally below chat */}

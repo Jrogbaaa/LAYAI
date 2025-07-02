@@ -125,11 +125,19 @@ export async function POST(request: NextRequest) {
 
 async function analyzeProposalText(text: string): Promise<ProposalAnalysis> {
   try {
+    // Check if OpenAI API key is available
+    const openaiApiKey = process.env.OPENAI_API_KEY;
+    
+    if (!openaiApiKey) {
+      console.log('⚠️ OpenAI API key not configured, using fallback analysis');
+      return generateFallbackAnalysis(text);
+    }
+
     // Use OpenAI API for intelligent analysis
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${openaiApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -177,32 +185,106 @@ Solo incluye campos que puedas extraer con confianza del texto. Usa null para ca
     });
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+      console.log(`⚠️ OpenAI API error: ${response.status}, falling back to basic analysis`);
+      return generateFallbackAnalysis(text);
     }
 
     const result = await response.json();
     const analysisText = result.choices[0]?.message?.content;
 
     if (!analysisText) {
-      throw new Error('No analysis returned from OpenAI');
+      console.log('⚠️ No analysis returned from OpenAI, using fallback');
+      return generateFallbackAnalysis(text);
     }
 
-    // Parse the JSON response
-    try {
-      const analysis = JSON.parse(analysisText);
-      console.log('🤖 AI Analysis result:', analysis);
-      return analysis;
-    } catch (parseError) {
-      console.error('Error parsing AI response:', parseError);
-      // Fallback to manual analysis if AI fails
-      return await manualAnalysis(text);
-    }
+    // Parse JSON response
+    const cleanJson = analysisText.replace(/```json\n?|\n?```/g, '').trim();
+    const analysis = JSON.parse(cleanJson);
+    
+    return analysis;
 
   } catch (error) {
     console.error('Error in AI analysis:', error);
-    // Fallback to manual analysis
-    return await manualAnalysis(text);
+    console.log('🔄 Falling back to basic text analysis');
+    return generateFallbackAnalysis(text);
   }
+}
+
+// 🔥 NEW: Fallback analysis when OpenAI is not available
+function generateFallbackAnalysis(text: string): ProposalAnalysis {
+  // Basic text analysis using regex and keyword matching
+  const lowerText = text.toLowerCase();
+  
+  // Extract brand name (look for common patterns)
+  const brandPatterns = [
+    /(?:para|for|de|brand|marca|company)[\s:]*([A-Z][A-Za-z0-9\s&]{2,30})/i,
+    /([A-Z][A-Za-z]{2,20})(?:\s+(?:quiere|wants|necesita|needs|busca))/i,
+  ];
+  
+  let brandName: string | undefined = undefined;
+  for (const pattern of brandPatterns) {
+    const match = text.match(pattern);
+    if (match && match[1]) {
+      brandName = match[1].trim();
+      break;
+    }
+  }
+  
+  // Extract platforms
+  const platforms = [];
+  if (lowerText.includes('instagram')) platforms.push('Instagram');
+  if (lowerText.includes('tiktok') || lowerText.includes('tik tok')) platforms.push('TikTok');
+  if (lowerText.includes('youtube')) platforms.push('YouTube');
+  if (lowerText.includes('twitter') || lowerText.includes('x.com')) platforms.push('Twitter');
+  
+  // Extract content types
+  const contentTypes = [];
+  if (lowerText.includes('post') || lowerText.includes('publicación')) contentTypes.push('Posts');
+  if (lowerText.includes('story') || lowerText.includes('historia')) contentTypes.push('Stories');
+  if (lowerText.includes('video') || lowerText.includes('vídeo')) contentTypes.push('Videos');
+  if (lowerText.includes('reel')) contentTypes.push('Reels');
+  
+  // Extract gender targeting
+  let gender: string | undefined = undefined;
+  if (lowerText.includes('female') || lowerText.includes('mujer') || lowerText.includes('femenino')) {
+    gender = 'female';
+  } else if (lowerText.includes('male') || lowerText.includes('hombre') || lowerText.includes('masculino')) {
+    gender = 'male';
+  }
+  
+  // Extract location
+  let location: string | undefined = undefined;
+  const locationPatterns = ['spain', 'españa', 'madrid', 'barcelona', 'valencia', 'sevilla'];
+  for (const loc of locationPatterns) {
+    if (lowerText.includes(loc)) {
+      location = loc.charAt(0).toUpperCase() + loc.slice(1);
+      break;
+    }
+  }
+  
+  return {
+    brandName: brandName || 'Brand Name Not Found',
+    campaignType: 'General Campaign',
+    targetAudience: {
+      ageRange: undefined,
+      gender,
+      interests: [],
+      location
+    },
+    budget: {
+      min: undefined,
+      max: undefined,
+      currency: undefined
+    },
+    contentTypes: contentTypes.length > 0 ? contentTypes : ['Posts'],
+    campaignGoals: ['Brand Awareness'],
+    platforms: platforms.length > 0 ? platforms : ['Instagram'],
+    timeline: undefined,
+    keyRequirements: [],
+    tone: undefined,
+    deliverables: contentTypes.length > 0 ? contentTypes : ['Social Media Content'],
+    summary: `Basic analysis for ${brandName || 'brand'} campaign` + (platforms.length > 0 ? ` on ${platforms.join(', ')}` : '')
+  };
 }
 
 async function manualAnalysis(text: string): Promise<ProposalAnalysis> {
