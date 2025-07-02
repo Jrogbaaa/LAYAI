@@ -281,6 +281,57 @@ async function addCollaborationStatus(results: any[], brandName: string | null):
   });
 }
 
+// 🔥 NEW: Proper gender detection function (same logic as apifyService)
+function detectInfluencerGender(influencer: any): 'Male' | 'Female' | 'Other' {
+  const { fullName, username, biography } = influencer;
+  const normalizedName = (fullName || username || '').toLowerCase();
+  const bio = (biography || '').toLowerCase();
+  
+  // Spanish male names (comprehensive list)
+  const maleNames = [
+    'jose', 'antonio', 'manuel', 'francisco', 'david', 'daniel', 'carlos', 'miguel', 'rafael', 'pedro', 
+    'angel', 'alejandro', 'fernando', 'sergio', 'pablo', 'jorge', 'alberto', 'luis', 'alvaro', 'oscar', 
+    'adrian', 'raul', 'enrique', 'jesus', 'javier', 'marcos', 'victor', 'ruben', 'ivan', 'diego', 
+    'andres', 'juan', 'ignacio', 'roberto', 'cristian', 'mario', 'eduardo', 'ricardo', 'gabriel'
+  ];
+  
+  // Spanish female names (comprehensive list)
+  const femaleNames = [
+    'maria', 'ana', 'carmen', 'josefa', 'isabel', 'dolores', 'pilar', 'teresa', 'rosa', 'francisca', 
+    'antonia', 'mercedes', 'julia', 'lucia', 'elena', 'concepcion', 'manuela', 'cristina', 'paula', 
+    'laura', 'marta', 'silvia', 'sara', 'patricia', 'monica', 'raquel', 'natalia', 'beatriz', 'rocio', 
+    'alba', 'andrea', 'irene', 'noelia', 'claudia', 'nuria', 'eva', 'susana', 'miriam', 'alicia'
+  ];
+  
+  // Check for male names
+  if (maleNames.some(name => normalizedName.includes(name))) {
+    return 'Male';
+  }
+  
+  // Check for female names  
+  if (femaleNames.some(name => normalizedName.includes(name))) {
+    return 'Female';
+  }
+  
+  // Check pronouns in bio
+  if (bio.includes('he/him') || bio.includes('él')) return 'Male';
+  if (bio.includes('she/her') || bio.includes('ella')) return 'Female';
+  
+  // Check gender indicators
+  const maleIndicators = ['boy', 'guy', 'man', 'male', 'hombre', 'chico'];
+  const femaleIndicators = ['girl', 'woman', 'female', 'mujer', 'chica'];
+  
+  if (maleIndicators.some(indicator => normalizedName.includes(indicator) || bio.includes(indicator))) {
+    return 'Male';
+  }
+  
+  if (femaleIndicators.some(indicator => normalizedName.includes(indicator) || bio.includes(indicator))) {
+    return 'Female';
+  }
+  
+  return 'Other';
+}
+
 export async function POST(req: Request) {
   try {
     const searchParams: ApifySearchParams = await req.json();
@@ -551,7 +602,7 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
             followerCount: influencer.followers,
             engagementRate: influencer.engagementRate / 100,
             ageRange: '25-34' as const,
-            gender: 'Other' as const,
+            gender: detectInfluencerGender(influencer),
             location: influencer.location || 'Unknown',
             niche: [influencer.category || 'Lifestyle'],
             contentStyle: ['Posts'] as const,

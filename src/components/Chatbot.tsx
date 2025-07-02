@@ -917,65 +917,75 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
             const decoder = new TextDecoder();
             let partialResults: any[] = [];
             let finalResults: any = null;
+            let buffer = ''; // 🔥 NEW: Buffer for incomplete chunks
 
             while (true) {
               const { done, value } = await reader.read();
               if (done) break;
 
               const chunk = decoder.decode(value);
-              const lines = chunk.split('\n');
+              buffer += chunk; // 🔥 FIXED: Accumulate chunks
+              
+              // 🔥 FIXED: Process complete lines only
+              const lines = buffer.split('\n');
+              buffer = lines.pop() || ''; // Keep incomplete line in buffer
 
               for (const line of lines) {
-                if (line.startsWith('data: ')) {
+                if (line.startsWith('data: ') && line.trim() !== 'data: ') {
                   try {
-                    const data = JSON.parse(line.slice(6));
-                    
-                    if (data.type === 'progress') {
-                      // Update progress bar with real-time status
-                      setSearchProgress({
-                        stage: data.stage,
-                        progress: data.progress,
-                        details: data.stage,
-                        isComplete: false
-                      });
-                    } else if (data.type === 'partial_results') {
-                      // Show partial results immediately
-                      partialResults.push(...(data.results || []));
+                    const jsonStr = line.slice(6).trim();
+                    if (jsonStr) { // 🔥 FIXED: Only parse non-empty JSON
+                      const data = JSON.parse(jsonStr);
                       
-                      setSearchProgress({
-                        stage: data.stage,
-                        progress: data.progress,
-                        details: `${partialResults.length} influencers encontrados hasta ahora...`,
-                        isComplete: false
-                      });
+                      if (data.type === 'progress') {
+                        // Update progress bar with real-time status
+                        setSearchProgress({
+                          stage: data.stage,
+                          progress: data.progress,
+                          details: data.stage,
+                          isComplete: false
+                        });
+                      } else if (data.type === 'partial_results') {
+                        // Show partial results immediately
+                        partialResults.push(...(data.results || []));
+                        
+                        setSearchProgress({
+                          stage: data.stage,
+                          progress: data.progress,
+                          details: `${partialResults.length} influencers encontrados hasta ahora...`,
+                          isComplete: false
+                        });
 
-                      // Trigger parent to show partial results
-                      if (partialResults.length > 0) {
-                        await onSendMessage(`PARTIAL_RESULTS:${JSON.stringify({
-                          premiumResults: partialResults,
-                          totalFound: partialResults.length,
-                          searchSources: [data.metadata?.source || 'streaming'],
-                          partial: true
-                        })}`, messages);
+                        // Trigger parent to show partial results
+                        if (partialResults.length > 0) {
+                          await onSendMessage(`PARTIAL_RESULTS:${JSON.stringify({
+                            premiumResults: partialResults,
+                            totalFound: partialResults.length,
+                            searchSources: [data.metadata?.source || 'streaming'],
+                            partial: true
+                          })}`, messages);
+                        }
+                      } else if (data.type === 'complete') {
+                        // Final results
+                        finalResults = {
+                          premiumResults: data.results || [],
+                          totalFound: data.totalFound || 0,
+                          searchSources: data.metadata?.searchSources || [],
+                          searchStrategy: data.metadata?.searchStrategy || 'streaming'
+                        };
+                        
+                        setSearchProgress({
+                          stage: '🎉 ¡Búsqueda completada exitosamente!',
+                          progress: 100,
+                          details: `${finalResults.totalFound} influencers encontrados`,
+                          isComplete: true
+                        });
                       }
-                    } else if (data.type === 'complete') {
-                      // Final results
-                      finalResults = {
-                        premiumResults: data.results || [],
-                        totalFound: data.totalFound || 0,
-                        searchSources: data.metadata?.searchSources || [],
-                        searchStrategy: data.metadata?.searchStrategy || 'streaming'
-                      };
-                      
-                      setSearchProgress({
-                        stage: '🎉 ¡Búsqueda completada exitosamente!',
-                        progress: 100,
-                        details: `${finalResults.totalFound} influencers encontrados`,
-                        isComplete: true
-                      });
                     }
                   } catch (parseError) {
                     console.warn('Failed to parse streaming data:', parseError);
+                    // 🔥 IMPROVED: Log the problematic line for debugging
+                    console.warn('Problematic line:', line);
                   }
                 }
               }

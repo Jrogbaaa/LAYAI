@@ -20,8 +20,20 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase services
-export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+// 🔥 FIXED: Initialize Analytics with error handling to prevent 400 errors
+let analytics = null;
+if (typeof window !== 'undefined') {
+  try {
+    // Only initialize analytics if we have a valid environment
+    if (process.env.NODE_ENV === 'production' && firebaseConfig.measurementId) {
+      analytics = getAnalytics(app);
+    }
+  } catch (error) {
+    console.warn('Analytics initialization failed (non-critical):', error);
+  }
+}
+
+export { analytics };
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
