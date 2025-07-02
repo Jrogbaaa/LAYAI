@@ -1111,3 +1111,189 @@ const cacheSearch = (params: SearchParams, results: SearchResult[]) => {
 - **Mobile Experience**: 100% responsive with touch optimization
 - **Conversation UX**: 40% more screen space for chat with compact suggestions
 - **System Reliability**: 99% uptime with intelligent fallbacks 
+
+## 📱 **Mobile UI Architecture (v2.13.4)**
+
+### 🎨 **Responsive Design System**
+
+#### **Breakpoint Strategy**
+```css
+/* Mobile-First Responsive Breakpoints */
+default:  0px+     /* Mobile (stack layout) */
+sm:       640px+   /* Small tablets */
+md:       768px+   /* Tablets */  
+lg:       1024px+  /* Desktop (sidebar appears) */
+xl:       1280px+  /* Large desktop */
+2xl:      1536px+  /* Extra large */
+```
+
+#### **Navigation Architecture**
+```typescript
+// Mobile Navigation (< 1024px)
+interface MobileNavigation {
+  header: {
+    component: "MobileHeader",
+    features: ["hamburger", "logo", "title"],
+    visibility: "lg:hidden"
+  },
+  sidebar: {
+    type: "slide-out",
+    overlay: true,
+    autoClose: true,
+    width: "320px"
+  }
+}
+
+// Desktop Navigation (≥ 1024px)  
+interface DesktopNavigation {
+  sidebar: {
+    component: "Sidebar", 
+    visibility: "hidden lg:flex",
+    width: "320px",
+    position: "fixed"
+  },
+  layout: "side-by-side"
+}
+```
+
+### 🔧 **Mobile Component Architecture**
+
+#### **Responsive Layout Components**
+```typescript
+// Main Layout (src/app/page.tsx)
+<div className="flex flex-col lg:flex-row h-screen">
+  <Sidebar /> {/* hidden lg:flex */}
+  <main className="flex-1 overflow-y-auto">
+    {renderContent()}
+  </main>
+</div>
+
+// Mobile Header (Sidebar.tsx)
+<div className="lg:hidden bg-white shadow-sm border-b p-4">
+  <button onClick={toggleMobileMenu}>
+    <HamburgerIcon />
+  </button>
+</div>
+```
+
+#### **Touch Optimization Patterns**
+```css
+/* Touch Target Sizing */
+.mobile-button {
+  @apply px-4 sm:px-6 py-2 sm:py-3;
+  @apply w-full sm:w-auto;
+  @apply text-sm sm:text-base;
+}
+
+/* Responsive Typography */
+.mobile-heading {
+  @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl;
+}
+
+/* Mobile Spacing */
+.mobile-container {
+  @apply px-4 sm:px-6 py-4 sm:py-8;
+}
+```
+
+---
+
+## 🗄️ **Database Architecture (Firebase Firestore)**
+
+### 🔥 **Collection Structure**
+
+#### **📝 Notes Collection** (`notes`)
+```typescript
+interface Note {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  userId?: string;
+  sessionId?: string;
+  tags?: string[];
+  campaignId?: string; // Optional campaign association
+}
+
+// Example Document
+{
+  "id": "K5lFnkiKHL61HYhW9oBj",
+  "title": "📘 Weekly Planning – June 16–22", 
+  "content": "🧠 Priorities This Week...",
+  "createdAt": Timestamp(2025-06-16T15:05:04.808Z),
+  "updatedAt": Timestamp(2025-07-01T10:03:57.349Z)
+}
+```
+
+#### **🎯 Campaigns Collection** (`campaigns`)
+```typescript
+interface EnhancedCampaign {
+  id: string;
+  name: string;
+  status: 'draft' | 'active' | 'paused' | 'completed';
+  priority: 'low' | 'medium' | 'high';
+  influencerCount: number;
+  budget?: string;
+  timeline?: string;
+  notes: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  
+  // Enhanced features
+  savedInfluencers: SavedInfluencer[];
+  savedSearches: SavedSearch[];
+  brandContext?: string;
+  targetAudience?: {
+    ageRange?: string;
+    gender?: string;
+    location?: string;
+    interests?: string[];
+  };
+}
+```
+
+### 🔄 **Data Migration System**
+
+#### **Notes Migration API** (`/api/migrate-notes`)
+```typescript
+// Migration endpoint for data recovery
+POST /api/migrate-notes
+Response: {
+  "success": true,
+  "message": "Notes migrated successfully", 
+  "migratedNotes": [
+    {
+      "id": "K5lFnkiKHL61HYhW9oBj",
+      "title": "📘 Weekly Planning – June 16–22",
+      "originalId": "note_1750086304808"
+    }
+  ],
+  "count": 1
+}
+```
+
+#### **Migration Process**
+```typescript
+// Automatic JSON → Firebase migration
+const migrateNotes = async () => {
+  // 1. Read from data/notes.json
+  const notesData = JSON.parse(fs.readFileSync('data/notes.json'));
+  
+  // 2. Convert to Firebase format
+  const noteData = {
+    title: note.title,
+    content: note.content,
+    createdAt: Timestamp.fromDate(new Date(note.createdAt)),
+    updatedAt: Timestamp.fromDate(new Date(note.updatedAt))
+  };
+  
+  // 3. Save to Firestore
+  const docRef = await addDoc(collection(db, 'notes'), noteData);
+  
+  // 4. Preserve original timestamps
+  return { id: docRef.id, originalId: note.id };
+};
+```
+
+--- 
