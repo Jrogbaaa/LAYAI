@@ -62,7 +62,7 @@ test.describe('Search Integration E2E Tests', () => {
     
     // Wait for processing
     await page.waitForTimeout(15000);
-    
+      
     // Check for bot messages or user messages (indicating chat is working)
     const botMessages = page.locator('div.bg-white.text-gray-800.border.border-gray-200');
     const userMessages = page.locator('div[class*="bg-gradient-to-r"][class*="from-blue-600"]');
@@ -167,7 +167,7 @@ test.describe('Search Integration E2E Tests', () => {
     
     // Wait for response
     await page.waitForTimeout(15000);
-    
+      
     // Check for realistic data patterns in response
     const pageContent = await page.locator('body').textContent();
     const hasInfluencerData = pageContent?.includes('seguidores') || 
@@ -188,7 +188,7 @@ test.describe('Search Integration E2E Tests', () => {
     await expect(chatInput).toBeVisible({ timeout: 10000 });
     
     await chatInput.fill('Busco influencers para una campaña de moda');
-    
+      
     // Submit search
     const sendButton = page.locator('button:has-text("Enviar"), button[type="submit"]').first();
     if (await sendButton.isVisible()) {
@@ -270,7 +270,7 @@ test.describe('Search Integration E2E Tests', () => {
     // Check that search history or context is maintained
     const finalPageContent = await page.locator('body').textContent();
     const contextMaintained = finalPageContent?.includes('fitness') || finalPageContent?.includes('Madrid') || finalPageContent?.includes('influencer');
-    
+      
     expect(contextMaintained).toBe(true);
   });
 
@@ -278,13 +278,13 @@ test.describe('Search Integration E2E Tests', () => {
     // Enter the app
     await page.click('text=Comenzar Búsqueda');
     await page.waitForTimeout(2000);
-    
+        
     // Start search
     const chatInput = page.locator('textarea, input[type="text"]').first();
     await expect(chatInput).toBeVisible({ timeout: 10000 });
     
     await chatInput.fill('Busco influencers de tecnología');
-    
+          
     // Submit and immediately check for loading state
     const sendButton = page.locator('button:has-text("Enviar"), button[type="submit"]').first();
     if (await sendButton.isVisible()) {

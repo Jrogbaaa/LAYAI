@@ -1,6 +1,6 @@
 /**
- * Enhanced Search Service
- * Integrates the verification system with existing search to improve accuracy
+ * Enhanced Search Service with Smart Caching
+ * Provides intelligent caching for search queries to improve performance
  */
 
 import { searchInfluencersWithTwoTierDiscovery } from './apifyService';
@@ -45,11 +45,303 @@ interface EnhancedSearchResponse {
   recommendations: string[];
 }
 
+interface SearchCacheEntry {
+  query: string;
+  queryHash: string;
+  results: any[];
+  timestamp: number;
+  searchParams: any;
+  hitCount: number;
+  lastAccessed: number;
+  sourceStrategy: string;
+  ttl: number; // Time to live in milliseconds
+}
+
+interface CacheStats {
+  totalQueries: number;
+  cacheHits: number;
+  cacheMisses: number;
+  hitRatio: number;
+  avgResponseTime: number;
+  lastCleanup: number;
+}
+
 class EnhancedSearchService {
   private verificationService: ProfileVerificationService;
+  private cache: Map<string, SearchCacheEntry> = new Map();
+  private stats: CacheStats = {
+    totalQueries: 0,
+    cacheHits: 0,
+    cacheMisses: 0,
+    hitRatio: 0,
+    avgResponseTime: 0,
+    lastCleanup: Date.now()
+  };
+
+  // Cache configuration
+  private readonly MAX_CACHE_SIZE = 100;
+  private readonly DEFAULT_TTL = 30 * 60 * 1000; // 30 minutes
+  private readonly POPULAR_QUERY_TTL = 2 * 60 * 60 * 1000; // 2 hours for popular queries
+  private readonly CLEANUP_INTERVAL = 10 * 60 * 1000; // 10 minutes
 
   constructor() {
     this.verificationService = new ProfileVerificationService();
+    // Auto cleanup every 10 minutes
+    setInterval(() => this.cleanupCache(), this.CLEANUP_INTERVAL);
+  }
+
+  /**
+   * Generate a cache key from search parameters
+   */
+  private generateCacheKey(searchParams: any): string {
+    const normalized = {
+      location: searchParams.location?.toLowerCase(),
+      gender: searchParams.gender,
+      brandName: searchParams.brandName?.toLowerCase(),
+      niches: searchParams.niches?.map((n: string) => n.toLowerCase()).sort(),
+      platforms: searchParams.platforms?.map((p: string) => p.toLowerCase()).sort(),
+      minFollowers: searchParams.minFollowers,
+      maxFollowers: searchParams.maxFollowers,
+      engagementRate: searchParams.engagementRate,
+      costLevel: searchParams.costLevel
+    };
+    
+    const keyString = JSON.stringify(normalized);
+    return this.hashString(keyString);
+  }
+
+  /**
+   * Simple hash function for cache keys
+   */
+  private hashString(str: string): string {
+    let hash = 0;
+    if (str.length === 0) return hash.toString();
+    
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    
+    return Math.abs(hash).toString(36);
+  }
+
+  /**
+   * Check if a query is cached and valid
+   */
+  async getCachedResults(searchParams: any): Promise<SearchCacheEntry | null> {
+    const cacheKey = this.generateCacheKey(searchParams);
+    const entry = this.cache.get(cacheKey);
+    
+    this.stats.totalQueries++;
+    
+    if (!entry) {
+      this.stats.cacheMisses++;
+      this.updateStats();
+      return null;
+    }
+
+    // Check if entry has expired
+    const now = Date.now();
+    const isExpired = (now - entry.timestamp) > entry.ttl;
+    
+    if (isExpired) {
+      this.cache.delete(cacheKey);
+      this.stats.cacheMisses++;
+      this.updateStats();
+      console.log(`🗑️ Cache entry expired for query: ${cacheKey}`);
+      return null;
+    }
+
+    // Update access stats
+    entry.hitCount++;
+    entry.lastAccessed = now;
+    this.cache.set(cacheKey, entry);
+    
+    this.stats.cacheHits++;
+    this.updateStats();
+    
+    console.log(`⚡ Cache HIT for query: ${cacheKey} (${entry.hitCount} hits)`);
+    return entry;
+  }
+
+  /**
+   * Cache search results
+   */
+  async cacheResults(searchParams: any, results: any[], sourceStrategy: string): Promise<void> {
+    const cacheKey = this.generateCacheKey(searchParams);
+    const now = Date.now();
+    
+    // Determine TTL based on query characteristics
+    const ttl = this.determineTTL(searchParams, results);
+    
+    const entry: SearchCacheEntry = {
+      query: JSON.stringify(searchParams),
+      queryHash: cacheKey,
+      results: results,
+      timestamp: now,
+      searchParams: searchParams,
+      hitCount: 0,
+      lastAccessed: now,
+      sourceStrategy: sourceStrategy,
+      ttl: ttl
+    };
+
+    // Ensure cache doesn't exceed max size
+    if (this.cache.size >= this.MAX_CACHE_SIZE) {
+      this.evictLeastUsed();
+    }
+
+    this.cache.set(cacheKey, entry);
+    console.log(`💾 Cached ${results.length} results for query: ${cacheKey} (TTL: ${ttl / 1000 / 60}min)`);
+  }
+
+  /**
+   * Determine cache TTL based on query characteristics
+   */
+  private determineTTL(searchParams: any, results: any[]): number {
+    // Longer TTL for broad queries that return many results
+    if (results.length > 50) return this.POPULAR_QUERY_TTL;
+    
+    // Longer TTL for location-based queries (geographic data changes slowly)
+    if (searchParams.location) return this.POPULAR_QUERY_TTL;
+    
+    // Shorter TTL for very specific queries (more likely to change)
+    if (searchParams.brandName && searchParams.niches?.length > 2) {
+      return this.DEFAULT_TTL / 2; // 15 minutes
+    }
+    
+    return this.DEFAULT_TTL;
+  }
+
+  /**
+   * Evict least recently used cache entries
+   */
+  private evictLeastUsed(): void {
+    let oldestEntry: string | null = null;
+    let oldestAccess = Date.now();
+
+    for (const [key, entry] of Array.from(this.cache.entries())) {
+      if (entry.lastAccessed < oldestAccess) {
+        oldestAccess = entry.lastAccessed;
+        oldestEntry = key;
+      }
+    }
+
+    if (oldestEntry) {
+      this.cache.delete(oldestEntry);
+      console.log(`🗑️ Evicted LRU cache entry: ${oldestEntry}`);
+    }
+  }
+
+  /**
+   * Clean up expired cache entries
+   */
+  private cleanupCache(): void {
+    const now = Date.now();
+    let cleanedCount = 0;
+
+    for (const [key, entry] of Array.from(this.cache.entries())) {
+      const isExpired = (now - entry.timestamp) > entry.ttl;
+      if (isExpired) {
+        this.cache.delete(key);
+        cleanedCount++;
+      }
+    }
+
+    this.stats.lastCleanup = now;
+    
+    if (cleanedCount > 0) {
+      console.log(`🧹 Cleaned up ${cleanedCount} expired cache entries`);
+    }
+  }
+
+  /**
+   * Update cache statistics
+   */
+  private updateStats(): void {
+    this.stats.hitRatio = this.stats.totalQueries > 0 
+      ? (this.stats.cacheHits / this.stats.totalQueries) * 100 
+      : 0;
+  }
+
+  /**
+   * Get cache statistics
+   */
+  getCacheStats(): CacheStats & { cacheSize: number; topQueries: Array<{query: string, hits: number}> } {
+    const topQueries = Array.from(this.cache.values())
+      .sort((a, b) => b.hitCount - a.hitCount)
+      .slice(0, 5)
+      .map(entry => ({
+        query: entry.searchParams.location || entry.searchParams.brandName || 'General search',
+        hits: entry.hitCount
+      }));
+
+    return {
+      ...this.stats,
+      cacheSize: this.cache.size,
+      topQueries
+    };
+  }
+
+  /**
+   * Invalidate cache entries matching certain criteria
+   */
+  invalidateCache(criteria?: { location?: string; brandName?: string }): number {
+    let invalidatedCount = 0;
+
+    if (!criteria) {
+      // Clear all cache
+      invalidatedCount = this.cache.size;
+      this.cache.clear();
+      console.log(`🗑️ Cleared entire cache: ${invalidatedCount} entries`);
+      return invalidatedCount;
+    }
+
+    // Selective invalidation
+    for (const [key, entry] of Array.from(this.cache.entries())) {
+      let shouldInvalidate = false;
+
+      if (criteria.location && entry.searchParams.location?.toLowerCase().includes(criteria.location.toLowerCase())) {
+        shouldInvalidate = true;
+      }
+      if (criteria.brandName && entry.searchParams.brandName?.toLowerCase().includes(criteria.brandName.toLowerCase())) {
+        shouldInvalidate = true;
+      }
+
+      if (shouldInvalidate) {
+        this.cache.delete(key);
+        invalidatedCount++;
+      }
+    }
+
+    console.log(`🗑️ Invalidated ${invalidatedCount} cache entries matching criteria`);
+    return invalidatedCount;
+  }
+
+  /**
+   * Preload popular searches into cache
+   */
+  async preloadPopularSearches(): Promise<void> {
+    const popularSearches = [
+      { location: 'España', platforms: ['instagram'], minFollowers: 10000 },
+      { location: 'México', platforms: ['instagram'], minFollowers: 50000 },
+      { niches: ['fitness', 'lifestyle'], platforms: ['instagram'], minFollowers: 25000 },
+      { location: 'Colombia', platforms: ['instagram'], minFollowers: 10000 },
+      { niches: ['beauty', 'fashion'], platforms: ['instagram'], minFollowers: 15000 }
+    ];
+
+    console.log('🚀 Preloading popular search patterns...');
+    
+    // Note: In a real implementation, you'd call the actual search service here
+    // For now, we'll just create placeholder cache entries
+    for (const searchParams of popularSearches) {
+      const cacheKey = this.generateCacheKey(searchParams);
+      if (!this.cache.has(cacheKey)) {
+        // Simulate cached results - in production, these would be real searches
+        await this.cacheResults(searchParams, [], 'preloaded');
+      }
+    }
   }
 
   /**
@@ -359,4 +651,7 @@ class EnhancedSearchService {
   }
 }
 
-export { EnhancedSearchService, type EnhancedSearchParams, type EnhancedSearchResult, type EnhancedSearchResponse }; 
+// Singleton instance
+const enhancedSearchService = new EnhancedSearchService();
+
+export { enhancedSearchService, type SearchCacheEntry, type CacheStats }; 

@@ -167,4 +167,354 @@ CardContent.displayName = 'CardContent';
 CardFooter.displayName = 'CardFooter';
 ProgressCard.displayName = 'ProgressCard';
 
-export { Card, CardHeader, CardContent, CardFooter, ProgressCard }; 
+export { Card, CardHeader, CardContent, CardFooter, ProgressCard };
+
+interface MobileOptimizedCardProps {
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+  variant?: 'default' | 'success' | 'warning' | 'info';
+  mobileCollapsible?: boolean;
+  compactMode?: boolean;
+}
+
+/**
+ * Mobile-first enhanced card component with responsive design
+ * Optimized for touch interactions and small screens
+ */
+export const EnhancedCard: React.FC<MobileOptimizedCardProps> = ({
+  title,
+  subtitle,
+  children,
+  variant = 'default',
+  mobileCollapsible = false,
+  compactMode = false
+}) => {
+  const [isExpanded, setIsExpanded] = React.useState(!mobileCollapsible);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const getVariantStyles = () => {
+    const baseStyles = "bg-white border rounded-lg shadow-sm";
+    
+    switch (variant) {
+      case 'success':
+        return `${baseStyles} border-green-200 bg-green-50`;
+      case 'warning':
+        return `${baseStyles} border-yellow-200 bg-yellow-50`;
+      case 'info':
+        return `${baseStyles} border-blue-200 bg-blue-50`;
+      default:
+        return `${baseStyles} border-gray-200`;
+    }
+  };
+
+  const getVariantIcon = () => {
+    switch (variant) {
+      case 'success':
+        return '✅';
+      case 'warning':
+        return '⚠️';
+      case 'info':
+        return 'ℹ️';
+      default:
+        return '📊';
+    }
+  };
+
+  return (
+    <div className={`${getVariantStyles()} transition-all duration-300 ${
+      isMobile ? 'mx-2' : ''
+    }`}>
+      {/* Header */}
+      <div
+        className={`p-4 ${mobileCollapsible && isMobile ? 'cursor-pointer' : ''} ${
+          compactMode ? 'p-3' : ''
+        }`}
+        onClick={() => {
+          if (mobileCollapsible && isMobile) {
+            setIsExpanded(!isExpanded);
+          }
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">{getVariantIcon()}</span>
+            <div>
+              <h3 className={`font-semibold text-gray-900 ${
+                compactMode ? 'text-sm' : isMobile ? 'text-base' : 'text-lg'
+              }`}>
+                {title}
+              </h3>
+              {subtitle && (
+                <p className={`text-gray-600 ${
+                  compactMode ? 'text-xs' : 'text-sm'
+                } ${isMobile ? 'line-clamp-1' : ''}`}>
+                  {subtitle}
+                </p>
+              )}
+            </div>
+          </div>
+          
+          {/* Mobile collapse indicator */}
+          {mobileCollapsible && isMobile && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">
+                {isExpanded ? 'Contraer' : 'Expandir'}
+              </span>
+              <div className={`transform transition-transform duration-200 ${
+                isExpanded ? 'rotate-180' : ''
+              }`}>
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className={`transition-all duration-300 overflow-hidden ${
+        mobileCollapsible && !isExpanded ? 'max-h-0' : 'max-h-none'
+      }`}>
+        <div className={`${compactMode ? 'px-3 pb-3' : 'px-4 pb-4'} ${
+          isMobile ? 'text-sm' : ''
+        }`}>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Mobile-optimized metrics grid component
+ */
+interface MobileMetricsGridProps {
+  metrics: Array<{
+    label: string;
+    value: string | number;
+    change?: number;
+    icon?: string;
+    color?: 'blue' | 'green' | 'yellow' | 'red' | 'purple';
+  }>;
+  columns?: 2 | 3 | 4;
+}
+
+export const MobileMetricsGrid: React.FC<MobileMetricsGridProps> = ({
+  metrics,
+  columns = 2
+}) => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const getColorStyles = (color: string = 'blue') => {
+    const colors = {
+      blue: 'text-blue-600 bg-blue-50',
+      green: 'text-green-600 bg-green-50',
+      yellow: 'text-yellow-600 bg-yellow-50',
+      red: 'text-red-600 bg-red-50',
+      purple: 'text-purple-600 bg-purple-50'
+    };
+    return colors[color as keyof typeof colors] || colors.blue;
+  };
+
+  const mobileColumns = isMobile ? Math.min(columns, 2) : columns;
+
+  return (
+    <div className={`grid gap-3 ${
+      mobileColumns === 2 ? 'grid-cols-2' :
+      mobileColumns === 3 ? 'grid-cols-3' : 'grid-cols-4'
+    }`}>
+      {metrics.map((metric, index) => (
+        <div
+          key={index}
+          className={`p-3 rounded-lg border border-gray-100 ${getColorStyles(metric.color)} ${
+            isMobile ? 'text-center' : ''
+          }`}
+        >
+          <div className="flex items-center justify-center gap-1 mb-1">
+            {metric.icon && <span className="text-sm">{metric.icon}</span>}
+            <div className={`font-semibold ${isMobile ? 'text-sm' : 'text-base'}`}>
+              {metric.value}
+            </div>
+          </div>
+          <div className={`text-gray-600 ${isMobile ? 'text-xs' : 'text-sm'} leading-tight`}>
+            {metric.label}
+          </div>
+          {metric.change !== undefined && (
+            <div className={`mt-1 text-xs flex items-center justify-center gap-1 ${
+              metric.change > 0 ? 'text-green-600' : 
+              metric.change < 0 ? 'text-red-600' : 'text-gray-500'
+            }`}>
+              <span>{metric.change > 0 ? '↗' : metric.change < 0 ? '↘' : '→'}</span>
+              <span>{Math.abs(metric.change)}%</span>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+/**
+ * Mobile-optimized progress bar component
+ */
+interface MobileProgressBarProps {
+  progress: number;
+  label?: string;
+  showPercentage?: boolean;
+  color?: 'blue' | 'green' | 'yellow' | 'red' | 'purple';
+  size?: 'small' | 'medium' | 'large';
+}
+
+export const MobileProgressBar: React.FC<MobileProgressBarProps> = ({
+  progress,
+  label,
+  showPercentage = true,
+  color = 'blue',
+  size = 'medium'
+}) => {
+  const getColorStyles = () => {
+    const colors = {
+      blue: 'bg-blue-500',
+      green: 'bg-green-500',
+      yellow: 'bg-yellow-500',
+      red: 'bg-red-500',
+      purple: 'bg-purple-500'
+    };
+    return colors[color];
+  };
+
+  const getSizeStyles = () => {
+    const sizes = {
+      small: 'h-1',
+      medium: 'h-2',
+      large: 'h-3'
+    };
+    return sizes[size];
+  };
+
+  return (
+    <div className="w-full">
+      {(label || showPercentage) && (
+        <div className="flex justify-between items-center mb-1">
+          {label && (
+            <span className="text-sm font-medium text-gray-700">{label}</span>
+          )}
+          {showPercentage && (
+            <span className="text-sm text-gray-600">{Math.round(progress)}%</span>
+          )}
+        </div>
+      )}
+      <div className={`w-full bg-gray-200 rounded-full ${getSizeStyles()}`}>
+        <div
+          className={`${getSizeStyles()} rounded-full transition-all duration-500 ease-out ${getColorStyles()}`}
+          style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+        />
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Mobile-optimized toast notification component
+ */
+interface MobileToastProps {
+  message: string;
+  type?: 'success' | 'error' | 'warning' | 'info';
+  duration?: number;
+  onClose?: () => void;
+}
+
+export const MobileToast: React.FC<MobileToastProps> = ({
+  message,
+  type = 'info',
+  duration = 3000,
+  onClose
+}) => {
+  const [isVisible, setIsVisible] = React.useState(true);
+
+  React.useEffect(() => {
+    if (duration > 0) {
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+        setTimeout(() => onClose?.(), 300);
+      }, duration);
+      return () => clearTimeout(timer);
+    }
+  }, [duration, onClose]);
+
+  const getTypeStyles = () => {
+    const styles = {
+      success: 'bg-green-500 text-white',
+      error: 'bg-red-500 text-white',
+      warning: 'bg-yellow-500 text-white',
+      info: 'bg-blue-500 text-white'
+    };
+    return styles[type];
+  };
+
+  const getTypeIcon = () => {
+    const icons = {
+      success: '✅',
+      error: '❌',
+      warning: '⚠️',
+      info: 'ℹ️'
+    };
+    return icons[type];
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <div className={`fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-50 transform transition-all duration-300 ${
+      isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+    }`}>
+      <div className={`rounded-lg px-4 py-3 shadow-lg ${getTypeStyles()}`}>
+        <div className="flex items-center gap-3">
+          <span className="text-lg">{getTypeIcon()}</span>
+          <span className="flex-1 text-sm font-medium">{message}</span>
+          <button
+            onClick={() => {
+              setIsVisible(false);
+              setTimeout(() => onClose?.(), 300);
+            }}
+            className="text-white hover:text-gray-200 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Export all components
+export default {
+  EnhancedCard,
+  MobileMetricsGrid,
+  MobileProgressBar,
+  MobileToast
+}; 

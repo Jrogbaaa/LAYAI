@@ -1,4 +1,5 @@
 import { ApifyClient } from 'apify-client';
+import { extractTikTokUsername, isTikTokUrl } from './tiktokUrlExtractor';
 
 interface ProfileVerificationRequest {
   profileUrl: string;
@@ -231,20 +232,45 @@ class ProfileVerificationService {
   }
 
   /**
-   * Verify multiple profiles in batches
+   * Verify multiple profiles in batches - OPTIMIZED FOR PARALLEL PROCESSING
    */
   async verifyProfiles(requests: ProfileVerificationRequest[]): Promise<VerificationResult[]> {
-    console.log(`🔍 Starting batch verification of ${requests.length} profiles`);
+    console.log(`🔍 Starting OPTIMIZED batch verification of ${requests.length} profiles`);
     
     const results: VerificationResult[] = [];
-    const batchSize = 5; // Process 5 profiles at a time to avoid overwhelming APIs
     
+    // Dynamic batch sizing based on total profiles
+    const getDynamicBatchSize = (totalCount: number) => {
+      if (totalCount <= 10) return Math.min(totalCount, 8); // Small batches for small counts
+      if (totalCount <= 50) return 15; // Medium batches
+      return 25; // Large batches for big searches
+    };
+    
+    const batchSize = getDynamicBatchSize(requests.length);
+    const totalBatches = Math.ceil(requests.length / batchSize);
+    
+    console.log(`⚡ Using dynamic batch size: ${batchSize} profiles per batch (${totalBatches} total batches)`);
+    
+    // Process batches with reduced delays
     for (let i = 0; i < requests.length; i += batchSize) {
       const batch = requests.slice(i, i + batchSize);
+      const batchNumber = Math.floor(i / batchSize) + 1;
       
-      console.log(`📦 Processing batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(requests.length / batchSize)}`);
+      console.log(`📦 Processing batch ${batchNumber}/${totalBatches} (${batch.length} profiles)`);
       
-      const batchPromises = batch.map(request => this.verifyProfile(request));
+      const startTime = Date.now();
+      
+      // Process all profiles in batch concurrently
+      const batchPromises = batch.map(async (request) => {
+        try {
+          return await this.verifyProfile(request);
+        } catch (error) {
+          console.error(`Verification failed for ${request.profileUrl}:`, error);
+          return this.createFailedResult(request, error instanceof Error ? error.message : 'Unknown error');
+        }
+      });
+      
+      // Wait for all profiles in batch to complete
       const batchResults = await Promise.allSettled(batchPromises);
       
       batchResults.forEach(result => {
@@ -255,13 +281,25 @@ class ProfileVerificationService {
         }
       });
       
-      // Delay between batches to be respectful
-      if (i + batchSize < requests.length) {
-        await new Promise(resolve => setTimeout(resolve, 3000));
+      const batchTime = Date.now() - startTime;
+      console.log(`✅ Batch ${batchNumber} completed in ${batchTime}ms (${Math.round(batchTime / batch.length)}ms per profile)`);
+      
+      // Reduced delay between batches - only delay for large batches
+      if (i + batchSize < requests.length && batchSize >= 15) {
+        const delay = Math.min(1500, batchSize * 50); // Shorter, proportional delays
+        console.log(`⏱️ Brief delay: ${delay}ms before next batch...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
     
-    console.log(`✅ Batch verification completed. ${results.length}/${requests.length} profiles verified`);
+    const verifiedCount = results.filter(r => r.verified).length;
+    const avgScore = results.length > 0 ? Math.round(results.reduce((sum, r) => sum + r.overallScore, 0) / results.length) : 0;
+    
+    console.log(`🎯 OPTIMIZED batch verification completed:`);
+    console.log(`   - Total processed: ${results.length}/${requests.length} profiles`);
+    console.log(`   - Successfully verified: ${verifiedCount} profiles`);
+    console.log(`   - Average quality score: ${avgScore}/100`);
+    
     return results;
   }
 
@@ -309,21 +347,21 @@ class ProfileVerificationService {
       const profile = items[0];
       
       return {
-        username: profile.username,
-        displayName: profile.fullName,
-        followerCount: profile.followersCount,
-        followingCount: profile.followsCount,
-        postCount: profile.postsCount,
-        bio: profile.biography,
-        location: profile.businessCategoryName,
-        website: profile.externalUrl,
-        profilePictureUrl: profile.profilePicUrl,
-        isVerified: profile.verified,
+        username: String(profile.username || ''),
+        displayName: profile.fullName ? String(profile.fullName) : undefined,
+        followerCount: typeof profile.followersCount === 'number' ? profile.followersCount : undefined,
+        followingCount: typeof profile.followsCount === 'number' ? profile.followsCount : undefined,
+        postCount: typeof profile.postsCount === 'number' ? profile.postsCount : undefined,
+        bio: profile.biography ? String(profile.biography) : undefined,
+        location: profile.businessCategoryName ? String(profile.businessCategoryName) : undefined,
+        website: profile.externalUrl ? String(profile.externalUrl) : undefined,
+        profilePictureUrl: profile.profilePicUrl ? String(profile.profilePicUrl) : undefined,
+        isVerified: Boolean(profile.verified),
         recentPosts: profile.latestPosts?.slice(0, 5).map((post: any) => ({
-          content: post.caption || '',
-          likes: post.likesCount || 0,
-          comments: post.commentsCount || 0,
-          hashtags: this.extractHashtags(post.caption || '')
+          content: post.caption ? String(post.caption) : '',
+          likes: typeof post.likesCount === 'number' ? post.likesCount : 0,
+          comments: typeof post.commentsCount === 'number' ? post.commentsCount : 0,
+          hashtags: this.extractHashtags(post.caption ? String(post.caption) : '')
         })) || []
       };
       
@@ -890,6 +928,12 @@ class ProfileVerificationService {
    * Extract username from profile URL
    */
   private extractUsernameFromUrl(url: string): string {
+    // Use enhanced TikTok URL extraction for TikTok URLs
+    if (isTikTokUrl(url)) {
+      return extractTikTokUsername(url);
+    }
+    
+    // For other platforms, use the existing logic
     const match = url.match(/@([^/?\s]+)/);
     return match ? match[1] : url.split('/').pop() || '';
   }

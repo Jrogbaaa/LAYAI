@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { searchInfluencersWithApify, type ApifySearchParams } from '@/lib/apifyService';
+import { searchInfluencersWithApify, searchInfluencersWithTwoTierDiscovery, type ApifySearchParams } from '@/lib/apifyService';
 import { searchVettedInfluencers, convertVettedToMatchResult } from '@/lib/vettedInfluencersService';
 import { searchMemory } from '@/lib/database';
 
@@ -17,6 +17,16 @@ interface EnhancedSearchRequest {
   enableSpanishDetection?: boolean;
   enableAgeEstimation?: boolean;
   maxResults?: number;
+}
+
+// Add progressive loading support at the top
+interface ProgressiveSearchUpdate {
+  type: 'progress' | 'partial_results' | 'complete';
+  stage: string;
+  progress: number;
+  results?: any[];
+  totalFound?: number;
+  metadata?: any;
 }
 
 // Simplified Spanish location detection
@@ -275,6 +285,231 @@ export async function POST(req: Request) {
   try {
     const searchParams: ApifySearchParams = await req.json();
     
+    console.log('🔍 Enhanced search started with PROGRESSIVE LOADING:', searchParams);
+    
+    // Check if client wants progressive updates (via streaming)
+    const acceptsStream = req.headers.get('accept')?.includes('text/event-stream');
+    
+    if (acceptsStream) {
+      // Return Server-Sent Events stream for progressive loading
+      return handleProgressiveSearch(searchParams);
+    }
+    
+    // Fallback to regular search for non-streaming clients
+    return handleRegularSearch(searchParams, req);
+    
+  } catch (error) {
+    console.error('❌ Enhanced search error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Search failed', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * Handle progressive search with streaming updates
+ */
+async function handleProgressiveSearch(searchParams: ApifySearchParams) {
+  const encoder = new TextEncoder();
+  
+  const stream = new ReadableStream({
+    async start(controller) {
+      const sendUpdate = (update: ProgressiveSearchUpdate) => {
+        const data = `data: ${JSON.stringify(update)}\n\n`;
+        controller.enqueue(encoder.encode(data));
+      };
+      
+      try {
+        // Initialize results
+        let allResults: any[] = [];
+        let totalFound = 0;
+        let searchSources: string[] = [];
+        
+        // Stage 1: Search vetted influencers database
+        sendUpdate({
+          type: 'progress',
+          stage: 'Searching verified database...',
+          progress: 10
+        });
+        
+        console.log('📊 Searching vetted influencers database...');
+        const vettedResults = await searchVettedInfluencers(searchParams);
+        
+        if (vettedResults.influencers.length > 0) {
+          const convertedVetted = vettedResults.influencers.map(inf => 
+            convertVettedToMatchResult(inf, searchParams)
+          );
+          
+          allResults.push(...convertedVetted);
+          totalFound += vettedResults.totalCount;
+          searchSources.push('Base de datos verificada');
+          
+          // Send partial results immediately
+          sendUpdate({
+            type: 'partial_results',
+            stage: 'Database results found',
+            progress: 25,
+            results: convertedVetted,
+            totalFound: convertedVetted.length,
+            metadata: { source: 'verified_database', quality: 'high' }
+          });
+          
+          console.log(`✅ Found ${vettedResults.influencers.length} vetted influencers - sent to client`);
+        }
+        
+        // Stage 2: Parallel real-time search
+        sendUpdate({
+          type: 'progress',
+          stage: 'Searching real-time sources...',
+          progress: 30
+        });
+        
+        try {
+          console.log('🌐 Searching Apify API...');
+          
+          const apifyResults = await searchInfluencersWithTwoTierDiscovery(searchParams);
+          
+          if (apifyResults.premiumResults && apifyResults.premiumResults.length > 0) {
+            const convertedApify = apifyResults.premiumResults.map((influencer: any) => ({
+              influencer: {
+                name: influencer.fullName || influencer.username,
+                handle: influencer.username,
+                followerCount: influencer.followers,
+                engagementRate: influencer.engagementRate || 0,
+                platform: influencer.platform,
+                profileUrl: influencer.url || `https://www.instagram.com/${influencer.username}`,
+                profileImage: influencer.profilePicUrl || '',
+                bio: influencer.biography || '',
+                location: influencer.location || '',
+                category: influencer.category || 'General',
+                isVerified: influencer.verified || false,
+                collaborationHistory: influencer.collaborationHistory || [],
+                avgLikes: influencer.avgLikes || 0,
+                avgComments: influencer.avgComments || 0,
+                lastActive: influencer.lastActive || 'Recently'
+              },
+              matchScore: (influencer.brandCompatibilityScore || 75) / 100,
+              matchReasons: generateRealtimeMatchReasons(influencer, searchParams),
+              estimatedCost: Math.floor(influencer.followers / 100) || 500,
+              similarPastCampaigns: [],
+              potentialReach: Math.round(influencer.followers * (influencer.engagementRate / 100)),
+              recommendations: ['Influencer encontrado mediante búsqueda en tiempo real'],
+            }));
+            
+            allResults.push(...convertedApify);
+            totalFound += apifyResults.premiumResults.length;
+            searchSources.push('Búsqueda en tiempo real');
+            
+            // Send additional partial results
+            sendUpdate({
+              type: 'partial_results',
+              stage: 'Real-time results found',
+              progress: 70,
+              results: convertedApify,
+              totalFound: convertedApify.length,
+              metadata: { source: 'realtime_search', quality: 'medium' }
+            });
+            
+            console.log(`✅ Found ${apifyResults.premiumResults.length} Apify results - sent to client`);
+          }
+        } catch (error) {
+          console.warn('⚠️ Apify search failed:', error);
+          sendUpdate({
+            type: 'progress',
+            stage: 'Real-time search unavailable, using cached results',
+            progress: 80
+          });
+        }
+        
+        // Stage 3: Final processing
+        sendUpdate({
+          type: 'progress',
+          stage: 'Processing and ranking results...',
+          progress: 85
+        });
+        
+        // Remove duplicates and add collaboration status
+        const uniqueResults = allResults.filter((result, index, array) => {
+          return array.findIndex(r => 
+            r.influencer.handle?.toLowerCase() === result.influencer.handle?.toLowerCase() ||
+            r.influencer.name?.toLowerCase() === result.influencer.name?.toLowerCase()
+          ) === index;
+        });
+        
+        const brandName = extractBrandFromQuery(searchParams);
+        const resultsWithCollaboration = await addCollaborationStatus(uniqueResults, brandName);
+        
+        // Sort results
+        resultsWithCollaboration.sort((a, b) => {
+          const scoreDiff = (b.matchScore || 0) - (a.matchScore || 0);
+          if (Math.abs(scoreDiff) > 0.1) {
+            return scoreDiff;
+          }
+          
+          const engagementA = a.influencer.engagementRate || 0;
+          const engagementB = b.influencer.engagementRate || 0;
+          const engagementDiff = engagementB - engagementA;
+          if (Math.abs(engagementDiff) > 0.001) {
+            return engagementDiff;
+          }
+          
+          const followersA = a.influencer.followerCount || 0;
+          const followersB = b.influencer.followerCount || 0;
+          return followersB - followersA;
+        });
+        
+        // Send final complete results
+        sendUpdate({
+          type: 'complete',
+          stage: 'Search completed successfully!',
+          progress: 100,
+          results: resultsWithCollaboration,
+          totalFound: resultsWithCollaboration.length,
+          metadata: {
+            searchSources,
+            totalFound: resultsWithCollaboration.length,
+            searchStrategy: searchSources.length > 1 ? 'hybrid_search' : 
+              searchSources.includes('Base de datos verificada') ? 'vetted_only' : 'realtime_only',
+            duplicatesRemoved: allResults.length - resultsWithCollaboration.length
+          }
+        });
+        
+        console.log(`🎯 Progressive search completed: ${resultsWithCollaboration.length} final results`);
+        
+      } catch (error) {
+        console.error('❌ Progressive search failed:', error);
+        sendUpdate({
+          type: 'complete',
+          stage: 'Search failed',
+          progress: 0,
+          results: [],
+          totalFound: 0,
+          metadata: { error: error instanceof Error ? error.message : 'Unknown error' }
+        });
+      }
+      
+      controller.close();
+    }
+  });
+  
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Accept',
+    },
+  });
+}
+
+/**
+ * Handle regular search (existing functionality)
+ */
+async function handleRegularSearch(searchParams: ApifySearchParams, req: Request) {
+  try {
     console.log('🔍 Enhanced search started with params:', searchParams);
     
     // Initialize results

@@ -79,9 +79,9 @@ function detectCollaborationQuery(message: string): { influencer: string; brand:
 // Constants for session storage
 const CHAT_MESSAGES_KEY = 'influencer_chat_messages';
 const WELCOME_MESSAGE: Message = {
-  text: "¡Hola! Soy tu asistente de IA para encontrar influencers. Puedes:\n\n🔍 Escribir tu búsqueda: 'Encuentra influencers de moda en Instagram'\n📄 Subir una propuesta PDF para búsqueda personalizada\n🤝 Preguntar sobre colaboraciones: '¿Ha trabajado Cristiano con IKEA?'\n💡 Hacer preguntas de seguimiento para refinar resultados\n\n¿Cómo te gustaría empezar?",
-  sender: 'bot',
-  type: 'chat',
+      text: "¡Hola! Soy tu asistente de IA para encontrar influencers. Puedes:\n\n🔍 Escribir tu búsqueda: 'Encuentra influencers de moda en Instagram'\n📄 Subir una propuesta PDF para búsqueda personalizada\n🤝 Preguntar sobre colaboraciones: '¿Ha trabajado Cristiano con IKEA?'\n💡 Hacer preguntas de seguimiento para refinar resultados\n\n¿Cómo te gustaría empezar?",
+      sender: 'bot',
+      type: 'chat',
 };
 
 // Helper functions for session persistence
@@ -702,12 +702,12 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
         };
         setMessages(prev => [...prev, cancelMessage]);
       } else {
-        const errorMessage: Message = {
+      const errorMessage: Message = {
           text: `❌ Error al verificar la colaboración entre ${influencer} y ${brand}. ${error instanceof Error ? error.message : 'Error desconocido'}. Por favor, inténtalo de nuevo.`,
-          sender: 'bot',
-          type: 'chat',
-        };
-        setMessages(prev => [...prev, errorMessage]);
+        sender: 'bot',
+        type: 'chat',
+      };
+      setMessages(prev => [...prev, errorMessage]);
       }
     } finally {
       setIsLoading(false);
@@ -888,74 +888,152 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
           setMessages(prev => [...prev, parsedMessage]);
         }
 
-        // Start progress tracking for search queries
+        // Start REAL-TIME progress tracking with streaming API
         setSearchProgress({
           stage: 'Iniciando búsqueda...',
           progress: 5,
-          details: 'Analizando criterios de búsqueda',
+          details: 'Conectando con servicios de búsqueda',
           isComplete: false
         });
 
-        // Simulate progress updates during search - realistic timing for 1-2 minute searches
-        let currentStage = 0;
-        const stages = [
-          { stage: 'Procesando consulta...', details: 'Extrayendo parámetros de búsqueda con IA', duration: 3000, endProgress: 15 },
-          { stage: 'Buscando en base de datos...', details: 'Consultando influencers verificados', duration: 8000, endProgress: 25 },
-          { stage: 'Búsqueda en tiempo real...', details: 'Descubriendo nuevos perfiles en redes sociales', duration: 45000, endProgress: 60 },
-          { stage: 'Extrayendo perfiles...', details: 'Scrapeando datos de influencers encontrados', duration: 40000, endProgress: 80 },
-          { stage: 'Verificando perfiles...', details: 'Validando métricas y filtrando marcas', duration: 15000, endProgress: 90 },
-          { stage: 'Analizando compatibilidad...', details: 'Calculando puntuaciones de marca', duration: 8000, endProgress: 95 },
-          { stage: 'Finalizando...', details: 'Preparando resultados', duration: 3000, endProgress: 98 }
-        ];
-
-        const progressInterval = setInterval(() => {
-          setSearchProgress(prev => {
-            if (!prev || currentStage >= stages.length) return prev;
-            
-            const stage = stages[currentStage];
-            const increment = (stage.endProgress - (currentStage > 0 ? stages[currentStage - 1].endProgress : 5)) / (stage.duration / 1000);
-            
-            if (prev.progress >= stage.endProgress) {
-              currentStage++;
-              if (currentStage < stages.length) {
-                return {
-                  stage: stages[currentStage].stage,
-                  progress: prev.progress + 1,
-                  details: stages[currentStage].details,
-                  isComplete: false
-                };
-              }
-              return prev;
-            }
-            
-            return {
-              stage: stage.stage,
-              progress: Math.min(prev.progress + increment, stage.endProgress),
-              details: stage.details,
-              isComplete: false
-            };
+        try {
+          // Use the progressive loading API with streaming
+          const response = await fetch('/api/enhanced-search', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'text/event-stream',
+            },
+            body: JSON.stringify(searchParams),
           });
-        }, 1000);
 
-        // Send structured parameters as a special formatted string
-        const structuredQuery = `STRUCTURED_SEARCH:${JSON.stringify(searchParams)}`;
-        const response = await onSendMessage(structuredQuery, messages);
+          if (response.body) {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let partialResults: any[] = [];
+            let finalResults: any = null;
 
-        // Clear progress interval
-        clearInterval(progressInterval);
-        
-        // Complete progress
-        setSearchProgress({
-          stage: '🎉 ¡Búsqueda completada exitosamente!',
-          progress: 100,
-          details: `Encontrados ${response.data?.data?.totalFound || 0} influencers perfectos para tu campaña`,
-          isComplete: true
-        });
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
 
-        // Clear progress after a longer delay to make it more obvious
+              const chunk = decoder.decode(value);
+              const lines = chunk.split('\n');
+
+              for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                  try {
+                    const data = JSON.parse(line.slice(6));
+                    
+                    if (data.type === 'progress') {
+                      // Update progress bar with real-time status
+                      setSearchProgress({
+                        stage: data.stage,
+                        progress: data.progress,
+                        details: data.stage,
+                        isComplete: false
+                      });
+                    } else if (data.type === 'partial_results') {
+                      // Show partial results immediately
+                      partialResults.push(...(data.results || []));
+                      
+                      setSearchProgress({
+                        stage: data.stage,
+                        progress: data.progress,
+                        details: `${partialResults.length} influencers encontrados hasta ahora...`,
+                        isComplete: false
+                      });
+
+                      // Trigger parent to show partial results
+                      if (partialResults.length > 0) {
+                        await onSendMessage(`PARTIAL_RESULTS:${JSON.stringify({
+                          premiumResults: partialResults,
+                          totalFound: partialResults.length,
+                          searchSources: [data.metadata?.source || 'streaming'],
+                          partial: true
+                        })}`, messages);
+                      }
+                    } else if (data.type === 'complete') {
+                      // Final results
+                      finalResults = {
+                        premiumResults: data.results || [],
+                        totalFound: data.totalFound || 0,
+                        searchSources: data.metadata?.searchSources || [],
+                        searchStrategy: data.metadata?.searchStrategy || 'streaming'
+                      };
+                      
+                      setSearchProgress({
+                        stage: '🎉 ¡Búsqueda completada exitosamente!',
+                        progress: 100,
+                        details: `${finalResults.totalFound} influencers encontrados`,
+                        isComplete: true
+                      });
+                    }
+                  } catch (parseError) {
+                    console.warn('Failed to parse streaming data:', parseError);
+                  }
+                }
+              }
+            }
+
+            // Send final results to parent
+            if (finalResults) {
+              const response = await onSendMessage(`STRUCTURED_SEARCH:${JSON.stringify(searchParams)}`, messages);
+              
+              const botResponse: Message = {
+                text: `🎯 ¡BÚSQUEDA EN TIEMPO REAL COMPLETADA! 🎯\n\n✅ Encontré ${finalResults.totalFound} influencers perfectamente alineados\n\n📊 Resultados mostrados en tiempo real usando búsqueda streaming\n🔍 Los perfiles se ordenaron automáticamente por compatibilidad\n\n💡 Búsqueda mejorada con IA y verificación en tiempo real`,
+                sender: 'bot',
+                type: 'search',
+              };
+              setMessages(prev => [...prev, botResponse]);
+            }
+
+          } else {
+            // Fallback to regular API if streaming not supported
+            console.log('🔄 Streaming not supported, falling back to regular search...');
+            const structuredQuery = `STRUCTURED_SEARCH:${JSON.stringify(searchParams)}`;
+            const response = await onSendMessage(structuredQuery, messages);
+            
+            setSearchProgress({
+              stage: '🎉 ¡Búsqueda completada!',
+              progress: 100,
+              details: `Encontrados ${response.data?.data?.totalFound || 0} influencers`,
+              isComplete: true
+            });
+
+            const botResponse: Message = {
+              text: `🎯 ¡BÚSQUEDA COMPLETADA! 🎯\n\n✅ Encontré ${response.data?.data?.totalFound || 0} influencers alineados con tus criterios\n\n📊 Los resultados están ordenados por compatibilidad de marca`,
+              sender: 'bot',
+              type: 'search',
+            };
+            setMessages(prev => [...prev, botResponse]);
+          }
+
+        } catch (streamError) {
+          console.error('Streaming search failed:', streamError);
+          
+          // Fallback to regular search
+          const structuredQuery = `STRUCTURED_SEARCH:${JSON.stringify(searchParams)}`;
+          const response = await onSendMessage(structuredQuery, messages);
+          
+          setSearchProgress({
+            stage: '✅ Búsqueda completada (modo estándar)',
+            progress: 100,
+            details: `${response.data?.data?.totalFound || 0} influencers encontrados`,
+            isComplete: true
+          });
+
+          const botResponse: Message = {
+            text: `🎯 ¡BÚSQUEDA COMPLETADA! 🎯\n\n✅ Encontré ${response.data?.data?.totalFound || 0} influencers\n\n📊 Resultados ordenados por compatibilidad`,
+            sender: 'bot',
+            type: 'search',
+          };
+          setMessages(prev => [...prev, botResponse]);
+        }
+
+        // Clear progress after delay
         setTimeout(() => {
           setSearchProgress(null);
-          // Auto-scroll to results after progress clears
           setTimeout(() => {
             const resultsElement = document.querySelector('[data-testid="influencer-results"]');
             if (resultsElement) {
@@ -967,27 +1045,6 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
             }
           }, 300);
         }, 3000);
-
-        let botResponse: Message;
-        if (response.type === 'search') {
-          // Access the search data properly - it's nested in response.data.data
-          const searchData = response.data?.data || response.data;
-          const totalFound = searchData?.totalFound || 0;
-          
-          botResponse = {
-            text: `🎯 ¡BÚSQUEDA COMPLETADA! 🎯\n\n✅ Encontré ${totalFound} influencers perfectamente alineados con tus criterios\n\n📊 Los resultados están ordenados por compatibilidad de marca\n🔍 Revisa los perfiles a continuación para encontrar las mejores opciones\n\n💡 Todos los influencers han sido automáticamente guardados en tu campaña`,
-            sender: 'bot',
-            type: 'search',
-          };
-        } else {
-          botResponse = {
-            text: response.data || 'Recibí tu mensaje. ¿Cómo puedo ayudarte a encontrar influencers?',
-            sender: 'bot',
-            type: 'chat',
-          };
-        }
-
-        setMessages(prev => [...prev, botResponse]);
       } else {
         // Regular chat without progress
         const response = await onSendMessage(inputMessage, messages);
@@ -1025,14 +1082,14 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 flex-shrink-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-              <span className="text-white text-lg">🤖</span>
-            </div>
-            <div>
-              <h2 className="text-white font-semibold text-lg">Asistente de IA para Influencers</h2>
-              <p className="text-blue-100 text-sm">Encuentra los creadores perfectos para tus campañas</p>
-            </div>
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <span className="text-white text-lg">🤖</span>
+          </div>
+          <div>
+            <h2 className="text-white font-semibold text-lg">Asistente de IA para Influencers</h2>
+            <p className="text-blue-100 text-sm">Encuentra los creadores perfectos para tus campañas</p>
+          </div>
           </div>
           
           {/* Clear Chat Button */}
@@ -1067,6 +1124,114 @@ export function Chatbot({ onSendMessage }: ChatbotProps) {
             </div>
           </div>
         ))}
+
+        {/* Suggested Prompts - Show when no conversation has started */}
+        {messages.length === 0 && (
+          <div className="space-y-4">
+            <div className="text-center mb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">💡 Prueba estas búsquedas:</h3>
+              <p className="text-sm text-gray-600">Haz clic en cualquier sugerencia para comenzar</p>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-3 max-w-lg mx-auto">
+              {[
+                {
+                  text: "Encuentra micro influencers fitness en Madrid",
+                  category: "🎯 Búsqueda específica",
+                  description: "Búsqueda targeted por ubicación y nicho"
+                },
+                {
+                  text: "Busca beauty creators femeninos con más de 50K seguidores",
+                  category: "👩 Demografía",
+                  description: "Filtros de género y audiencia"
+                },
+                {
+                  text: "¿Qué influencers han trabajado con Nike recientemente?",
+                  category: "🔍 Colaboraciones",
+                  description: "Análisis de partnerships pasados"
+                },
+                {
+                  text: "Encuentra TikTokers de tecnología en Latinoamérica",
+                  category: "📱 Plataforma",
+                  description: "Búsqueda por plataforma específica"
+                },
+                {
+                  text: "Busca influencers sostenibles para campaña eco-friendly",
+                  category: "🌱 Nicho específico",
+                  description: "Valores y causas específicas"
+                },
+                {
+                  text: "Analiza esta propuesta de campaña [sube PDF]",
+                  category: "📄 Análisis PDF",
+                  description: "Análisis inteligente de documentos"
+                }
+              ].map((prompt, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setInputMessage(prompt.text);
+                    // Auto-focus input after setting message
+                    setTimeout(() => {
+                      const textarea = document.querySelector('textarea') as HTMLTextAreaElement;
+                      if (textarea) {
+                        textarea.focus();
+                        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+                      }
+                    }, 100);
+                  }}
+                  className="group p-3 bg-white border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-md transition-all duration-200 text-left"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg flex items-center justify-center border border-blue-100 group-hover:border-blue-200 transition-colors">
+                        <span className="text-sm">{prompt.category.split(' ')[0]}</span>
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-gray-900 mb-1 group-hover:text-blue-700 transition-colors">
+                        {prompt.text}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {prompt.category} • {prompt.description}
+                      </div>
+                    </div>
+                    <div className="flex-shrink-0">
+                      <svg className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+            
+            {/* Quick tips */}
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 border border-blue-100 max-w-lg mx-auto mt-6">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg">🚀</span>
+                <span className="font-medium text-gray-800">Tips rápidos:</span>
+              </div>
+              <div className="grid grid-cols-1 gap-2 text-sm text-gray-700">
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-500">•</span>
+                  <span>Usa ubicaciones específicas: "Madrid", "CDMX"</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-purple-500">•</span>
+                  <span>Especifica tamaño: "micro", "macro" influencers</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">•</span>
+                  <span>Menciona plataformas: "Instagram", "TikTok"</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-orange-500">•</span>
+                  <span>Incluye nichos: "fitness", "beauty", "tech"</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         
                  {/* Progress Bar for Search */}
          {searchProgress && (

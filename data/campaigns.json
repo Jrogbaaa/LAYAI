@@ -5392,5 +5392,4463 @@
     "originalSearchQuery": "encontrar influencers",
     "createdAt": "2025-07-01T14:28:00.170Z",
     "updatedAt": "2025-07-01T14:28:00.378Z"
+  },
+  {
+    "id": "campaign_1751448879823",
+    "name": "FITNESS Campaign",
+    "brandName": "FITNESS",
+    "owner": "Clara",
+    "status": "Planning",
+    "priority": "Medium",
+    "startDate": "2025-07-02",
+    "endDate": "2025-08-01",
+    "budget": 25000,
+    "platform": [
+      "Instagram"
+    ],
+    "notes": "Auto-created from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+    "savedSearches": [
+      {
+        "id": "000apvomfmclrfui0",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:34:36.840Z",
+        "resultsCount": 44,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 3000-5000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "saschafitness",
+          "adidasbrasil",
+          "camilamonteiro",
+          "strava"
+        ]
+      },
+      {
+        "id": "ciwr7yyfumclrj1mk",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:37:06.044Z",
+        "resultsCount": 44,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 3000-5000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "saschafitness",
+          "adidasbrasil",
+          "camilamonteiro",
+          "strava"
+        ]
+      },
+      {
+        "id": "sf19c70vjmclrn1rd",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:40:12.841Z",
+        "resultsCount": 44,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 3000-5000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "saschafitness",
+          "adidasbrasil",
+          "camilamonteiro",
+          "strava"
+        ]
+      },
+      {
+        "id": "1pal4eg0zmclrn8bb",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:40:21.335Z",
+        "resultsCount": 52,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 4000-8000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "angel7real",
+          "fyndafit",
+          "projectpowerbykc",
+          "jenselter",
+          "saschafitness",
+          "krissycela",
+          "growingannanas",
+          "katiecrewe",
+          "muscletech",
+          "adrianmuriacoach",
+          "percyzuazofitness",
+          "sandra_r_boluda"
+        ]
+      },
+      {
+        "id": "1cxgdi2rymclroqc6",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:41:31.350Z",
+        "resultsCount": 51,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 2000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "gymvirtualcenter",
+          "villadecalma",
+          "projectpowerbykc",
+          "helatra_",
+          "influencerfit.",
+          "krissycela",
+          "gymvirtual_com",
+          "meggangrubb",
+          "patryjordan",
+          "micaelavaldesfit",
+          "luciayelseo"
+        ]
+      },
+      {
+        "id": "6br767njmmclrph4u",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:42:06.078Z",
+        "resultsCount": 44,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 3000-5000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "saschafitness",
+          "adidasbrasil",
+          "camilamonteiro",
+          "strava"
+        ]
+      },
+      {
+        "id": "nvx37lndkmclrpkjq",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:42:10.502Z",
+        "resultsCount": 52,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 4000-8000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "angel7real",
+          "fyndafit",
+          "projectpowerbykc",
+          "jenselter",
+          "saschafitness",
+          "krissycela",
+          "growingannanas",
+          "katiecrewe",
+          "muscletech",
+          "adrianmuriacoach",
+          "percyzuazofitness",
+          "sandra_r_boluda"
+        ]
+      },
+      {
+        "id": "d594u2h45mclsdfom",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:00:43.942Z",
+        "resultsCount": 45,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 2000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "helatra_",
+          "saschafitness",
+          "muscletech",
+          "percyzuazofitness",
+          "luciayelseo"
+        ]
+      },
+      {
+        "id": "umi7lb1lemclse97x",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:01:22.221Z",
+        "resultsCount": 43,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 3000-5000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "mps",
+          "tone",
+          "saschafitness"
+        ]
+      },
+      {
+        "id": "kn12wfoigmclsfq3d",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "BUSCO",
+        "timestamp": "2025-07-02T10:02:30.745Z",
+        "resultsCount": 48,
+        "parameters": {
+          "userQuery": "Busco influencers de Instagram",
+          "location": "instagram",
+          "platforms": [
+            "Instagram"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "skiller",
+          "garciaposti",
+          "mariquitatrasquila",
+          "rudyruymanoficial",
+          "joseriveraprod",
+          "rubentonces",
+          "jjeesiicaa_",
+          "zara.outfits.balkan",
+          "robert__pg",
+          "juanpere7",
+          "techblockproject",
+          "laramartingilarranz",
+          "susi_dg",
+          "luiski_26",
+          "misticahinojosa",
+          "ramonathornes",
+          "fransilvestrearquitectos",
+          "marketingenioso",
+          "anuel_2blea_g4",
+          "justalpatri",
+          "elmunditoparalelo",
+          "vegetta777",
+          "holaenfermera",
+          "tercosmicqueen",
+          "paramvir_beniwal",
+          "sparta356yt",
+          "unicosobreviviente",
+          "sunfwer",
+          "skinnyflakk",
+          "helloimlana",
+          "annaponsalopez",
+          "cachoo01",
+          "lapostaec",
+          "_onagonfaus",
+          "ibaillanos",
+          "sitaraghattamaneni",
+          "bienvenidoaguado",
+          "tuhoroscopo24",
+          "antonio.pozo",
+          "influencercity_",
+          "influence_latam",
+          "dolcemusa_",
+          "trending_influencers",
+          "eumarparfum",
+          "jamescharles.",
+          "jettysblog",
+          "mariabecerra",
+          "influencer"
+        ]
+      },
+      {
+        "id": "3cbi61ef1mclsgq40",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con 1000-3000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:03:17.424Z",
+        "resultsCount": 44,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con 1000-3000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "samantharuthprabhuoffl.",
+          "therock.",
+          "marinaruybarbosa.",
+          "karolg."
+        ]
+      },
+      {
+        "id": "g8trb5403mclsgr45",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:03:18.725Z",
+        "resultsCount": 43,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 3000-5000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "mps",
+          "tone",
+          "saschafitness"
+        ]
+      },
+      {
+        "id": "tkekl04smmcltbtgu",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers con presupuesto de 1000-5000 euros\",\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "BUSCO",
+        "timestamp": "2025-07-02T10:27:28.110Z",
+        "resultsCount": 39,
+        "parameters": {
+          "userQuery": "Busco influencers con presupuesto de 1000-5000 euros",
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "skiller",
+          "garciaposti",
+          "mariquitatrasquila",
+          "rudyruymanoficial",
+          "joseriveraprod",
+          "rubentonces",
+          "jjeesiicaa_",
+          "zara.outfits.balkan",
+          "robert__pg",
+          "juanpere7",
+          "techblockproject",
+          "laramartingilarranz",
+          "susi_dg",
+          "luiski_26",
+          "misticahinojosa",
+          "ramonathornes",
+          "fransilvestrearquitectos",
+          "marketingenioso",
+          "anuel_2blea_g4",
+          "justalpatri",
+          "elmunditoparalelo",
+          "vegetta777",
+          "holaenfermera",
+          "tercosmicqueen",
+          "paramvir_beniwal",
+          "sparta356yt",
+          "unicosobreviviente",
+          "sunfwer",
+          "skinnyflakk",
+          "helloimlana",
+          "annaponsalopez",
+          "cachoo01",
+          "lapostaec",
+          "_onagonfaus",
+          "ibaillanos",
+          "sitaraghattamaneni",
+          "bienvenidoaguado",
+          "tuhoroscopo24",
+          "antonio.pozo"
+        ]
+      },
+      {
+        "id": "cp1sgmzo9mcltburq",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "BUSCO",
+        "timestamp": "2025-07-02T10:27:29.798Z",
+        "resultsCount": 49,
+        "parameters": {
+          "userQuery": "Busco influencers de Instagram",
+          "location": "instagram",
+          "platforms": [
+            "Instagram"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "skiller",
+          "garciaposti",
+          "mariquitatrasquila",
+          "rudyruymanoficial",
+          "joseriveraprod",
+          "rubentonces",
+          "jjeesiicaa_",
+          "zara.outfits.balkan",
+          "robert__pg",
+          "juanpere7",
+          "techblockproject",
+          "laramartingilarranz",
+          "susi_dg",
+          "luiski_26",
+          "misticahinojosa",
+          "ramonathornes",
+          "fransilvestrearquitectos",
+          "marketingenioso",
+          "anuel_2blea_g4",
+          "justalpatri",
+          "elmunditoparalelo",
+          "vegetta777",
+          "holaenfermera",
+          "tercosmicqueen",
+          "paramvir_beniwal",
+          "sparta356yt",
+          "unicosobreviviente",
+          "sunfwer",
+          "skinnyflakk",
+          "helloimlana",
+          "annaponsalopez",
+          "cachoo01",
+          "lapostaec",
+          "_onagonfaus",
+          "ibaillanos",
+          "sitaraghattamaneni",
+          "bienvenidoaguado",
+          "tuhoroscopo24",
+          "antonio.pozo",
+          "influencercity_",
+          "influence_latam",
+          "iberogram",
+          "thelocalinfluencers",
+          "vonniesmiles.",
+          "influencersinthewild",
+          "iconiqtalents",
+          "davidrevueltaa",
+          "influencer",
+          "abeltheepisces"
+        ]
+      },
+      {
+        "id": "owjavhmremcltd5sa",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con 1000-3000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:28:30.730Z",
+        "resultsCount": 48,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con 1000-3000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "adidasbrasil",
+          "camilamonteiro",
+          "strava",
+          "annavictoria",
+          "vitaluralabs",
+          "abby",
+          "laarimichelin",
+          "bodylura"
+        ]
+      },
+      {
+        "id": "uh7reqo7vmcltdfq4",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:28:43.612Z",
+        "resultsCount": 47,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 3000-5000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "fyndafit",
+          "projectpowerbykc",
+          "saschafitness",
+          "krissycela",
+          "growingannanas",
+          "camillalor",
+          "meggangrubb"
+        ]
+      },
+      {
+        "id": "xaqj0f23nmcltdgjm",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:28:44.674Z",
+        "resultsCount": 49,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 4000-8000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "barbarauber",
+          "jujunorremose",
+          "adidasbrasil",
+          "camilamonteiro",
+          "zkramos",
+          "strava",
+          "adrianammiranda",
+          "laarimichelin",
+          "carolinalazaretti"
+        ]
+      },
+      {
+        "id": "c9bjuf0k0mcltgm9d",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con 1000-3000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:31:12.049Z",
+        "resultsCount": 48,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con 1000-3000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "adidasbrasil",
+          "camilamonteiro",
+          "strava",
+          "annavictoria",
+          "vitaluralabs",
+          "abby",
+          "laarimichelin",
+          "bodylura"
+        ]
+      },
+      {
+        "id": "y3wsmiu25mcltgxw7",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:31:27.127Z",
+        "resultsCount": 47,
+        "parameters": {
+          "userQuery": "Busco influencers de fitness con presupuesto de 3000-5000 euros",
+          "niches": [
+            "fitness"
+          ],
+          "platforms": [
+            "Instagram",
+            "TikTok"
+          ],
+          "enableSpanishDetection": true,
+          "enableAgeEstimation": true,
+          "maxResults": 50
+        },
+        "influencerIds": [
+          "ibaillanos",
+          "cristinaverdu",
+          "jaspercillessen",
+          "cunha",
+          "camilacruzzbb",
+          "5sergiob",
+          "jennihermoso",
+          "nico14",
+          "adamatrd37",
+          "chukwuezesamuel8",
+          "alecapetilloga",
+          "manuelhuedo",
+          "ansufati",
+          "davidebartolomorana",
+          "89jorgemartin",
+          "luukdejong9",
+          "ferrantorres",
+          "marcosllorente",
+          "ivanperujo",
+          "madelman_",
+          "juanmatagarcia",
+          "paugasol",
+          "claraaafernandez",
+          "shifer_what",
+          "bruma_7",
+          "carles5puyol",
+          "heyratolina",
+          "valentisanjuan",
+          "futurlife21",
+          "olgacarmona7",
+          "beccapires",
+          "nadina_ioana",
+          "carolinamarin",
+          "themadridviews",
+          "_pedro17_",
+          "fit_happy_sisters",
+          "rm.news",
+          "alexmarquez73",
+          "loloel11",
+          "tumejorjugada",
+          "fyndafit",
+          "projectpowerbykc",
+          "saschafitness",
+          "krissycela",
+          "growingannanas",
+          "camillalor",
+          "meggangrubb"
+        ]
+      }
+    ],
+    "savedInfluencers": [
+      {
+        "id": "ajcbryi6nmclrfwt8",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Ibai",
+          "handle": "ibaillanos",
+          "platform": "Instagram",
+          "followers": 10500000,
+          "engagementRate": 0.10460000000000001,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 105000
+        },
+        "savedAt": "2025-07-02T09:34:39.836Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "y4h9lxij9mclrfwux",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Cristina Verdú 🌿 Travel / Vegan / Curly",
+          "handle": "cristinaverdu",
+          "platform": "Instagram",
+          "followers": 427200,
+          "engagementRate": 0.1013,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4272
+        },
+        "savedAt": "2025-07-02T09:34:39.897Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "vvlf81nh3mclrfwvr",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Jasper Cillessen\n@jaspercillessen",
+          "handle": "jaspercillessen",
+          "platform": "Instagram",
+          "followers": 1500000,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 15000
+        },
+        "savedAt": "2025-07-02T09:34:39.927Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "9qiw51dplmclrfwwk",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Matheus Cunha",
+          "handle": "cunha",
+          "platform": "Instagram",
+          "followers": 1100000,
+          "engagementRate": 0.1002,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 11000
+        },
+        "savedAt": "2025-07-02T09:34:39.956Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "z63us8wdzmclrfwxi",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Camila Cruz Escobar\n@camilacruzzbb",
+          "handle": "camilacruzzbb",
+          "platform": "Instagram",
+          "followers": 427400,
+          "engagementRate": 0.1,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4274
+        },
+        "savedAt": "2025-07-02T09:34:39.990Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "bii07mju0mclrfwya",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Sergio Busquets",
+          "handle": "5sergiob",
+          "platform": "Instagram",
+          "followers": 6300000,
+          "engagementRate": 0.0955,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 63000
+        },
+        "savedAt": "2025-07-02T09:34:40.018Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "gex2lfhcumclrfwz4",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "𝕵𝖊𝖓𝖓𝖎 𝕳𝖊𝖗𝖒𝖔𝖘𝖔 🙃",
+          "handle": "jennihermoso",
+          "platform": "Instagram",
+          "followers": 1200000,
+          "engagementRate": 0.0944,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 12000
+        },
+        "savedAt": "2025-07-02T09:34:40.048Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "lybocpt9gmclrfwzy",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Nico González Iglesias\n@nico14",
+          "handle": "nico14",
+          "platform": "Instagram",
+          "followers": 1000000,
+          "engagementRate": 0.0799,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 10000
+        },
+        "savedAt": "2025-07-02T09:34:40.078Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "awr28cdz1mclrfx0t",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Adama Traore Diarra",
+          "handle": "adamatrd37",
+          "platform": "Instagram",
+          "followers": 3100000,
+          "engagementRate": 0.0701,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 31000
+        },
+        "savedAt": "2025-07-02T09:34:40.109Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "971u03oxxmclrfx1h",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Chukwuezesamuel (m.o.n)",
+          "handle": "chukwuezesamuel8",
+          "platform": "Instagram",
+          "followers": 2200000,
+          "engagementRate": 0.0466,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 22000
+        },
+        "savedAt": "2025-07-02T09:34:40.133Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "4zif4b22dmclrfx2c",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Alejandra Capetillo",
+          "handle": "alecapetilloga",
+          "platform": "Instagram",
+          "followers": 1100000,
+          "engagementRate": 0.045700000000000005,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 11000
+        },
+        "savedAt": "2025-07-02T09:34:40.164Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ukifqce9emclrfx4p",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Manuel Huedo",
+          "handle": "manuelhuedo",
+          "platform": "Instagram",
+          "followers": 413600,
+          "engagementRate": 0.041100000000000005,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4136
+        },
+        "savedAt": "2025-07-02T09:34:40.249Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "qjypx43qkmclrfx7c",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Ansu Fati\n@ansufati",
+          "handle": "ansufati",
+          "platform": "Instagram",
+          "followers": 10200000,
+          "engagementRate": 0.0395,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 102000
+        },
+        "savedAt": "2025-07-02T09:34:40.344Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "zg3bnqfw2mclrfx87",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Davide Morana",
+          "handle": "davidebartolomorana",
+          "platform": "Instagram",
+          "followers": 425400,
+          "engagementRate": 0.039900000000000005,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4254
+        },
+        "savedAt": "2025-07-02T09:34:40.375Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "cxtw5nwo8mclrfx8x",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Jorge Martin Almoguera",
+          "handle": "89jorgemartin",
+          "platform": "Instagram",
+          "followers": 1200000,
+          "engagementRate": 0.0375,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 12000
+        },
+        "savedAt": "2025-07-02T09:34:40.401Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "lk6eqowigmclrfx9v",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Luuk de Jong",
+          "handle": "luukdejong9",
+          "platform": "Instagram",
+          "followers": 651800,
+          "engagementRate": 0.0361,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6518
+        },
+        "savedAt": "2025-07-02T09:34:40.435Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "h10qc7w92mclrfxab",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Ferran Torres",
+          "handle": "ferrantorres",
+          "platform": "Instagram",
+          "followers": 5000000,
+          "engagementRate": 0.033,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 50000
+        },
+        "savedAt": "2025-07-02T09:34:40.451Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "17bo9j114mclrfxas",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Marcos Llorente",
+          "handle": "marcosllorente",
+          "platform": "Instagram",
+          "followers": 2400000,
+          "engagementRate": 0.0322,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 24000
+        },
+        "savedAt": "2025-07-02T09:34:40.468Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "2x2hlsw0amclrfxbl",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Ivan Perujo Oficial",
+          "handle": "ivanperujo",
+          "platform": "Instagram",
+          "followers": 1100000,
+          "engagementRate": 0.0315,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 11000
+        },
+        "savedAt": "2025-07-02T09:34:40.497Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "sru0aqxusmclrfxcl",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Jose María Mete Bueriberi 🇪🇸🇬🇶",
+          "handle": "madelman_",
+          "platform": "Instagram",
+          "followers": 1000000,
+          "engagementRate": 0.0319,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 10000
+        },
+        "savedAt": "2025-07-02T09:34:40.533Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "6frcbvwcvmclrfxdv",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Juan Mata\n@juanmatagarcia",
+          "handle": "juanmatagarcia",
+          "platform": "Instagram",
+          "followers": 7300000,
+          "engagementRate": 0.0297,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 73000
+        },
+        "savedAt": "2025-07-02T09:34:40.579Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "fq4ioj345mclrfxec",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Pau",
+          "handle": "paugasol",
+          "platform": "Instagram",
+          "followers": 2000000,
+          "engagementRate": 0.0305,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 20000
+        },
+        "savedAt": "2025-07-02T09:34:40.596Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "xnw0qmstmmclrfxev",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Clara Fernández | Track & Field\n@claraaafernandez",
+          "handle": "claraaafernandez",
+          "platform": "Instagram",
+          "followers": 736200,
+          "engagementRate": 0.0294,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7362
+        },
+        "savedAt": "2025-07-02T09:34:40.615Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "90nydl1w4mclrfxf9",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Shifer",
+          "handle": "shifer_what",
+          "platform": "Instagram",
+          "followers": 506600,
+          "engagementRate": 0.0277,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5066
+        },
+        "savedAt": "2025-07-02T09:34:40.629Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "wbh2n4249mclrfxfp",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Bruma",
+          "handle": "bruma_7",
+          "platform": "Instagram",
+          "followers": 478300,
+          "engagementRate": 0.027200000000000002,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4783
+        },
+        "savedAt": "2025-07-02T09:34:40.645Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "1gdx6e6htmclrfxg7",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Carles Puyol",
+          "handle": "carles5puyol",
+          "platform": "Instagram",
+          "followers": 10800000,
+          "engagementRate": 0.026000000000000002,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 108000
+        },
+        "savedAt": "2025-07-02T09:34:40.663Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "9vjsag5dumclrfxgl",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Marta - Ratolina",
+          "handle": "heyratolina",
+          "platform": "Instagram",
+          "followers": 481200,
+          "engagementRate": 0.0256,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4812
+        },
+        "savedAt": "2025-07-02T09:34:40.677Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "6y17z2pgfmclrfxgz",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "valentí sanjuan 🤘",
+          "handle": "valentisanjuan",
+          "platform": "Instagram",
+          "followers": 1100000,
+          "engagementRate": 0.0245,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 11000
+        },
+        "savedAt": "2025-07-02T09:34:40.691Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "so9yfw9ezmclrfxhc",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Futurlife21",
+          "handle": "futurlife21",
+          "platform": "Instagram",
+          "followers": 564700,
+          "engagementRate": 0.0231,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5647
+        },
+        "savedAt": "2025-07-02T09:34:40.704Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "rf12ks50ymclrfxhp",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "OLGA CARMONA\n@olgacarmona7",
+          "handle": "olgacarmona7",
+          "platform": "Instagram",
+          "followers": 563700,
+          "engagementRate": 0.0233,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5637
+        },
+        "savedAt": "2025-07-02T09:34:40.717Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "e2w5m47wfmclrfxi5",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Becca Pires",
+          "handle": "beccapires",
+          "platform": "Instagram",
+          "followers": 557700,
+          "engagementRate": 0.0232,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5577
+        },
+        "savedAt": "2025-07-02T09:34:40.733Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "nxp9z9181mclrfxik",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Nadina Ioana 🤍",
+          "handle": "nadina_ioana",
+          "platform": "Instagram",
+          "followers": 2100000,
+          "engagementRate": 0.0219,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 21000
+        },
+        "savedAt": "2025-07-02T09:34:40.748Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "6sgaqay28mclrfxix",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Carolina Marin",
+          "handle": "carolinamarin",
+          "platform": "Instagram",
+          "followers": 610900,
+          "engagementRate": 0.021400000000000002,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6109
+        },
+        "savedAt": "2025-07-02T09:34:40.761Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "mhdjgw1ocmclrfxjb",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "𝗧𝗵𝗲 𝗠𝗮𝗱𝗿𝗶𝗱 𝗩𝗶𝗲𝘄𝘀\n@themadridviews",
+          "handle": "themadridviews",
+          "platform": "Instagram",
+          "followers": 551100,
+          "engagementRate": 0.0218,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5511
+        },
+        "savedAt": "2025-07-02T09:34:40.775Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "lntzruki3mclrfxjs",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Pedro Rodriguez Ledesma",
+          "handle": "_pedro17_",
+          "platform": "Instagram",
+          "followers": 6000000,
+          "engagementRate": 0.018000000000000002,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 60000
+        },
+        "savedAt": "2025-07-02T09:34:40.792Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "1ou3zlk6fmclrfxk5",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Recetas| Fit Happy Sisters",
+          "handle": "fit_happy_sisters",
+          "platform": "Instagram",
+          "followers": 1100000,
+          "engagementRate": 0.0179,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 11000
+        },
+        "savedAt": "2025-07-02T09:34:40.805Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "1hiobvoafmclrfxks",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "أخبار ريال مدريد",
+          "handle": "rm.news",
+          "platform": "Instagram",
+          "followers": 510700,
+          "engagementRate": 0.0177,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5107
+        },
+        "savedAt": "2025-07-02T09:34:40.828Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "sw2hz2c9cmclrfxlf",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Alex Márquez Alentà",
+          "handle": "alexmarquez73",
+          "platform": "Instagram",
+          "followers": 1300000,
+          "engagementRate": 0.016399999999999998,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 13000
+        },
+        "savedAt": "2025-07-02T09:34:40.851Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "35opkibrzmclrfxmd",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Fabian Estoyanoff",
+          "handle": "loloel11",
+          "platform": "Instagram",
+          "followers": 525300,
+          "engagementRate": 0.016,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5253
+        },
+        "savedAt": "2025-07-02T09:34:40.885Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "atwv3gm13mclrfxo9",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Football • Soccer • Futbol\n@tumejorjugada",
+          "handle": "tumejorjugada",
+          "platform": "Instagram",
+          "followers": 1400000,
+          "engagementRate": 0.0149,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 14000
+        },
+        "savedAt": "2025-07-02T09:34:40.953Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "9mmbngcbjmclrfxoz",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Sascha Barboza",
+          "handle": "saschafitness",
+          "platform": "Instagram",
+          "followers": 5760213,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 57602
+        },
+        "savedAt": "2025-07-02T09:34:40.979Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "idrvde8uemclrfxpo",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "adidas Brasil",
+          "handle": "adidasbrasil",
+          "platform": "Instagram",
+          "followers": 5383307,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 53833
+        },
+        "savedAt": "2025-07-02T09:34:41.004Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "953t6j10smclrfxqs",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Camila Monteiro",
+          "handle": "camilamonteiro",
+          "platform": "Instagram",
+          "followers": 3346040,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 33460
+        },
+        "savedAt": "2025-07-02T09:34:41.044Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "7tmsc5kpzmclrfxsq",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Strava",
+          "handle": "strava",
+          "platform": "Instagram",
+          "followers": 1565266,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 15652
+        },
+        "savedAt": "2025-07-02T09:34:41.114Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "2j2x8zy4rmclrn8f2",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Angel7real Entrenador personal",
+          "handle": "angel7real",
+          "platform": "Instagram",
+          "followers": 217802,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 2178
+        },
+        "savedAt": "2025-07-02T09:40:21.470Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "8s61hi2ovmclrn8fb",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "fyndafit",
+          "handle": "fyndafit",
+          "platform": "Instagram",
+          "followers": 11186,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 111
+        },
+        "savedAt": "2025-07-02T09:40:21.479Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "hxwbh8bk6mclrn8fh",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Project Power by Krissy Cela™️",
+          "handle": "projectpowerbykc",
+          "platform": "Instagram",
+          "followers": 10293,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 102
+        },
+        "savedAt": "2025-07-02T09:40:21.485Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "wgd3k7dd0mclrn8fr",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Jen Selter",
+          "handle": "jenselter",
+          "platform": "Instagram",
+          "followers": 13586567,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 135865
+        },
+        "savedAt": "2025-07-02T09:40:21.495Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ythh53sl9mclrn8g2",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Krissy Cela",
+          "handle": "krissycela",
+          "platform": "Instagram",
+          "followers": 3317759,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 33177
+        },
+        "savedAt": "2025-07-02T09:40:21.506Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "mde1rtr36mclrn8g8",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Anna Engelschall",
+          "handle": "growingannanas",
+          "platform": "Instagram",
+          "followers": 1687583,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 16875
+        },
+        "savedAt": "2025-07-02T09:40:21.512Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "0nj3trv49mclrn8gj",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Katie Crewe",
+          "handle": "katiecrewe",
+          "platform": "Instagram",
+          "followers": 813170,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 8131
+        },
+        "savedAt": "2025-07-02T09:40:21.523Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "odg90krrqmclrn8gq",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "MuscleTech®",
+          "handle": "muscletech",
+          "platform": "Instagram",
+          "followers": 483563,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4835
+        },
+        "savedAt": "2025-07-02T09:40:21.530Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "2abzw6jbvmclrn8h1",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Adrian Muria",
+          "handle": "adrianmuriacoach",
+          "platform": "Instagram",
+          "followers": 314838,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3148
+        },
+        "savedAt": "2025-07-02T09:40:21.541Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "9gc7hcjvamclrn8h8",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Percy Zuazo",
+          "handle": "percyzuazofitness",
+          "platform": "Instagram",
+          "followers": 174448,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 1744
+        },
+        "savedAt": "2025-07-02T09:40:21.548Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "xb48xn6vumclrn8hf",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Sandra RB ATLETA FITNESS y SUPER MAMA🦸‍♀️",
+          "handle": "sandra_r_boluda",
+          "platform": "Instagram",
+          "followers": 29883,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 298
+        },
+        "savedAt": "2025-07-02T09:40:21.555Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "qlo9bksa0mclroqed",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Gym Virtual Center✌🏻✊🏻✋🏻",
+          "handle": "gymvirtualcenter",
+          "platform": "Instagram",
+          "followers": 173933,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 1739
+        },
+        "savedAt": "2025-07-02T09:41:31.429Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "c5koxtfsimclroqel",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Villa Calma",
+          "handle": "villadecalma",
+          "platform": "Instagram",
+          "followers": 27030,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 270
+        },
+        "savedAt": "2025-07-02T09:41:31.437Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "s71fflzjnmclroqev",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Héctor G.B. | Entrenador Personal Online",
+          "handle": "helatra_",
+          "platform": "Instagram",
+          "followers": 1371,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 13
+        },
+        "savedAt": "2025-07-02T09:41:31.447Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "2xl1ieczimclroqf7",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "influencerfit.",
+          "handle": "influencerfit.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-07-02T09:41:31.459Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "x2z31rz6ymclroqfe",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Gym Virtual✌🏻✊🏻🖐🏻",
+          "handle": "gymvirtual_com",
+          "platform": "Instagram",
+          "followers": 2204509,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 22045
+        },
+        "savedAt": "2025-07-02T09:41:31.466Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "pbn970w8cmclroqfm",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Meggan Kirkland",
+          "handle": "meggangrubb",
+          "platform": "Instagram",
+          "followers": 1341961,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 13419
+        },
+        "savedAt": "2025-07-02T09:41:31.474Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "49eq6204wmclroqfy",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Patry Jordán💋",
+          "handle": "patryjordan",
+          "platform": "Instagram",
+          "followers": 1334998,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 13349
+        },
+        "savedAt": "2025-07-02T09:41:31.486Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "lkb5mb81omclroqg8",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Micaela Valdes/ Fitness e Influencer",
+          "handle": "micaelavaldesfit",
+          "platform": "Instagram",
+          "followers": 53818,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 538
+        },
+        "savedAt": "2025-07-02T09:41:31.496Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "3acm8oaismclroqge",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "LUCIA Y EL SEO (Lucía Rico)",
+          "handle": "luciayelseo",
+          "platform": "Instagram",
+          "followers": 3282,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 32
+        },
+        "savedAt": "2025-07-02T09:41:31.502Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "tqu87h5ujmclse99r",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Mmmmm",
+          "handle": "mps",
+          "platform": "Instagram",
+          "followers": 649,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6
+        },
+        "savedAt": "2025-07-02T10:01:22.287Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "vvdl0lnsjmclse9a3",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "LMF",
+          "handle": "tone",
+          "platform": "Instagram",
+          "followers": 71,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-07-02T10:01:22.299Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "lb216hlswmclsfq6c",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "SKILLER\n@skiller",
+          "handle": "skiller",
+          "platform": "Instagram",
+          "followers": 1600000,
+          "engagementRate": 0.15,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 16000
+        },
+        "savedAt": "2025-07-02T10:02:30.852Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "y1r2k0iovmclsfq6k",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "garciaposti\n@garciaposti",
+          "handle": "garciaposti",
+          "platform": "Instagram",
+          "followers": 1100000,
+          "engagementRate": 0.15,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 11000
+        },
+        "savedAt": "2025-07-02T10:02:30.860Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "3mu26c185mclsfq6s",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Mariquita Trasquilá\n@mariquitatrasquila",
+          "handle": "mariquitatrasquila",
+          "platform": "Instagram",
+          "followers": 726700,
+          "engagementRate": 0.15,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7267
+        },
+        "savedAt": "2025-07-02T10:02:30.868Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "hkj99pqvpmclsfq72",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "RUDY RUYMÁN\n@rudyruymanoficial",
+          "handle": "rudyruymanoficial",
+          "platform": "Instagram",
+          "followers": 431800,
+          "engagementRate": 0.15,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4318
+        },
+        "savedAt": "2025-07-02T10:02:30.878Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "pa4kw6cm1mclsfq7d",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Jose Rivera Payán",
+          "handle": "joseriveraprod",
+          "platform": "Instagram",
+          "followers": 396600,
+          "engagementRate": 0.14820259003210562,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3966
+        },
+        "savedAt": "2025-07-02T10:02:30.889Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "etldlju9xmclsfq7l",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Rubentonces",
+          "handle": "rubentonces",
+          "platform": "Instagram",
+          "followers": 920700,
+          "engagementRate": 0.14400000000000002,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 9207
+        },
+        "savedAt": "2025-07-02T10:02:30.897Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "hapa8f249mclsfq7s",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "J e s i c a 𓆙",
+          "handle": "jjeesiicaa_",
+          "platform": "Instagram",
+          "followers": 829300,
+          "engagementRate": 0.142,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 8293
+        },
+        "savedAt": "2025-07-02T10:02:30.904Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "5xtyr0u22mclsfq7z",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Z A R A OUTFITS DAILY ®️\n@zara.outfits.balkan",
+          "handle": "zara.outfits.balkan",
+          "platform": "Instagram",
+          "followers": 1100000,
+          "engagementRate": 0.14034262890731927,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 11000
+        },
+        "savedAt": "2025-07-02T10:02:30.911Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "blj0we4j2mclsfq87",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "ROBERT PG",
+          "handle": "robert__pg",
+          "platform": "Instagram",
+          "followers": 1100000,
+          "engagementRate": 0.141,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 11000
+        },
+        "savedAt": "2025-07-02T10:02:30.919Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "d66zx48hvmclsfq8d",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Juan Pérez ⚡️\n@juanpere7",
+          "handle": "juanpere7",
+          "platform": "Instagram",
+          "followers": 616400,
+          "engagementRate": 0.1399,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6164
+        },
+        "savedAt": "2025-07-02T10:02:30.925Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "86ppjt44smclsfq8m",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Crypto | Blockchain | Trading\n@techblockproject",
+          "handle": "techblockproject",
+          "platform": "Instagram",
+          "followers": 389700,
+          "engagementRate": 0.14,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3897
+        },
+        "savedAt": "2025-07-02T10:02:30.934Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "q9mg65xfamclsfq8t",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Lara M.Gilarranz\n@laramartingilarranz",
+          "handle": "laramartingilarranz",
+          "platform": "Instagram",
+          "followers": 377900,
+          "engagementRate": 0.1390978297277027,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3779
+        },
+        "savedAt": "2025-07-02T10:02:30.941Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "mstynk3u6mclsfq93",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Susi Díaz | Ideas & Recetas Fáciles\n@susi_dg",
+          "handle": "susi_dg",
+          "platform": "Instagram",
+          "followers": 371100,
+          "engagementRate": 0.14,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3711
+        },
+        "savedAt": "2025-07-02T10:02:30.951Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "a8ktzdithmclsfq9e",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "LUISKI GARCIA 🔥❣️",
+          "handle": "luiski_26",
+          "platform": "Instagram",
+          "followers": 439500,
+          "engagementRate": 0.1321,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4395
+        },
+        "savedAt": "2025-07-02T10:02:30.962Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "1cnghzeb2mclsfq9o",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "🌜Misti🌛\n@misticahinojosa",
+          "handle": "misticahinojosa",
+          "platform": "Instagram",
+          "followers": 404000,
+          "engagementRate": 0.13138724380147737,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4040
+        },
+        "savedAt": "2025-07-02T10:02:30.972Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "qgx7ehyfmclsfq9w",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Arci Muñoz 🌸らもな 🌻라모나\n@ramonathornes",
+          "handle": "ramonathornes",
+          "platform": "Instagram",
+          "followers": 5900000,
+          "engagementRate": 0.13,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 59000
+        },
+        "savedAt": "2025-07-02T10:02:30.980Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "cejibsdkumclsfqa3",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Fran Silvestre Arquitectos\n@fransilvestrearquitectos",
+          "handle": "fransilvestrearquitectos",
+          "platform": "Instagram",
+          "followers": 2300000,
+          "engagementRate": 0.13,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 23000
+        },
+        "savedAt": "2025-07-02T10:02:30.987Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ix4hkmtyhmclsfqac",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Marketing Ingenioso - Vende con Instagram💰\n@marketingenioso",
+          "handle": "marketingenioso",
+          "platform": "Instagram",
+          "followers": 690400,
+          "engagementRate": 0.13,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6904
+        },
+        "savedAt": "2025-07-02T10:02:30.996Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "7mlngpue0mclsfqak",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "LAS LEYENDAS NUNCA MUEREN\n@anuel_2blea_g4",
+          "handle": "anuel_2blea_g4",
+          "platform": "Instagram",
+          "followers": 411400,
+          "engagementRate": 0.13,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4114
+        },
+        "savedAt": "2025-07-02T10:02:31.004Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "4l4okbwsqmclsfqaq",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Patricia Pastor\n@justalpatri",
+          "handle": "justalpatri",
+          "platform": "Instagram",
+          "followers": 445100,
+          "engagementRate": 0.12518455064948553,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4451
+        },
+        "savedAt": "2025-07-02T10:02:31.011Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "yrie3ftivmclsfqay",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "El Mundo Paralelo\n@elmunditoparalelo",
+          "handle": "elmunditoparalelo",
+          "platform": "Instagram",
+          "followers": 2500000,
+          "engagementRate": 0.12,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 25000
+        },
+        "savedAt": "2025-07-02T10:02:31.018Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "y9oqpgbfgmclsfqb5",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "♈️ Samuel De Luque ♈️\n@vegetta777",
+          "handle": "vegetta777",
+          "platform": "Instagram",
+          "followers": 6400000,
+          "engagementRate": 0.11542818475287438,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 64000
+        },
+        "savedAt": "2025-07-02T10:02:31.025Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "smvwyhb7mmclsfqbc",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "HolaEnfermera\n@holaenfermera",
+          "handle": "holaenfermera",
+          "platform": "Instagram",
+          "followers": 1000000,
+          "engagementRate": 0.11380000000000001,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 10000
+        },
+        "savedAt": "2025-07-02T10:02:31.032Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "povibphyhmclsfqbj",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Ter",
+          "handle": "tercosmicqueen",
+          "platform": "Instagram",
+          "followers": 612500,
+          "engagementRate": 0.1139,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6125
+        },
+        "savedAt": "2025-07-02T10:02:31.039Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "mjz31nm9emclsfqbr",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Paramvir Singh Beniwal\n@paramvir_beniwal",
+          "handle": "paramvir_beniwal",
+          "platform": "Instagram",
+          "followers": 574000,
+          "engagementRate": 0.11419194298241518,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5740
+        },
+        "savedAt": "2025-07-02T10:02:31.047Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "cek48c5apmclsfqc1",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Sparta356",
+          "handle": "sparta356yt",
+          "platform": "Instagram",
+          "followers": 525800,
+          "engagementRate": 0.1124,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5258
+        },
+        "savedAt": "2025-07-02T10:02:31.057Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "hdrb55qxymclsfqch",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Único Sobreviviente\n@unicosobreviviente",
+          "handle": "unicosobreviviente",
+          "platform": "Instagram",
+          "followers": 681400,
+          "engagementRate": 0.11,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6814
+        },
+        "savedAt": "2025-07-02T10:02:31.073Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "h5wnbg437mclsfqd7",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Cristina Ji\n@sunfwer",
+          "handle": "sunfwer",
+          "platform": "Instagram",
+          "followers": 508500,
+          "engagementRate": 0.10980000000000001,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5085
+        },
+        "savedAt": "2025-07-02T10:02:31.099Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ksq1q2g1smclsfqdz",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Rels B .݁✧⋆\n@skinnyflakk",
+          "handle": "skinnyflakk",
+          "platform": "Instagram",
+          "followers": 5400000,
+          "engagementRate": 0.10859999999999999,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 54000
+        },
+        "savedAt": "2025-07-02T10:02:31.127Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "i7zvokhlgmclsfqer",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Lana\n@helloimlana",
+          "handle": "helloimlana",
+          "platform": "Instagram",
+          "followers": 702000,
+          "engagementRate": 0.1093,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7020
+        },
+        "savedAt": "2025-07-02T10:02:31.155Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "4iev7uaaimclsfqfk",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Anna Ponsa Lopez\n@annaponsalopez",
+          "handle": "annaponsalopez",
+          "platform": "Instagram",
+          "followers": 559000,
+          "engagementRate": 0.1082,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 5590
+        },
+        "savedAt": "2025-07-02T10:02:31.184Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "2zcp2ka92mclsfqgd",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Jose Antonio Cacho\n@cachoo01",
+          "handle": "cachoo01",
+          "platform": "Instagram",
+          "followers": 418600,
+          "engagementRate": 0.1084,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4186
+        },
+        "savedAt": "2025-07-02T10:02:31.213Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "3oyjflvqhmclsfqh7",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "La Posta\n@lapostaec",
+          "handle": "lapostaec",
+          "platform": "Instagram",
+          "followers": 390700,
+          "engagementRate": 0.10846089847336887,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3907
+        },
+        "savedAt": "2025-07-02T10:02:31.243Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "onanevavmmclsfqi0",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Ona Gonfaus\n@_onagonfaus",
+          "handle": "_onagonfaus",
+          "platform": "Instagram",
+          "followers": 610300,
+          "engagementRate": 0.106,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 6103
+        },
+        "savedAt": "2025-07-02T10:02:31.272Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "x06bfxfw8mclsfqit",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "sitara",
+          "handle": "sitaraghattamaneni",
+          "platform": "Instagram",
+          "followers": 2200000,
+          "engagementRate": 0.10339999999999999,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 22000
+        },
+        "savedAt": "2025-07-02T10:02:31.301Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "jaxtiriakmclsfqjn",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Bienvenido Aguado\n@bienvenidoaguado",
+          "handle": "bienvenidoaguado",
+          "platform": "Instagram",
+          "followers": 390500,
+          "engagementRate": 0.1033,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3905
+        },
+        "savedAt": "2025-07-02T10:02:31.331Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "p0fiwsg92mclsfqkh",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Tu Horóscopo 24 🔵\n@tuhoroscopo24",
+          "handle": "tuhoroscopo24",
+          "platform": "Instagram",
+          "followers": 1600000,
+          "engagementRate": 0.1022357734900001,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 16000
+        },
+        "savedAt": "2025-07-02T10:02:31.361Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ohxtko8gmmclsfqle",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Antonio Pozo 🇪🇸\n@antonio.pozo",
+          "handle": "antonio.pozo",
+          "platform": "Instagram",
+          "followers": 1100000,
+          "engagementRate": 0.10189999999999999,
+          "location": "Spain",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 11000
+        },
+        "savedAt": "2025-07-02T10:02:31.394Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "gkpkf5aicmclsfqlr",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "INFLUENCER CITY",
+          "handle": "influencercity_",
+          "platform": "Instagram",
+          "followers": 444401,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4444
+        },
+        "savedAt": "2025-07-02T10:02:31.407Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "y5s21jxvvmclsfqm3",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Agencia de influencers",
+          "handle": "influence_latam",
+          "platform": "Instagram",
+          "followers": 22708,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 227
+        },
+        "savedAt": "2025-07-02T10:02:31.419Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "q1v6lkarmmclsfqmd",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "𝐃𝐨𝐥𝐜𝐞𝐌𝐔𝐒𝐀 𝐛𝐲 𝐉𝐞𝐭𝐭𝐲𝐬𝐛𝐥𝐨𝐠",
+          "handle": "dolcemusa_",
+          "platform": "Instagram",
+          "followers": 11436,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 114
+        },
+        "savedAt": "2025-07-02T10:02:31.429Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "hymzyer87mclsfqmo",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Trending Influencers",
+          "handle": "trending_influencers",
+          "platform": "Instagram",
+          "followers": 5711,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 57
+        },
+        "savedAt": "2025-07-02T10:02:31.440Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "8xzow0q2xmclsfqmz",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "𝐄𝐮𝐦𝐚𝐫 𝐏𝐚𝐫𝐟𝐮𝐦",
+          "handle": "eumarparfum",
+          "platform": "Instagram",
+          "followers": 4269,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 42
+        },
+        "savedAt": "2025-07-02T10:02:31.451Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "hgj5qqvkomclsfqn7",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "jamescharles.",
+          "handle": "jamescharles.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-07-02T10:02:31.459Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "489104631mclsfqne",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "𝐉 𝐞 𝐭 𝐭 𝐲 𝐬 𝐁 𝐥 𝐨 𝐠 | 𝐅𝐚𝐬𝐡𝐢𝐨𝐧 𝐈𝐧𝐟𝐥𝐮𝐞𝐧𝐜𝐞𝐫",
+          "handle": "jettysblog",
+          "platform": "Instagram",
+          "followers": 20499,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 204
+        },
+        "savedAt": "2025-07-02T10:02:31.466Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "mwx8qy19tmclsfqnr",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Maria Becerra",
+          "handle": "mariabecerra",
+          "platform": "Instagram",
+          "followers": 14729200,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 147292
+        },
+        "savedAt": "2025-07-02T10:02:31.479Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "rapftgvhjmclsfqo0",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Influencer",
+          "handle": "influencer",
+          "platform": "Instagram",
+          "followers": 100676,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 1006
+        },
+        "savedAt": "2025-07-02T10:02:31.488Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "ecgr5vykmmcltbuvc",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Influencers & Content Agency",
+          "handle": "iberogram",
+          "platform": "Instagram",
+          "followers": 10988,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 109
+        },
+        "savedAt": "2025-07-02T10:27:29.928Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "dl72aik5zmcltbuw1",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "The Local Influencers",
+          "handle": "thelocalinfluencers",
+          "platform": "Instagram",
+          "followers": 1354,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 13
+        },
+        "savedAt": "2025-07-02T10:27:29.953Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "bfjcrd24smcltbuwi",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "vonniesmiles.",
+          "handle": "vonniesmiles.",
+          "platform": "Instagram",
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 500
+        },
+        "savedAt": "2025-07-02T10:27:29.970Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "1dxt2hhnnmcltbuxf",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Influencers in the Wild",
+          "handle": "influencersinthewild",
+          "platform": "Instagram",
+          "followers": 5249568,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 52495
+        },
+        "savedAt": "2025-07-02T10:27:30.003Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "zeviob8mqmcltbv02",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "ICONIQ TALENTS AGENCY",
+          "handle": "iconiqtalents",
+          "platform": "Instagram",
+          "followers": 9818,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 98
+        },
+        "savedAt": "2025-07-02T10:27:30.098Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "5748vk3cemcltbv0k",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "David Revuelta",
+          "handle": "davidrevueltaa",
+          "platform": "Instagram",
+          "followers": 285714,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 2857
+        },
+        "savedAt": "2025-07-02T10:27:30.116Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "fddehb01omcltbv11",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Abel Ozuna",
+          "handle": "abeltheepisces",
+          "platform": "Instagram",
+          "followers": 852,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 8
+        },
+        "savedAt": "2025-07-02T10:27:30.133Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "c5r8qpa64mcltd5u9",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Anna Victoria",
+          "handle": "annavictoria",
+          "platform": "Instagram",
+          "followers": 1047213,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 10472
+        },
+        "savedAt": "2025-07-02T10:28:30.801Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con 1000-3000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "u4wqon2armcltd5uj",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "VITALURA LABS",
+          "handle": "vitaluralabs",
+          "platform": "Instagram",
+          "followers": 847318,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 8473
+        },
+        "savedAt": "2025-07-02T10:28:30.811Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con 1000-3000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "8ei8bfls1mcltd5uu",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Abby Pollock",
+          "handle": "abby",
+          "platform": "Instagram",
+          "followers": 749590,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 7495
+        },
+        "savedAt": "2025-07-02T10:28:30.822Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con 1000-3000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "lz2lr6aj7mcltd5v3",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Larissa Michelin",
+          "handle": "laarimichelin",
+          "platform": "Instagram",
+          "followers": 488975,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 4889
+        },
+        "savedAt": "2025-07-02T10:28:30.831Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con 1000-3000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "f3e2e0trrmcltd5vf",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Bodylura App",
+          "handle": "bodylura",
+          "platform": "Instagram",
+          "followers": 149284,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 1492
+        },
+        "savedAt": "2025-07-02T10:28:30.843Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con 1000-3000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "7g9vdiya7mcltdft5",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Camilla Lorentzen",
+          "handle": "camillalor",
+          "platform": "Instagram",
+          "followers": 1360671,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 13606
+        },
+        "savedAt": "2025-07-02T10:28:43.721Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "q9c25nfzkmcltdgms",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Bárbara Uber",
+          "handle": "barbarauber",
+          "platform": "Instagram",
+          "followers": 322832,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3228
+        },
+        "savedAt": "2025-07-02T10:28:44.788Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "lrquyxxwmmcltdgnm",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Julia Norremose Ferreira",
+          "handle": "jujunorremose",
+          "platform": "Instagram",
+          "followers": 1526934,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 15269
+        },
+        "savedAt": "2025-07-02T10:28:44.818Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "661uba0m6mcltdgoh",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Zeka Ramos",
+          "handle": "zkramos",
+          "platform": "Instagram",
+          "followers": 2889598,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 28895
+        },
+        "savedAt": "2025-07-02T10:28:44.849Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "suyitbmo0mcltdgox",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Adriana Miranda",
+          "handle": "adrianammiranda",
+          "platform": "Instagram",
+          "followers": 950751,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 9507
+        },
+        "savedAt": "2025-07-02T10:28:44.865Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      },
+      {
+        "id": "jth6c0gyimcltdgpd",
+        "campaignId": "campaign_1751448879823",
+        "influencerData": {
+          "name": "Carolina Lazaretti | Influencer Digital",
+          "handle": "carolinalazaretti",
+          "platform": "Instagram",
+          "followers": 331457,
+          "engagementRate": 0.025,
+          "location": "Unknown",
+          "niche": [
+            "Lifestyle"
+          ],
+          "estimatedCost": 3314
+        },
+        "savedAt": "2025-07-02T10:28:44.881Z",
+        "notes": "Auto-saved from search: \"STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}\"",
+        "status": "saved",
+        "tags": [
+          "auto-saved",
+          "search-result"
+        ]
+      }
+    ],
+    "searchHistory": [
+      {
+        "id": "s53mxm6ormclrfui0",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:34:36.840Z",
+        "resultsCount": 44
+      },
+      {
+        "id": "jv9pwnlqymclrj1mk",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:37:06.044Z",
+        "resultsCount": 44
+      },
+      {
+        "id": "zjqb57nebmclrn1rd",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:40:12.841Z",
+        "resultsCount": 44
+      },
+      {
+        "id": "jovsohhjimclrn8bb",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:40:21.335Z",
+        "resultsCount": 52
+      },
+      {
+        "id": "ogvm3iamimclroqc6",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:41:31.350Z",
+        "resultsCount": 51
+      },
+      {
+        "id": "v67flrlhxmclrph4u",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:42:06.078Z",
+        "resultsCount": 44
+      },
+      {
+        "id": "r9trvitp4mclrpkjq",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T09:42:10.502Z",
+        "resultsCount": 52
+      },
+      {
+        "id": "qyumxad20mclsdfom",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 2000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:00:43.942Z",
+        "resultsCount": 45
+      },
+      {
+        "id": "0xbc8u9ytmclse97x",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:01:22.221Z",
+        "resultsCount": 43
+      },
+      {
+        "id": "k1pk91tplmclsfq3d",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "BUSCO",
+        "timestamp": "2025-07-02T10:02:30.745Z",
+        "resultsCount": 48
+      },
+      {
+        "id": "92uba50m9mclsgq40",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con 1000-3000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:03:17.424Z",
+        "resultsCount": 44
+      },
+      {
+        "id": "uhfl13r3xmclsgr46",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:03:18.726Z",
+        "resultsCount": 43
+      },
+      {
+        "id": "omfd1mq4emcltbtgu",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers con presupuesto de 1000-5000 euros\",\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "BUSCO",
+        "timestamp": "2025-07-02T10:27:28.110Z",
+        "resultsCount": 39
+      },
+      {
+        "id": "sraz2do28mcltburq",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de Instagram\",\"location\":\"instagram\",\"platforms\":[\"Instagram\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "BUSCO",
+        "timestamp": "2025-07-02T10:27:29.798Z",
+        "resultsCount": 49
+      },
+      {
+        "id": "xj18lcg4xmcltd5sa",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con 1000-3000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:28:30.730Z",
+        "resultsCount": 48
+      },
+      {
+        "id": "6xdui0z5tmcltdfq4",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:28:43.612Z",
+        "resultsCount": 47
+      },
+      {
+        "id": "uj2bypvxwmcltdgjn",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 4000-8000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:28:44.675Z",
+        "resultsCount": 49
+      },
+      {
+        "id": "7il4hzdupmcltgm9d",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con 1000-3000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:31:12.049Z",
+        "resultsCount": 48
+      },
+      {
+        "id": "rsxlw3osbmcltgxw7",
+        "query": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+        "brandName": "FITNESS",
+        "timestamp": "2025-07-02T10:31:27.127Z",
+        "resultsCount": 47
+      }
+    ],
+    "autoCreatedFromSearch": true,
+    "originalSearchQuery": "STRUCTURED_SEARCH:{\"userQuery\":\"Busco influencers de fitness con presupuesto de 3000-5000 euros\",\"niches\":[\"fitness\"],\"platforms\":[\"Instagram\",\"TikTok\"],\"enableSpanishDetection\":true,\"enableAgeEstimation\":true,\"maxResults\":50}",
+    "createdAt": "2025-07-02T09:34:39.823Z",
+    "updatedAt": "2025-07-02T10:31:28.491Z"
   }
 ]

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getWebSearchBreaker, CircuitBreakerOpenError } from '@/lib/circuitBreaker';
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,7 +31,10 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const webSearchBreaker = getWebSearchBreaker();
+
     try {
+      const results = await webSearchBreaker.executeWithTimeout(async () => {
       // Use correct Serply API endpoint format from official documentation
       const searchUrl = `https://api.serply.io/v1/search/q=${encodeURIComponent(query)}&num=${limit}&gl=us&hl=en`;
 
@@ -42,7 +46,6 @@ export async function POST(request: NextRequest) {
         'X-API-KEY': serplyApiKey,
           'User-Agent': 'LAYAI/1.0',
       },
-        signal: AbortSignal.timeout(30000), // 30 second timeout
       });
 
       console.log(`📡 Serply API response status: ${searchResponse.status}`);
@@ -55,25 +58,46 @@ export async function POST(request: NextRequest) {
       console.log(`✅ Serply API response received:`, JSON.stringify(searchData, null, 2));
     
     if (searchData.results && searchData.results.length > 0) {
-        const results = searchData.results.slice(0, limit).map((result: any) => ({
+          const processedResults = searchData.results.slice(0, limit).map((result: any) => ({
         title: result.title || '',
         description: result.description || result.snippet || '',
         url: result.link || result.url || '',
           domain: result.cite?.domain || new URL(result.link || result.url || 'https://example.com').hostname,
       }));
 
-        console.log(`✅ Successfully processed ${results.length} Serply results`);
+          console.log(`✅ Successfully processed ${processedResults.length} Serply results`);
+          return processedResults;
+        } else {
+          throw new Error('No results found in Serply response');
+        }
+      }, 30000, async () => {
+        // Fallback when circuit breaker is open
+        console.log('🔄 Web search circuit breaker fallback');
+        return type === 'influencer' 
+          ? generateFallbackInfluencerData(query)
+          : generateFallbackBrandData(query);
+      });
       
       return NextResponse.json({
         success: true,
         results,
           source: 'serply'
       });
-    } else {
-        throw new Error('No results found in Serply response');
-      }
 
     } catch (serplyError) {
+      if (serplyError instanceof CircuitBreakerOpenError) {
+        console.log('⚡ Web search blocked by circuit breaker - using fallback');
+        const fallbackData = type === 'influencer' 
+          ? generateFallbackInfluencerData(query)
+          : generateFallbackBrandData(query);
+        
+        return NextResponse.json({
+          success: true,
+          results: fallbackData,
+          source: 'circuit-breaker-fallback',
+          note: 'Search service temporarily unavailable'
+        });
+      }
       console.error('❌ Serply API failed:', serplyError);
       
       // Fallback to local data when Serply fails

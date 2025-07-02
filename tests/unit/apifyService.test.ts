@@ -62,16 +62,16 @@ describe('Apify Service', () => {
     };
 
     const mockInfluencers = [
-      {
-        username: 'dulceida',
-        fullName: 'Aida Domenech',
+            {
+              username: 'dulceida',
+              fullName: 'Aida Domenech',
         followers: 2800000,
         following: 500,
-        postsCount: 1500,
+              postsCount: 1500,
         engagementRate: 3.2,
         platform: 'Instagram',
-        biography: 'Fashion blogger and influencer from Barcelona',
-        verified: true,
+              biography: 'Fashion blogger and influencer from Barcelona',
+              verified: true,
         profilePicUrl: 'https://example.com/pic1.jpg',
         avgLikes: 85000,
         avgComments: 2400,
@@ -79,17 +79,17 @@ describe('Apify Service', () => {
         location: 'Barcelona, Spain',
         collaborationRate: 2.5,
         brandCompatibilityScore: 0.9
-      },
-      {
-        username: 'meryturiel',
-        fullName: 'Mery Turiel',
+            },
+            {
+              username: 'meryturiel',
+              fullName: 'Mery Turiel',
         followers: 1200000,
         following: 300,
-        postsCount: 800,
+              postsCount: 800,
         engagementRate: 4.1,
         platform: 'Instagram',
-        biography: 'Fashion and lifestyle content creator',
-        verified: true,
+              biography: 'Fashion and lifestyle content creator',
+              verified: true,
         profilePicUrl: 'https://example.com/pic2.jpg',
         avgLikes: 48000,
         avgComments: 1200,

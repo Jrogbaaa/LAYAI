@@ -105,7 +105,7 @@ class SearchMemoryStore {
       this.searchHistory = searchSnapshot.docs.map(doc => {
         const data = doc.data();
         return {
-          id: doc.id,
+        id: doc.id,
           ...data,
           timestamp: data.timestamp && typeof data.timestamp.toDate === 'function' 
             ? data.timestamp.toDate() 
@@ -123,7 +123,7 @@ class SearchMemoryStore {
       this.userFeedback = feedbackSnapshot.docs.map(doc => {
         const data = doc.data();
         return {
-          id: doc.id,
+        id: doc.id,
           ...data,
           timestamp: data.timestamp && typeof data.timestamp.toDate === 'function' 
             ? data.timestamp.toDate() 
@@ -140,7 +140,7 @@ class SearchMemoryStore {
       this.learningPatterns = patternsSnapshot.docs.map(doc => {
         const data = doc.data();
         return {
-          id: doc.id,
+        id: doc.id,
           ...data,
           lastUpdated: data.lastUpdated && typeof data.lastUpdated.toDate === 'function' 
             ? data.lastUpdated.toDate() 

@@ -51,8 +51,8 @@ export async function POST(request: NextRequest) {
       console.log(`📱 Scraping Instagram posts from @${cleanHandle}...`);
       const instagramInput = {
         username: [cleanHandle],
-        resultsLimit: limitedPostsToCheck
-      };
+      resultsLimit: limitedPostsToCheck
+    };
 
       console.log(`🔧 Instagram Input:`, JSON.stringify(instagramInput, null, 2));
 
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
 
       const { items: instagramPosts } = await apifyClient.dataset(instagramRun.defaultDatasetId).listItems();
       console.log(`📊 Retrieved ${instagramPosts.length} Instagram posts for analysis`);
-      
+
       if (instagramPosts.length > 0) {
         instagramAnalysis = analyzeBrandCollaboration(instagramPosts, brandName);
         console.log(`📱 Instagram analysis: ${instagramAnalysis.hasCollaborated ? 'FOUND' : 'NOT FOUND'} collaboration (${instagramAnalysis.confidenceScore}% confidence)`);
@@ -149,57 +149,57 @@ export async function POST(request: NextRequest) {
         verificationMethods: ['Instagram', 'Web Search']
       });
     }
-
+      
     // 4. Fallback: Try to get basic profile info for bio analysis
     console.log(`🔄 No collaboration found, falling back to profile bio analysis...`);
-    
-    try {
-      const profileRun = await apifyClient.actor('apify/instagram-profile-scraper').call({
-        usernames: [cleanHandle],
-        resultsType: 'profiles',
-        resultsLimit: 1
-      });
-
-      const { items: profileItems } = await apifyClient.dataset(profileRun.defaultDatasetId).listItems();
       
-      if (profileItems.length > 0) {
-        const profile = profileItems[0];
-        const bioAnalysis = analyzeBioForCollaboration(profile.biography || '', brandName);
-        
-        return NextResponse.json({
-          success: true,
-          collaboration: {
-            hasWorkedTogether: bioAnalysis.hasCollaboration,
-            collaborationType: bioAnalysis.collaborationType,
-            confidence: bioAnalysis.confidence,
-            evidence: bioAnalysis.evidence,
-            reason: 'Analyzed from profile bio (posts unavailable)',
-            postsAnalyzed: 0
-          },
-          brandName,
-          influencerHandle: cleanHandle,
-          fallbackMethod: 'bio-analysis'
+      try {
+        const profileRun = await apifyClient.actor('apify/instagram-profile-scraper').call({
+          usernames: [cleanHandle],
+          resultsType: 'profiles',
+          resultsLimit: 1
         });
-      }
-    } catch (fallbackError) {
-      console.error(`❌ Fallback analysis also failed:`, fallbackError);
-    }
 
-    // Return negative result if everything fails
-    return NextResponse.json({
-      success: true,
-      collaboration: {
-        hasWorkedTogether: false,
-        collaborationType: 'none',
-        confidence: 0,
-        evidence: [],
+        const { items: profileItems } = await apifyClient.dataset(profileRun.defaultDatasetId).listItems();
+        
+        if (profileItems.length > 0) {
+          const profile = profileItems[0];
+          const bioAnalysis = analyzeBioForCollaboration(profile.biography || '', brandName);
+          
+          return NextResponse.json({
+            success: true,
+            collaboration: {
+              hasWorkedTogether: bioAnalysis.hasCollaboration,
+              collaborationType: bioAnalysis.collaborationType,
+              confidence: bioAnalysis.confidence,
+              evidence: bioAnalysis.evidence,
+              reason: 'Analyzed from profile bio (posts unavailable)',
+              postsAnalyzed: 0
+            },
+            brandName,
+            influencerHandle: cleanHandle,
+            fallbackMethod: 'bio-analysis'
+          });
+        }
+      } catch (fallbackError) {
+        console.error(`❌ Fallback analysis also failed:`, fallbackError);
+      }
+
+      // Return negative result if everything fails
+      return NextResponse.json({
+        success: true,
+        collaboration: {
+          hasWorkedTogether: false,
+          collaborationType: 'none',
+          confidence: 0,
+          evidence: [],
         reason: 'No collaboration found via Instagram, web search, or profile analysis',
         postsAnalyzed: instagramAnalysis?.evidence.length || 0
-      },
-      brandName,
-      influencerHandle: cleanHandle,
+        },
+        brandName,
+        influencerHandle: cleanHandle,
       error: 'No collaboration evidence found'
-    });
+      });
 
   } catch (error) {
     console.error('❌ Brand collaboration check error:', error);
@@ -376,7 +376,7 @@ function analyzeBrandCollaboration(posts: any[], brandName: string): Collaborati
           const postDate = new Date(post.createTime * 1000).toLocaleDateString();
           if (!lastCollabDate || new Date(post.createTime * 1000) > new Date(lastCollabDate)) {
             lastCollabDate = postDate;
-          }
+        }
         }
         
         console.log(`📊 Analysis complete: FOUND collaboration (partnership, ${confidenceScore}% confidence)`);
@@ -391,7 +391,7 @@ function analyzeBrandCollaboration(posts: any[], brandName: string): Collaborati
             evidence.push(`Mention: "${evidenceText}${evidenceText.length >= 150 ? '...' : ''}"`);
           }
         }
-        
+
         console.log(`📊 Analysis complete: FOUND mention (${confidenceScore}% confidence)`);
       }
     }
