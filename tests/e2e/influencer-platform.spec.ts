@@ -77,13 +77,15 @@ test.describe('Influencer Matching Platform', () => {
     await page.waitForTimeout(3000);
     
     // Check if PDF upload button/hint is visible
-    const pdfUpload = page.locator('text=PDF, text=sube, button:has-text("Upload")').first();
-    const pdfHint = page.locator('text=Sube una propuesta PDF').first();
+    const pdfUploadButton = page.locator('button:has-text("Subir PDF")').first();
+    const pdfUploadFull = page.locator('button:has-text("Subir propuesta PDF")').first();
+    const pdfHint = page.locator('text*=Sube una propuesta PDF').first();
     
-    const hasPdfUpload = await pdfUpload.isVisible().catch(() => false);
+    const hasPdfUploadButton = await pdfUploadButton.isVisible().catch(() => false);
+    const hasPdfUploadFull = await pdfUploadFull.isVisible().catch(() => false);
     const hasPdfHint = await pdfHint.isVisible().catch(() => false);
     
-    expect(hasPdfUpload || hasPdfHint).toBe(true);
+    expect(hasPdfUploadButton || hasPdfUploadFull || hasPdfHint).toBe(true);
   });
 
   test('should have proper chat interface structure', async ({ page }) => {
