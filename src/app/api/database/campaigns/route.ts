@@ -1,34 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { db } from '@/lib/firebase';
+import { 
+  collection, 
+  addDoc, 
+  getDocs, 
+  doc, 
+  updateDoc, 
+  deleteDoc, 
+  getDoc,
+  query,
+  orderBy,
+  Timestamp 
+} from 'firebase/firestore';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const CAMPAIGNS_FILE = path.join(DATA_DIR, 'campaigns.json');
+const CAMPAIGNS_COLLECTION = 'campaigns';
 
-// Ensure data directory exists
-async function ensureDataDir() {
-  try {
-    await fs.access(DATA_DIR);
-  } catch {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-  }
-}
-
-// Load campaigns from file
+// Load campaigns from Firebase
 async function loadCampaigns() {
   try {
-    await ensureDataDir();
-    const data = await fs.readFile(CAMPAIGNS_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch {
+    const q = query(
+      collection(db, CAMPAIGNS_COLLECTION),
+      orderBy('createdAt', 'desc')
+    );
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate?.() || new Date(),
+      updatedAt: doc.data().updatedAt?.toDate?.() || new Date(),
+    }));
+  } catch (error) {
+    console.error('Error loading campaigns from Firebase:', error);
     return [];
   }
-}
-
-// Save campaigns to file
-async function saveCampaigns(campaigns: any[]) {
-  await ensureDataDir();
-  await fs.writeFile(CAMPAIGNS_FILE, JSON.stringify(campaigns, null, 2));
 }
 
 export async function GET() {
@@ -46,79 +51,126 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { action, campaign, campaignId, field, value, savedSearch, historyEntry, savedInfluencer } = body;
 
-    const campaigns = await loadCampaigns();
-
     switch (action) {
       case 'create':
       case 'create_enhanced':
         const newCampaign = {
-          id: `campaign_${Date.now()}`,
           ...campaign,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now(),
           // Enhanced campaign fields with defaults
           savedSearches: campaign.savedSearches || [],
           savedInfluencers: campaign.savedInfluencers || [],
           searchHistory: campaign.searchHistory || []
         };
-        campaigns.push(newCampaign);
-        await saveCampaigns(campaigns);
-        return NextResponse.json({ success: true, campaign: newCampaign });
+        
+        const docRef = await addDoc(collection(db, CAMPAIGNS_COLLECTION), newCampaign);
+        const createdCampaign = {
+          id: docRef.id,
+          ...newCampaign,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        
+        return NextResponse.json({ success: true, campaign: createdCampaign });
 
       case 'update':
-        const campaignIndex = campaigns.findIndex((c: any) => c.id === campaignId);
-        if (campaignIndex === -1) {
+        if (!campaignId) {
+          return NextResponse.json({ success: false, error: 'Campaign ID required' }, { status: 400 });
+        }
+        
+        const campaignRef = doc(db, CAMPAIGNS_COLLECTION, campaignId);
+        const campaignDoc = await getDoc(campaignRef);
+        
+        if (!campaignDoc.exists()) {
           return NextResponse.json({ success: false, error: 'Campaign not found' }, { status: 404 });
         }
         
-        // 🔒 Preserve critical fields when updating
-        const originalCampaign = campaigns[campaignIndex];
-        campaigns[campaignIndex] = {
-          ...originalCampaign,
+        const updateData = {
           [field]: value,
-          updatedAt: new Date().toISOString(),
-          // 📅 Ensure dates are preserved unless explicitly being updated
-          startDate: field === 'startDate' ? value : originalCampaign.startDate,
-          endDate: field === 'endDate' ? value : originalCampaign.endDate,
-          createdAt: originalCampaign.createdAt, // Never overwrite creation date
+          updatedAt: Timestamp.now()
         };
-        await saveCampaigns(campaigns);
-        return NextResponse.json({ success: true, campaign: campaigns[campaignIndex] });
+        
+        await updateDoc(campaignRef, updateData);
+        
+        const updatedCampaign = {
+          id: campaignId,
+          ...campaignDoc.data(),
+          [field]: value,
+          updatedAt: new Date()
+        };
+        
+        return NextResponse.json({ success: true, campaign: updatedCampaign });
 
       case 'add_search':
-        const searchCampaignIndex = campaigns.findIndex((c: any) => c.id === campaignId);
-        if (searchCampaignIndex === -1) {
+        if (!campaignId) {
+          return NextResponse.json({ success: false, error: 'Campaign ID required' }, { status: 400 });
+        }
+        
+        const searchCampaignRef = doc(db, CAMPAIGNS_COLLECTION, campaignId);
+        const searchCampaignDoc = await getDoc(searchCampaignRef);
+        
+        if (!searchCampaignDoc.exists()) {
           return NextResponse.json({ success: false, error: 'Campaign not found' }, { status: 404 });
         }
         
-        // Add search to existing campaign
-        campaigns[searchCampaignIndex].savedSearches = campaigns[searchCampaignIndex].savedSearches || [];
-        campaigns[searchCampaignIndex].searchHistory = campaigns[searchCampaignIndex].searchHistory || [];
+        const currentData = searchCampaignDoc.data();
+        const updatedSearches = [...(currentData.savedSearches || []), savedSearch];
+        const updatedHistory = [...(currentData.searchHistory || []), historyEntry];
         
-        campaigns[searchCampaignIndex].savedSearches.push(savedSearch);
-        campaigns[searchCampaignIndex].searchHistory.push(historyEntry);
-        campaigns[searchCampaignIndex].updatedAt = new Date().toISOString();
+        await updateDoc(searchCampaignRef, {
+          savedSearches: updatedSearches,
+          searchHistory: updatedHistory,
+          updatedAt: Timestamp.now()
+        });
         
-        await saveCampaigns(campaigns);
-        return NextResponse.json({ success: true, campaign: campaigns[searchCampaignIndex] });
+        const updatedSearchCampaign = {
+          id: campaignId,
+          ...currentData,
+          savedSearches: updatedSearches,
+          searchHistory: updatedHistory,
+          updatedAt: new Date()
+        };
+        
+        return NextResponse.json({ success: true, campaign: updatedSearchCampaign });
 
       case 'add_influencer':
-        const influencerCampaignIndex = campaigns.findIndex((c: any) => c.id === campaignId);
-        if (influencerCampaignIndex === -1) {
+        if (!campaignId) {
+          return NextResponse.json({ success: false, error: 'Campaign ID required' }, { status: 400 });
+        }
+        
+        const influencerCampaignRef = doc(db, CAMPAIGNS_COLLECTION, campaignId);
+        const influencerCampaignDoc = await getDoc(influencerCampaignRef);
+        
+        if (!influencerCampaignDoc.exists()) {
           return NextResponse.json({ success: false, error: 'Campaign not found' }, { status: 404 });
         }
         
-        // Add influencer to existing campaign
-        campaigns[influencerCampaignIndex].savedInfluencers = campaigns[influencerCampaignIndex].savedInfluencers || [];
-        campaigns[influencerCampaignIndex].savedInfluencers.push(savedInfluencer);
-        campaigns[influencerCampaignIndex].updatedAt = new Date().toISOString();
+        const currentInfluencerData = influencerCampaignDoc.data();
+        const updatedInfluencers = [...(currentInfluencerData.savedInfluencers || []), savedInfluencer];
         
-        await saveCampaigns(campaigns);
-        return NextResponse.json({ success: true, campaign: campaigns[influencerCampaignIndex] });
+        await updateDoc(influencerCampaignRef, {
+          savedInfluencers: updatedInfluencers,
+          updatedAt: Timestamp.now()
+        });
+        
+        const updatedInfluencerCampaign = {
+          id: campaignId,
+          ...currentInfluencerData,
+          savedInfluencers: updatedInfluencers,
+          updatedAt: new Date()
+        };
+        
+        return NextResponse.json({ success: true, campaign: updatedInfluencerCampaign });
 
       case 'delete':
-        const filteredCampaigns = campaigns.filter((c: any) => c.id !== campaignId);
-        await saveCampaigns(filteredCampaigns);
+        if (!campaignId) {
+          return NextResponse.json({ success: false, error: 'Campaign ID required' }, { status: 400 });
+        }
+        
+        const deleteCampaignRef = doc(db, CAMPAIGNS_COLLECTION, campaignId);
+        await deleteDoc(deleteCampaignRef);
+        
         return NextResponse.json({ success: true });
 
       default:

@@ -50,59 +50,7 @@ interface MatchResultWithVerification extends MatchResult {
 export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results }) => {
   const [viewMode, setViewMode] = useState<'standard' | 'enhanced'>('standard');
   
-  // Pre-filter results to remove invalid profiles before any rendering
-  const validResults = useMemo(() => {
-    return results.filter(result => {
-      const validation = isValidInstagramHandle(result.influencer);
-      if (!validation.isValid) {
-        console.log(`🚫 Filtering out invalid profile: ${result.influencer.handle} - ${validation.reason}`);
-        return false;
-      }
-      return true;
-    });
-  }, [results]);
-  
-  // Performance metrics calculation
-  const performanceMetrics = useMemo(() => {
-    if (validResults.length === 0) {
-      return {
-        avgMatchScore: 0,
-        avgEngagement: 0,
-        verifiedCount: 0,
-        premiumCount: 0,
-        qualityDistribution: { excellent: 0, good: 0, fair: 0 }
-      };
-    }
-
-    const avgMatchScore = Math.round(
-      validResults.reduce((sum, result) => sum + (result.matchScore || 0), 0) / validResults.length * 100
-    );
-    
-    const avgEngagement = Math.round(
-      validResults.reduce((sum, result) => sum + (result.influencer.engagementRate || 0), 0) / validResults.length * 100
-    );
-    
-    const verifiedCount = validResults.filter(result => result.influencer.validationStatus?.apifyVerified).length;
-    const premiumCount = validResults.filter(result => 
-      result.influencer.costLevel === 'Premium' || result.influencer.costLevel === 'Celebrity'
-    ).length;
-    
-    // Quality distribution based on match scores
-    const qualityDistribution = {
-      excellent: validResults.filter(result => (result.matchScore || 0) >= 0.8).length,
-      good: validResults.filter(result => (result.matchScore || 0) >= 0.6 && (result.matchScore || 0) < 0.8).length,
-      fair: validResults.filter(result => (result.matchScore || 0) < 0.6).length
-    };
-    
-    return {
-      avgMatchScore,
-      avgEngagement,
-      verifiedCount,
-      premiumCount,
-      qualityDistribution
-    };
-  }, [validResults]);
-
+  // Define validation function before using it
   const isValidInstagramHandle = (influencer: any): { isValid: boolean; reason?: string } => {
     // First check if we have Apify validation data (most reliable)
     if (influencer.validationStatus) {
@@ -200,19 +148,68 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
     
     if (!noConsecutiveDots || !notStartsWithDot || !notEndsWithDot || 
         !notStartsWithUnderscore || !notEndsWithUnderscore) {
-      return { isValid: false, reason: 'Formato de handle inválido (puntos/guiones al inicio/final)' };
+      return { isValid: false, reason: 'Formato de handle inválido (puntos/guiones bajos)' };
     }
     
-    if (!notAllNumbers) {
-      return { isValid: false, reason: 'Handle no puede ser solo números' };
-    }
-    
-    if (!notTooManyNumbers) {
-      return { isValid: false, reason: 'Demasiados números consecutivos en el handle' };
+    if (!notAllNumbers || !notTooManyNumbers) {
+      return { isValid: false, reason: 'Demasiados números en el handle' };
     }
     
     return { isValid: true };
   };
+  
+  // Pre-filter results to remove invalid profiles before any rendering
+  const validResults = useMemo(() => {
+    return results.filter(result => {
+      const validation = isValidInstagramHandle(result.influencer);
+      if (!validation.isValid) {
+        console.log(`🚫 Filtering out invalid profile: ${result.influencer.handle} - ${validation.reason}`);
+        return false;
+      }
+      return true;
+    });
+  }, [results]);
+  
+  // Performance metrics calculation
+  const performanceMetrics = useMemo(() => {
+    if (validResults.length === 0) {
+      return {
+        avgMatchScore: 0,
+        avgEngagement: 0,
+        verifiedCount: 0,
+        premiumCount: 0,
+        qualityDistribution: { excellent: 0, good: 0, fair: 0 }
+      };
+    }
+
+    const avgMatchScore = Math.round(
+      validResults.reduce((sum, result) => sum + (result.matchScore || 0), 0) / validResults.length * 100
+    );
+    
+    const avgEngagement = Math.round(
+      validResults.reduce((sum, result) => sum + (result.influencer.engagementRate || 0), 0) / validResults.length * 100
+    );
+    
+    const verifiedCount = validResults.filter(result => result.influencer.validationStatus?.apifyVerified).length;
+    const premiumCount = validResults.filter(result => 
+      result.influencer.costLevel === 'Premium' || result.influencer.costLevel === 'Celebrity'
+    ).length;
+    
+    // Quality distribution based on match scores
+    const qualityDistribution = {
+      excellent: validResults.filter(result => (result.matchScore || 0) >= 0.8).length,
+      good: validResults.filter(result => (result.matchScore || 0) >= 0.6 && (result.matchScore || 0) < 0.8).length,
+      fair: validResults.filter(result => (result.matchScore || 0) < 0.6).length
+    };
+    
+    return {
+      avgMatchScore,
+      avgEngagement,
+      verifiedCount,
+      premiumCount,
+      qualityDistribution
+    };
+  }, [validResults]);
 
   const getProfileLink = (handle: string, name: string): string => {
     // Clean the handle and create Instagram URL

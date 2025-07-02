@@ -1,34 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { db } from '@/lib/firebase';
+import { 
+  collection, 
+  addDoc, 
+  getDocs, 
+  doc, 
+  updateDoc, 
+  deleteDoc, 
+  getDoc,
+  query,
+  orderBy,
+  Timestamp 
+} from 'firebase/firestore';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const NOTES_FILE = path.join(DATA_DIR, 'notes.json');
+const NOTES_COLLECTION = 'notes';
 
-// Ensure data directory exists
-async function ensureDataDir() {
-  try {
-    await fs.access(DATA_DIR);
-  } catch {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-  }
-}
-
-// Load notes from file
+// Load notes from Firebase
 async function loadNotes() {
   try {
-    await ensureDataDir();
-    const data = await fs.readFile(NOTES_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch {
+    const q = query(
+      collection(db, NOTES_COLLECTION),
+      orderBy('createdAt', 'desc')
+    );
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate?.() || new Date(),
+      updatedAt: doc.data().updatedAt?.toDate?.() || new Date(),
+    }));
+  } catch (error) {
+    console.error('Error loading notes from Firebase:', error);
     return [];
   }
-}
-
-// Save notes to file
-async function saveNotes(notes: any[]) {
-  await ensureDataDir();
-  await fs.writeFile(NOTES_FILE, JSON.stringify(notes, null, 2));
 }
 
 export async function GET() {
@@ -46,39 +51,63 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { action, note, noteId, title, content } = body;
 
-    const notes = await loadNotes();
-
     switch (action) {
       case 'create':
         const newNote = {
-          id: `note_${Date.now()}`,
           title: title || 'Untitled Note',
           content: content || '',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now()
         };
-        notes.push(newNote);
-        await saveNotes(notes);
-        return NextResponse.json({ success: true, note: newNote });
+        
+        const docRef = await addDoc(collection(db, NOTES_COLLECTION), newNote);
+        const createdNote = {
+          id: docRef.id,
+          ...newNote,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        
+        return NextResponse.json({ success: true, note: createdNote });
 
       case 'update':
-        const noteIndex = notes.findIndex((n: any) => n.id === noteId);
-        if (noteIndex === -1) {
+        if (!noteId) {
+          return NextResponse.json({ success: false, error: 'Note ID required' }, { status: 400 });
+        }
+        
+        const noteRef = doc(db, NOTES_COLLECTION, noteId);
+        const noteDoc = await getDoc(noteRef);
+        
+        if (!noteDoc.exists()) {
           return NextResponse.json({ success: false, error: 'Note not found' }, { status: 404 });
         }
         
-        notes[noteIndex] = {
-          ...notes[noteIndex],
-          title: title !== undefined ? title : notes[noteIndex].title,
-          content: content !== undefined ? content : notes[noteIndex].content,
-          updatedAt: new Date().toISOString()
+        const updateData: any = {
+          updatedAt: Timestamp.now()
         };
-        await saveNotes(notes);
-        return NextResponse.json({ success: true, note: notes[noteIndex] });
+        
+        if (title !== undefined) updateData.title = title;
+        if (content !== undefined) updateData.content = content;
+        
+        await updateDoc(noteRef, updateData);
+        
+        const updatedNote = {
+          id: noteId,
+          ...noteDoc.data(),
+          ...updateData,
+          updatedAt: new Date()
+        };
+        
+        return NextResponse.json({ success: true, note: updatedNote });
 
       case 'delete':
-        const filteredNotes = notes.filter((n: any) => n.id !== noteId);
-        await saveNotes(filteredNotes);
+        if (!noteId) {
+          return NextResponse.json({ success: false, error: 'Note ID required' }, { status: 400 });
+        }
+        
+        const deleteNoteRef = doc(db, NOTES_COLLECTION, noteId);
+        await deleteDoc(deleteNoteRef);
+        
         return NextResponse.json({ success: true });
 
       default:
