@@ -93,7 +93,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
       good: validResults.filter(result => (result.matchScore || 0) >= 0.6 && (result.matchScore || 0) < 0.8).length,
       fair: validResults.filter(result => (result.matchScore || 0) < 0.6).length
     };
-
+    
     return {
       avgMatchScore,
       avgEngagement,
