@@ -415,7 +415,7 @@ export default function Home() {
         return (
           <div className="min-h-screen overflow-y-auto bg-gray-50">
             {/* Chat Section - Always visible at top */}
-            <div className="w-full max-w-4xl mx-auto px-6 py-8">
+            <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
               <Chatbot 
                 onSendMessage={handleSendMessage} 
                 onPDFAnalyzed={setPdfAnalysisContext}
@@ -424,21 +424,21 @@ export default function Home() {
             
             {/* Results Section - Flows naturally below chat */}
             {searchResults && (searchResults.premiumResults.length > 0 || searchResults.discoveryResults.length > 0) && (
-              <div className="w-full max-w-7xl mx-auto px-6 pb-8">
+              <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pb-4 sm:pb-8">
                 {/* Search Results Header */}
-                <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-                  <div className="flex justify-between items-center">
+                <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900">
+                      <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                         Search Results ({(searchResults.premiumResults.length + searchResults.discoveryResults.length)} total)
                       </h2>
-                      <p className="text-gray-600 mt-1">
+                      <p className="text-gray-600 mt-1 text-sm sm:text-base">
                         Found {searchResults.premiumResults.length} premium and {searchResults.discoveryResults.length} discovery results
                       </p>
                     </div>
                     <button
                       onClick={handleClearResults}
-                      className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors flex items-center space-x-2"
+                      className="px-3 sm:px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors flex items-center justify-center space-x-2 text-sm sm:text-base w-full sm:w-auto"
                     >
                       <span>🗑️</span>
                       <span>Clear Results</span>
@@ -448,7 +448,7 @@ export default function Home() {
 
                 {/* Enhanced Feedback Panel - More Prominent */}
                 {currentSearchId && (
-                  <div className="mb-6">
+                  <div className="mb-4 sm:mb-6">
                     <EnhancedFeedbackPanel 
                       searchId={currentSearchId}
                       sessionId={sessionId}
@@ -463,13 +463,13 @@ export default function Home() {
                   console.log('🔍 Rendering results section. Premium count:', searchResults.premiumResults.length, 'Show all:', showAllResults, 'Should show button:', searchResults.premiumResults.length > 20 && !showAllResults);
                   return true;
                 })() && (
-                  <div className="mb-8">
-                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 mb-4">
-                      <h3 className="text-lg font-semibold text-blue-900 flex items-center space-x-2">
+                  <div className="mb-6 sm:mb-8">
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
+                      <h3 className="text-base sm:text-lg font-semibold text-blue-900 flex items-center space-x-2">
                         <span>⭐</span>
                         <span>Premium Results ({searchResults.premiumResults.length})</span>
                       </h3>
-                      <p className="text-blue-700 text-sm mt-1">
+                      <p className="text-blue-700 text-xs sm:text-sm mt-1">
                         Verified profiles with detailed analytics and contact information
                       </p>
                     </div>
@@ -481,16 +481,16 @@ export default function Home() {
                     
                     {/* Show More Button - show when there are more than 20 results */}
                     {searchResults.premiumResults.length > 20 && !showAllResults && (
-                      <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 text-center border-2 border-dashed border-blue-200">
-                        <div className="flex flex-col items-center space-y-4">
-                          <div className="p-3 bg-white rounded-full shadow-sm">
-                            <span className="text-2xl">🔍</span>
+                      <div className="mt-4 sm:mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 sm:p-6 text-center border-2 border-dashed border-blue-200">
+                        <div className="flex flex-col items-center space-y-3 sm:space-y-4">
+                          <div className="p-2 sm:p-3 bg-white rounded-full shadow-sm">
+                            <span className="text-xl sm:text-2xl">🔍</span>
                           </div>
                           <div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
                               {searchResults.premiumResults.length - 20} Influencers Adicionales Encontrados
                             </h3>
-                            <p className="text-gray-600 text-sm max-w-md mx-auto">
+                            <p className="text-gray-600 text-xs sm:text-sm max-w-md mx-auto">
                               Mostrando los primeros 20 resultados. Hay {searchResults.premiumResults.length - 20} influencers más que coinciden perfectamente con tu búsqueda.
                             </p>
                           </div>
@@ -499,7 +499,7 @@ export default function Home() {
                               console.log('🔄 Expanding to show all results:', searchResults.premiumResults.length);
                               setShowAllResults(true);
                             }}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 shadow-sm"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 shadow-sm text-sm sm:text-base w-full sm:w-auto"
                           >
                             <span>👀</span>
                             <span>Mostrar Todos los {searchResults.premiumResults.length} Resultados</span>
@@ -510,10 +510,10 @@ export default function Home() {
                     
                     {/* Collapse Button - when showing all results */}
                     {showAllResults && searchResults.premiumResults.length > 20 && (
-                      <div className="mt-6 text-center">
+                      <div className="mt-4 sm:mt-6 text-center">
                         <button
                           onClick={() => setShowAllResults(false)}
-                          className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 mx-auto"
+                          className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 mx-auto text-sm sm:text-base"
                         >
                           <span>▲</span>
                           <span>Mostrar Solo los Primeros 20</span>
@@ -525,13 +525,13 @@ export default function Home() {
 
                 {/* Discovery Results (separate section if any) */}
                 {searchResults.discoveryResults.length > 0 && (
-                  <div className="mb-8">
-                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 mb-4">
-                      <h3 className="text-lg font-semibold text-purple-900 flex items-center space-x-2">
+                  <div className="mb-6 sm:mb-8">
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
+                      <h3 className="text-base sm:text-lg font-semibold text-purple-900 flex items-center space-x-2">
                         <span>🔍</span>
                         <span>Discovery Results ({searchResults.discoveryResults.length})</span>
                       </h3>
-                      <p className="text-purple-700 text-sm mt-1">
+                      <p className="text-purple-700 text-xs sm:text-sm mt-1">
                         Additional profiles found through web search
                       </p>
                     </div>
@@ -559,11 +559,11 @@ export default function Home() {
         />;
       case 'proposal':
         return currentProposal ? (
-          <div className="min-h-screen p-6">
-            <div className="mb-6">
+          <div className="min-h-screen p-4 sm:p-6">
+            <div className="mb-4 sm:mb-6">
               <button
                 onClick={() => setCurrentView('generate')}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                className="px-3 sm:px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm sm:text-base"
               >
                 ← Back to Generator
               </button>
@@ -575,8 +575,8 @@ export default function Home() {
             />
           </div>
         ) : (
-          <div className="min-h-screen flex items-center justify-center">
-            <p className="text-gray-500">No proposal to display</p>
+          <div className="min-h-screen flex items-center justify-center p-4">
+            <p className="text-gray-500 text-sm sm:text-base">No proposal to display</p>
           </div>
         );
       case 'campaigns':
@@ -595,7 +595,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Sidebar 
         currentView={currentView === 'chat' ? 'search' : currentView as PageView} 
         onViewChange={handleSidebarViewChange} 
