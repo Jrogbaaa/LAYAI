@@ -336,6 +336,33 @@ function parseSearchQuery(message: string): {
     /desde\s+([a-zA-ZáéíóúñÑ\s,]+?)(?:\s+con|\s+para|\s+en|\s+más|$|,|\.|!|\?)/i
   ];
 
+  // Extract brand name for search context FIRST (before using it elsewhere)
+  let brandName: string | undefined = undefined;
+  const brandPatterns = [
+    /(?:for|para)\s+(?:the\s+)?([A-Za-z0-9\s&.-]+?)\s+brand/gi,
+    /(?:for|para)\s+([A-Za-z0-9\s&.-]+?)(?:\s+campaign|\s+colaboración|\s+marketing|\s|$)/gi,
+    /(?:Nike|Adidas|Zara|H&M|McDonald's|Coca-Cola|Pepsi|Samsung|Apple|Google|Amazon|Microsoft|Facebook|Instagram|TikTok|YouTube|Twitter|Spotify|Netflix|Disney|Marvel|DC|PlayStation|Xbox|Nintendo|Tesla|BMW|Mercedes|Audi|Volkswagen|Toyota|Honda|Ford|Chevrolet|Uber|Airbnb|Starbucks|KFC|Burger King|Subway|Pizza Hut|Domino's|Walmart|Target|Best Buy|GameStop|Sephora|Ulta|Victoria's Secret|Calvin Klein|Tommy Hilfiger|Ralph Lauren|Gucci|Prada|Louis Vuitton|Chanel|Hermès|Rolex|Cartier|Tiffany|IKEA|Ikea)/gi
+  ];
+  
+  for (const pattern of brandPatterns) {
+    const match = pattern.exec(message);
+    if (match) {
+      if (match[1]) {
+        // Pattern with capture group
+        brandName = match[1].trim();
+      } else {
+        // Direct brand name match
+        brandName = match[0].trim();
+      }
+      break;
+    }
+  }
+  
+  // Clean up brand name
+  if (brandName) {
+    brandName = brandName.replace(/^(for|para|the)\s+/gi, '').replace(/\s+(brand|marca)$/gi, '').trim();
+  }
+
   // Remove other keywords from the message before location parsing to avoid conflicts
   let cleanMessage = lowerMessage;
   const brandNameToRemove = brandName ? `for ${brandName.toLowerCase()} brand` : '';
@@ -361,33 +388,6 @@ function parseSearchQuery(message: string): {
 
   // Extract verification preference
   const verified = lowerMessage.includes('verified') || lowerMessage.includes('blue check');
-
-  // Extract brand name for search context
-  let brandName: string | undefined;
-  const brandPatterns = [
-    /(?:for|para)\s+(?:the\s+)?([A-Za-z0-9\s&.-]+?)\s+brand/gi,
-    /(?:for|para)\s+([A-Za-z0-9\s&.-]+?)(?:\s+campaign|\s+colaboración|\s+marketing|\s|$)/gi,
-    /(?:Nike|Adidas|Zara|H&M|McDonald's|Coca-Cola|Pepsi|Samsung|Apple|Google|Amazon|Microsoft|Facebook|Instagram|TikTok|YouTube|Twitter|Spotify|Netflix|Disney|Marvel|DC|PlayStation|Xbox|Nintendo|Tesla|BMW|Mercedes|Audi|Volkswagen|Toyota|Honda|Ford|Chevrolet|Uber|Airbnb|Starbucks|KFC|Burger King|Subway|Pizza Hut|Domino's|Walmart|Target|Best Buy|GameStop|Sephora|Ulta|Victoria's Secret|Calvin Klein|Tommy Hilfiger|Ralph Lauren|Gucci|Prada|Louis Vuitton|Chanel|Hermès|Rolex|Cartier|Tiffany|IKEA|Ikea)/gi
-  ];
-  
-  for (const pattern of brandPatterns) {
-    const match = pattern.exec(message);
-    if (match) {
-      if (match[1]) {
-        // Pattern with capture group
-        brandName = match[1].trim();
-      } else {
-        // Direct brand name match
-        brandName = match[0].trim();
-      }
-      break;
-    }
-  }
-  
-  // Clean up brand name
-  if (brandName) {
-    brandName = brandName.replace(/^(for|para|the)\s+/gi, '').replace(/\s+(brand|marca)$/gi, '').trim();
-  }
 
   const params: ApifySearchParams = {
     platforms,
