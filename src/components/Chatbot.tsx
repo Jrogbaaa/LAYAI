@@ -25,30 +25,73 @@ interface ChatbotProps {
 function detectCollaborationQuery(message: string): { influencer: string; brand: string } | null {
   const lowerMessage = message.toLowerCase();
   
-  // Enhanced patterns to detect collaboration queries
+  // First, check if this is clearly a search query - if so, don't attempt collaboration detection
+  const searchKeywords = ['find', 'search', 'show', 'get', 'look for', 'discover', 'recommend', 'buscar', 'encontrar', 'mostrar', 'busca', 'encuentra', 'muestra', 'recomendar', 'descubrir'];
+  const hasSearchKeywords = searchKeywords.some(keyword => lowerMessage.includes(keyword));
+  const hasInfluencerKeywords = lowerMessage.includes('influencer') || lowerMessage.includes('creator') || lowerMessage.includes('creador') || lowerMessage.includes('creadores');
+  
+  // Age-related patterns that should NOT trigger collaboration checks
+  const agePatterns = [
+    /ages?\s+\d+/gi,
+    /\d+\s+(?:and|y)\s+(?:over|under|above|below|más|menos)/gi,
+    /(?:over|under|above|below|más|menos)\s+\d+/gi,
+    /\d+\s*-\s*\d+\s*(?:years?|años?)/gi,
+    /\d+k?\s+(?:followers?|seguidores?)/gi
+  ];
+  
+  const hasAgePatterns = agePatterns.some(pattern => pattern.test(message));
+  
+  // If it's clearly a search query or has age patterns, don't try collaboration detection
+  if (hasSearchKeywords || hasInfluencerKeywords || hasAgePatterns) {
+    return null;
+  }
+  
+  // Only proceed with collaboration detection if we have explicit collaboration keywords
+  const collaborationKeywords = [
+    'check collaboration', 'verify collaboration', 'brand collaboration', 'worked with',
+    'collaborated with', 'partnership with', 'sponsored by', 'brand ambassador',
+    'collaboration history', 'brand partnership',
+    'verificar colaboración', 'verificar colaboracion', 'colaboró con', 'colaboro con',
+    'trabajó con', 'trabajo con', 'patrocinado por', 'embajador de',
+    'collaboration check', 'partnership check', 'mentioned', 'ever mentioned'
+  ];
+  
+  const hasCollaborationKeywords = collaborationKeywords.some(keyword => lowerMessage.includes(keyword));
+  
+  if (!hasCollaborationKeywords) {
+    return null;
+  }
+  
+  // Enhanced patterns to detect collaboration queries - only proceed if we have collaboration keywords
   const patterns = [
     // Standard format: "Has X worked with Y" / "Ha X trabajado con Y"
-    /(?:has|ha)\s+(@?\w+)\s+(?:worked|trabajado)\s+(?:with|con)\s+(@?\w+)/i,
-    /(@?\w+)\s+(?:ha\s+trabajado|worked)\s+(?:con|with)\s+(@?\w+)/i,
+    /(?:has|ha)\s+(@?[a-zA-Z][a-zA-Z0-9._]+)\s+(?:worked|trabajado)\s+(?:with|con)\s+(@?[a-zA-Z][a-zA-Z0-9._]+)/i,
+    /(@?[a-zA-Z][a-zA-Z0-9._]+)\s+(?:ha\s+trabajado|worked)\s+(?:con|with)\s+(@?[a-zA-Z][a-zA-Z0-9._]+)/i,
     
     // Collaboration format: "X collaborated with Y" / "X colaborado con Y"
-    /(?:colaborado|collaborated)\s+(@?\w+)\s+(?:con|with)\s+(@?\w+)/i,
-    /(@?\w+)\s+(?:colaborado|collaborated)\s+(?:con|with)\s+(@?\w+)/i,
-    
-    // "X and Y" collaboration format
-    /(@?\w+)\s+(?:and|y)\s+(@?\w+)\s*(?:collaboration|colaboraci[oó]n)?/i,
-    /(?:collaboration|colaboraci[oó]n)\s*(?:between|entre)\s+(@?\w+)\s+(?:and|y)\s+(@?\w+)/i,
-    
-    // Direct brand mention: "Cristiano Binance" / "Binance Cristiano"
-    /(@?(?:cristiano|ronaldo))\s+(@?\w+)(?:\s+(?:collaboration|colaboraci[oó]n|work|trabajo))?/i,
-    /(@?\w+)\s+(@?(?:cristiano|ronaldo))(?:\s+(?:collaboration|colaboraci[oó]n|work|trabajo))?/i,
+    /(?:colaborado|collaborated)\s+(@?[a-zA-Z][a-zA-Z0-9._]+)\s+(?:con|with)\s+(@?[a-zA-Z][a-zA-Z0-9._]+)/i,
+    /(@?[a-zA-Z][a-zA-Z0-9._]+)\s+(?:colaborado|collaborated)\s+(?:con|with)\s+(@?[a-zA-Z][a-zA-Z0-9._]+)/i,
     
     // Question format: "Did X work with Y?" / "¿X trabajó con Y?"
-    /(?:did|¿)\s*(@?\w+)\s+(?:work|trabajar?)\s+(?:with|con)\s+(@?\w+)/i,
+    /(?:did|¿)\s*(@?[a-zA-Z][a-zA-Z0-9._]+)\s+(?:work|trabajar?)\s+(?:with|con)\s+(@?[a-zA-Z][a-zA-Z0-9._]+)/i,
     
-    // Mention/partnership format
-    /(@?\w+)\s+(?:mentioned|mencionó|mencionado)\s+(@?\w+)/i,
-    /(?:partnership|alianza)\s+(?:between|entre)\s+(@?\w+)\s+(?:and|y)\s+(@?\w+)/i,
+    // Check/verify format
+    /(?:check|verify|verifica)\s+(?:if\s+)?(@?[a-zA-Z][a-zA-Z0-9._]+)\s+(?:worked|colaboró|mentioned)\s+(?:with|con)\s+(@?[a-zA-Z][a-zA-Z0-9._]+)/i,
+    
+    // Mention/partnership format - but require explicit mention context
+    /(?:has\s+)?(@?[a-zA-Z][a-zA-Z0-9._]+)\s+(?:mentioned|mencionó|ever\s+mentioned)\s+(@?[a-zA-Z][a-zA-Z0-9._]+)/i,
+  ];
+  
+  // Invalid words that should not be treated as influencers or brands
+  const invalidWords = [
+    /^\d+$/, // Pure numbers
+    /^over$/i, /^under$/i, /^above$/i, /^below$/i,
+    /^and$/i, /^or$/i, /^the$/i, /^a$/i, /^an$/i,
+    /^ages?$/i, /^years?$/i, /^old$/i,
+    /^men$/i, /^women$/i, /^male$/i, /^female$/i,
+    /^only$/i, /^from$/i, /^in$/i, /^for$/i,
+    /^followers?$/i, /^seguidores?$/i,
+    /^más$/i, /^menos$/i, /^y$/i, /^with$/i, /^con$/i
   ];
   
   for (const pattern of patterns) {
@@ -56,6 +99,14 @@ function detectCollaborationQuery(message: string): { influencer: string; brand:
     if (match) {
       let influencer = match[1].replace('@', '').toLowerCase();
       let brand = match[2].replace('@', '').toLowerCase();
+      
+      // Validate that neither is an invalid word
+      const influencerInvalid = invalidWords.some(invalidPattern => invalidPattern.test(influencer));
+      const brandInvalid = invalidWords.some(invalidPattern => invalidPattern.test(brand));
+      
+      if (influencerInvalid || brandInvalid) {
+        continue; // Skip this match and try next pattern
+      }
       
       // Handle specific known influencers
       if (influencer === 'ronaldo') influencer = 'cristiano';
@@ -70,7 +121,10 @@ function detectCollaborationQuery(message: string): { influencer: string; brand:
         [influencer, brand] = [brand, influencer];
       }
       
-      return { influencer, brand };
+      // Only return if both names are meaningful (more than 1 character and not invalid)
+      if (influencer.length > 1 && brand.length > 1) {
+        return { influencer, brand };
+      }
     }
   }
   
@@ -864,12 +918,40 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
         return;
       }
 
-      // Check if this is likely a search query
-      const isSearchQuery = inputMessage.toLowerCase().includes('encuentra') || 
-                           inputMessage.toLowerCase().includes('busca') || 
-                           inputMessage.toLowerCase().includes('find') || 
-                           inputMessage.toLowerCase().includes('search') ||
-                           inputMessage.toLowerCase().includes('influencer');
+      // Check if this is likely a search query - enhanced detection
+      const lowerMessage = inputMessage.toLowerCase();
+      const searchKeywords = ['find', 'search', 'show', 'get', 'look for', 'discover', 'recommend', 'buscar', 'encontrar', 'mostrar', 'busca', 'encuentra', 'muestra', 'recomendar', 'descubrir'];
+      const hasSearchKeywords = searchKeywords.some(keyword => lowerMessage.includes(keyword));
+      const hasInfluencerKeywords = lowerMessage.includes('influencer') || lowerMessage.includes('creator') || lowerMessage.includes('creador') || lowerMessage.includes('creadores');
+      
+      // Age-related patterns that indicate search queries
+      const agePatterns = [
+        /ages?\s+\d+/gi,
+        /\d+\s+(?:and|y)\s+(?:over|under|above|below|más|menos)/gi,
+        /(?:over|under|above|below|más|menos)\s+\d+/gi,
+        /\d+\s*-\s*\d+\s*(?:years?|años?)/gi,
+      ];
+      
+      const hasAgePatterns = agePatterns.some(pattern => pattern.test(inputMessage));
+      
+      // Platform indicators
+      const platformKeywords = ['instagram', 'tiktok', 'youtube', 'twitter', 'ig', 'yt'];
+      const hasPlatformKeywords = platformKeywords.some(keyword => lowerMessage.includes(keyword));
+      
+      // Follower count indicators
+      const followerPatterns = [
+        /\d+k?\s+(?:followers?|seguidores?)/gi,
+        /\d+\s*-\s*\d+k?\s*(?:followers?|seguidores?)/gi,
+        /(?:over|under|above|below|más|menos)\s+\d+k?\s*(?:followers?|seguidores?)/gi
+      ];
+      
+      const hasFollowerPatterns = followerPatterns.some(pattern => pattern.test(inputMessage));
+      
+      // Location indicators
+      const locationKeywords = ['from', 'in', 'based in', 'located in', 'en', 'de', 'desde'];
+      const hasLocationKeywords = locationKeywords.some(keyword => lowerMessage.includes(keyword));
+      
+      const isSearchQuery = hasSearchKeywords || hasInfluencerKeywords || hasAgePatterns || hasPlatformKeywords || hasFollowerPatterns || hasLocationKeywords;
 
       if (isSearchQuery) {
         // Parse the natural language query into structured parameters
