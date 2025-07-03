@@ -34,6 +34,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ✅ No more automatic adjustments for "premium database"
 - ✅ Direct application of minFollowers and maxFollowers constraints
 
+##### Boundary Condition Fix (CRITICAL)
+- ✅ **FIXED** exclusive vs inclusive filtering for "under" vs "up to"
+- ✅ "under 500,000" now uses strict less-than (<) instead of less-than-or-equal (<=)
+- ✅ "up to 500,000" continues to use inclusive less-than-or-equal (<=)
+- ✅ Added maxFollowersInclusive flag to distinguish between patterns
+- ✅ Terminal logs now show "under (exclusive)" vs "up to (inclusive)"
+
 #### Testing Results
 - ✅ "under 500,000 followers" now correctly limits results to <500K
 - ✅ No more mega-influencers (20M+) in restricted searches
