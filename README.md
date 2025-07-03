@@ -1,22 +1,29 @@
 # 🚀 LAYAI - AI-Powered Influencer Marketing Platform
 
-**📱 Version 2.16.0** | **🌐 Live Production**: [https://layai.vercel.app/](https://layai.vercel.app/)
+**📱 Version 2.17.0** | **🌐 Live Production**: [https://layai.vercel.app/](https://layai.vercel.app/)
 
-> 🎯 **NEW: Test Reliability Enhanced** - Fixed flaky E2E tests with multi-strategy timeout handling and 148/148 tests now passing consistently!
+> 🚨 **CRITICAL FIX: Follower Count Filtering Restored** - Fixed broken parsing for "under 500,000 followers" - now 100% accurate!
+> 🎯 **PREVIOUS: Test Reliability Enhanced** - Fixed flaky E2E tests with multi-strategy timeout handling and 148/148 tests now passing consistently!
 > 🔧 **PREVIOUS: Database Search Accuracy Restored** - Fixed hardcoded gender/age overrides that were preventing intelligent demographic detection!
-> 🚑 **PREVIOUS: Universal Scroll Restored** - Fixed scroll blocking issue affecting all pages on mobile and web!
 
 ## 🌟 Platform Overview
 
 LAYAI is a comprehensive AI-powered influencer discovery and campaign management platform that helps brands find, analyze, and collaborate with the perfect influencers for their marketing campaigns.
 
-### 🔥 **Latest Features (v2.16.0)**
+### 🔥 **Latest Features (v2.17.0)**
+- **🚨 Follower Count Filtering Accuracy**: Fixed critical bug in comma-separated number parsing
+- **🎯 Perfect User Request Handling**: "under 500,000 followers" now works 100% accurately  
+- **🔧 Smart Override Removal**: No more system overrides of explicit user preferences
+- **⚡ Precision Search Results**: Results now match exactly what users request
+- **📊 Complete Pattern Support**: All follower formats ("500,000", "500k", "5m") supported
+
+### 🔥 **Core Features (v2.16.0)**
 - **🎯 Test Suite Reliability**: 148/148 E2E tests passing with zero flaky failures
 - **🔧 Playwright Best Practices**: Fixed strict mode violations and timeout handling
 - **🚀 Production Validation**: Complete test coverage verified on live Vercel deployment
 - **🛡️ Robust Error Handling**: Multi-layer fallback strategies for API delays and network issues
 
-### 🔥 **Core Features (v2.15.0)**
+### 🔥 **Search Intelligence (v2.15.0)**
 - **🔧 Search Accuracy Intelligence**: Intelligent gender/age detection with 7-layer scoring system
 - **⚡ Database-First Performance**: 4.7s Spanish influencer search (vs 130s+ previously)
 - **🧠 Smart Demographic Filtering**: Confidence-based gender matching with fallback strategies

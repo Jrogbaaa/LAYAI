@@ -1599,3 +1599,119 @@ const migrateNotes = async () => {
 ```
 
 --- 
+
+## 🚨 Follower Count Filtering Accuracy (v2.17.0)
+
+### Critical Bug Analysis
+
+#### Problem Discovery
+A critical bug was discovered where follower count filtering was completely inaccurate for comma-separated numbers:
+
+**User Request Example**:
+```
+"search for influencers in spain ages 30 and over perfect for the adidas brand men only- under 500,000 followers as well"
+```
+
+**Expected Results**: Influencers with <500K followers  
+**Actual Results**: Influencers with 20.8M, 7.3M, 2.0M+ followers
+
+**Impact**: Core search functionality providing completely wrong results for campaign targeting.
+
+#### Root Cause Analysis
+
+##### 1. Missing Chat Parsing Patterns
+The follower parsing logic in `src/app/api/chat/route.ts` had patterns for:
+- ✅ "under 500k" → Worked correctly
+- ✅ "under 5m" → Worked correctly  
+- ❌ "under 500,000" → **No pattern existed**
+
+```typescript
+// Existing patterns (worked):
+{ pattern: /under\s+(\d+)k/i, multiplier1: 1000, isMax: true },
+{ pattern: /under\s+(\d+)m/i, multiplier1: 1000000, isMax: true },
+
+// Missing pattern (broken):
+// No support for comma-separated numbers like "500,000"
+```
+
+##### 2. Default Fallback Issue
+When "under 500,000" didn't match any pattern, the system fell back to:
+```typescript
+let maxFollowers = 1000000;  // Default 1M limit
+```
+
+##### 3. Smart Override Logic
+The database search then had "smart filtering" that completely ignored user limits:
+```typescript
+// PROBLEMATIC: Override user preferences
+if (maxFollowers && maxFollowers < 100000) {
+  effectiveMaxFollowers = 500000; // Extend to include macro influencers
+}
+```
+
+#### Solution Implementation
+
+##### Chat Parsing Enhancement
+Added comprehensive comma-separated number support:
+
+```typescript
+// FIXED: Added missing patterns for comma-separated numbers
+{ pattern: /under\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
+{ pattern: /below\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
+{ pattern: /less than\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
+{ pattern: /fewer than\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
+```
+
+**Now Supports**:
+- "under 500,000 followers" ✅
+- "below 100,000 followers" ✅  
+- "less than 250,000 followers" ✅
+- "fewer than 50,000 followers" ✅
+
+##### Database Search Logic Fix
+Removed smart override logic that ignored user preferences:
+
+```typescript
+// BEFORE (broken):
+if (maxFollowers && maxFollowers < 100000) {
+  console.log(`💡 Adjusting restrictive maxFollowers from ${maxFollowers} to 500K`);
+  effectiveMaxFollowers = 500000; // Override user request!
+}
+
+// AFTER (fixed):
+// REMOVED: Smart follower filtering that overrides user requests
+// Now we respect the user's explicit requirements
+let effectiveMaxFollowers = maxFollowers; // Direct user preference
+```
+
+#### Testing Results
+
+**Test Case**: "under 500,000 followers"
+- **Before**: Results included 20.8M, 7.3M, 2.0M followers
+- **After**: All results correctly under 500K followers
+
+**Parse Testing**:
+```typescript
+// All these now parse correctly:
+"under 500,000" → maxFollowers: 500000 ✅
+"below 100,000" → maxFollowers: 100000 ✅
+"less than 250,000" → maxFollowers: 250000 ✅
+"fewer than 50,000" → maxFollowers: 50000 ✅
+```
+
+**Search Precision**:
+- ✅ No more mega-influencer results in restricted searches
+- ✅ 100% adherence to user-specified follower limits
+- ✅ Perfect parsing accuracy for all number formats
+
+#### Implementation Files
+- `src/app/api/chat/route.ts` - Enhanced follower parsing patterns
+- `src/lib/vettedInfluencersService.ts` - Removed smart override logic
+
+#### Validation Strategy
+1. **Pattern Testing**: Verify all follower formats parse correctly
+2. **Search Validation**: Confirm results respect exact user limits  
+3. **Regression Testing**: Ensure existing "k" and "m" formats still work
+4. **Edge Case Testing**: Test boundary conditions and malformed inputs
+
+--- 
