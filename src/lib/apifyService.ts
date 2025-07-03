@@ -111,6 +111,7 @@ export interface ApifySearchParams {
   niches: string[];
   minFollowers: number;
   maxFollowers: number;
+  maxFollowersInclusive?: boolean; // Whether maxFollowers should be inclusive (<=) or exclusive (<)
   location?: string;
   verified?: boolean;
   maxResults?: number;

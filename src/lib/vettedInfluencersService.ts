@@ -376,10 +376,21 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
     }
 
     if (effectiveMaxFollowers) {
-      console.log(`📊 Filtering by maxFollowers: ${effectiveMaxFollowers.toLocaleString()}`);
-      filteredInfluencers = filteredInfluencers.filter(inf => 
-        inf.followerCount <= effectiveMaxFollowers
-      );
+      const isInclusive = params.maxFollowersInclusive !== false; // Default to inclusive unless explicitly false
+      const operator = isInclusive ? 'up to' : 'under';
+      console.log(`📊 Filtering by maxFollowers: ${effectiveMaxFollowers.toLocaleString()} (${operator} - ${isInclusive ? 'inclusive' : 'exclusive'})`);
+      
+      if (isInclusive) {
+        // Inclusive: "up to 500,000" includes exactly 500,000
+        filteredInfluencers = filteredInfluencers.filter(inf => 
+          inf.followerCount <= effectiveMaxFollowers
+        );
+      } else {
+        // Exclusive: "under 500,000" excludes exactly 500,000  
+        filteredInfluencers = filteredInfluencers.filter(inf => 
+          inf.followerCount < effectiveMaxFollowers
+        );
+      }
       console.log(`📊 After maxFollowers filter: ${filteredInfluencers.length} influencers`);
     }
 

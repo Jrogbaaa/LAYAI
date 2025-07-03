@@ -254,17 +254,18 @@ function parseSearchQuery(message: string): {
 
   // Look for follower patterns (including comma-separated numbers)
   const followerPatterns = [
-    // Handle "no more than" patterns
-    { pattern: /no more than\s+([\d,]+)/i, isMax: true },
-    { pattern: /not more than\s+([\d,]+)/i, isMax: true },
-    { pattern: /maximum of\s+([\d,]+)/i, isMax: true },
-    { pattern: /max\s+([\d,]+)/i, isMax: true },
+    // Handle "no more than" patterns (INCLUSIVE - allows exactly the number)
+    { pattern: /no more than\s+([\d,]+)/i, isMax: true, inclusive: true },
+    { pattern: /not more than\s+([\d,]+)/i, isMax: true, inclusive: true },
+    { pattern: /maximum of\s+([\d,]+)/i, isMax: true, inclusive: true },
+    { pattern: /max\s+([\d,]+)/i, isMax: true, inclusive: true },
+    { pattern: /up to\s+([\d,]+)/i, isMax: true, inclusive: true },
     
-    // CRITICAL FIX: Handle "under", "below" patterns with comma-separated numbers
-    { pattern: /under\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
-    { pattern: /below\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
-    { pattern: /less than\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
-    { pattern: /fewer than\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
+    // CRITICAL FIX: Handle "under", "below" patterns with comma-separated numbers (EXCLUSIVE)
+    { pattern: /under\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true, inclusive: false },
+    { pattern: /below\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true, inclusive: false },
+    { pattern: /less than\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true, inclusive: false },
+    { pattern: /fewer than\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true, inclusive: false },
     
     // Handle "between X and Y" patterns with commas
     { pattern: /between\s+([\d,]+)\s+and\s+([\d,]+)/i, isRange: true },
@@ -272,11 +273,11 @@ function parseSearchQuery(message: string): {
     { pattern: /([\d,]+)\s*to\s*([\d,]+)\s*followers/i, isRange: true },
     
     // Handle k/m patterns for maximums
-    { pattern: /no more than\s+(\d+)k/i, multiplier1: 1000, isMax: true },
-    { pattern: /under\s+(\d+)k/i, multiplier1: 1000, isMax: true },
-    { pattern: /below\s+(\d+)k/i, multiplier1: 1000, isMax: true },
-    { pattern: /no more than\s+(\d+)m/i, multiplier1: 1000000, isMax: true },
-    { pattern: /under\s+(\d+)m/i, multiplier1: 1000000, isMax: true },
+    { pattern: /no more than\s+(\d+)k/i, multiplier1: 1000, isMax: true, inclusive: true },
+    { pattern: /under\s+(\d+)k/i, multiplier1: 1000, isMax: true, inclusive: false },
+    { pattern: /below\s+(\d+)k/i, multiplier1: 1000, isMax: true, inclusive: false },
+    { pattern: /no more than\s+(\d+)m/i, multiplier1: 1000000, isMax: true, inclusive: true },
+    { pattern: /under\s+(\d+)m/i, multiplier1: 1000000, isMax: true, inclusive: false },
     
     // Handle k/m patterns for ranges
     { pattern: /(\d+)k?\s*-\s*(\d+)k/i, multiplier1: 1000, multiplier2: 1000 },
@@ -296,7 +297,9 @@ function parseSearchQuery(message: string): {
     { pattern: /(\d+)m/i, multiplier1: 1000000, isSingle: true }
   ];
 
-  for (const { pattern, multiplier1, multiplier2, isMin, isMax, isSingle, isRange } of followerPatterns) {
+  let maxFollowersInclusive = true; // Track if the max should be inclusive or exclusive
+
+  for (const { pattern, multiplier1, multiplier2, isMin, isMax, isSingle, isRange, inclusive } of followerPatterns) {
     const match = lowerMessage.match(pattern);
     if (match) {
       if (isRange) {
@@ -316,6 +319,8 @@ function parseSearchQuery(message: string): {
           // Handle comma-separated numbers for max patterns
           maxFollowers = parseInt(match[1].replace(/,/g, ''));
         }
+        // CRITICAL: Set inclusivity flag for the filtering logic
+        maxFollowersInclusive = inclusive !== undefined ? inclusive : true; // Default inclusive unless pattern specifies otherwise
       } else if (isSingle && multiplier1) {
         const count = parseInt(match[1]) * multiplier1;
         minFollowers = Math.max(1000, count * 0.5);
@@ -400,6 +405,7 @@ function parseSearchQuery(message: string): {
     niches,
     minFollowers,
     maxFollowers,
+    maxFollowersInclusive,
     location,
     verified,
     maxResults: 20,
