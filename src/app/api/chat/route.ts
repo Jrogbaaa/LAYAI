@@ -18,49 +18,56 @@ function parseSearchQuery(message: string): {
 } {
   const lowerMessage = message.toLowerCase();
   
-  // Check for collaboration keywords first
-  const collaborationKeywords = [
-    'check collaboration', 'verify collaboration', 'brand collaboration', 'worked with',
-    'collaborated with', 'partnership with', 'sponsored by', 'brand ambassador',
-    'check if', 'verify if', 'has worked', 'collaboration history', 'brand partnership',
-    'verificar colaboración', 'verificar colaboracion', 'colaboró con', 'colaboro con',
-    'trabajó con', 'trabajo con', 'patrocinado por', 'embajador de',
-    'check brand', 'verify brand', 'collaboration check', 'partnership check',
-    'mentioned', 'talked about', 'used', 'promoted', 'featuring', 'showcased',
-    'mencionó', 'habló de', 'usó', 'promocionó', 'mostró', 'presentó',
-    'has mentioned', 'ever mentioned', 'mentioned in posts', 'talked about in posts'
-  ];
+  // Check if this is a search intent FIRST - support both English and Spanish keywords
+  const searchKeywords = ['find', 'search', 'show', 'get', 'look for', 'discover', 'recommend', 'buscar', 'encontrar', 'mostrar', 'busca', 'encuentra', 'muestra', 'recomendar', 'descubrir'];
+  const hasSearchKeywords = searchKeywords.some(keyword => lowerMessage.includes(keyword));
+  const hasInfluencerKeywords = lowerMessage.includes('influencer') || lowerMessage.includes('creator') || lowerMessage.includes('creador') || lowerMessage.includes('creadores');
   
-  const isCollaboration = collaborationKeywords.some(keyword => lowerMessage.includes(keyword)) ||
-                         (lowerMessage.includes('check') && (lowerMessage.includes('brand') || lowerMessage.includes('sponsored'))) ||
-                         (lowerMessage.includes('verify') && (lowerMessage.includes('partnership') || lowerMessage.includes('collaboration')));
-
-  if (isCollaboration) {
-    // Extract influencer handle and brand name
-    const collaborationParams = parseCollaborationQuery(message);
+  // If it has clear search indicators, prioritize search over collaboration
+  const isSearch = hasSearchKeywords || hasInfluencerKeywords;
+  
+  // Only check for collaboration if it's NOT clearly a search query
+  if (!isSearch) {
+    // More specific collaboration keywords that require exact context
+    const collaborationKeywords = [
+      'check collaboration', 'verify collaboration', 'brand collaboration', 'worked with',
+      'collaborated with', 'partnership with', 'sponsored by', 'brand ambassador',
+      'collaboration history', 'brand partnership',
+      'verificar colaboración', 'verificar colaboracion', 'colaboró con', 'colaboro con',
+      'trabajó con', 'trabajo con', 'patrocinado por', 'embajador de',
+      'collaboration check', 'partnership check',
+      'has mentioned', 'ever mentioned', 'mentioned in posts', 'talked about in posts'
+    ];
     
-    if (!collaborationParams.influencerHandle || !collaborationParams.brandName) {
+    // More strict collaboration detection - require explicit patterns
+    const hasCollaborationKeywords = collaborationKeywords.some(keyword => lowerMessage.includes(keyword));
+    const hasStrictCollaborationPattern = 
+      (lowerMessage.includes('check if') && (lowerMessage.includes('@') || lowerMessage.includes('username'))) ||
+      (lowerMessage.includes('verify if') && (lowerMessage.includes('@') || lowerMessage.includes('username'))) ||
+      (lowerMessage.includes('has worked') && lowerMessage.includes('with')) ||
+      (lowerMessage.includes('did') && lowerMessage.includes('work with'));
+
+    const isCollaboration = hasCollaborationKeywords || hasStrictCollaborationPattern;
+
+    if (isCollaboration) {
+      // Extract influencer handle and brand name
+      const collaborationParams = parseCollaborationQuery(message);
+      
+      if (!collaborationParams.influencerHandle || !collaborationParams.brandName) {
+        return {
+          isSearch: false,
+          isCollaboration: true,
+          response: "Para verificar una colaboración, necesito el nombre del influencer y la marca. Por ejemplo: 'Verifica si @influencer colaboró con Nike' o 'Check if @username worked with Adidas'."
+        };
+      }
+      
       return {
         isSearch: false,
         isCollaboration: true,
-        response: "Para verificar una colaboración, necesito el nombre del influencer y la marca. Por ejemplo: 'Verifica si @influencer colaboró con Nike' o 'Check if @username worked with Adidas'."
+        collaborationParams
       };
     }
-    
-    return {
-      isSearch: false,
-      isCollaboration: true,
-      collaborationParams
-    };
   }
-  
-  // Check if this is a search intent - support both English and Spanish keywords
-  const searchKeywords = ['find', 'search', 'show', 'get', 'look for', 'discover', 'recommend', 'buscar', 'encontrar', 'mostrar', 'busca', 'encuentra', 'muestra', 'recomendar', 'descubrir'];
-  const isSearch = searchKeywords.some(keyword => lowerMessage.includes(keyword)) ||
-                   lowerMessage.includes('influencer') ||
-                   lowerMessage.includes('creator') ||
-                   lowerMessage.includes('creador') ||
-                   lowerMessage.includes('creadores');
 
   if (!isSearch) {
     // Handle non-search queries with conversational responses in Spanish
@@ -198,9 +205,11 @@ function parseSearchQuery(message: string): {
   const agePatterns = [
     { pattern: /ages?\s+(\d+)\s*-\s*(\d+)/i, isRange: true },
     { pattern: /(\d+)\s*-\s*(\d+)\s+years?\s+old/i, isRange: true },
-    { pattern: /ages?\s+(\d+)\s+and\s+up/i, isRange: false },
+    { pattern: /ages?\s+(\d+)\s+and\s+(?:up|older|above)/i, isRange: false },
+    { pattern: /(\d+)\s+and\s+(?:up|older|above)/i, isRange: false },
     { pattern: /(\d+)\+\s+years?\s+old/i, isRange: false },
-    { pattern: /over\s+(\d+)\s+years?\s+old/i, isRange: false }
+    { pattern: /over\s+(\d+)\s+years?\s+old/i, isRange: false },
+    { pattern: /(\d+)\s*\+/i, isRange: false }
   ];
 
   for (const { pattern, isRange } of agePatterns) {
@@ -325,6 +334,33 @@ function parseSearchQuery(message: string): {
   // Extract verification preference
   const verified = lowerMessage.includes('verified') || lowerMessage.includes('blue check');
 
+  // Extract brand name for search context
+  let brandName: string | undefined;
+  const brandPatterns = [
+    /(?:for|para)\s+(?:the\s+)?([A-Za-z0-9\s&.-]+?)\s+brand/gi,
+    /(?:for|para)\s+([A-Za-z0-9\s&.-]+?)(?:\s+campaign|\s+colaboración|\s+marketing|\s|$)/gi,
+    /(?:Nike|Adidas|Zara|H&M|McDonald's|Coca-Cola|Pepsi|Samsung|Apple|Google|Amazon|Microsoft|Facebook|Instagram|TikTok|YouTube|Twitter|Spotify|Netflix|Disney|Marvel|DC|PlayStation|Xbox|Nintendo|Tesla|BMW|Mercedes|Audi|Volkswagen|Toyota|Honda|Ford|Chevrolet|Uber|Airbnb|Starbucks|KFC|Burger King|Subway|Pizza Hut|Domino's|Walmart|Target|Best Buy|GameStop|Sephora|Ulta|Victoria's Secret|Calvin Klein|Tommy Hilfiger|Ralph Lauren|Gucci|Prada|Louis Vuitton|Chanel|Hermès|Rolex|Cartier|Tiffany|IKEA|Ikea)/gi
+  ];
+  
+  for (const pattern of brandPatterns) {
+    const match = pattern.exec(message);
+    if (match) {
+      if (match[1]) {
+        // Pattern with capture group
+        brandName = match[1].trim();
+      } else {
+        // Direct brand name match
+        brandName = match[0].trim();
+      }
+      break;
+    }
+  }
+  
+  // Clean up brand name
+  if (brandName) {
+    brandName = brandName.replace(/^(for|para|the)\s+/gi, '').replace(/\s+(brand|marca)$/gi, '').trim();
+  }
+
   const params: ApifySearchParams = {
     platforms,
     niches,
@@ -336,7 +372,7 @@ function parseSearchQuery(message: string): {
     gender,
     ageRange,
     strictLocationMatch: location ? true : false, // Enable strict location matching when location is specified
-    brandName: undefined,
+    brandName,
     userQuery: message
   };
 
