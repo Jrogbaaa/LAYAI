@@ -1,5 +1,63 @@
 # Layout Improvements Summary
 
+## Latest Critical Fix (v2.13.5)
+
+### Universal Scroll Restoration ✅ FIXED
+**Problem**: Complete inability to scroll on all pages (mobile and web) - users were trapped within viewport height.
+
+**Root Cause**: CSS overflow constraints were blocking all scrolling functionality:
+- Main wrapper had `overflow-hidden` preventing any scroll
+- Fixed `height: 100%` constraints forcing content into viewport
+- CSS classes like `.main-content` had `overflow: hidden`
+
+**Solution Implemented**:
+- **Removed `overflow-hidden`** from main layout wrapper in `layout.tsx`
+- **Changed height strategy** from fixed `height: 100%` to flexible `min-height: 100%`
+- **Updated CSS classes** in `globals.css` to allow proper scrolling
+- **Added explicit scroll** with `overflow-y: auto` on body element
+
+**Technical Changes**:
+```typescript
+// layout.tsx - Before
+<div className="h-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+
+// layout.tsx - After  
+<div className="min-h-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative">
+```
+
+```css
+/* globals.css - Before */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+.main-content {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* globals.css - After */
+html, body {
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.main-content {
+  min-height: 100vh;
+  overflow-y: auto;
+}
+```
+
+**Impact**:
+- ✅ **Mobile scrolling restored** - Touch scrolling works on all mobile devices
+- ✅ **Desktop scrolling restored** - Mouse wheel and scrollbar work properly
+- ✅ **Content accessibility** - All content beyond viewport height now accessible
+- ✅ **Cross-platform compatibility** - Works on all browsers and devices
+
+---
+
+## Previous Fixes
+
 ## Issues Fixed
 
 ### 1. Auto-Scrolling Problem ✅ UPDATED

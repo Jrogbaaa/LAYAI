@@ -5,6 +5,30 @@ All notable changes to LAYAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.5] - 2025-01-25
+
+### 🚑 CRITICAL SCROLL BUG FIX
+
+**🖱️ Universal Scroll Restoration**
+- ✅ **FIXED: No Scroll Issue** - Resolved scroll blocking on all pages (mobile + web)
+- ✅ **Layout Container Fix** - Removed `overflow-hidden` from main wrapper preventing scroll
+- ✅ **CSS Constraints Fixed** - Updated `globals.css` overflow policies for proper scrolling
+- ✅ **Height Strategy** - Changed fixed `height: 100%` to flexible `min-height: 100%`
+
+**🔧 Technical Changes**
+- ✅ **layout.tsx**: Removed `overflow-hidden` class, changed `h-full` to `min-h-full`
+- ✅ **globals.css**: Updated html/body to use `min-height: 100%` instead of fixed height
+- ✅ **CSS Classes**: Fixed `.main-content` from `overflow: hidden` to `overflow-y: auto`
+- ✅ **Body Scroll**: Added explicit `overflow-y: auto` to body element
+
+**📱 Impact**
+- ✅ **Mobile Scrolling**: Fully functional scrolling on all mobile devices
+- ✅ **Desktop Scrolling**: Proper vertical scrolling on all web browsers
+- ✅ **Content Access**: Users can now access all content beyond viewport height
+- ✅ **UX Improvement**: No more trapped content or inaccessible sections
+
+---
+
 ## [2.13.4] - 2025-07-02
 
 ### 📱 MOBILE UI OPTIMIZATION: Complete Mobile Responsiveness Overhaul

@@ -936,50 +936,50 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
                     const jsonStr = line.slice(6).trim();
                     if (jsonStr) { // 🔥 FIXED: Only parse non-empty JSON
                       const data = JSON.parse(jsonStr);
+                    
+                    if (data.type === 'progress') {
+                      // Update progress bar with real-time status
+                      setSearchProgress({
+                        stage: data.stage,
+                        progress: data.progress,
+                        details: data.stage,
+                        isComplete: false
+                      });
+                    } else if (data.type === 'partial_results') {
+                      // Show partial results immediately
+                      partialResults.push(...(data.results || []));
                       
-                      if (data.type === 'progress') {
-                        // Update progress bar with real-time status
-                        setSearchProgress({
-                          stage: data.stage,
-                          progress: data.progress,
-                          details: data.stage,
-                          isComplete: false
-                        });
-                      } else if (data.type === 'partial_results') {
-                        // Show partial results immediately
-                        partialResults.push(...(data.results || []));
-                        
-                        setSearchProgress({
-                          stage: data.stage,
-                          progress: data.progress,
-                          details: `${partialResults.length} influencers encontrados hasta ahora...`,
-                          isComplete: false
-                        });
+                      setSearchProgress({
+                        stage: data.stage,
+                        progress: data.progress,
+                        details: `${partialResults.length} influencers encontrados hasta ahora...`,
+                        isComplete: false
+                      });
 
-                        // Trigger parent to show partial results
-                        if (partialResults.length > 0) {
-                          await onSendMessage(`PARTIAL_RESULTS:${JSON.stringify({
-                            premiumResults: partialResults,
-                            totalFound: partialResults.length,
-                            searchSources: [data.metadata?.source || 'streaming'],
-                            partial: true
-                          })}`, messages);
-                        }
-                      } else if (data.type === 'complete') {
-                        // Final results
-                        finalResults = {
-                          premiumResults: data.results || [],
-                          totalFound: data.totalFound || 0,
-                          searchSources: data.metadata?.searchSources || [],
-                          searchStrategy: data.metadata?.searchStrategy || 'streaming'
-                        };
-                        
-                        setSearchProgress({
-                          stage: '🎉 ¡Búsqueda completada exitosamente!',
-                          progress: 100,
-                          details: `${finalResults.totalFound} influencers encontrados`,
-                          isComplete: true
-                        });
+                      // Trigger parent to show partial results
+                      if (partialResults.length > 0) {
+                        await onSendMessage(`PARTIAL_RESULTS:${JSON.stringify({
+                          premiumResults: partialResults,
+                          totalFound: partialResults.length,
+                          searchSources: [data.metadata?.source || 'streaming'],
+                          partial: true
+                        })}`, messages);
+                      }
+                    } else if (data.type === 'complete') {
+                      // Final results
+                      finalResults = {
+                        premiumResults: data.results || [],
+                        totalFound: data.totalFound || 0,
+                        searchSources: data.metadata?.searchSources || [],
+                        searchStrategy: data.metadata?.searchStrategy || 'streaming'
+                      };
+                      
+                      setSearchProgress({
+                        stage: '🎉 ¡Búsqueda completada exitosamente!',
+                        progress: 100,
+                        details: `${finalResults.totalFound} influencers encontrados`,
+                        isComplete: true
+                      });
                       }
                     }
                   } catch (parseError) {
@@ -1093,49 +1093,47 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
   };
 
   return (
-    <div className="bg-white rounded-none sm:rounded-2xl shadow-xl border border-gray-100 overflow-hidden flex flex-col h-full min-h-[400px] max-h-[70vh]">
+    <div className="bg-white rounded-xl shadow-lg border border-gray-200 flex flex-col max-h-[600px] sm:max-h-[700px] lg:max-h-[800px]">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 flex-shrink-0">
-        <div className="flex items-center justify-between">
+      <div className="p-4 sm:p-6 bg-gradient-to-r from-blue-600 to-blue-700 rounded-t-xl flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-            <span className="text-white text-lg">🤖</span>
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <span className="text-white text-lg sm:text-xl">🤖</span>
           </div>
           <div>
-            <h2 className="text-white font-semibold text-lg">Asistente de IA para Influencers</h2>
-            <p className="text-blue-100 text-sm">Encuentra los creadores perfectos para tus campañas</p>
-          </div>
+            <h2 className="text-white font-semibold text-base sm:text-lg">Asistente de IA para Influencers</h2>
+            <p className="text-blue-100 text-xs sm:text-sm">Encuentra los creadores perfectos para tus campañas</p>
           </div>
           
           {/* Clear Chat Button */}
           {messages.length > 1 && (
             <button
               onClick={clearChatHistory}
-              className="text-white/70 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center space-x-1"
+              className="text-white/70 hover:text-white bg-white/10 hover:bg-white/20 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center space-x-1"
               title="Limpiar conversación"
             >
-              <X className="w-4 h-4" />
-              <span>Limpiar</span>
+              <X className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Limpiar</span>
             </button>
           )}
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50/50 min-h-0">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4 bg-gray-50/50 min-h-0">
         {messages.map((message, index) => (
           <div
             key={index}
             className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
+              className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-sm ${
                 message.sender === 'user'
                   ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
                   : 'bg-white text-gray-800 border border-gray-200'
               }`}
             >
-              <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
+              <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
             </div>
           </div>
         ))}
@@ -1143,22 +1141,22 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
         {/* Progress Bar for Search */}
         {searchProgress && (
           <div className="flex justify-start">
-            <div className="bg-white text-gray-800 border border-gray-200 px-5 py-4 rounded-2xl shadow-lg max-w-md w-full">
-              <div className="space-y-4">
+            <div className="bg-white text-gray-800 border border-gray-200 px-3 sm:px-5 py-3 sm:py-4 rounded-2xl shadow-lg max-w-full sm:max-w-md w-full">
+              <div className="space-y-3 sm:space-y-4">
                 {/* Header with icon and stage */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <div className="text-lg">🔍</div>
-                    <span className="text-sm font-semibold text-gray-800">{searchProgress.stage}</span>
+                    <div className="text-base sm:text-lg">🔍</div>
+                    <span className="text-xs sm:text-sm font-semibold text-gray-800">{searchProgress?.stage}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs font-medium text-gray-600">{Math.round(searchProgress.progress)}%</span>
-                    {searchProgress.isComplete && <span className="text-green-500 text-sm">✅</span>}
+                    <span className="text-xs font-medium text-gray-600">{Math.round(searchProgress?.progress || 0)}%</span>
+                    {searchProgress?.isComplete && <span className="text-green-500 text-sm">✅</span>}
                     {/* Cancel button for active collaboration checks */}
-                    {activeCollaborationCheck && !searchProgress.isComplete && (
+                    {activeCollaborationCheck && !searchProgress?.isComplete && (
                       <button
                         onClick={cancelCollaborationCheck}
-                        className="text-red-500 hover:text-red-700 text-xs font-medium underline ml-2"
+                        className="text-red-500 hover:text-red-700 text-xs font-medium underline ml-2 touch-manipulation"
                         title="Cancelar verificación"
                       >
                         Cancelar
@@ -1168,17 +1166,17 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
                 </div>
                 
                 {/* Progress Bar */}
-                <div className="w-full bg-gray-200 rounded-full h-3 shadow-inner">
+                <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3 shadow-inner">
                   <div 
-                    className={`h-3 rounded-full transition-all duration-500 ease-out ${
-                      searchProgress.isComplete 
+                    className={`h-2 sm:h-3 rounded-full transition-all duration-500 ease-out ${
+                      searchProgress?.isComplete 
                         ? 'bg-gradient-to-r from-green-500 to-green-600 shadow-lg' 
                         : 'bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 shadow-md'
                     }`}
-                    style={{ width: `${searchProgress.progress}%` }}
+                    style={{ width: `${searchProgress?.progress || 0}%` }}
                   >
                     {/* Animated shine effect */}
-                    {!searchProgress.isComplete && (
+                    {!searchProgress?.isComplete && (
                       <div className="h-full w-full rounded-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
                     )}
                   </div>
@@ -1186,20 +1184,20 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
                 
                 {/* Details */}
                 <div className="flex items-center space-x-2">
-                  {!searchProgress.isComplete && (
+                  {!searchProgress?.isComplete && (
                     <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-600 rounded-full animate-bounce"></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     </div>
                   )}
-                  <span className="text-xs text-gray-600 leading-relaxed">{searchProgress.details}</span>
+                  <span className="text-xs text-gray-600 leading-relaxed">{searchProgress?.details}</span>
                 </div>
                 
                 {/* Estimated time remaining (only for active searches) */}
-                {!searchProgress.isComplete && searchProgress.progress > 10 && (
+                {!searchProgress?.isComplete && (searchProgress?.progress || 0) > 10 && (
                   <div className="text-xs text-gray-500 italic">
-                    ⏱️ Tiempo estimado: {searchProgress.progress < 60 ? '60-90 segundos' : '30-45 segundos'}
+                    ⏱️ Tiempo estimado: {(searchProgress?.progress || 0) < 60 ? '60-90 segundos' : '30-45 segundos'}
                   </div>
                 )}
               </div>
@@ -1210,14 +1208,14 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
         {/* Simple loading for non-search queries */}
         {isLoading && !searchProgress && (
           <div className="flex justify-start">
-            <div className="bg-white text-gray-800 border border-gray-200 px-4 py-3 rounded-2xl shadow-sm">
+            <div className="bg-white text-gray-800 border border-gray-200 px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-sm">
               <div className="flex items-center space-x-2">
                 <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-600 rounded-full animate-bounce"></div>
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
-                <span className="text-sm text-gray-600">Pensando...</span>
+                <span className="text-xs sm:text-sm text-gray-600">Pensando...</span>
               </div>
             </div>
           </div>
@@ -1227,9 +1225,9 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
 
       {/* Compact Suggested Prompts - Only show until first user message */}
       {messages.length <= 1 && (
-        <div className="px-4 py-2 bg-gray-50 border-t border-gray-200 flex-shrink-0">
+        <div className="px-3 sm:px-4 py-2 bg-gray-50 border-t border-gray-200 flex-shrink-0">
           <div className="text-xs text-gray-600 mb-1.5 font-medium">💡 Prueba estas búsquedas:</div>
-          <div className="flex gap-2 overflow-x-auto">
+          <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1">
             {[
               { text: "🎯 Influencers fitness Madrid", icon: "🎯" },
               { text: "👩 Beauty +50K seguidores", icon: "👩" },
@@ -1253,10 +1251,11 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
                     }, 100);
                   }
                 }}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs bg-white border border-gray-200 rounded-md hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 text-gray-700 hover:text-blue-700 whitespace-nowrap flex-shrink-0"
+                className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 text-xs bg-white border border-gray-200 rounded-md hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 text-gray-700 hover:text-blue-700 whitespace-nowrap flex-shrink-0 touch-manipulation"
               >
-                <span>{prompt.icon}</span>
-                <span>{prompt.text.substring(2)}</span>
+                <span className="text-xs">{prompt.icon}</span>
+                <span className="hidden sm:inline">{prompt.text.substring(2)}</span>
+                <span className="sm:hidden">{prompt.text.split(' ')[0].substring(2)}</span>
               </button>
             ))}
           </div>
@@ -1264,15 +1263,15 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
       )}
 
       {/* Input */}
-      <div className="p-6 bg-white border-t border-gray-100 flex-shrink-0">
+      <div className="p-3 sm:p-4 lg:p-6 bg-white border-t border-gray-100 flex-shrink-0">
         {/* PDF Upload Area */}
         {uploadedFile && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="mb-3 sm:mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <FileText className="h-5 w-5 text-blue-600" />
-                <div>
-                  <div className="text-sm font-medium text-blue-900">{uploadedFile.name}</div>
+              <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+                <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 flex-shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <div className="text-xs sm:text-sm font-medium text-blue-900 truncate">{uploadedFile.name}</div>
                   <div className="text-xs text-blue-600">
                     {(uploadedFile.size / 1024 / 1024).toFixed(1)} MB
                     {analysisResult && <span className="ml-2">✅ Analizado</span>}
@@ -1281,7 +1280,7 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
               </div>
               <button
                 onClick={removePDFFile}
-                className="p-1 text-blue-400 hover:text-blue-600"
+                className="p-1 text-blue-400 hover:text-blue-600 touch-manipulation flex-shrink-0"
                 disabled={isAnalyzing}
               >
                 <X className="h-4 w-4" />
@@ -1290,14 +1289,14 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
           </div>
         )}
 
-        <div className="flex space-x-3">
+        <div className="flex space-x-2 sm:space-x-3">
           <div className="flex-1 relative">
             <textarea
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder={uploadedFile && analysisResult ? "Haz preguntas de seguimiento o refina la búsqueda..." : "Pídeme que encuentre influencers o sube un PDF..."}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm bg-gray-50 focus:bg-white transition-colors"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-xs sm:text-sm bg-gray-50 focus:bg-white transition-colors touch-manipulation"
               rows={2}
               disabled={isLoading || isAnalyzing}
             />
@@ -1307,19 +1306,19 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
           <button
             onClick={handlePDFUploadClick}
             disabled={isLoading || isAnalyzing}
-            className="px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="px-3 sm:px-4 py-2 sm:py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl touch-manipulation"
             title="Subir propuesta PDF"
           >
-            <Upload className="w-5 h-5" />
+            <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           
           {/* Send Button */}
           <button
             onClick={handleSendMessage}
             disabled={!inputMessage.trim() || isLoading || isAnalyzing}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl touch-manipulation"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
             </svg>
           </button>
@@ -1336,7 +1335,7 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
 
         {/* PDF Upload Hint */}
         {!uploadedFile && (
-          <div className="mt-3 text-center">
+          <div className="mt-2 sm:mt-3 text-center">
             <p className="text-xs text-gray-500">
               💡 <strong>Nuevo:</strong> Sube una propuesta PDF para búsquedas ultra-personalizadas
             </p>
@@ -1345,50 +1344,11 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
 
         {/* Session Persistence Indicator */}
         {messages.length > 1 && (
-          <div className="mt-3 text-center">
+          <div className="mt-2 sm:mt-3 text-center">
             <p className="text-xs text-gray-400 flex items-center justify-center space-x-1">
               <span>💾</span>
-              <span>Tu conversación se guarda durante esta sesión</span>
+              <span>Tu conversación se guarda automáticamente</span>
             </p>
-          </div>
-        )}
-
-        {/* Start Search Button - appears after PDF analysis */}
-        {readyToSearch && (
-          <div className="mt-3 space-y-2">
-            {/* Show preview of what will be searched */}
-            {(() => {
-              const baseQuery = analysisResult ? generateSearchFromAnalysis(analysisResult) : '';
-              const pdfAnalysisIndex = messages.findIndex(msg => 
-                msg.text.includes('✅ ¡Análisis completado!') && msg.sender === 'bot'
-              );
-              const userRefinements = messages
-                .slice(pdfAnalysisIndex + 1)
-                .filter(msg => msg.sender === 'user' && msg.type === 'chat')
-                .map(msg => msg.text)
-                .join(' ');
-              
-              return userRefinements ? (
-                <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
-                  <div className="font-medium text-blue-900 mb-2">🎯 Vista previa de búsqueda:</div>
-                  <div className="text-blue-800">
-                    <div><strong>PDF Base:</strong> {baseQuery}</div>
-                    <div className="mt-1"><strong>+ Refinamientos:</strong> {userRefinements}</div>
-                  </div>
-                </div>
-              ) : null;
-            })()}
-            
-            <button
-              onClick={handleStartSearchFromPDF}
-              disabled={isLoading}
-              className="w-full px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-500 hover:to-emerald-500 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              {isLoading ? 'Buscando...' : 'Iniciar Búsqueda Completa'}
-            </button>
           </div>
         )}
       </div>

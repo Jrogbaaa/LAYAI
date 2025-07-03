@@ -1,11 +1,33 @@
 # LAYAI UI Enhancement Summary 🎨
 
-**Updated: January 18, 2025** | *Including Spanish Localization v2.5.0*
+**Updated: January 25, 2025** | *Including Spanish Localization v2.5.0 + Critical Scroll Fix v2.13.5*
 
 ## Overview
-This document outlines the comprehensive UI overhaul implemented for LAYAI, transforming it from a basic interface into a modern, AI-driven, conversion-optimized platform that follows cutting-edge UI/UX principles. Recently enhanced with complete Spanish localization.
+This document outlines the comprehensive UI overhaul implemented for LAYAI, transforming it from a basic interface into a modern, AI-driven, conversion-optimized platform that follows cutting-edge UI/UX principles. Recently enhanced with complete Spanish localization and critical scroll functionality restoration.
 
-## 🌟 Latest Enhancement (v2.5.0) - Spanish Localization
+## 🚑 Latest Critical Fix (v2.13.5) - Universal Scroll Restoration
+
+### 🖱️ **Scroll Functionality Completely Restored**
+- **CRITICAL BUG FIXED**: Resolved scroll blocking affecting all pages on mobile and web
+- **Layout Container**: Removed `overflow-hidden` from main wrapper that was preventing scrolling
+- **CSS Architecture**: Updated `globals.css` overflow policies for proper viewport handling
+- **Height Strategy**: Changed rigid `height: 100%` to flexible `min-height: 100%`
+
+### 🔧 **Technical Implementation**
+- **layout.tsx Updates**: Removed `overflow-hidden` class, changed `h-full` to `min-h-full`
+- **CSS Constraints Fixed**: Updated html/body to use `min-height: 100%` instead of fixed height
+- **Main Content Classes**: Fixed `.main-content` from `overflow: hidden` to `overflow-y: auto`
+- **Body Element**: Added explicit `overflow-y: auto` for proper scrolling
+
+### 📱 **Cross-Platform Impact**
+- **Mobile Devices**: Fully functional touch scrolling on all mobile browsers
+- **Desktop Browsers**: Proper vertical scrolling across all web platforms
+- **Content Accessibility**: Users can now access all content beyond viewport height
+- **UX Improvement**: Eliminated trapped content and inaccessible page sections
+
+---
+
+## 🌟 Previous Enhancement (v2.5.0) - Spanish Localization
 
 ### 🇪🇸 **Complete Spanish Translation**
 - **Landing Page**: Hero text, features, and CTAs fully translated

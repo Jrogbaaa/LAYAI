@@ -201,7 +201,7 @@ Solo incluye campos que puedas extraer con confianza del texto. Usa null para ca
     const cleanJson = analysisText.replace(/```json\n?|\n?```/g, '').trim();
     const analysis = JSON.parse(cleanJson);
     
-    return analysis;
+      return analysis;
 
   } catch (error) {
     console.error('Error in AI analysis:', error);

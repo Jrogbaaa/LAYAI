@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${htmlClasses} h-full`}>
       <body className={`${inter.className} h-full`}>
-        <div className="h-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+        <div className="min-h-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative">
           {/* Subtle background pattern */}
           <div 
             className="absolute inset-0 opacity-50" 
@@ -45,7 +45,7 @@ export default function RootLayout({
           ></div>
           
           {/* Main content */}
-          <div className="relative z-10 h-full">
+          <div className="relative z-10 min-h-full">
             {children}
           </div>
         </div>

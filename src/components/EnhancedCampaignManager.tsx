@@ -14,7 +14,7 @@ export const EnhancedCampaignManager: React.FC = () => {
   const [showNotesModal, setShowNotesModal] = useState<{campaignId: string, notes: string} | null>(null);
   const [showSearchesModal, setShowSearchesModal] = useState<{campaignId: string, searches: SavedSearch[]} | null>(null);
   const [showInfluencersModal, setShowInfluencersModal] = useState<{campaignId: string, influencers: SavedInfluencer[]} | null>(null);
-  
+
   // 🔥 NEW: Add request deduplication to prevent API spam
   const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(false);
 
@@ -464,195 +464,195 @@ export const EnhancedCampaignManager: React.FC = () => {
     );
   };
 
-  return (
+    return (
     <div className="p-6 bg-white">
       {/* Loading State */}
       {isLoading && (
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
+        <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Cargando campañas...</p>
-          </div>
+          <p className="text-gray-600">Cargando campañas...</p>
         </div>
+      </div>
       )}
 
       {/* Main Content - Only show when not loading */}
       {!isLoading && (
         <>
-          {/* Header */}
-          <div className="mb-6">
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">📊 Gestión de Campañas</h1>
-                <p className="text-gray-600 mt-1">Gestiona todas tus campañas, búsquedas guardadas e influencers</p>
-              </div>
-              <button
-                onClick={createCampaign}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
-              >
-                <span>+</span>
-                <span>Nueva Campaña</span>
-              </button>
-            </div>
-
-            {/* Stats Summary */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-                <div className="text-2xl font-bold text-blue-600">{campaigns.length}</div>
-                <div className="text-sm text-blue-700">Total Campañas</div>
-              </div>
-              <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
-                <div className="text-2xl font-bold text-green-600">
-                  {campaigns.reduce((sum, c) => sum + (c.savedSearches?.length || 0), 0)}
-                </div>
-                <div className="text-sm text-green-700">Búsquedas Guardadas</div>
-              </div>
-              <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
-                <div className="text-2xl font-bold text-purple-600">
-                  {campaigns.reduce((sum, c) => sum + (c.savedInfluencers?.length || 0), 0)}
-                </div>
-                <div className="text-sm text-purple-700">Influencers Guardados</div>
-              </div>
-              <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
-                <div className="text-2xl font-bold text-orange-600">
-                  {campaigns.filter(c => c.status === 'Active').length}
-                </div>
-                <div className="text-sm text-orange-700">Campañas Activas</div>
-              </div>
-            </div>
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">📊 Gestión de Campañas</h1>
+            <p className="text-gray-600 mt-1">Gestiona todas tus campañas, búsquedas guardadas e influencers</p>
           </div>
+          <button
+            onClick={createCampaign}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
+          >
+            <span>+</span>
+            <span>Nueva Campaña</span>
+          </button>
+        </div>
 
-          {/* Campaign Table */}
-          <div className="bg-white rounded-lg border border-gray-200">
-            <div className="overflow-x-auto relative">
-              <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="w-8 px-2 py-3">
-                      <input
-                        type="checkbox"
-                        className="rounded border-gray-300"
-                        checked={selectedCampaigns.length === campaigns.length && campaigns.length > 0}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedCampaigns(campaigns.map(c => c.id));
-                          } else {
-                            setSelectedCampaigns([]);
-                          }
-                        }}
-                      />
-                    </th>
-                    <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-32">
-                       Campaña
-                     </th>
-                    <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20">
-                       Propietario
-                     </th>
-                    <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-24">
-                      Estado
-                    </th>
-                    <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20">
-                      Prioridad
-                    </th>
-                    <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-28">
-                      Cronograma
-                    </th>
-                    <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-24">
-                      Presupuesto
-                    </th>
-                    <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20 text-center">
-                      Búsquedas
-                    </th>
-                    <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20 text-center">
-                      Influencers
-                    </th>
-                    <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-12 text-center">
-                      Notas
-                    </th>
-                    <th className="w-12 px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide text-center">
-                      Acciones
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {campaigns.map((campaign) => (
-                    <tr
-                      key={campaign.id}
-                      className={`hover:bg-gray-50 ${selectedCampaigns.includes(campaign.id) ? 'bg-blue-50' : ''}`}
+        {/* Stats Summary */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+            <div className="text-2xl font-bold text-blue-600">{campaigns.length}</div>
+            <div className="text-sm text-blue-700">Total Campañas</div>
+          </div>
+          <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
+            <div className="text-2xl font-bold text-green-600">
+              {campaigns.reduce((sum, c) => sum + (c.savedSearches?.length || 0), 0)}
+            </div>
+            <div className="text-sm text-green-700">Búsquedas Guardadas</div>
+          </div>
+          <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
+            <div className="text-2xl font-bold text-purple-600">
+              {campaigns.reduce((sum, c) => sum + (c.savedInfluencers?.length || 0), 0)}
+            </div>
+            <div className="text-sm text-purple-700">Influencers Guardados</div>
+          </div>
+          <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
+            <div className="text-2xl font-bold text-orange-600">
+              {campaigns.filter(c => c.status === 'Active').length}
+            </div>
+            <div className="text-sm text-orange-700">Campañas Activas</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Campaign Table */}
+      <div className="bg-white rounded-lg border border-gray-200">
+        <div className="overflow-x-auto relative">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="w-8 px-2 py-3">
+                  <input
+                    type="checkbox"
+                    className="rounded border-gray-300"
+                    checked={selectedCampaigns.length === campaigns.length && campaigns.length > 0}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedCampaigns(campaigns.map(c => c.id));
+                      } else {
+                        setSelectedCampaigns([]);
+                      }
+                    }}
+                  />
+                </th>
+                <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-32">
+                   Campaña
+                 </th>
+                <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20">
+                   Propietario
+                 </th>
+                <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-24">
+                  Estado
+                </th>
+                <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20">
+                  Prioridad
+                </th>
+                <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-28">
+                  Cronograma
+                </th>
+                <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-24">
+                  Presupuesto
+                </th>
+                <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20 text-center">
+                  Búsquedas
+                </th>
+                <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20 text-center">
+                  Influencers
+                </th>
+                <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-12 text-center">
+                  Notas
+                </th>
+                <th className="w-12 px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide text-center">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {campaigns.map((campaign) => (
+                <tr
+                  key={campaign.id}
+                  className={`hover:bg-gray-50 ${selectedCampaigns.includes(campaign.id) ? 'bg-blue-50' : ''}`}
+                >
+                  <td className="px-2 py-3">
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-300"
+                      checked={selectedCampaigns.includes(campaign.id)}
+                      onChange={() => toggleCampaignSelection(campaign.id)}
+                    />
+                  </td>
+                  <td className="px-2 py-3">
+                     <EditableCell 
+                       campaign={campaign} 
+                       field="name" 
+                       value={campaign.name}
+                      className="font-medium text-gray-900 text-sm"
+                       placeholder="Nombre de campaña"
+                     />
+                   </td>
+                  <td className="px-2 py-3 text-sm text-gray-700">
+                     {campaign.owner}
+                   </td>
+                  <td className="px-2 py-3">
+                    <StatusCell campaign={campaign} />
+                  </td>
+                  <td className="px-2 py-3">
+                    <PriorityCell campaign={campaign} />
+                  </td>
+                  <td className="px-2 py-3">
+                     <EditableCell 
+                       campaign={campaign} 
+                       field="timeline" 
+                       value={campaign.customTimeline || formatDateRange(campaign.startDate, campaign.endDate)}
+                      className="text-gray-700 text-sm"
+                      placeholder="Jun 2025"
+                     />
+                   </td>
+                  <td className="px-2 py-3">
+                    <EditableCell 
+                      campaign={campaign} 
+                      field="budget" 
+                      value={formatBudget(campaign.budget)}
+                      className="text-gray-700 text-sm"
+                      placeholder="0 €"
+                    />
+                  </td>
+                  <td className="px-2 py-3 text-center">
+                    <button
+                      onClick={() => handleCellClick(campaign.id, 'savedSearches', null)}
+                      className="inline-flex items-center space-x-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs font-medium hover:bg-blue-200 transition-colors"
                     >
-                      <td className="px-2 py-3">
-                        <input
-                          type="checkbox"
-                          className="rounded border-gray-300"
-                          checked={selectedCampaigns.includes(campaign.id)}
-                          onChange={() => toggleCampaignSelection(campaign.id)}
-                        />
-                      </td>
-                      <td className="px-2 py-3">
-                         <EditableCell 
-                           campaign={campaign} 
-                           field="name" 
-                           value={campaign.name}
-                          className="font-medium text-gray-900 text-sm"
-                           placeholder="Nombre de campaña"
-                         />
-                       </td>
-                      <td className="px-2 py-3 text-sm text-gray-700">
-                         {campaign.owner}
-                       </td>
-                      <td className="px-2 py-3">
-                        <StatusCell campaign={campaign} />
-                      </td>
-                      <td className="px-2 py-3">
-                        <PriorityCell campaign={campaign} />
-                      </td>
-                      <td className="px-2 py-3">
-                         <EditableCell 
-                           campaign={campaign} 
-                           field="timeline" 
-                           value={campaign.customTimeline || formatDateRange(campaign.startDate, campaign.endDate)}
-                          className="text-gray-700 text-sm"
-                          placeholder="Jun 2025"
-                         />
-                       </td>
-                      <td className="px-2 py-3">
-                        <EditableCell 
-                          campaign={campaign} 
-                          field="budget" 
-                          value={formatBudget(campaign.budget)}
-                          className="text-gray-700 text-sm"
-                          placeholder="0 €"
-                        />
-                      </td>
-                      <td className="px-2 py-3 text-center">
-                        <button
-                          onClick={() => handleCellClick(campaign.id, 'savedSearches', null)}
-                          className="inline-flex items-center space-x-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs font-medium hover:bg-blue-200 transition-colors"
-                        >
-                          <span>🔍</span>
-                          <span>{campaign.savedSearches?.length || 0}</span>
-                        </button>
-                      </td>
-                      <td className="px-2 py-3 text-center">
-                        <button
-                          onClick={() => handleCellClick(campaign.id, 'savedInfluencers', null)}
-                          className="inline-flex items-center space-x-1 px-2 py-1 bg-purple-100 text-purple-800 rounded-md text-xs font-medium hover:bg-purple-200 transition-colors"
-                        >
-                          <span>👥</span>
-                          <span>{campaign.savedInfluencers?.length || 0}</span>
-                        </button>
-                      </td>
-                      <td className="px-2 py-3 text-center">
-                        <button
-                          onClick={() => handleCellClick(campaign.id, 'notes', campaign.notes)}
-                          className="text-gray-400 hover:text-gray-600 transition-colors"
-                          title="Ver/editar notas"
-                        >
-                          📝
-                        </button>
-                      </td>
-                      <td className="px-2 py-3 text-center">
-                        <button
+                      <span>🔍</span>
+                      <span>{campaign.savedSearches?.length || 0}</span>
+                    </button>
+                  </td>
+                  <td className="px-2 py-3 text-center">
+                    <button
+                      onClick={() => handleCellClick(campaign.id, 'savedInfluencers', null)}
+                      className="inline-flex items-center space-x-1 px-2 py-1 bg-purple-100 text-purple-800 rounded-md text-xs font-medium hover:bg-purple-200 transition-colors"
+                    >
+                      <span>👥</span>
+                      <span>{campaign.savedInfluencers?.length || 0}</span>
+                    </button>
+                  </td>
+                  <td className="px-2 py-3 text-center">
+                    <button
+                      onClick={() => handleCellClick(campaign.id, 'notes', campaign.notes)}
+                      className="text-gray-400 hover:text-gray-600 transition-colors"
+                      title="Ver/editar notas"
+                    >
+                      📝
+                    </button>
+                  </td>
+                  <td className="px-2 py-3 text-center">
+                    <button
                           onClick={async () => {
                             try {
                               const response = await fetch('/api/database/campaigns', {
@@ -673,31 +673,31 @@ export const EnhancedCampaignManager: React.FC = () => {
                             }
                           }}
                           className="text-gray-400 hover:text-red-600 transition-colors"
-                          title="Eliminar campaña"
-                        >
-                          🗑️
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      title="Eliminar campaña"
+                    >
+                      🗑️
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
               {/* Empty State */}
-              {campaigns.length === 0 && (
-                <div className="text-center py-12">
+        {campaigns.length === 0 && (
+          <div className="text-center py-12">
                   <div className="text-6xl mb-4">📊</div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No hay campañas</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No hay campañas</h3>
                   <p className="text-gray-500 mb-4">Crea tu primera campaña para comenzar</p>
-                  <button
-                    onClick={createCampaign}
+            <button
+              onClick={createCampaign}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
+            >
                     + Nueva Campaña
-                  </button>
-                </div>
-              )}
-            </div>
+            </button>
+          </div>
+        )}
+      </div>
           </div>
         </>
       )}
@@ -807,21 +807,21 @@ export const EnhancedCampaignManager: React.FC = () => {
                         </div>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <div className="text-right">
-                          <span className="text-sm text-gray-500">
-                            Guardado: {new Date(savedInfluencer.savedAt).toLocaleDateString('es-ES')}
+                      <div className="text-right">
+                        <span className="text-sm text-gray-500">
+                          Guardado: {new Date(savedInfluencer.savedAt).toLocaleDateString('es-ES')}
+                        </span>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            savedInfluencer.status === 'saved' ? 'bg-blue-100 text-blue-800' :
+                            savedInfluencer.status === 'contacted' ? 'bg-yellow-100 text-yellow-800' :
+                            savedInfluencer.status === 'confirmed' ? 'bg-green-100 text-green-800' :
+                            savedInfluencer.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {savedInfluencer.status}
                           </span>
-                          <div className="flex items-center space-x-2 mt-1">
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              savedInfluencer.status === 'saved' ? 'bg-blue-100 text-blue-800' :
-                              savedInfluencer.status === 'contacted' ? 'bg-yellow-100 text-yellow-800' :
-                              savedInfluencer.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                              savedInfluencer.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                              'bg-gray-100 text-gray-800'
-                            }`}>
-                              {savedInfluencer.status}
-                            </span>
-                          </div>
+                        </div>
                         </div>
                         <button
                           onClick={() => {
@@ -963,12 +963,12 @@ export const EnhancedCampaignManager: React.FC = () => {
                       🗑️ Eliminar Todos
                     </button>
                   )}
-                  <button
-                    onClick={() => setShowInfluencersModal(null)}
-                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                  >
-                    Cerrar
-                  </button>
+                <button
+                  onClick={() => setShowInfluencersModal(null)}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  Cerrar
+                </button>
                 </div>
               </div>
             </div>

@@ -1,14 +1,16 @@
 # 🚀 LAYAI - AI-Powered Influencer Marketing Platform
 
-**📱 Version 2.13.4** | **🌐 Live Production**: [https://layai.vercel.app/](https://layai.vercel.app/)
+**📱 Version 2.13.5** | **🌐 Live Production**: [https://layai.vercel.app/](https://layai.vercel.app/)
 
-> 🎉 **NEW: Complete Mobile UI Overhaul** - Professional mobile experience with responsive design, hamburger navigation, and touch-optimized interactions!
+> 🚑 **CRITICAL FIX: Universal Scroll Restored** - Fixed scroll blocking issue affecting all pages on mobile and web!
+> 🎉 **PREVIOUS: Complete Mobile UI Overhaul** - Professional mobile experience with responsive design, hamburger navigation, and touch-optimized interactions!
 
 ## 🌟 Platform Overview
 
 LAYAI is a comprehensive AI-powered influencer discovery and campaign management platform that helps brands find, analyze, and collaborate with the perfect influencers for their marketing campaigns.
 
-### 🔥 **Latest Features (v2.13.4)**
+### 🔥 **Latest Features (v2.13.5)**
+- **🚑 Universal Scroll Fix** - Restored scroll functionality on all pages (mobile + web)
 - **📱 Mobile-First Design** - Complete responsive overhaul with hamburger navigation
 - **🔍 AI-Powered Search** - Natural language influencer discovery with intelligent filtering
 - **📊 Campaign Management** - End-to-end campaign creation and influencer tracking

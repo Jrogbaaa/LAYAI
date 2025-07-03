@@ -49,19 +49,20 @@ body {
   /* Prevent auto-scrolling on page load/refresh */
   scroll-behavior: auto;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Prevent auto-scrolling and ensure proper viewport handling */
 html, body {
-  height: 100%;
+  min-height: 100%;
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
 
-/* Ensure main content areas don't cause unwanted scrolling */
+/* Ensure main content areas allow proper scrolling */
 .main-content {
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-y: auto;
 }
 
 /* Fix for text appearing backward and ensure proper text visibility */
