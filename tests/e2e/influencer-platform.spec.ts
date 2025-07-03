@@ -47,8 +47,8 @@ test.describe('Influencer Matching Platform', () => {
     const chatInput = page.locator('textarea').first();
     await expect(chatInput).toBeVisible({ timeout: 15000 });
     
-    // Check if we can at least see the chat interface elements
-    await expect(page.locator('text=Asistente de IA para Influencers')).toBeVisible();
+    // Check if we can at least see the chat interface elements - FIXED
+    await expect(page.locator('h1:has-text("Asistente de IA para Influencers"), h2:has-text("Asistente de IA para Influencers")').first()).toBeVisible();
   });
 
   test('should handle basic interface interactions', async ({ page }) => {
@@ -93,8 +93,8 @@ test.describe('Influencer Matching Platform', () => {
     await page.click('text=Comenzar Búsqueda');
     await page.waitForTimeout(3000);
     
-    // Check for chat header
-    await expect(page.locator('text=Asistente de IA para Influencers')).toBeVisible({ timeout: 15000 });
+    // Check for chat header - FIXED
+    await expect(page.locator('h1:has-text("Asistente de IA para Influencers"), h2:has-text("Asistente de IA para Influencers")').first()).toBeVisible({ timeout: 15000 });
     
     // Check for chat input area
     const chatInput = page.locator('textarea').first();

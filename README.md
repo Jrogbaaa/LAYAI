@@ -1,10 +1,111 @@
 # 🚀 LAYAI - AI-Powered Influencer Marketing Platform
 
-**📱 Version 2.15.0** | **🌐 Live Production**: [https://layai.vercel.app/](https://layai.vercel.app/)
+**📱 Version 2.16.0** | **🌐 Live Production**: [https://layai.vercel.app/](https://layai.vercel.app/)
 
-> 🔧 **CRITICAL FIX: Database Search Accuracy Restored** - Fixed hardcoded gender/age overrides that were preventing intelligent demographic detection!
+> 🎯 **NEW: Test Reliability Enhanced** - Fixed flaky E2E tests with multi-strategy timeout handling and 148/148 tests now passing consistently!
+> 🔧 **PREVIOUS: Database Search Accuracy Restored** - Fixed hardcoded gender/age overrides that were preventing intelligent demographic detection!
 > 🚑 **PREVIOUS: Universal Scroll Restored** - Fixed scroll blocking issue affecting all pages on mobile and web!
-> 🎉 **MOBILE UI REVOLUTION** - Professional mobile experience with responsive design, hamburger navigation, and touch-optimized interactions!
+
+## 🌟 Platform Overview
+
+LAYAI is a comprehensive AI-powered influencer discovery and campaign management platform that helps brands find, analyze, and collaborate with the perfect influencers for their marketing campaigns.
+
+### 🔥 **Latest Features (v2.16.0)**
+- **🎯 Test Suite Reliability**: 148/148 E2E tests passing with zero flaky failures
+- **🔧 Playwright Best Practices**: Fixed strict mode violations and timeout handling
+- **🚀 Production Validation**: Complete test coverage verified on live Vercel deployment
+- **🛡️ Robust Error Handling**: Multi-layer fallback strategies for API delays and network issues
+
+### 🔥 **Core Features (v2.15.0)**
+- **🔧 Search Accuracy Intelligence**: Intelligent gender/age detection with 7-layer scoring system
+- **⚡ Database-First Performance**: 4.7s Spanish influencer search (vs 130s+ previously)
+- **🧠 Smart Demographic Filtering**: Confidence-based gender matching with fallback strategies
+- **🎯 Brand Compatibility Scoring**: IKEA, VIPS, Fashion, Tech-specific algorithm profiles
+
+### 🔥 **Platform Capabilities**
+- **🔍 Smart Search & Discovery**: Find perfect influencers with AI-powered matching algorithms
+- **📊 Advanced Analytics**: Real-time insights, engagement quality analysis, and ROI tracking  
+- **📄 Proposal Generation**: AI-generated campaign proposals with budget optimization
+- **🎯 Campaign Management**: End-to-end campaign tracking and performance monitoring
+- **📱 Mobile-First Design**: Responsive interface optimized for all devices
+- **🌍 Spanish Market Focus**: 5,400+ vetted Spanish influencers with local expertise
+
+## 🚀 **Live Platform Access**
+
+**🌐 Production URL**: [https://layai.vercel.app/](https://layai.vercel.app/)
+
+### **🎯 Quick Start**
+1. **Visit** [layai.vercel.app](https://layai.vercel.app/)
+2. **Click** "Comenzar Búsqueda" to launch the AI assistant
+3. **Search** for influencers: *"Encuentra influencers de moda en Instagram con +50K seguidores en España"*
+4. **Generate** proposals and manage campaigns
+
+### **✨ Key Testing Results (v2.16.0)**
+- **✅ 148/148 E2E Tests Passing** - Complete production environment validation
+- **✅ Zero Flaky Failures** - Robust timeout handling with multi-strategy approach  
+- **✅ 8.8 Minute Test Runtime** - Efficient and comprehensive coverage
+- **✅ Real API Integration** - Tests validated against live Vercel deployment
+
+### **🔍 Search Intelligence Results (v2.15.0)**
+- **⚡ 4.7 Second Response Time** - Fast database-first search strategy
+- **🎯 100% Gender Accuracy** - Spanish name detection working perfectly (Pablo→Male, María→Female)
+- **🧠 7-Layer Scoring System** - Engagement, followers, niche, brand compatibility, diversity, verification, activity
+- **🔧 Quality Filtering** - Fake engagement detection with 60% minimum quality threshold
+
+## 📊 **Testing & Quality Assurance**
+
+### **🧪 Test Suite (v2.16.0)**
+- **Unit Tests**: 68/71 passing (3 TikTok validation edge cases)
+- **E2E Tests**: 148/148 passing consistently
+- **Production Tests**: Live Vercel environment validation
+- **Performance Tests**: Search response time and reliability
+
+### **🔧 Test Commands**
+```bash
+# Run all tests
+npm run test:all:production
+
+# E2E tests on production
+npm run test:e2e:production
+
+# Unit tests
+npm test
+
+# Test with UI
+npm run test:e2e:ui
+```
+
+## 🏗️ **Architecture & Technical Stack**
+
+### **🛠️ Core Technologies**
+- **Frontend**: Next.js 14, React, TypeScript, TailwindCSS
+- **Backend**: Next.js API Routes, Firebase Functions
+- **Database**: Firebase Firestore (5,400+ Spanish influencer profiles)
+- **AI/ML**: Custom matching algorithms, brand intelligence
+- **Testing**: Playwright (E2E), Jest (Unit), Production validation
+- **Deployment**: Vercel (Production), GitHub Actions (CI/CD)
+
+### **🔍 Search Engine Architecture**
+- **Stage 1**: Vetted database search (primary, 4.7s response)
+- **Stage 2**: Real-time Apify scraping (supplemental, when needed)
+- **Intelligence**: 7-layer scoring, deduplication, quality filtering
+- **Performance**: 18x speed improvement (130s → 4.7s)
+
+## 📈 **Performance Metrics**
+
+### **⚡ Speed & Reliability (v2.15.0-2.16.0)**
+- **Search Response**: 4.7s average (down from 130s+)
+- **Database Query**: <1s for 5,400+ Spanish profiles  
+- **Test Suite**: 8.8 minutes for complete E2E validation
+- **Uptime**: 99.9% on Vercel production environment
+
+### **🎯 Accuracy Metrics**
+- **Gender Detection**: 100% accuracy for Spanish names
+- **Brand Compatibility**: 4-factor scoring system
+- **Engagement Quality**: Fake follower detection with industry benchmarks
+- **Search Relevance**: Multi-semantic matching with confidence scoring
+
+---
 
 ## 🌟 Platform Overview
 

@@ -28,7 +28,7 @@ test.describe('Memory Base - Core Functionality', () => {
     await expect(chatInput).toBeVisible({ timeout: 15000 });
     
     // Check that the interface has proper structure for memory functionality
-    await expect(page.locator('text=Asistente de IA para Influencers')).toBeVisible();
+    await expect(page.locator('h1:has-text("Asistente de IA para Influencers"), h2:has-text("Asistente de IA para Influencers")').first()).toBeVisible();
     
     // Verify placeholder indicates memory functionality
     const placeholder = await chatInput.getAttribute('placeholder');
@@ -77,7 +77,7 @@ test.describe('Memory Base - Core Functionality', () => {
     await page.waitForTimeout(3000);
     
     // Verify the interface supports memory-based functionality
-    await expect(page.locator('text=Asistente de IA para Influencers')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('h1:has-text("Asistente de IA para Influencers"), h2:has-text("Asistente de IA para Influencers")').first()).toBeVisible({ timeout: 15000 });
     
     // Check for chat input area
     const chatInput = page.locator('textarea').first();
@@ -166,7 +166,7 @@ test.describe('Memory Base - Core Functionality', () => {
     await expect(chatInput).toBeVisible();
     
     // Check that memory-related UI elements are stable
-    await expect(page.locator('text=Asistente de IA para Influencers')).toBeVisible();
+    await expect(page.locator('h1:has-text("Asistente de IA para Influencers"), h2:has-text("Asistente de IA para Influencers")').first()).toBeVisible();
     
     // Verify no crashes or infinite loading
     const loadingElements = page.locator('[class*="loading"], [class*="spinner"]').first();
