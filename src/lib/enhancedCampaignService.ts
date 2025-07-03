@@ -134,8 +134,8 @@ export class EnhancedCampaignService {
         return { campaignId: '', searchId: savedSearch.id, action };
       }
 
-      // Save to database
-      await this.saveToDB('search_history', historyEntry);
+      // Note: Search history is already saved to campaigns via add_search or create_enhanced actions
+      // No need for additional standalone save since it's included in campaign data
       
       console.log(`✅ Search saved successfully. Campaign: ${campaignId}, Action: ${action}`);
       return { campaignId, searchId: savedSearch.id, action };

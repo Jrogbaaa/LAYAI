@@ -99,17 +99,17 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
       /pullandbear/i,
       /patrikssontalent/i,
       
-      // Invalid username ending patterns (like jaykarafit_, laschicasdelgym_)
-      /^[._]/,  // Starts with period or underscore
-      /[._]$/,  // Ends with period or underscore
+      // Invalid username ending patterns - but allow single trailing underscore (common on Instagram)
+      /^[._]/,  // Starts with period or underscore  
+      /\.$/, // Ends with period (but allow underscore)
       /[._]{2,}/, // Consecutive periods/underscores
       
       // Additional spam/invalid patterns
       /^(spam|bot|fake|clone|temp|tmp|guest|admin|support|help)\d*$/i,
       /^(user|profile|account|test|demo|sample)\d*$/i,
       
-      // Domain-like patterns
-      /\.(es|com|net|org|uk|de|fr|it)$/i,
+      // Domain-like patterns (but allow country codes in travel accounts)
+      /\.(com|net|org|gov|edu)$/i, // Only reject obvious domains, allow country codes
       
       // Email-like patterns
       /@.*\./,
@@ -128,7 +128,8 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
     const notStartsWithDot = !handle.startsWith('.');
     const notEndsWithDot = !handle.endsWith('.');
     const notStartsWithUnderscore = !handle.startsWith('_');
-    const notEndsWithUnderscore = !handle.endsWith('_');
+    // Allow handles ending with underscore (common on Instagram)
+    const validUnderscoreUsage = true; // We'll check this via patterns instead
     const notAllNumbers = !/^\d+$/.test(handle);
     const notTooManyNumbers = !(/\d{4,}/.test(handle)); // No more than 3 consecutive numbers
     
@@ -147,7 +148,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
     }
     
     if (!noConsecutiveDots || !notStartsWithDot || !notEndsWithDot || 
-        !notStartsWithUnderscore || !notEndsWithUnderscore) {
+        !notStartsWithUnderscore || !validUnderscoreUsage) {
       return { isValid: false, reason: 'Formato de handle inválido (puntos/guiones bajos)' };
     }
     
