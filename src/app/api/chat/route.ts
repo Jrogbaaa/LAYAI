@@ -352,7 +352,8 @@ function parseSearchQuery(message: string): {
   const brandPatterns = [
     /(?:for|para)\s+(?:the\s+)?([A-Za-z0-9\s&.-]+?)\s+brand/gi,
     /(?:for|para)\s+([A-Za-z0-9\s&.-]+?)(?:\s+campaign|\s+colaboración|\s+marketing|\s|$)/gi,
-    /(?:Nike|Adidas|Zara|H&M|McDonald's|Coca-Cola|Pepsi|Samsung|Apple|Google|Amazon|Microsoft|Facebook|Instagram|TikTok|YouTube|Twitter|Spotify|Netflix|Disney|Marvel|DC|PlayStation|Xbox|Nintendo|Tesla|BMW|Mercedes|Audi|Volkswagen|Toyota|Honda|Ford|Chevrolet|Uber|Airbnb|Starbucks|KFC|Burger King|Subway|Pizza Hut|Domino's|Walmart|Target|Best Buy|GameStop|Sephora|Ulta|Victoria's Secret|Calvin Klein|Tommy Hilfiger|Ralph Lauren|Gucci|Prada|Louis Vuitton|Chanel|Hermès|Rolex|Cartier|Tiffany|IKEA|Ikea)/gi
+    /(?:like|similar to|tipo|como)\s+([A-Za-z0-9\s&.-]+?)(?:\s+style|\s+aesthetic|\s+estilo|\s|$)/gi,
+    /(?:Nike|Adidas|Zara|H&M|McDonald's|Coca-Cola|Pepsi|Samsung|Apple|Google|Amazon|Microsoft|Facebook|Instagram|TikTok|YouTube|Twitter|Spotify|Netflix|Disney|Marvel|DC|PlayStation|Xbox|Nintendo|Tesla|BMW|Mercedes|Audi|Volkswagen|Toyota|Honda|Ford|Chevrolet|Uber|Airbnb|Starbucks|KFC|Burger King|Subway|Pizza Hut|Domino's|Walmart|Target|Best Buy|GameStop|Sephora|Ulta|Victoria's Secret|Calvin Klein|Tommy Hilfiger|Ralph Lauren|Gucci|Prada|Louis Vuitton|Chanel|Hermès|Rolex|Cartier|Tiffany|IKEA|Ikea|Zara Home)/gi
   ];
   
   for (const pattern of brandPatterns) {
@@ -371,8 +372,27 @@ function parseSearchQuery(message: string): {
   
   // Clean up brand name
   if (brandName) {
-    brandName = brandName.replace(/^(for|para|the)\s+/gi, '').replace(/\s+(brand|marca)$/gi, '').trim();
+    brandName = brandName.replace(/^(for|para|the|like|similar to|tipo|como)\s+/gi, '').replace(/\s+(brand|marca|style|aesthetic|estilo)$/gi, '').trim();
   }
+
+  // Parse aesthetic keywords from query
+  let aestheticKeywords: string[] = [];
+  const aestheticTerms = {
+    'minimalist': ['minimalist', 'minimal', 'clean', 'simple', 'modern', 'sleek'],
+    'luxury': ['luxury', 'premium', 'high-end', 'elegant', 'sophisticated', 'exclusive'],
+    'casual': ['casual', 'relaxed', 'everyday', 'comfortable', 'laid-back', 'informal'],
+    'professional': ['professional', 'business', 'corporate', 'formal', 'polished'],
+    'creative': ['creative', 'artistic', 'unique', 'innovative', 'experimental'],
+    'sustainable': ['sustainable', 'eco-friendly', 'green', 'ethical', 'conscious']
+  };
+
+  Object.entries(aestheticTerms).forEach(([aesthetic, keywords]) => {
+    if (keywords.some(keyword => lowerMessage.includes(keyword))) {
+      if (!aestheticKeywords.includes(aesthetic)) {
+        aestheticKeywords.push(aesthetic);
+      }
+    }
+  });
 
   // Remove other keywords from the message before location parsing to avoid conflicts
   let cleanMessage = lowerMessage;
@@ -413,6 +433,7 @@ function parseSearchQuery(message: string): {
     ageRange,
     strictLocationMatch: location ? true : false, // Enable strict location matching when location is specified
     brandName,
+    aestheticKeywords, // Add aesthetic preferences for enhanced matching
     userQuery: message
   };
 

@@ -119,6 +119,7 @@ export interface ApifySearchParams {
   ageRange?: string;
   strictLocationMatch?: boolean;
   brandName?: string;
+  aestheticKeywords?: string[]; // Aesthetic style preferences for enhanced brand matching
   userQuery?: string;
   specificHandle?: string;
 }

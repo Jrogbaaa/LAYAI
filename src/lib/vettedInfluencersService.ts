@@ -453,26 +453,33 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
     
     // 5. Brand-specific compatibility analysis
     if (brandName) {
-      console.log(`🏷️ Applying enhanced brand compatibility analysis for: ${brandName}...`);
+      console.log(`🏷️ Applying dynamic brand compatibility analysis for: ${brandName}...`);
+      
+      // Import dynamic compatibility engine
+      const { calculateDynamicBrandCompatibility } = await import('./enhancedCompatibilityEngine');
+      
       const brandScoredInfluencers = scoredInfluencers.map(inf => {
-        const brandCompatibility = calculateEnhancedBrandCompatibility(inf, brandName);
+        const dynamicCompatibility = calculateDynamicBrandCompatibility(inf, brandName);
         
         return {
           ...inf,
-          brandCompatibilityScore: brandCompatibility.overallScore,
-          brandCompatibilityProfile: brandCompatibility
+          brandCompatibilityScore: dynamicCompatibility.overallScore,
+          brandCompatibilityProfile: dynamicCompatibility,
+          // Store transparency information for UI display
+          matchReasons: dynamicCompatibility.transparency.matchReasons,
+          confidenceLevel: dynamicCompatibility.transparency.confidenceLevel
         };
       });
       
-      // Sort by combined score (enhanced score + brand compatibility)
+      // Sort by dynamic brand compatibility score (prioritize brand fit)
       brandScoredInfluencers.sort((a, b) => {
-        const scoreA = (a.enhancedScore * 0.6) + ((a.brandCompatibilityScore || 0) * 0.4);
-        const scoreB = (b.enhancedScore * 0.6) + ((b.brandCompatibilityScore || 0) * 0.4);
+        const scoreA = (a.brandCompatibilityScore || 0) * 0.7 + (a.enhancedScore * 0.3);
+        const scoreB = (b.brandCompatibilityScore || 0) * 0.7 + (b.enhancedScore * 0.3);
         return scoreB - scoreA;
       });
       
       filteredInfluencers = brandScoredInfluencers as VettedInfluencer[];
-      console.log(`🏆 Top brand compatibility: ${filteredInfluencers.slice(0, 3).map(inf => `${inf.username}: ${(inf as any).brandCompatibilityScore}`).join(', ')}`);
+      console.log(`🏆 Top dynamic brand compatibility: ${filteredInfluencers.slice(0, 3).map(inf => `${inf.username}: ${(inf as any).brandCompatibilityScore}`).join(', ')}`);
     } else {
       // Sort by enhanced score only
       scoredInfluencers.sort((a, b) => b.enhancedScore - a.enhancedScore);
