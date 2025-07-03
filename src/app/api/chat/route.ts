@@ -214,25 +214,35 @@ function parseSearchQuery(message: string): {
   // Extract age range
   let ageRange: string | undefined;
   const agePatterns = [
-    { pattern: /ages?\s+(\d+)\s*-\s*(\d+)/i, isRange: true },
-    { pattern: /(\d+)\s*-\s*(\d+)\s+years?\s+old/i, isRange: true },
-    { pattern: /ages?\s+(\d+)\s+and\s+(?:up|older|above)/i, isRange: false },
-    { pattern: /(\d+)\s+and\s+(?:up|older|above)/i, isRange: false },
-    { pattern: /(\d+)\+\s+years?\s+old/i, isRange: false },
-    { pattern: /over\s+(\d+)\s+years?\s+old/i, isRange: false },
-    { pattern: /(\d+)\s*\+/i, isRange: false }
+    { pattern: /ages?\s+(\d+)\s*-\s*(\d+)/i, isRange: true }, // "ages 25-35"
+    { pattern: /(\d+)\s*-\s*(\d+)\s+years?\s+old/i, isRange: true }, // "25-35 years old"
+    { pattern: /between\s+(\d+)\s+and\s+(\d+)/i, isRange: true }, // "between 25 and 35"
+    
+    // "30 and over", "over 30", "30+"
+    { pattern: /ages?\s+(\d+)\s+and\s+(?:over|older|above|up)/i, isRange: false },
+    { pattern: /(\d+)\s+and\s+(?:over|older|above|up)/i, isRange: false },
+    { pattern: /(?:over|above|más de)\s+(\d+)/i, isRange: false },
+    { pattern: /(\d+)\+\s*(?:years? old)?/i, isRange: false },
+    
+    // "under 30", "30 and under"
+    { pattern: /(?:under|below|less than|menos de)\s+(\d+)/i, isRange: false, isUpper: true },
+    { pattern: /ages?\s+(\d+)\s+and\s+(?:under|younger|below)/i, isRange: false, isUpper: true },
   ];
 
-  for (const { pattern, isRange } of agePatterns) {
+  for (const { pattern, isRange, isUpper } of agePatterns) {
     const match = lowerMessage.match(pattern);
     if (match) {
       if (isRange && match[2]) {
-        // Range pattern
+        // Range pattern: "25-35"
         ageRange = `${parseInt(match[1])}-${parseInt(match[2])}`;
-      } else {
-        // Single number pattern (30 and up)
+      } else if (isUpper) {
+        // Upper bound pattern: "under 30" -> "18-29"
         const age = parseInt(match[1]);
-        ageRange = age >= 30 ? '30+' : age >= 25 ? '25-34' : '18-24';
+        ageRange = `18-${age - 1}`;
+      } else {
+        // Lower bound pattern: "30 and up" -> "30-65"
+        const age = parseInt(match[1]);
+        ageRange = `${age}-65`; // Assume a reasonable upper limit
       }
       break;
     }
@@ -315,25 +325,32 @@ function parseSearchQuery(message: string): {
   // Extract location with improved patterns (including Spanish)
   let location: string | undefined;
   const locationPatterns = [
-    // English patterns
-    /in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
-    /from\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
-    /based in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
-    /located in\s+([a-zA-Z\s]+?)(?:\s+men|\s+women|\s+with|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
+    // English patterns - more specific to avoid capturing non-locations
+    /in\s+([a-zA-Z\s,]+?)(?:\s+with|\s+for|\s+men|\s+women|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
+    /from\s+([a-zA-Z\s,]+?)(?:\s+with|\s+for|\s+men|\s+women|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
+    /based in\s+([a-zA-Z\s,]+?)(?:\s+with|\s+for|\s+men|\s+women|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
+    /located in\s+([a-zA-Z\s,]+?)(?:\s+with|\s+for|\s+men|\s+women|\s+over|\s+under|\s+above|\s+between|\s+ages?|$|,|\.|!|\?)/i,
     // Spanish patterns
-    /en\s+([a-zA-ZáéíóúñÑ\s]+?)(?:\s+con|\s+más|\s+para|\s+de|$|,|\.|!|\?)/i,
-    /de\s+([a-zA-ZáéíóúñÑ\s]+?)(?:\s+con|\s+más|\s+para|\s+en|$|,|\.|!|\?)/i,
-    /desde\s+([a-zA-ZáéíóúñÑ\s]+?)(?:\s+con|\s+más|\s+para|\s+en|$|,|\.|!|\?)/i
+    /en\s+([a-zA-ZáéíóúñÑ\s,]+?)(?:\s+con|\s+para|\s+de|\s+más|$|,|\.|!|\?)/i,
+    /de\s+([a-zA-ZáéíóúñÑ\s,]+?)(?:\s+con|\s+para|\s+en|\s+más|$|,|\.|!|\?)/i,
+    /desde\s+([a-zA-ZáéíóúñÑ\s,]+?)(?:\s+con|\s+para|\s+en|\s+más|$|,|\.|!|\?)/i
   ];
 
+  // Remove other keywords from the message before location parsing to avoid conflicts
+  let cleanMessage = lowerMessage;
+  const brandNameToRemove = brandName ? `for ${brandName.toLowerCase()} brand` : '';
+  if (brandNameToRemove) {
+    cleanMessage = cleanMessage.replace(brandNameToRemove, '');
+  }
+  
   for (const pattern of locationPatterns) {
-    const match = lowerMessage.match(pattern);
-    if (match) {
-      location = match[1].trim();
+    const match = cleanMessage.match(pattern);
+    if (match && match[1]) {
+      let foundLocation = match[1].trim();
       // Clean up common words that might be captured
-      const stopWords = ['the', 'with', 'and', 'or', 'followers', 'subscribers', 'over', 'under', 'above', 'only'];
-      const locationWords = location.split(' ').filter(word => 
-        !stopWords.includes(word.toLowerCase()) && word.length > 1
+      const stopWords = ['the', 'with', 'and', 'or', 'followers', 'subscribers', 'over', 'under', 'above', 'only', 'men', 'women', 'for', 'brand', 'ages'];
+      const locationWords = foundLocation.split(' ').filter(word => 
+        !stopWords.includes(word.toLowerCase()) && isNaN(parseInt(word)) && word.length > 1
       );
       if (locationWords.length > 0) {
         location = locationWords.join(' ');
