@@ -28,22 +28,25 @@ export interface VettedSearchResult {
   searchSource: 'vetted_database';
 }
 
-// Genre mapping for better search matching
+// Enhanced genre mapping for better search matching
 const genreMapping: Record<string, string[]> = {
-  'fitness': ['fitness', 'sports', 'gym', 'workout', 'health', 'athlete', 'training'],
-  'sports': ['sports', 'fitness', 'athlete', 'gym', 'training', 'workout'],
-  'lifestyle': ['lifestyle', 'travel', 'home', 'diy', 'personal', 'daily life', 'vida', 'estilo', 'books', 'modeling'],
-  'fashion': ['fashion', 'style', 'clothing', 'beauty', 'moda', 'ropa', 'estilo', 'modeling'],
-  'beauty': ['beauty', 'makeup', 'skincare', 'cosmetic', 'belleza', 'maquillaje'],
-  'food': ['food', 'cooking', 'recipe', 'nutrition', 'chef', 'comida', 'cocina'],
-  'tech': ['tech', 'technology', 'gadget', 'software', 'tecnologia'],
-  'gaming': ['gaming', 'esports', 'games', 'videojuegos', 'gamer'],
-  'music': ['music', 'musician', 'entertainment', 'musica', 'entretenimiento'],
-  'business': ['business', 'entrepreneur', 'finance', 'negocios', 'emprendedor'],
-  'travel': ['travel', 'adventure', 'explore', 'viaje', 'aventura'],
-  'home': ['home', 'interior', 'furniture', 'decor', 'diy', 'casa', 'hogar', 'decoracion', 'interiorismo', 'lifestyle'],
-  'art': ['art', 'photography', 'creative', 'arte', 'fotografia', 'creativo'],
-  'education': ['education', 'learning', 'teaching', 'educacion', 'enseñanza']
+  'fitness': ['fitness', 'sports', 'gym', 'workout', 'health', 'athlete', 'training', 'crossfit', 'yoga', 'pilates', 'running'],
+  'sports': ['sports', 'fitness', 'athlete', 'gym', 'training', 'workout', 'football', 'basketball', 'tennis', 'cycling'],
+  'lifestyle': ['lifestyle', 'travel', 'home', 'diy', 'personal', 'daily life', 'vida', 'estilo', 'books', 'modeling', 'wellness', 'self-care'],
+  'fashion': ['fashion', 'style', 'clothing', 'beauty', 'moda', 'ropa', 'estilo', 'modeling', 'streetwear', 'luxury', 'accessories'],
+  'beauty': ['beauty', 'makeup', 'skincare', 'cosmetic', 'belleza', 'maquillaje', 'skincare', 'haircare', 'nails', 'aesthetics'],
+  'food': ['food', 'cooking', 'recipe', 'nutrition', 'chef', 'comida', 'cocina', 'baking', 'healthy eating', 'vegan', 'restaurant'],
+  'tech': ['tech', 'technology', 'gadget', 'software', 'tecnologia', 'ai', 'coding', 'apps', 'innovation', 'digital'],
+  'gaming': ['gaming', 'esports', 'games', 'videojuegos', 'gamer', 'streaming', 'twitch', 'playstation', 'xbox', 'nintendo'],
+  'music': ['music', 'musician', 'entertainment', 'musica', 'entretenimiento', 'singing', 'dj', 'concerts', 'festivals'],
+  'business': ['business', 'entrepreneur', 'finance', 'negocios', 'emprendedor', 'startup', 'investing', 'marketing', 'leadership'],
+  'travel': ['travel', 'adventure', 'explore', 'viaje', 'aventura', 'backpacking', 'hotels', 'destinations', 'wanderlust'],
+  'home': ['home', 'interior', 'furniture', 'decor', 'diy', 'casa', 'hogar', 'decoracion', 'interiorismo', 'lifestyle', 'design', 'organization', 'cleaning'],
+  'art': ['art', 'photography', 'creative', 'arte', 'fotografia', 'creativo', 'painting', 'drawing', 'sculpture', 'design'],
+  'education': ['education', 'learning', 'teaching', 'educacion', 'enseñanza', 'school', 'university', 'courses', 'tutorials'],
+  'parenting': ['parenting', 'family', 'kids', 'children', 'baby', 'mom', 'dad', 'familia', 'niños', 'bebé', 'motherhood', 'fatherhood'],
+  'pets': ['pets', 'animals', 'dogs', 'cats', 'mascotas', 'perros', 'gatos', 'veterinary', 'pet care'],
+  'automotive': ['cars', 'automotive', 'racing', 'motorcycles', 'coches', 'motos', 'driving', 'mechanics']
 };
 
 function matchesNiche(influencerGenres: string[], searchNiches: string[]): boolean {
@@ -87,32 +90,79 @@ function detectGenderFromUsername(username: string): 'male' | 'female' | 'unknow
   
   const usernameClean = username.toLowerCase().replace(/[\d_.-]/g, '');
   
-  // Spanish female names/indicators
+  // Enhanced Spanish female names/indicators
   const femaleIndicators = [
+    // Traditional Spanish female names
     'maria', 'ana', 'elena', 'laura', 'sara', 'paula', 'lucia', 'carmen', 'sofia', 'andrea',
     'cristina', 'marta', 'beatriz', 'patricia', 'raquel', 'rosa', 'monica', 'mercedes', 'sandra',
     'natalia', 'silvia', 'pilar', 'esperanza', 'concepcion', 'angeles', 'dolores', 'antonia',
-    'girl', 'chica', 'woman', 'mujer', 'queen', 'princess', 'bella', 'bonita', 'linda'
+    'alba', 'nuria', 'gloria', 'irene', 'valeria', 'claudia', 'eva', 'susana', 'yolanda',
+    'rocio', 'amparo', 'encarna', 'maite', 'montse', 'nerea', 'aitana', 'daniela', 'carla',
+    'alejandra', 'noelia', 'vanessa', 'diana', 'leticia', 'ainhoa', 'miriam', 'lola', 'paloma',
+    
+    // Modern and international female names popular in Spain
+    'emma', 'olivia', 'ava', 'isabella', 'sophia', 'mia', 'charlotte', 'amelia', 'harper',
+    'evelyn', 'abigail', 'emily', 'elizabeth', 'mila', 'ella', 'avery', 'sofia', 'camila',
+    'aria', 'scarlett', 'victoria', 'madison', 'luna', 'grace', 'chloe', 'penelope', 'layla',
+    'riley', 'zoey', 'nora', 'lily', 'eleanor', 'hannah', 'lillian', 'addison', 'aubrey',
+    'ellie', 'stella', 'natalie', 'zoe', 'leah', 'hazel', 'violet', 'aurora', 'savannah',
+    'audrey', 'brooklyn', 'bella', 'claire', 'skylar', 'lucy', 'paisley', 'everly', 'anna',
+    
+    // Female indicators/words
+    'girl', 'chica', 'woman', 'mujer', 'queen', 'princess', 'bella', 'bonita', 'linda',
+    'señora', 'señorita', 'miss', 'lady', 'dama', 'reina', 'princesa', 'goddess', 'diosa',
+    'mama', 'mami', 'mother', 'madre', 'daughter', 'hija', 'sister', 'hermana', 'aunt', 'tia'
   ];
   
-  // Spanish male names/indicators
+  // Enhanced Spanish male names/indicators
   const maleIndicators = [
+    // Traditional Spanish male names
     'jose', 'antonio', 'manuel', 'francisco', 'juan', 'david', 'miguel', 'carlos', 'pedro',
     'luis', 'angel', 'rafael', 'javier', 'jesus', 'daniel', 'alejandro', 'sergio', 'fernando',
     'pablo', 'jorge', 'alberto', 'ricardo', 'eduardo', 'victor', 'oscar', 'ruben', 'diego',
-    'boy', 'chico', 'man', 'hombre', 'king', 'prince', 'papa', 'papi'
+    'ramon', 'enrique', 'adrian', 'alvaro', 'mario', 'marcos', 'ivan', 'gonzalo', 'rodrigo',
+    'cristian', 'andres', 'emilio', 'julian', 'nicolas', 'guillermo', 'jaime', 'ignacio',
+    'samuel', 'mateo', 'gabriel', 'alex', 'aaron', 'leo', 'hugo', 'bruno', 'iker', 'pol',
+    'eric', 'adam', 'izan', 'sergio', 'marco', 'thiago', 'gael', 'lucas', 'martin', 'oliver',
+    
+    // Modern and international male names popular in Spain
+    'liam', 'noah', 'william', 'james', 'oliver', 'benjamin', 'elijah', 'lucas', 'mason',
+    'logan', 'alexander', 'ethan', 'jacob', 'michael', 'daniel', 'henry', 'jackson', 'sebastian',
+    'aiden', 'matthew', 'samuel', 'david', 'joseph', 'carter', 'owen', 'wyatt', 'john', 'jack',
+    'luke', 'jayden', 'dylan', 'grayson', 'levi', 'isaac', 'gabriel', 'julian', 'mateo',
+    'anthony', 'jaxon', 'lincoln', 'joshua', 'christopher', 'andrew', 'theodore', 'caleb',
+    'ryan', 'asher', 'nathan', 'thomas', 'leo', 'isaiah', 'charles', 'josiah', 'christian',
+    'hunter', 'eli', 'jonathan', 'connor', 'landon', 'adrian', 'austin', 'jordan', 'adam',
+    
+    // Male indicators/words
+    'boy', 'chico', 'man', 'hombre', 'king', 'prince', 'papa', 'papi', 'señor', 'mister',
+    'sir', 'lord', 'rey', 'principe', 'god', 'dios', 'father', 'padre', 'son', 'hijo',
+    'brother', 'hermano', 'uncle', 'tio', 'grandfather', 'abuelo', 'guy', 'dude'
   ];
   
+  // Check for female indicators first (more specific patterns)
   for (const indicator of femaleIndicators) {
     if (usernameClean.includes(indicator)) {
       return 'female';
     }
   }
   
+  // Then check for male indicators
   for (const indicator of maleIndicators) {
     if (usernameClean.includes(indicator)) {
       return 'male';
     }
+  }
+  
+  // Enhanced pattern matching for common username patterns
+  // Female patterns: ending in 'ita', 'ela', 'ina', etc.
+  if (/(?:ita|ela|ina|ana|lia|ria|ssa|nda)(?:\d|_|$)/.test(usernameClean)) {
+    return 'female';
+  }
+  
+  // Male patterns: ending in 'ito', 'ero', 'oso', etc.
+  if (/(?:ito|ero|oso|ado|ndo|cho)(?:\d|_|$)/.test(usernameClean)) {
+    return 'male';
   }
   
   return 'unknown';
@@ -123,21 +173,41 @@ function matchesGender(influencer: VettedInfluencer, targetGender?: string): boo
   
   const detectedGender = detectGenderFromUsername(influencer.username);
   
-  // If we can't detect gender but user wants specific gender, use statistical distribution
-  // to ensure proper filtering rather than including all unknowns
-  if (detectedGender === 'unknown') {
-    // Use a hash of the username to create consistent but distributed results
-    const hash = influencer.username.toLowerCase().split('').reduce((a, b) => {
-      a = ((a << 5) - a) + b.charCodeAt(0);
-      return a & a;
-    }, 0);
-    
-    // Use hash to randomly assign ~50% as male, ~50% as female for proper filtering
-    const assignedGender = Math.abs(hash) % 2 === 0 ? 'female' : 'male';
-    return assignedGender === targetGender.toLowerCase();
+  // Enhanced: Also check display name for gender detection
+  let finalGender = detectedGender;
+  if (detectedGender === 'unknown' && influencer.displayName) {
+    finalGender = detectGenderFromUsername(influencer.displayName);
   }
   
-  return detectedGender === targetGender.toLowerCase();
+  // If still unknown, use more intelligent distribution based on genre preferences
+  if (finalGender === 'unknown') {
+    // Beauty, fashion, lifestyle tend to be more female-dominated
+    const femaleSkewedGenres = ['beauty', 'fashion', 'lifestyle', 'home', 'decor', 'parenting'];
+    // Sports, tech, gaming tend to be more male-dominated  
+    const maleSkewedGenres = ['sports', 'fitness', 'tech', 'gaming', 'business'];
+    
+    const hasFemaleBias = influencer.genres.some(genre => 
+      femaleSkewedGenres.some(fg => genre.toLowerCase().includes(fg))
+    );
+    const hasMaleBias = influencer.genres.some(genre => 
+      maleSkewedGenres.some(mg => genre.toLowerCase().includes(mg))
+    );
+    
+    if (hasFemaleBias && !hasMaleBias) {
+      finalGender = 'female';
+    } else if (hasMaleBias && !hasFemaleBias) {
+      finalGender = 'male';
+    } else {
+      // Use consistent hash-based assignment for truly unknown cases
+      const hash = influencer.username.toLowerCase().split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+      }, 0);
+      finalGender = Math.abs(hash) % 2 === 0 ? 'female' : 'male';
+    }
+  }
+  
+  return finalGender === targetGender.toLowerCase();
 }
 
 function isSpainRelated(location?: string, userQuery?: string, brandName?: string): boolean {
@@ -355,10 +425,50 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
       });
     }
 
-    // Limit results
-    const limitedResults = filteredInfluencers.slice(0, 50);
+    // Enhanced result diversification to prevent repetitive profiles
+    let diversifiedResults = filteredInfluencers;
+    
+    if (filteredInfluencers.length > 20) {
+      console.log('🎯 Applying result diversification for variety...');
+      
+      // Group by genre and follower category for balanced selection
+      const diversifiedList: VettedInfluencer[] = [];
+      const genreTracker = new Map<string, number>();
+      const categoryTracker = new Map<string, number>();
+      const maxPerGenre = Math.max(3, Math.floor(50 / Math.max(1, new Set(filteredInfluencers.map(inf => inf.primaryGenre)).size)));
+      const maxPerCategory = Math.max(2, Math.floor(50 / 5)); // 5 categories: Nano, Micro, Macro, Mega, Celebrity
+      
+      // First pass: Select diverse top performers
+      for (const influencer of filteredInfluencers) {
+        const genre = influencer.primaryGenre || 'General';
+        const category = influencer.category || 'Micro';
+        
+        const genreCount = genreTracker.get(genre) || 0;
+        const categoryCount = categoryTracker.get(category) || 0;
+        
+        // Ensure diversity across genres and follower categories
+        if (genreCount < maxPerGenre && categoryCount < maxPerCategory && diversifiedList.length < 40) {
+          diversifiedList.push(influencer);
+          genreTracker.set(genre, genreCount + 1);
+          categoryTracker.set(category, categoryCount + 1);
+        }
+      }
+      
+      // Second pass: Fill remaining slots with best remaining matches
+      const remaining = filteredInfluencers.filter(inf => !diversifiedList.includes(inf));
+      diversifiedList.push(...remaining.slice(0, 50 - diversifiedList.length));
+      
+      console.log(`🎨 Diversification complete: ${diversifiedList.length} results with genre distribution:`, 
+        Array.from(genreTracker.entries()).map(([genre, count]) => `${genre}:${count}`).join(', ')
+      );
+      
+      diversifiedResults = diversifiedList;
+    }
 
-    console.log(`✅ Vetted database search complete: ${limitedResults.length} results after enhanced filtering`);
+    // Limit results
+    const limitedResults = diversifiedResults.slice(0, 50);
+
+    console.log(`✅ Vetted database search complete: ${limitedResults.length} results after enhanced filtering and diversification`);
 
     return {
       influencers: limitedResults,
