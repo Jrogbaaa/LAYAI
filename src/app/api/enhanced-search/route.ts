@@ -586,12 +586,27 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
       console.log('📍 No vetted influencers found, proceeding with other sources');
     }
     
-    // 2. Always search Apify API for real-time results
-    console.log('🌐 Searching Apify API...');
-    try {
-      const apifyInfluencers = await searchInfluencersWithApify(searchParams);
-      
-      if (apifyInfluencers && apifyInfluencers.length > 0) {
+    // 2. Only search Apify API if we need more results (conditional real-time search)
+    const databaseResultsCount = vettedResults.influencers.length;
+    const targetResults = searchParams.maxResults || 20;
+    const shouldDoRealtimeSearch = databaseResultsCount < Math.max(5, targetResults * 0.3); // Only if we have fewer than 30% of target or less than 5 results
+    
+    if (shouldDoRealtimeSearch) {
+      console.log(`🌐 Database found ${databaseResultsCount} results, supplementing with real-time search...`);
+      try {
+        // Add timeout protection for real-time search
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Real-time search timeout')), 30000) // 30 second timeout
+        );
+        
+        const searchPromise = searchInfluencersWithApify({
+          ...searchParams,
+          maxResults: Math.min(10, targetResults - databaseResultsCount) // Limit real-time results
+        });
+        
+        const apifyInfluencers = await Promise.race([searchPromise, timeoutPromise]) as any[];
+        
+        if (apifyInfluencers && apifyInfluencers.length > 0) {
         // Convert ScrapedInfluencer[] to MatchResult[] format
         const convertedApify = apifyInfluencers.map(influencer => ({
           influencer: {
@@ -649,11 +664,14 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
         searchSources.push('Búsqueda en tiempo real');
         
         console.log(`✅ Found ${apifyInfluencers.length} Apify results`);
-      } else {
-        console.log('⚠️ No Apify results found');
+        } else {
+          console.log('⚠️ No Apify results found');
+        }
+      } catch (error) {
+        console.warn('⚠️ Real-time search failed or timed out:', error);
       }
-    } catch (error) {
-      console.warn('⚠️ Apify search failed:', error);
+    } else {
+      console.log(`✅ Database provided sufficient results (${databaseResultsCount}/${targetResults}), skipping real-time search`);
     }
     
     // Remove duplicates based on handle/username
