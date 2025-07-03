@@ -355,23 +355,20 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
       console.log(`📊 After niche filter: ${filteredInfluencers.length} influencers`);
     }
 
-    // Enhanced follower count filtering - Adjusted for premium Spanish database
+    // Enhanced follower count filtering - Respect user's explicit preferences
     const minFollowers = parsedQuery.minFollowers || params.minFollowers;
     const maxFollowers = parsedQuery.maxFollowers || params.maxFollowers;
     
-    // Smart follower filtering: If the range is too restrictive for our premium database, adjust it
+    // Apply user-specified follower filtering WITHOUT overriding their preferences
     let effectiveMinFollowers = minFollowers;
     let effectiveMaxFollowers = maxFollowers;
     
-    // If searching for small influencers (under 100K) but our DB has premium influencers (100K+), 
-    // adjust the range to include our quality database
-    if (maxFollowers && maxFollowers < 100000) {
-      console.log(`💡 Adjusting restrictive maxFollowers from ${maxFollowers} to 500K for premium Spanish database`);
-      effectiveMaxFollowers = 500000; // Extend to include macro influencers
-    }
+    // REMOVED: Smart follower filtering that overrides user requests
+    // The old logic ignored user-specified limits like "under 500,000"
+    // Now we respect the user's explicit requirements
     
     if (effectiveMinFollowers) {
-      console.log(`📊 Filtering by minFollowers: ${effectiveMinFollowers}`);
+      console.log(`📊 Filtering by minFollowers: ${effectiveMinFollowers.toLocaleString()}`);
       filteredInfluencers = filteredInfluencers.filter(inf => 
         inf.followerCount >= effectiveMinFollowers
       );
@@ -379,7 +376,7 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
     }
 
     if (effectiveMaxFollowers) {
-      console.log(`📊 Filtering by maxFollowers: ${effectiveMaxFollowers}`);
+      console.log(`📊 Filtering by maxFollowers: ${effectiveMaxFollowers.toLocaleString()}`);
       filteredInfluencers = filteredInfluencers.filter(inf => 
         inf.followerCount <= effectiveMaxFollowers
       );

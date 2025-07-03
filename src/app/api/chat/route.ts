@@ -260,6 +260,12 @@ function parseSearchQuery(message: string): {
     { pattern: /maximum of\s+([\d,]+)/i, isMax: true },
     { pattern: /max\s+([\d,]+)/i, isMax: true },
     
+    // CRITICAL FIX: Handle "under", "below" patterns with comma-separated numbers
+    { pattern: /under\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
+    { pattern: /below\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
+    { pattern: /less than\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
+    { pattern: /fewer than\s+([\d,]+)\s*(?:followers?|seguidores?|$)/i, isMax: true },
+    
     // Handle "between X and Y" patterns with commas
     { pattern: /between\s+([\d,]+)\s+and\s+([\d,]+)/i, isRange: true },
     { pattern: /([\d,]+)\s*-\s*([\d,]+)\s*followers/i, isRange: true },
