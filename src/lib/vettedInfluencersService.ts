@@ -908,6 +908,17 @@ function generatePersonalizedMatchReasons(vetted: VettedInfluencer, params: Apif
 
 // Convert vetted influencer to match result format for consistency
 export function convertVettedToMatchResult(vetted: VettedInfluencer, params?: ApifySearchParams) {
+  // Detect actual gender and age instead of using hardcoded defaults
+  const genderData = detectGenderWithConfidence(vetted);
+  const ageData = estimateAge(vetted);
+  
+  // Convert gender to the expected format
+  const detectedGender = genderData.gender === 'unknown' ? 'Other' : 
+                        genderData.gender === 'male' ? 'Male' : 'Female';
+  
+  // Convert age to age range
+  const ageRange = ageData.ageRange || '25-34'; // fallback to 25-34 if unknown
+  
   return {
     influencer: {
       id: vetted.username,
@@ -916,8 +927,8 @@ export function convertVettedToMatchResult(vetted: VettedInfluencer, params?: Ap
       platform: vetted.platform as 'Instagram' | 'TikTok' | 'YouTube' | 'Twitter' | 'Multi-Platform',
       followerCount: vetted.followerCount,
       engagementRate: vetted.engagementRate, // Already stored as decimal (0.0286 = 2.86%)
-      ageRange: '25-34' as const,
-      gender: 'Other' as const, // Default since we don't have this data
+      ageRange: ageRange as '18-24' | '25-34' | '35-44' | '45-54' | '55+',
+      gender: detectedGender as 'Male' | 'Female' | 'Other',
       location: vetted.country,
       niche: vetted.genres,
       contentStyle: ['Posts'] as const,
