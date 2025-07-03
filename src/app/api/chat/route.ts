@@ -23,8 +23,19 @@ function parseSearchQuery(message: string): {
   const hasSearchKeywords = searchKeywords.some(keyword => lowerMessage.includes(keyword));
   const hasInfluencerKeywords = lowerMessage.includes('influencer') || lowerMessage.includes('creator') || lowerMessage.includes('creador') || lowerMessage.includes('creadores');
   
-  // If it has clear search indicators, prioritize search over collaboration
-  const isSearch = hasSearchKeywords || hasInfluencerKeywords;
+  // Age-related patterns that should NOT trigger collaboration checks
+  const ageDetectionPatterns = [
+    /ages?\s+\d+/gi,
+    /\d+\s+(?:and|y)\s+(?:over|under|above|below|más|menos)/gi,
+    /(?:over|under|above|below|más|menos)\s+\d+/gi,
+    /\d+\s*-\s*\d+\s*(?:years?|años?)/gi,
+    /\d+k?\s+(?:followers?|seguidores?)/gi
+  ];
+  
+  const hasAgePatterns = ageDetectionPatterns.some(pattern => pattern.test(message));
+  
+  // If it has clear search indicators OR age patterns, prioritize search over collaboration
+  const isSearch = hasSearchKeywords || hasInfluencerKeywords || hasAgePatterns;
   
   // Only check for collaboration if it's NOT clearly a search query
   if (!isSearch) {
@@ -402,29 +413,53 @@ function parseCollaborationQuery(message: string): CollaborationParams {
     }
   }
   
-  // Extract brand name patterns
+  // Extract brand name patterns - but avoid age-related and demographic terms
   const brandPatterns = [
     /(?:with|con|collaborated with|trabajó con|sponsored by|patrocinado por|brand|marca)\s+([A-Za-z0-9\s&.-]+?)(?:\s|$|\?|!|\.)/gi,
     /(?:mentioned|talked about|used|promoted|featuring|showcased|mencionó|habló de|usó|promocionó|mostró|presentó)\s+([A-Za-z0-9\s&.-]+?)(?:\s+ever|\s+in|\s+on|\s|$|\?|!|\.)/gi,
     /(?:Nike|Adidas|Zara|H&M|McDonald's|Coca-Cola|Pepsi|Samsung|Apple|Google|Amazon|Microsoft|Facebook|Instagram|TikTok|YouTube|Twitter|Spotify|Netflix|Disney|Marvel|DC|PlayStation|Xbox|Nintendo|Tesla|BMW|Mercedes|Audi|Volkswagen|Toyota|Honda|Ford|Chevrolet|Uber|Airbnb|Starbucks|KFC|Burger King|Subway|Pizza Hut|Domino's|Walmart|Target|Best Buy|GameStop|Sephora|Ulta|Victoria's Secret|Calvin Klein|Tommy Hilfiger|Ralph Lauren|Gucci|Prada|Louis Vuitton|Chanel|Hermès|Rolex|Cartier|Tiffany|IKEA|Ikea)/gi
   ];
   
+  // RegExp patterns that should NOT be treated as brand names
+  const invalidBrandPatterns = [
+    /^\d+$/, // Pure numbers like "30"
+    /^over$/i, /^under$/i, /^above$/i, /^below$/i,
+    /^and$/i, /^or$/i, /^the$/i, /^a$/i, /^an$/i,
+    /^ages?$/i, /^years?$/i, /^old$/i,
+    /^men$/i, /^women$/i, /^male$/i, /^female$/i,
+    /^only$/i, /^from$/i, /^in$/i, /^for$/i,
+    /^followers?$/i, /^seguidores?$/i,
+    /^más$/i, /^menos$/i, /^y$/i
+  ];
+  
   for (const pattern of brandPatterns) {
     const match = pattern.exec(message);
     if (match) {
+      let candidateBrand = '';
       if (match[1]) {
         // First pattern with capture group
-        brandName = match[1].trim();
+        candidateBrand = match[1].trim();
       } else {
         // Second pattern (direct brand names)
-        brandName = match[0].trim();
+        candidateBrand = match[0].trim();
       }
-      break;
+      
+      // Validate that it's not an invalid brand word
+      const isInvalid = invalidBrandPatterns.some(invalidPattern => 
+        invalidPattern.test(candidateBrand)
+      );
+      
+      if (!isInvalid && candidateBrand.length > 1) {
+        brandName = candidateBrand;
+        break;
+      }
     }
   }
   
   // Clean up brand name
-  brandName = brandName.replace(/^(with|con|collaborated with|trabajó con|sponsored by|patrocinado por|brand|marca)\s+/gi, '').trim();
+  if (brandName) {
+    brandName = brandName.replace(/^(with|con|collaborated with|trabajó con|sponsored by|patrocinado por|brand|marca)\s+/gi, '').trim();
+  }
   
   return {
     influencerHandle,
