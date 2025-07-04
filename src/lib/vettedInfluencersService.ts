@@ -199,10 +199,10 @@ function matchesGender(influencer: VettedInfluencer, targetGender?: string): boo
       finalGender = 'male';
     } else {
       // Use consistent hash-based assignment for truly unknown cases
-      const hash = influencer.username.toLowerCase().split('').reduce((a, b) => {
-        a = ((a << 5) - a) + b.charCodeAt(0);
-        return a & a;
-      }, 0);
+    const hash = influencer.username.toLowerCase().split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
       finalGender = Math.abs(hash) % 2 === 0 ? 'female' : 'male';
     }
   }
@@ -382,9 +382,9 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
       
       if (isInclusive) {
         // Inclusive: "up to 500,000" includes exactly 500,000
-        filteredInfluencers = filteredInfluencers.filter(inf => 
-          inf.followerCount <= effectiveMaxFollowers
-        );
+      filteredInfluencers = filteredInfluencers.filter(inf => 
+        inf.followerCount <= effectiveMaxFollowers
+      );
       } else {
         // Exclusive: "under 500,000" excludes exactly 500,000  
         filteredInfluencers = filteredInfluencers.filter(inf => 
@@ -462,7 +462,7 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
         const dynamicCompatibility = await calculateDynamicBrandCompatibility(inf, brandName);
         
         return {
-          ...inf,
+        ...inf,
           brandCompatibilityScore: dynamicCompatibility.overallScore,
           brandCompatibilityProfile: dynamicCompatibility,
           // Store transparency information for UI display
@@ -988,7 +988,7 @@ export function convertVettedToMatchResult(vetted: VettedInfluencer, params?: Ap
     potentialReach: Math.round(vetted.followerCount * vetted.engagementRate),
     recommendations: [`Influencer verificado de la base de datos española`],
   };
-}
+} 
 
 /**
  * Enhanced Multi-Layered Scoring Algorithm

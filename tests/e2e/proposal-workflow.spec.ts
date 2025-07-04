@@ -18,10 +18,10 @@ test.describe('2Good Proposal Generation Workflow', () => {
     
     // FIXED: More robust waiting for chat readiness
     try {
-      await page.waitForFunction(() => {
-        const textarea = document.querySelector('textarea');
-        return textarea && !textarea.disabled;
-      }, { timeout: 10000 });
+    await page.waitForFunction(() => {
+      const textarea = document.querySelector('textarea');
+      return textarea && !textarea.disabled;
+    }, { timeout: 10000 });
     } catch (error) {
       console.log('⚠️ Initial textarea not ready, proceeding anyway...');
     }
@@ -42,9 +42,9 @@ test.describe('2Good Proposal Generation Workflow', () => {
     
     try {
       // Strategy 1: Wait for textarea to be re-enabled (primary indicator)
-      await page.waitForFunction(() => {
-        const textarea = document.querySelector('textarea');
-        return textarea && !textarea.disabled;
+    await page.waitForFunction(() => {
+      const textarea = document.querySelector('textarea');
+      return textarea && !textarea.disabled;
       }, { timeout: 30000 });
       searchCompleted = true;
       console.log('✅ Search completed - textarea re-enabled');
@@ -89,10 +89,10 @@ test.describe('2Good Proposal Generation Workflow', () => {
       
       // FIXED: More robust input readiness check
       try {
-        await page.waitForFunction(() => {
-          const textarea = document.querySelector('textarea');
-          return textarea && !textarea.disabled;
-        }, { timeout: 10000 });
+      await page.waitForFunction(() => {
+        const textarea = document.querySelector('textarea');
+        return textarea && !textarea.disabled;
+      }, { timeout: 10000 });
       } catch (error) {
         console.log('⚠️ Textarea not ready for proposal request, trying anyway...');
       }
@@ -105,10 +105,10 @@ test.describe('2Good Proposal Generation Workflow', () => {
       
       // FIXED: More robust waiting for proposal completion
       try {
-        await page.waitForFunction(() => {
-          const textarea = document.querySelector('textarea');
-          return textarea && !textarea.disabled;
-        }, { timeout: 20000 });
+      await page.waitForFunction(() => {
+        const textarea = document.querySelector('textarea');
+        return textarea && !textarea.disabled;
+      }, { timeout: 20000 });
       } catch (error) {
         console.log('⚠️ Proposal generation timeout, proceeding with results check...');
       }

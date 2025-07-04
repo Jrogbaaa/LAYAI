@@ -501,14 +501,14 @@ function parseCollaborationQuery(message: string): CollaborationParams {
       
       if (!isInvalid && candidateBrand.length > 1) {
         brandName = candidateBrand;
-        break;
+      break;
       }
     }
   }
   
   // Clean up brand name
   if (brandName) {
-    brandName = brandName.replace(/^(with|con|collaborated with|trabajó con|sponsored by|patrocinado por|brand|marca)\s+/gi, '').trim();
+  brandName = brandName.replace(/^(with|con|collaborated with|trabajó con|sponsored by|patrocinado por|brand|marca)\s+/gi, '').trim();
   }
   
   return {

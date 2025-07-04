@@ -222,6 +222,7 @@ export async function POST(request: NextRequest) {
 function analyzeBrandCollaboration(posts: any[], brandName: string): CollaborationResult {
   const brand = brandName.toLowerCase();
   const evidence: string[] = [];
+  let hasCollaborated = false;
   let collaborationType: 'partnership' | 'mention' | 'none' = 'none';
   let confidenceScore = 0;
   let lastCollabDate: string | undefined;
@@ -369,6 +370,7 @@ function analyzeBrandCollaboration(posts: any[], brandName: string): Collaborati
       if (isPartnership || currentConfidence >= 30) {
         collaborationType = 'partnership';
         confidenceScore = Math.max(confidenceScore, Math.min(currentConfidence, 95));
+        hasCollaborated = true;
         
         // Extract evidence
         const evidenceText = (post.caption || post.text || '').substring(0, 200);
@@ -386,9 +388,10 @@ function analyzeBrandCollaboration(posts: any[], brandName: string): Collaborati
         console.log(`📊 Analysis complete: FOUND collaboration (partnership, ${confidenceScore}% confidence)`);
       } else if (currentConfidence >= 15) {
         // Only set to mention if we haven't already found a partnership
-        if (collaborationType === 'none') {
+        if (collaborationType !== 'partnership') {
           collaborationType = 'mention';
           confidenceScore = Math.max(confidenceScore, Math.min(currentConfidence, 85));
+          hasCollaborated = true;
           
           const evidenceText = (post.caption || post.text || '').substring(0, 150);
           if (evidenceText.trim()) {
@@ -407,7 +410,7 @@ function analyzeBrandCollaboration(posts: any[], brandName: string): Collaborati
   }
 
   return {
-    hasCollaborated: collaborationType !== 'none',
+    hasCollaborated,
     collaborationType,
     evidence,
     confidenceScore: Math.round(confidenceScore),
@@ -497,10 +500,10 @@ function analyzeWebSearchForCollaboration(results: any[], influencerHandle: stri
   results.forEach((result, index) => {
     console.log(`🔎 Analyzing web result: ${result.title} | URL: ${result.url}`);
     
-    const resultText = result.title.toLowerCase();
+    const resultText = (result.title + ' ' + (result.description || '')).toLowerCase();
     const resultUrl = result.url.toLowerCase();
 
-    // Check for brand variations in title
+    // Check for brand variations in title/description
     let brandMentioned = false;
     let mentionType = '';
     
@@ -508,7 +511,7 @@ function analyzeWebSearchForCollaboration(results: any[], influencerHandle: stri
       if (resultText.includes(variation)) {
         brandMentioned = true;
         mentionType = 'text';
-        console.log(`✅ Brand variation "${variation}" found in title`);
+        console.log(`✅ Brand variation "${variation}" found in title/description`);
         break;
       }
     }
@@ -525,36 +528,43 @@ function analyzeWebSearchForCollaboration(results: any[], influencerHandle: stri
       }
     }
 
-    // Check for brand mentions with @ symbol (tagged mentions)
-    if (!brandMentioned) {
-      const atMentions = resultText.match(/@\w+/g) || [];
-      for (const variation of generateBrandVariations(brandName.toLowerCase())) {
-        if (atMentions.some((mention: string) => mention.toLowerCase().includes(variation))) {
-          brandMentioned = true;
-          mentionType = 'tag';
-          console.log(`✅ Brand variation "${variation}" found in @ mentions`);
-          break;
-        }
-      }
-    }
-
     // Enhanced collaboration detection for joint campaigns, challenges, etc.
     if (brandMentioned) {
       let isPartnership = false;
       let currentConfidence = 10; // Base confidence for brand mention
 
-      // Check for partnership indicators
-      for (const keyword of ['partnership', 'colaboración', 'colaboracion', 'sponsored', 'patrocinado', 'ad', 'publicidad', '#ad', '#publicidad', '#sponsored']) {
+      // HIGH CONFIDENCE: Clear ambassador/partnership indicators
+      const highConfidenceKeywords = [
+        'ambassador', 'embajador', 'embajadora',
+        'partnership', 'colaboración', 'colaboracion', 'partnership with',
+        'sponsored by', 'patrocinado por', 'patrocinado',
+        'brand ambassador', 'official ambassador',
+        'campaign ambassador', 'perfect ambassadors',
+        'turned into.*ambassadors', 'became.*ambassador'
+      ];
+
+      for (const keyword of highConfidenceKeywords) {
         if (resultText.includes(keyword.toLowerCase())) {
           isPartnership = true;
-          currentConfidence += 15;
-          console.log(`🤝 Partnership keyword found: "${keyword}"`);
-          
-          // Special boost for campaign/challenge indicators
-          if (['challenge', 'campaign', 'contest', 'duet'].some(special => keyword.includes(special))) {
-            currentConfidence += 20;
-            console.log(`🎯 Campaign/Challenge detected - confidence boost`);
-          }
+          currentConfidence += 40; // High boost for clear ambassador mentions
+          console.log(`🏆 HIGH CONFIDENCE: Ambassador/Partnership keyword found: "${keyword}"`);
+          break;
+        }
+      }
+
+      // MEDIUM CONFIDENCE: Campaign/collaboration indicators
+      const mediumConfidenceKeywords = [
+        'campaign', 'campaña', 'challenge', 'desafío',
+        'collaboration', 'colaboración', 'collab',
+        'sponsored', 'patrocinado', '#ad', '#publicidad', '#sponsored',
+        'official', 'oficial', 'represent', 'representa'
+      ];
+
+      for (const keyword of mediumConfidenceKeywords) {
+        if (resultText.includes(keyword.toLowerCase())) {
+          isPartnership = true;
+          currentConfidence += 25;
+          console.log(`🤝 MEDIUM CONFIDENCE: Campaign keyword found: "${keyword}"`);
           break;
         }
       }
@@ -566,14 +576,16 @@ function analyzeWebSearchForCollaboration(results: any[], influencerHandle: stri
         new RegExp(`cr7\\s*x\\s*${brandName.toLowerCase()}`, 'i'),
         new RegExp(`cristiano\\s*x\\s*${brandName.toLowerCase()}`, 'i'),
         new RegExp(`${brandName.toLowerCase()}.*(?:challenge|contest|campaign)`, 'i'),
-        new RegExp(`(?:challenge|contest|campaign).*${brandName.toLowerCase()}`, 'i')
+        new RegExp(`(?:challenge|contest|campaign).*${brandName.toLowerCase()}`, 'i'),
+        new RegExp(`${brandName.toLowerCase()}.*(?:ambassador|embajador)`, 'i'),
+        new RegExp(`(?:ambassador|embajador).*${brandName.toLowerCase()}`, 'i')
       ];
 
       for (const pattern of campaignPatterns) {
         if (pattern.test(resultText)) {
           isPartnership = true;
-          currentConfidence += 25;
-          console.log(`🎪 Campaign pattern detected: ${pattern.source}`);
+          currentConfidence += 35;
+          console.log(`🎪 CAMPAIGN PATTERN: ${pattern.source}`);
           break;
         }
       }
@@ -599,7 +611,13 @@ function analyzeWebSearchForCollaboration(results: any[], influencerHandle: stri
 
       // Look for mention-only indicators if not partnership
       if (!isPartnership) {
-        for (const keyword of ['love', 'amo', 'encanta', 'amazing', 'increíble', 'increible', 'using', 'usando', 'utilizo', 'with', 'con', 'from', 'de', 'by', 'por', 'join', 'únete']) {
+        const mentionKeywords = [
+          'love', 'amo', 'encanta', 'amazing', 'increíble', 'increible', 
+          'using', 'usando', 'utilizo', 'with', 'con', 'from', 'de', 
+          'by', 'por', 'join', 'únete', 'featured', 'appears'
+        ];
+        
+        for (const keyword of mentionKeywords) {
           if (resultText.includes(keyword.toLowerCase())) {
             currentConfidence += 5;
             console.log(`💬 Mention keyword found: "${keyword}"`);
@@ -612,11 +630,12 @@ function analyzeWebSearchForCollaboration(results: any[], influencerHandle: stri
       if (isPartnership || currentConfidence >= 30) {
         collaborationType = 'partnership';
         confidenceScore = Math.max(confidenceScore, Math.min(currentConfidence, 95));
+        hasCollaborated = true;
         
         // Extract evidence
-        const evidenceText = result.title.substring(0, 200);
+        const evidenceText = (result.title + (result.description ? ' - ' + result.description : '')).substring(0, 300);
         if (evidenceText.trim()) {
-          evidence.push(`Result ${index + 1}: "${evidenceText}${evidenceText.length >= 200 ? '...' : ''}"`);
+          evidence.push(`Partnership Evidence: "${evidenceText}${evidenceText.length >= 300 ? '...' : ''}"`);
         }
         
         if (result.date) {
@@ -629,21 +648,19 @@ function analyzeWebSearchForCollaboration(results: any[], influencerHandle: stri
         console.log(`📊 Analysis complete: FOUND collaboration (partnership, ${confidenceScore}% confidence)`);
       } else if (currentConfidence >= 15) {
         // Only set to mention if we haven't already found a partnership
-        if (collaborationType === 'none') {
+        if (collaborationType !== 'partnership') {
           collaborationType = 'mention';
           confidenceScore = Math.max(confidenceScore, Math.min(currentConfidence, 85));
+          hasCollaborated = true;
           
-          const evidenceText = result.title.substring(0, 150);
+          const evidenceText = (result.title + (result.description ? ' - ' + result.description : '')).substring(0, 200);
           if (evidenceText.trim()) {
-            evidence.push(`Mention: "${evidenceText}${evidenceText.length >= 150 ? '...' : ''}"`);
+            evidence.push(`Mention Evidence: "${evidenceText}${evidenceText.length >= 200 ? '...' : ''}"`);
           }
         }
         
         console.log(`📊 Analysis complete: FOUND mention (${confidenceScore}% confidence)`);
       }
-
-      // Update hasCollaborated flag
-      hasCollaborated = isPartnership || currentConfidence >= 30;
     }
   });
 

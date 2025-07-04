@@ -123,7 +123,7 @@ function detectCollaborationQuery(message: string): { influencer: string; brand:
       
       // Only return if both names are meaningful (more than 1 character and not invalid)
       if (influencer.length > 1 && brand.length > 1) {
-        return { influencer, brand };
+      return { influencer, brand };
       }
     }
   }

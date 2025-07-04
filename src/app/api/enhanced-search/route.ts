@@ -593,7 +593,7 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
     
     if (shouldDoRealtimeSearch) {
       console.log(`🌐 Database found ${databaseResultsCount} results, supplementing with real-time search...`);
-      try {
+    try {
         // Add timeout protection for real-time search
         const timeoutPromise = new Promise((_, reject) => 
           setTimeout(() => reject(new Error('Real-time search timeout')), 30000) // 30 second timeout
@@ -605,8 +605,8 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
         });
         
         const apifyInfluencers = await Promise.race([searchPromise, timeoutPromise]) as any[];
-        
-        if (apifyInfluencers && apifyInfluencers.length > 0) {
+      
+      if (apifyInfluencers && apifyInfluencers.length > 0) {
         // Convert ScrapedInfluencer[] to MatchResult[] format
         const convertedApify = apifyInfluencers.map(influencer => ({
           influencer: {
@@ -664,10 +664,10 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
         searchSources.push('Búsqueda en tiempo real');
         
         console.log(`✅ Found ${apifyInfluencers.length} Apify results`);
-        } else {
-          console.log('⚠️ No Apify results found');
-        }
-      } catch (error) {
+      } else {
+        console.log('⚠️ No Apify results found');
+      }
+    } catch (error) {
         console.warn('⚠️ Real-time search failed or timed out:', error);
       }
     } else {

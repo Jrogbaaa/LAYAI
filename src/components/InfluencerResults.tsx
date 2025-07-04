@@ -100,7 +100,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
       /patrikssontalent/i,
       
       // Invalid username ending patterns - but allow single trailing underscore (common on Instagram)
-      /^[._]/,  // Starts with period or underscore  
+      /^[._]/,  // Starts with period or underscore
       /\.$/, // Ends with period (but allow underscore)
       /[._]{2,}/, // Consecutive periods/underscores
       
