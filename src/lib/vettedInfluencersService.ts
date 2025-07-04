@@ -458,8 +458,8 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
       // Import dynamic compatibility engine
       const { calculateDynamicBrandCompatibility } = await import('./enhancedCompatibilityEngine');
       
-      const brandScoredInfluencers = scoredInfluencers.map(inf => {
-        const dynamicCompatibility = calculateDynamicBrandCompatibility(inf, brandName);
+      const brandScoredInfluencers = await Promise.all(scoredInfluencers.map(async (inf) => {
+        const dynamicCompatibility = await calculateDynamicBrandCompatibility(inf, brandName);
         
         return {
           ...inf,
@@ -469,7 +469,7 @@ export async function searchVettedInfluencers(params: ApifySearchParams): Promis
           matchReasons: dynamicCompatibility.transparency.matchReasons,
           confidenceLevel: dynamicCompatibility.transparency.confidenceLevel
         };
-      });
+      }));
       
       // Sort by dynamic brand compatibility score (prioritize brand fit)
       brandScoredInfluencers.sort((a, b) => {

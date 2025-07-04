@@ -1,7 +1,7 @@
 /**
  * Enhanced Brand Compatibility Engine
  * Multi-dimensional scoring with transparency and aesthetic understanding
- * LAYAI v2.18.0 - Dynamic Brand Intelligence System
+ * LAYAI v2.18.0 - Dynamic Brand Intelligence System with Web Search Fallback
  */
 
 import { 
@@ -11,25 +11,348 @@ import {
   areCompetitors,
   BrandProfile, 
   CompatibilityScore,
-  AESTHETIC_PROFILES 
+  AESTHETIC_PROFILES,
+  BrandCategory 
 } from './brandDatabase';
 import { VettedInfluencer } from './vettedInfluencersService';
+
+// Interface for dynamic brand research results
+interface DynamicBrandData {
+  brandName: string;
+  category: BrandCategory;
+  description: string;
+  targetAudience: {
+    primaryAge: [number, number];
+    secondaryAge: [number, number];
+    gender: 'male' | 'female' | 'mixed';
+    interests: string[];
+  };
+  brandValues: string[];
+  aestheticKeywords: string[];
+  contentThemes: string[];
+  riskTolerance: 'low' | 'medium' | 'high';
+  confidence: 'high' | 'medium' | 'low';
+  source: 'web-search' | 'fallback';
+}
+
+/**
+ * Research unknown brand using web search
+ */
+async function researchBrandDynamically(brandName: string): Promise<DynamicBrandData | null> {
+  try {
+    console.log(`🔍 Researching unknown brand: ${brandName}`);
+    
+    const searchQuery = `${brandName} brand target audience marketing demographics`;
+    
+    const response = await fetch('/api/web-search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: searchQuery,
+        limit: 3,
+        type: 'brand'
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Web search failed: ${response.status}`);
+    }
+
+    const searchData = await response.json();
+    
+    if (!searchData.success || !searchData.results || searchData.results.length === 0) {
+      throw new Error('No search results found');
+    }
+
+    // Analyze search results to extract brand information
+    const searchResults = searchData.results;
+    const combinedText = searchResults
+      .map((result: any) => `${result.title} ${result.description}`)
+      .join(' ')
+      .toLowerCase();
+
+    console.log(`📊 Analyzing search results for ${brandName}:`, combinedText.substring(0, 200) + '...');
+
+    // Extract brand category
+    const category = extractBrandCategory(combinedText, brandName);
+    
+    // Extract target demographics
+    const targetAudience = extractTargetAudience(combinedText);
+    
+    // Extract brand values and aesthetics
+    const brandValues = extractBrandValues(combinedText);
+    const aestheticKeywords = extractAestheticKeywords(combinedText);
+    const contentThemes = extractContentThemes(combinedText, category);
+    
+    // Determine risk tolerance
+    const riskTolerance = extractRiskTolerance(combinedText, brandName);
+
+    const dynamicBrandData: DynamicBrandData = {
+      brandName,
+      category,
+      description: searchResults[0]?.description || `${brandName} brand information`,
+      targetAudience,
+      brandValues,
+      aestheticKeywords,
+      contentThemes,
+      riskTolerance,
+      confidence: searchData.source === 'serply' ? 'high' : 'medium',
+      source: searchData.source === 'serply' ? 'web-search' : 'fallback'
+    };
+
+    console.log(`✅ Dynamic brand research completed for ${brandName}:`, {
+      category: dynamicBrandData.category,
+      values: dynamicBrandData.brandValues,
+      aesthetics: dynamicBrandData.aestheticKeywords,
+      confidence: dynamicBrandData.confidence
+    });
+
+    return dynamicBrandData;
+
+  } catch (error) {
+    console.error(`❌ Failed to research brand ${brandName}:`, error);
+    
+    // Return basic fallback data
+    return {
+      brandName,
+      category: BrandCategory.LIFESTYLE_GENERAL,
+      description: `${brandName} brand information`,
+      targetAudience: {
+        primaryAge: [18, 45],
+        secondaryAge: [16, 65],
+        gender: 'mixed',
+        interests: ['lifestyle', 'trends', 'quality products']
+      },
+      brandValues: ['quality', 'innovative', 'customer-focused'],
+      aestheticKeywords: ['modern', 'professional', 'accessible'],
+      contentThemes: ['product showcases', 'lifestyle content', 'brand stories'],
+      riskTolerance: 'medium',
+      confidence: 'low',
+      source: 'fallback'
+    };
+  }
+}
+
+/**
+ * Extract brand category from search text
+ */
+function extractBrandCategory(text: string, brandName: string): BrandCategory {
+  const categoryKeywords = {
+    [BrandCategory.FASHION_BEAUTY]: ['fashion', 'beauty', 'cosmetics', 'clothing', 'style', 'makeup', 'skincare', 'apparel'],
+    [BrandCategory.FOOD_BEVERAGE]: ['food', 'beverage', 'restaurant', 'drink', 'coffee', 'tea', 'dining', 'cuisine'],
+    [BrandCategory.HOME_LIVING]: ['home', 'furniture', 'interior', 'decoration', 'living', 'house', 'design'],
+    [BrandCategory.TECH_GAMING]: ['technology', 'tech', 'software', 'gaming', 'computer', 'digital', 'app', 'platform'],
+    [BrandCategory.SPORTS_FITNESS]: ['sports', 'fitness', 'athletic', 'gym', 'workout', 'exercise', 'health'],
+    [BrandCategory.TRAVEL_TOURISM]: ['travel', 'tourism', 'hotel', 'airline', 'vacation', 'trip', 'booking'],
+    [BrandCategory.AUTOMOTIVE]: ['automotive', 'car', 'vehicle', 'auto', 'driving', 'transportation'],
+    [BrandCategory.FINANCIAL]: ['financial', 'bank', 'finance', 'investment', 'money', 'payment', 'credit'],
+    [BrandCategory.ENTERTAINMENT]: ['entertainment', 'media', 'streaming', 'music', 'movie', 'show', 'content']
+  };
+
+  for (const [category, keywords] of Object.entries(categoryKeywords)) {
+    if (keywords.some(keyword => text.includes(keyword))) {
+      return category as BrandCategory;
+    }
+  }
+
+  return BrandCategory.LIFESTYLE_GENERAL;
+}
+
+/**
+ * Extract target audience from search text
+ */
+function extractTargetAudience(text: string) {
+  // Age detection
+  let primaryAge: [number, number] = [18, 45];
+  let secondaryAge: [number, number] = [16, 65];
+
+  if (text.includes('teen') || text.includes('young')) {
+    primaryAge = [13, 25];
+    secondaryAge = [16, 35];
+  } else if (text.includes('millennial')) {
+    primaryAge = [25, 40];
+    secondaryAge = [20, 45];
+  } else if (text.includes('gen z')) {
+    primaryAge = [16, 26];
+    secondaryAge = [13, 30];
+  } else if (text.includes('adult') || text.includes('professional')) {
+    primaryAge = [25, 55];
+    secondaryAge = [20, 65];
+  }
+
+  // Gender detection
+  let gender: 'male' | 'female' | 'mixed' = 'mixed';
+  if (text.includes('women') || text.includes('female') || text.includes('beauty') || text.includes('makeup')) {
+    gender = 'female';
+  } else if (text.includes('men') || text.includes('male') || text.includes('masculine')) {
+    gender = 'male';
+  }
+
+  // Interest extraction
+  const interests = ['lifestyle', 'quality products', 'trends'];
+  const interestKeywords = ['fashion', 'technology', 'food', 'travel', 'fitness', 'entertainment', 'home', 'beauty'];
+  interestKeywords.forEach(keyword => {
+    if (text.includes(keyword)) {
+      interests.push(keyword);
+    }
+  });
+
+  return {
+    primaryAge,
+    secondaryAge,
+    gender,
+    interests: Array.from(new Set(interests)) // Remove duplicates
+  };
+}
+
+/**
+ * Extract brand values from search text
+ */
+function extractBrandValues(text: string): string[] {
+  const valueKeywords = {
+    'innovative': ['innovative', 'innovation', 'cutting-edge', 'advanced'],
+    'sustainable': ['sustainable', 'eco-friendly', 'green', 'environmental'],
+    'premium': ['premium', 'luxury', 'high-end', 'exclusive'],
+    'affordable': ['affordable', 'budget', 'value', 'economical'],
+    'reliable': ['reliable', 'trusted', 'dependable', 'consistent'],
+    'modern': ['modern', 'contemporary', 'current', 'up-to-date'],
+    'traditional': ['traditional', 'classic', 'heritage', 'established'],
+    'customer-focused': ['customer', 'service', 'support', 'satisfaction']
+  };
+
+  const extractedValues: string[] = [];
+  
+  for (const [value, keywords] of Object.entries(valueKeywords)) {
+    if (keywords.some(keyword => text.includes(keyword))) {
+      extractedValues.push(value);
+    }
+  }
+
+  // Ensure at least some basic values
+  if (extractedValues.length === 0) {
+    extractedValues.push('quality', 'customer-focused');
+  }
+
+  return extractedValues;
+}
+
+/**
+ * Extract aesthetic keywords from search text
+ */
+function extractAestheticKeywords(text: string): string[] {
+  const aestheticKeywords = {
+    'minimalist': ['minimal', 'clean', 'simple', 'sleek'],
+    'luxury': ['luxury', 'premium', 'elegant', 'sophisticated'],
+    'casual': ['casual', 'relaxed', 'everyday', 'comfortable'],
+    'professional': ['professional', 'business', 'corporate', 'formal'],
+    'creative': ['creative', 'artistic', 'unique', 'innovative'],
+    'sustainable': ['sustainable', 'eco', 'green', 'natural']
+  };
+
+  const extractedAesthetics: string[] = [];
+  
+  for (const [aesthetic, keywords] of Object.entries(aestheticKeywords)) {
+    if (keywords.some(keyword => text.includes(keyword))) {
+      extractedAesthetics.push(aesthetic);
+    }
+  }
+
+  // Default aesthetics if none found
+  if (extractedAesthetics.length === 0) {
+    extractedAesthetics.push('modern', 'professional');
+  }
+
+  return extractedAesthetics;
+}
+
+/**
+ * Extract content themes based on category
+ */
+function extractContentThemes(text: string, category: BrandCategory): string[] {
+  const categoryThemes = {
+    [BrandCategory.FASHION_BEAUTY]: ['outfit styling', 'beauty tutorials', 'fashion trends', 'product reviews'],
+    [BrandCategory.FOOD_BEVERAGE]: ['food reviews', 'recipes', 'dining experiences', 'taste tests'],
+    [BrandCategory.HOME_LIVING]: ['home tours', 'decoration tips', 'organization', 'DIY projects'],
+    [BrandCategory.TECH_GAMING]: ['product demos', 'tech reviews', 'tutorials', 'unboxing'],
+    [BrandCategory.SPORTS_FITNESS]: ['workout routines', 'fitness tips', 'sports content', 'health advice'],
+    [BrandCategory.TRAVEL_TOURISM]: ['travel vlogs', 'destination guides', 'travel tips', 'experiences'],
+    [BrandCategory.AUTOMOTIVE]: ['car reviews', 'driving experiences', 'automotive news', 'comparisons'],
+    [BrandCategory.FINANCIAL]: ['financial advice', 'investment tips', 'money management', 'economic insights'],
+    [BrandCategory.ENTERTAINMENT]: ['entertainment news', 'reviews', 'behind-the-scenes', 'recommendations'],
+    [BrandCategory.LIFESTYLE_GENERAL]: ['lifestyle content', 'daily routines', 'personal stories', 'recommendations']
+  };
+
+  return categoryThemes[category] || categoryThemes[BrandCategory.LIFESTYLE_GENERAL];
+}
+
+/**
+ * Extract risk tolerance from search text and brand name
+ */
+function extractRiskTolerance(text: string, brandName: string): 'low' | 'medium' | 'high' {
+  // Conservative brands (financial, healthcare, children's products)
+  if (text.includes('bank') || text.includes('financial') || text.includes('healthcare') || 
+      text.includes('children') || text.includes('family') || text.includes('education')) {
+    return 'low';
+  }
+
+  // High-risk tolerance brands (entertainment, gaming, fashion)
+  if (text.includes('entertainment') || text.includes('gaming') || text.includes('nightlife') ||
+      text.includes('extreme') || text.includes('edgy')) {
+    return 'high';
+  }
+
+  // Default to medium risk
+  return 'medium';
+}
 
 /**
  * Calculate comprehensive brand compatibility with transparency
  */
-export function calculateDynamicBrandCompatibility(
+export async function calculateDynamicBrandCompatibility(
   influencer: VettedInfluencer, 
   brandName: string
-): CompatibilityScore {
-  const brandProfile = getBrandProfile(brandName);
+): Promise<CompatibilityScore> {
+  let brandProfile = getBrandProfile(brandName);
+  let isDynamicBrand = false;
   
   if (!brandProfile) {
-    // Fallback to universal scoring for unknown brands
-    return calculateUniversalCompatibility(influencer, brandName);
+    console.log(`🔍 Brand "${brandName}" not in database, researching dynamically...`);
+    
+    // Research brand dynamically using web search
+    const dynamicBrandData = await researchBrandDynamically(brandName);
+    
+    if (dynamicBrandData) {
+      // Convert dynamic brand data to BrandProfile format
+      brandProfile = {
+        brandName: dynamicBrandData.brandName,
+        category: dynamicBrandData.category,
+        targetAudience: dynamicBrandData.targetAudience,
+        brandValues: dynamicBrandData.brandValues,
+        aestheticKeywords: dynamicBrandData.aestheticKeywords,
+        contentThemes: dynamicBrandData.contentThemes,
+        competitorBrands: [], // No competitor data from web search
+        riskTolerance: dynamicBrandData.riskTolerance,
+        preferredInfluencerTiers: ['nano', 'micro', 'macro'], // Default tiers
+        optimalFollowerRange: { min: 10000, max: 500000 }, // Default range
+        optimalEngagement: 0.03, // Default engagement
+        weightings: {
+          categoryMatch: 0.30,
+          audienceAlignment: 0.25,
+          aestheticCompatibility: 0.25,
+          riskAssessment: 0.20
+        }
+      };
+      isDynamicBrand = true;
+      console.log(`✅ Dynamic brand research completed for ${brandName}`);
+    } else {
+      // Fallback to universal scoring for completely unknown brands
+      return calculateUniversalCompatibility(influencer, brandName);
+    }
   }
 
-  console.log(`🧠 Calculating dynamic compatibility for ${influencer.username} x ${brandProfile.brandName}`);
+  console.log(`🧠 Calculating ${isDynamicBrand ? 'dynamic' : 'database'} compatibility for ${influencer.username} x ${brandProfile.brandName}`);
 
   // 1. Category Match Analysis
   const categoryMatch = analyzeCategoryCompatibility(influencer, brandProfile);
@@ -50,7 +373,8 @@ export function calculateDynamicBrandCompatibility(
     categoryMatch,
     audienceAlignment,
     aestheticCompatibility,
-    riskAssessment
+    riskAssessment,
+    isDynamicBrand
   );
 
   // Calculate weighted overall score using brand-specific weightings
@@ -61,7 +385,7 @@ export function calculateDynamicBrandCompatibility(
     riskAssessment.score * brandProfile.weightings.riskAssessment
   );
 
-  console.log(`📊 ${influencer.username} compatibility: ${overallScore}/100 (Category: ${categoryMatch.score}, Audience: ${audienceAlignment.score}, Aesthetic: ${aestheticCompatibility.score}, Risk: ${riskAssessment.score})`);
+  console.log(`📊 ${influencer.username} compatibility: ${overallScore}/100 (Category: ${categoryMatch.score}, Audience: ${audienceAlignment.score}, Aesthetic: ${aestheticCompatibility.score}, Risk: ${riskAssessment.score}) [${isDynamicBrand ? 'Dynamic' : 'Database'}]`);
 
   return {
     overallScore,
@@ -334,7 +658,8 @@ function generateTransparencyInfo(
   categoryMatch: CompatibilityScore['categoryMatch'],
   audienceAlignment: CompatibilityScore['audienceAlignment'],
   aestheticCompatibility: CompatibilityScore['aestheticCompatibility'],
-  riskAssessment: CompatibilityScore['riskAssessment']
+  riskAssessment: CompatibilityScore['riskAssessment'],
+  isDynamicBrand: boolean
 ): CompatibilityScore['transparency'] {
   const matchReasons: string[] = [];
   let confidenceLevel: 'high' | 'medium' | 'low' = 'medium';
@@ -374,6 +699,12 @@ function generateTransparencyInfo(
   const { min, max } = brandProfile.optimalFollowerRange;
   if (influencer.followerCount >= min && influencer.followerCount <= max) {
     matchReasons.push(`Follower count (${influencer.followerCount.toLocaleString()}) in optimal range for ${brandProfile.brandName}`);
+  }
+
+  // Add dynamic brand research note
+  if (isDynamicBrand) {
+    matchReasons.push(`🔍 Brand analysis powered by real-time web research`);
+    if (confidenceLevel === 'high') confidenceLevel = 'medium'; // Slightly reduce confidence for dynamic brands
   }
 
   const scoringBreakdown = {

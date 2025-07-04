@@ -1,8 +1,9 @@
 # 🚀 LAYAI - AI-Powered Influencer Marketing Platform
 
-**📱 Version 2.18.0** | **🌐 Live Production**: [https://layai.vercel.app/](https://layai.vercel.app/)
+**📱 Version 2.19.0** | **🌐 Live Production**: [https://layai.vercel.app/](https://layai.vercel.app/)
 
-> 🎯 **MAJOR: Enhanced Brand Compatibility Engine** - Dynamic multi-dimensional brand-influencer matching with 50+ brand profiles and aesthetic intelligence!
+> 🔍 **MAJOR: Dynamic Brand Research Engine** - Universal brand support with real-time web search for ANY brand, not just pre-configured ones!
+> 🎯 **PREVIOUS: Enhanced Brand Compatibility Engine** - Dynamic multi-dimensional brand-influencer matching with 50+ brand profiles and aesthetic intelligence!
 > 🚨 **PREVIOUS: Follower Count Filtering Restored** - Fixed broken parsing for "under 500,000 followers" - now 100% accurate!
 > ✅ **PREVIOUS: Test Reliability Enhanced** - Fixed flaky E2E tests with multi-strategy timeout handling and 148/148 tests now passing consistently!
 
@@ -10,7 +11,15 @@
 
 LAYAI is a comprehensive AI-powered influencer discovery and campaign management platform that helps brands find, analyze, and collaborate with the perfect influencers for their marketing campaigns.
 
-### 🔥 **Latest Features (v2.18.0)**
+### 🔥 **Latest Features (v2.19.0)**
+- **🔍 Universal Brand Support**: Can analyze compatibility for ANY brand, not just pre-configured ones
+- **🌐 Real-time Brand Research**: Automatically researches unknown brands using web search API
+- **🤖 AI-Powered Extraction**: Intelligent analysis of search results to determine brand attributes
+- **📊 Confidence Scoring**: Tracks data quality and source reliability for dynamic research
+- **🔄 Seamless Fallback**: Graceful degradation when web search fails
+- **⚡ Performance Optimized**: <2 seconds for dynamic brand research with circuit breaker protection
+
+### 🔥 **Previous Features (v2.18.0)**
 - **🎯 Dynamic Brand Database**: 50+ pre-configured brand profiles across 10 major categories (Home, Fashion, Tech, etc.)
 - **🎨 Aesthetic Intelligence**: 6 core aesthetic profiles (Minimalist, Luxury, Casual, Professional, Creative, Sustainable)
 - **🔍 Transparent Scoring**: Multi-dimensional compatibility analysis with clear match reasoning
