@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import LandingPage from '@/components/LandingPage';
 import { SearchInterface } from '@/components/SearchInterface';
 import { ProposalGenerator } from '@/components/ProposalGenerator';
@@ -35,10 +35,38 @@ export default function Home() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showAllResults, setShowAllResults] = useState(false);
   const [pdfAnalysisContext, setPdfAnalysisContext] = useState<any>(null);
+  
+  // Ref for auto-scrolling to results
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setSessionId(generateSessionId());
   }, []);
+
+  // Auto-scroll to results when search results are updated
+  useEffect(() => {
+    if (searchResults && searchResults.premiumResults.length > 0 && resultsRef.current) {
+      // Small delay to ensure the results are rendered and loading state is complete
+      setTimeout(() => {
+        if (resultsRef.current) {
+          console.log('🔄 Auto-scrolling to search results...');
+          resultsRef.current.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start',
+            inline: 'nearest'
+          });
+          
+          // Add a subtle highlight effect to draw attention to results
+          resultsRef.current.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.3)';
+          setTimeout(() => {
+            if (resultsRef.current) {
+              resultsRef.current.style.boxShadow = '';
+            }
+          }, 2000);
+        }
+      }, 300); // Increased delay to ensure everything is rendered
+    }
+  }, [searchResults]);
 
   // Helper function to extract brand name from search message OR PDF context
   const extractBrandFromMessage = (message: string): string => {
@@ -455,12 +483,28 @@ export default function Home() {
                     
               {/* Results */}
               {searchResults && (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-8">
-                    <InfluencerResults 
+                <div 
+                  ref={resultsRef}
+                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-8 transition-all duration-300"
+                >
+                  {/* Results Header */}
+                  <div className="mb-6">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                      📊 Resultados de Búsqueda
+                    </h2>
+                    <p className="text-sm text-gray-600">
+                      {searchResults.premiumResults.length} influencers encontrados
+                      {searchResults.totalFound > searchResults.premiumResults.length && 
+                        ` (${searchResults.totalFound} total disponibles)`
+                      }
+                    </p>
+                  </div>
+                  
+                  <InfluencerResults 
                     results={searchResults.premiumResults}
-                    />
-                      </div>
-                    )}
+                  />
+                </div>
+              )}
             </>
           )}
 
