@@ -446,3 +446,104 @@ export async function getInfluencerStats(): Promise<{
     };
   }
 }
+
+// Generate match reasons for vetted influencers
+function generateVettedMatchReasons(influencer: VettedInfluencer, params: any): string[] {
+  const reasons: string[] = [];
+  
+  // Always include source
+  reasons.push('Base de datos verificada');
+  
+  // Niche matching
+  if (params.niches && params.niches.length > 0) {
+    const matchingNiches = params.niches.filter((niche: string) => 
+      influencer.niche.some(n => n.toLowerCase().includes(niche.toLowerCase()))
+    );
+    
+    if (matchingNiches.length > 0) {
+      reasons.push(`Especialista en ${matchingNiches.join(', ')}`);
+    }
+  }
+  
+  // Brand-specific matching
+  if (params.brandName?.toLowerCase().includes('ikea') || params.userQuery?.toLowerCase().includes('ikea')) {
+    if (influencer.niche.some(n => n.toLowerCase().includes('home') || n.toLowerCase().includes('lifestyle'))) {
+      reasons.push('Perfecto para IKEA: contenido de hogar y lifestyle');
+    }
+  }
+  
+  // Engagement analysis
+  if (influencer.engagementRate > 0.05) {
+    reasons.push(`Engagement excepcional ${(influencer.engagementRate * 100).toFixed(1)}%`);
+  } else if (influencer.engagementRate > 0.03) {
+    reasons.push(`Engagement sólido ${(influencer.engagementRate * 100).toFixed(1)}%`);
+  }
+  
+  // Follower analysis
+  if (influencer.followerCount > 1000000) {
+    reasons.push('Mega-influencer con alcance masivo');
+  } else if (influencer.followerCount > 500000) {
+    reasons.push('Macro-influencer con gran alcance');
+  } else if (influencer.followerCount > 100000) {
+    reasons.push('Influencer establecido con audiencia sólida');
+  } else if (influencer.followerCount > 50000) {
+    reasons.push('Micro-influencer con comunidad engaged');
+  }
+  
+  // Location matching
+  if (params.location && influencer.location?.toLowerCase().includes(params.location.toLowerCase())) {
+    reasons.push(`Ubicado en ${influencer.location}`);
+  }
+  
+  // Verification status
+  if (influencer.verified) {
+    reasons.push('✅ Cuenta verificada');
+  }
+  
+  return reasons;
+}
+
+// Convert VettedInfluencer to MatchResult format
+export function convertVettedToMatchResult(influencer: VettedInfluencer, params: any): any {
+  return {
+    influencer: {
+      id: influencer.id,
+      name: influencer.name,
+      handle: influencer.handle,
+      platform: influencer.platform,
+      followerCount: influencer.followerCount,
+      engagementRate: influencer.engagementRate,
+      ageRange: influencer.ageRange,
+      gender: influencer.gender,
+      location: influencer.location,
+      niche: influencer.niche,
+      contentStyle: influencer.contentStyle,
+      pastCollaborations: influencer.pastCollaborations,
+      averageRate: influencer.averageRate,
+      costLevel: influencer.costLevel,
+      audienceDemographics: influencer.audienceDemographics,
+      recentPosts: influencer.recentPosts,
+      contactInfo: influencer.contactInfo,
+      isActive: influencer.isActive,
+      lastUpdated: influencer.lastUpdated,
+      profileUrl: `https://www.instagram.com/${influencer.handle}`,
+      profileImage: '',
+      bio: '',
+      category: influencer.niche[0] || 'General',
+      isVerified: influencer.verified || false,
+      collaborationHistory: [],
+      avgLikes: Math.round(influencer.followerCount * influencer.engagementRate * 0.8),
+      avgComments: Math.round(influencer.followerCount * influencer.engagementRate * 0.2),
+      lastActive: 'Recently'
+    },
+    matchScore: 0.95, // High score for vetted database results
+    matchReasons: generateVettedMatchReasons(influencer, params),
+    estimatedCost: influencer.averageRate,
+    similarPastCampaigns: [],
+    potentialReach: Math.round(influencer.followerCount * influencer.engagementRate),
+    recommendations: [
+      'Influencer verificado de base de datos española',
+      'Datos de engagement reales y actualizados'
+    ]
+  };
+}

@@ -1688,6 +1688,7 @@ function transformProfileResults(items: any[], platform: string, params: ApifySe
   // Track filtering statistics
   let brandAccountsFiltered = 0;
   let followerCountFiltered = 0;
+  let genderFiltered = 0;
 
   // Niche scoring for brand compatibility
   const nicheScores: { [key: string]: number } = {
@@ -1734,6 +1735,13 @@ function transformProfileResults(items: any[], platform: string, params: ApifySe
         followerCountFiltered++;
         return null;
       }
+
+      // 🔥 FIXED: Apply gender filtering
+      if (params.gender && !matchesGender(transformed, params.gender)) {
+        console.log(`👤 Filtered out by gender: ${transformed.username} (looking for ${params.gender})`);
+        genderFiltered++;
+        return null;
+      }
       
       // Enhance with brand compatibility score
       if (params.brandName) {
@@ -1766,6 +1774,7 @@ function transformProfileResults(items: any[], platform: string, params: ApifySe
   console.log(`🔍 Filtering summary for ${platform}:`);
   console.log(`   - Brand accounts filtered: ${brandAccountsFiltered}`);
   console.log(`   - Follower count filtered: ${followerCountFiltered}`);
+  console.log(`   - Gender filtered: ${genderFiltered}`);
   console.log(`   - Final results: ${results.length}`);
 
   return results;
@@ -2043,12 +2052,26 @@ function matchesLocation(influencer: ScrapedInfluencer, targetLocation: string, 
  * Check if an influencer's gender matches the target, with flexibility
  */
 function matchesGender(influencer: ScrapedInfluencer, targetGender: string): boolean {
-    if (!targetGender) return true;
+    if (!targetGender || targetGender === 'any') return true;
     
     const { fullName, username, biography } = influencer;
     const gender = targetGender.toLowerCase();
 
-    // Common names for gender detection (expanded lists)
+    // Use the comprehensive gender detection from username
+    const detectedGender = detectGenderFromUsername(username);
+    
+    // If we can confidently detect gender from username, use it
+    if (detectedGender !== 'unknown') {
+        const matches = detectedGender === gender;
+        if (matches) {
+            console.log(`✅ Gender match: ${username} (${detectedGender} matches ${gender})`);
+        } else {
+            console.log(`❌ Gender mismatch: ${username} (${detectedGender} doesn't match ${gender})`);
+        }
+        return matches;
+    }
+
+    // Fallback to name analysis for cases where username detection fails
     const maleNames = [
         'pablo', 'sergio', 'david', 'javier', 'daniel', 'mario', 'manuel', 'jose', 'antonio', 
         'francisco', 'juan', 'carlos', 'miguel', 'rafael', 'pedro', 'angel', 'alejandro',
@@ -2068,27 +2091,46 @@ function matchesGender(influencer: ScrapedInfluencer, targetGender: string): boo
 
     const normalizedName = (fullName || username || '').toLowerCase();
     
-    // Check for exact gender matches first
+    // Check for exact gender matches in full name
     if (gender === 'male') {
-        if (maleNames.some(name => normalizedName.includes(name))) return true;
-        if (femaleNames.some(name => normalizedName.includes(name))) return false;
+        if (maleNames.some(name => normalizedName.includes(name))) {
+            console.log(`✅ Gender match by name: ${username} (male name detected)`);
+            return true;
+        }
+        if (femaleNames.some(name => normalizedName.includes(name))) {
+            console.log(`❌ Gender mismatch by name: ${username} (female name detected, looking for male)`);
+            return false;
+        }
     }
     
     if (gender === 'female') {
-        if (femaleNames.some(name => normalizedName.includes(name))) return true;
-        if (maleNames.some(name => normalizedName.includes(name))) return false;
+        if (femaleNames.some(name => normalizedName.includes(name))) {
+            console.log(`✅ Gender match by name: ${username} (female name detected)`);
+            return true;
+        }
+        if (maleNames.some(name => normalizedName.includes(name))) {
+            console.log(`❌ Gender mismatch by name: ${username} (male name detected, looking for female)`);
+            return false;
+        }
     }
     
     // Check pronouns in bio
     if (biography) {
         const bio = biography.toLowerCase();
-        if (gender === 'male' && (bio.includes('he/him') || bio.includes('él'))) return true;
-        if (gender === 'female' && (bio.includes('she/her') || bio.includes('ella'))) return true;
+        if (gender === 'male' && (bio.includes('he/him') || bio.includes('él'))) {
+            console.log(`✅ Gender match by bio: ${username} (male pronouns detected)`);
+            return true;
+        }
+        if (gender === 'female' && (bio.includes('she/her') || bio.includes('ella'))) {
+            console.log(`✅ Gender match by bio: ${username} (female pronouns detected)`);
+            return true;
+        }
     }
 
     // 🔥 FIXED: When gender is specifically requested but can't be determined, 
     // filter them out instead of including them all
     // This ensures "male only" actually returns only males, not everyone
+    console.log(`❌ Gender unknown: ${username} (can't determine gender, filtering out for strict ${gender} search)`);
     return false;
 }
 
@@ -2513,7 +2555,7 @@ function isGenericProfile(username: string): boolean {
     return false;
 }
 
-function detectGenderFromUsername(username: string): 'male' | 'female' | 'unknown' {
+export function detectGenderFromUsername(username: string): 'male' | 'female' | 'unknown' {
     const lowerUsername = username.toLowerCase();
     
     // Spanish male names (more comprehensive)
@@ -2683,6 +2725,15 @@ function createDiscoveryResults(profileUrls: {url: string, platform: string}[], 
     if (profileMap.has(normalizedKey)) {
       console.log(`🔍 Skipping duplicate in discovery: ${username} (${profileData.platform})`);
       return;
+    }
+    
+    // 🔥 FIXED: Apply gender filtering at discovery level
+    if (params.gender && params.gender !== 'any') {
+      const detectedGender = detectGenderFromUsername(username);
+      if (detectedGender !== params.gender && detectedGender !== 'unknown') {
+        console.log(`👤 Discovery filtered by gender: ${username} (detected: ${detectedGender}, looking for: ${params.gender})`);
+        return;
+      }
     }
     
     // Generate consistent display name based on actual username

@@ -12,6 +12,7 @@ import {
   orderBy,
   Timestamp 
 } from 'firebase/firestore';
+import { throttledCreate, throttledUpdate, firebaseThrottler } from '@/lib/firebaseThrottler';
 
 const CAMPAIGNS_COLLECTION = 'campaigns';
 
@@ -36,8 +37,24 @@ async function loadCampaigns() {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const action = searchParams.get('action');
+    
+    if (action === 'throttler_status') {
+      const stats = firebaseThrottler.getStats();
+      return NextResponse.json({ 
+        success: true,
+        throttler: {
+          ...stats,
+          status: stats.queueSize > 0 ? 'processing' : 'idle',
+          healthScore: stats.failedWrites > 0 ? 
+            Math.max(0, 100 - (stats.failedWrites / stats.totalWrites * 100)) : 100
+        }
+      });
+    }
+    
     const campaigns = await loadCampaigns();
     return NextResponse.json({ success: true, campaigns });
   } catch (error) {
@@ -56,21 +73,16 @@ export async function POST(request: NextRequest) {
       case 'create_enhanced':
         const newCampaign = {
           ...campaign,
-          createdAt: Timestamp.now(),
-          updatedAt: Timestamp.now(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
           // Enhanced campaign fields with defaults
           savedSearches: campaign.savedSearches || [],
           savedInfluencers: campaign.savedInfluencers || [],
           searchHistory: campaign.searchHistory || []
         };
         
-        const docRef = await addDoc(collection(db, CAMPAIGNS_COLLECTION), newCampaign);
-        const createdCampaign = {
-          id: docRef.id,
-          ...newCampaign,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        };
+        console.log('🔄 Throttling campaign creation to prevent Firebase resource exhaustion...');
+        const createdCampaign = await throttledCreate(CAMPAIGNS_COLLECTION, newCampaign, 'normal');
         
         return NextResponse.json({ success: true, campaign: createdCampaign });
 
@@ -88,10 +100,11 @@ export async function POST(request: NextRequest) {
         
         const updateData = {
           [field]: value,
-          updatedAt: Timestamp.now()
+          updatedAt: new Date()
         };
         
-        await updateDoc(campaignRef, updateData);
+        console.log('🔄 Throttling campaign update to prevent Firebase resource exhaustion...');
+        await throttledUpdate(CAMPAIGNS_COLLECTION, campaignId, updateData, 'normal');
         
         const updatedCampaign = {
           id: campaignId,
@@ -118,11 +131,14 @@ export async function POST(request: NextRequest) {
         const updatedSearches = [...(currentData.savedSearches || []), savedSearch];
         const updatedHistory = [...(currentData.searchHistory || []), historyEntry];
         
-        await updateDoc(searchCampaignRef, {
+        const searchUpdateData = {
           savedSearches: updatedSearches,
           searchHistory: updatedHistory,
-          updatedAt: Timestamp.now()
-        });
+          updatedAt: new Date()
+        };
+        
+        console.log('🔄 Throttling campaign search update to prevent Firebase resource exhaustion...');
+        await throttledUpdate(CAMPAIGNS_COLLECTION, campaignId, searchUpdateData, 'normal');
         
         const updatedSearchCampaign = {
           id: campaignId,
@@ -149,10 +165,13 @@ export async function POST(request: NextRequest) {
         const currentInfluencerData = influencerCampaignDoc.data();
         const updatedInfluencers = [...(currentInfluencerData.savedInfluencers || []), savedInfluencer];
         
-        await updateDoc(influencerCampaignRef, {
+        const influencerUpdateData = {
           savedInfluencers: updatedInfluencers,
-          updatedAt: Timestamp.now()
-        });
+          updatedAt: new Date()
+        };
+        
+        console.log('🔄 Throttling campaign influencer update to prevent Firebase resource exhaustion...');
+        await throttledUpdate(CAMPAIGNS_COLLECTION, campaignId, influencerUpdateData, 'normal');
         
         const updatedInfluencerCampaign = {
           id: campaignId,

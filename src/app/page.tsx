@@ -466,14 +466,35 @@ export default function Home() {
         return <LandingPage onGetStarted={handleGetStarted} />;
     }
 
-        return (
-      <div className="flex-1 flex flex-col lg:flex-row bg-gray-50 min-h-0">
+    return (
+      <div className="flex-1 flex flex-col lg:flex-row bg-gradient-to-br from-gray-50 to-gray-100 min-h-0">
         {/* Main Content */}
-        <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 min-h-0">
+        <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 min-h-0 space-y-6">
+          
+          {/* Loading Overlay */}
+          {isLoading && (
+            <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center">
+              <div className="bg-white rounded-2xl p-8 shadow-2xl border border-gray-200/50 max-w-sm mx-4">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 animate-pulse">
+                    <span className="text-2xl">🤖</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Buscando influencers...</h3>
+                  <p className="text-sm text-gray-600 mb-4">Analizando perfiles y verificando compatibilidad</p>
+                  <div className="flex space-x-1 justify-center">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {currentView === 'search' && (
             <>
-              {/* New Integrated Search Interface */}
-              <div className="mb-4 lg:mb-6">
+              {/* Enhanced Search Interface */}
+              <div className="transform transition-all duration-500 ease-out">
                 <SearchInterface 
                   onSendMessage={handleSendMessage}
                   onPDFAnalyzed={setPdfAnalysisContext}
@@ -481,23 +502,48 @@ export default function Home() {
                 />
               </div>
                     
-              {/* Results */}
+              {/* Enhanced Results Section */}
               {searchResults && (
                 <div 
                   ref={resultsRef}
-                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-8 transition-all duration-300"
+                  className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 sm:p-8 transition-all duration-500 ease-out transform hover:shadow-2xl"
                 >
-                  {/* Results Header */}
-                  <div className="mb-6">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                      📊 Resultados de Búsqueda
-                    </h2>
-                    <p className="text-sm text-gray-600">
-                      {searchResults.premiumResults.length} influencers encontrados
-                      {searchResults.totalFound > searchResults.premiumResults.length && 
-                        ` (${searchResults.totalFound} total disponibles)`
-                      }
-                    </p>
+                  {/* Enhanced Results Header */}
+                  <div className="mb-8">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 space-y-4 sm:space-y-0">
+                      <div>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+                          📊 Resultados de Búsqueda
+                          <span className="ml-3 text-base font-normal bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                            {searchResults.premiumResults.length}
+                          </span>
+                        </h2>
+                        <p className="text-sm sm:text-base text-gray-600">
+                          {searchResults.premiumResults.length} influencers perfectos encontrados
+                          {searchResults.totalFound > searchResults.premiumResults.length && 
+                            ` de ${searchResults.totalFound} total disponibles`
+                          }
+                        </p>
+                      </div>
+                      
+                      {/* Action Buttons */}
+                      <div className="flex items-center space-x-3">
+                        <button
+                          onClick={handleClearResults}
+                          className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                        >
+                          Limpiar resultados
+                        </button>
+                        {searchResults.premiumResults.length > 0 && (
+                          <button
+                            onClick={() => handleGenerateProposal(searchResults.premiumResults)}
+                            className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-md"
+                          >
+                            Generar propuesta
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
                   
                   <InfluencerResults 
@@ -505,11 +551,47 @@ export default function Home() {
                   />
                 </div>
               )}
+
+              {/* Empty State */}
+              {!searchResults && !isLoading && (
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 p-8 sm:p-12 text-center">
+                  <div className="max-w-md mx-auto">
+                    <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <span className="text-3xl">🔍</span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                      Comienza tu búsqueda
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      Usa el chat IA o los filtros para encontrar los influencers perfectos para tu campaña
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <div className="flex items-center text-sm text-gray-500">
+                        <span className="mr-2">💬</span>
+                        Chat: "Busca influencers de fitness en Madrid"
+                      </div>
+                      <div className="flex items-center text-sm text-gray-500">
+                        <span className="mr-2">🎯</span>
+                        Filtros: Criterios específicos
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </>
           )}
 
           {currentView === 'generate' && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-8">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 sm:p-8 transition-all duration-500 ease-out">
+              <div className="mb-6">
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+                  📄 Generador de Propuestas
+                </h2>
+                <p className="text-gray-600">
+                  Crea propuestas profesionales para tus campañas de influencer marketing
+                </p>
+              </div>
+              
               {currentProposal ? (
                 <ProposalViewer
                   proposal={currentProposal}
@@ -521,38 +603,69 @@ export default function Home() {
                   matchResults={searchResults?.premiumResults || []}
                   onProposalGenerated={handleProposalGenerated}
                 />
-                    )}
-                  </div>
-                )}
+              )}
+            </div>
+          )}
 
           {currentView === 'campaigns' && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-8">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 sm:p-8 transition-all duration-500 ease-out">
+              <div className="mb-6">
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+                  🎯 Gestión de Campañas
+                </h2>
+                <p className="text-gray-600">
+                  Administra y monitorea tus campañas de influencer marketing
+                </p>
+              </div>
+              
               <EnhancedCampaignManager />
-                  </div>
-                )}
+            </div>
+          )}
 
           {currentView === 'notes' && (
-            <div className="h-full -m-4 sm:-m-6 lg:-m-8">
-              <NotesManager />
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden transition-all duration-500 ease-out h-full">
+              <div className="p-6 border-b border-gray-200/50">
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+                  📝 Notas y Recordatorios
+                </h2>
+                <p className="text-gray-600">
+                  Gestiona tus notas, ideas y recordatorios de campañas
+                </p>
               </div>
-            )}
-          </div>
+              
+              <div className="h-full">
+                <NotesManager />
+              </div>
+            </div>
+          )}
+        </div>
 
-        {/* Feedback Panel - Desktop Only */}
+        {/* Enhanced Feedback Panel - Desktop Only */}
         {currentSearchId && (
           <div className="hidden xl:block w-80 p-4 lg:p-8">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-full">
-              <EnhancedFeedbackPanel 
-                searchId={currentSearchId}
-                sessionId={sessionId}
-                searchQuery="Recent search"
-                resultCount={searchResults?.premiumResults.length || 0}
-              />
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 h-full overflow-hidden">
+              <div className="p-6 border-b border-gray-200/50">
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                  📊 Análisis de Búsqueda
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Feedback y métricas en tiempo real
+                </p>
+              </div>
+              
+              <div className="flex-1 overflow-hidden">
+                <EnhancedFeedbackPanel 
+                  searchId={currentSearchId}
+                  sessionId={sessionId}
+                  searchQuery="Recent search"
+                  resultCount={searchResults?.premiumResults.length || 0}
+                />
+              </div>
             </div>
           </div>
         )}
-          </div>
-        );
+      </div>
+    );
   };
 
   return (

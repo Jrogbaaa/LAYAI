@@ -223,73 +223,75 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
   }
 
   return (
-    <div>
-      {/* Performance Dashboard */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-6 border border-blue-100">
-        <div className="flex items-center justify-between mb-4">
+    <div className="space-y-6">
+      {/* Enhanced Performance Dashboard */}
+      <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-6 sm:p-8 border border-blue-200/50 shadow-lg">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 space-y-4 sm:space-y-0">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
-              {validResults.length} Coincidencia{validResults.length !== 1 ? 's' : ''} Perfecta{validResults.length !== 1 ? 's' : ''} Encontrada{validResults.length !== 1 ? 's' : ''}
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+              {validResults.length} Coincidencia{validResults.length !== 1 ? 's' : ''} Perfecta{validResults.length !== 1 ? 's' : ''} ✨
             </h2>
-            <p className="text-gray-600 mt-1 text-sm">
+            <p className="text-gray-600 text-sm sm:text-base">
               Clasificados por puntuación de compatibilidad y rendimiento
             </p>
           </div>
           
-          {/* View Mode Toggle */}
-          <div className="flex items-center space-x-2 bg-white rounded-lg p-1 border">
+          {/* Enhanced View Mode Toggle */}
+          <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm rounded-xl p-1 border border-white/30 shadow-sm">
             <button
               onClick={() => setViewMode('standard')}
-              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+              className={`px-3 sm:px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 transform hover:scale-105 ${
                 viewMode === 'standard' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-blue-600 text-white shadow-md' 
+                  : 'text-gray-600 hover:bg-gray-100/80'
               }`}
+              aria-label="Vista estándar"
             >
-              📋 Standard
+              📋 <span className="hidden sm:inline">Standard</span>
             </button>
             <button
               onClick={() => setViewMode('enhanced')}
-              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+              className={`px-3 sm:px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 transform hover:scale-105 ${
                 viewMode === 'enhanced' 
-                  ? 'bg-purple-600 text-white' 
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-purple-600 text-white shadow-md' 
+                  : 'text-gray-600 hover:bg-gray-100/80'
               }`}
+              aria-label="Vista mejorada"
             >
-              ⭐ Enhanced
+              ⭐ <span className="hidden sm:inline">Enhanced</span>
             </button>
           </div>
         </div>
         
-        {/* Performance Metrics Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <div className="bg-white rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">{performanceMetrics.avgMatchScore}%</div>
-            <div className="text-sm text-gray-600">Avg Match Score</div>
+        {/* Enhanced Performance Metrics Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30 shadow-sm hover:shadow-md transition-shadow">
+            <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-1">{performanceMetrics.avgMatchScore}%</div>
+            <div className="text-xs sm:text-sm text-gray-600">Puntuación Promedio</div>
           </div>
-          <div className="bg-white rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-green-600">{performanceMetrics.avgEngagement}%</div>
-            <div className="text-sm text-gray-600">Avg Engagement</div>
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30 shadow-sm hover:shadow-md transition-shadow">
+            <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-1">{performanceMetrics.avgEngagement}%</div>
+            <div className="text-xs sm:text-sm text-gray-600">Engagement Promedio</div>
           </div>
-          <div className="bg-white rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-purple-600">{performanceMetrics.verifiedCount}</div>
-            <div className="text-sm text-gray-600">Verified</div>
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30 shadow-sm hover:shadow-md transition-shadow">
+            <div className="text-2xl sm:text-3xl font-bold text-purple-600 mb-1">{performanceMetrics.verifiedCount}</div>
+            <div className="text-xs sm:text-sm text-gray-600">Verificados</div>
           </div>
-          <div className="bg-white rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-indigo-600">{performanceMetrics.premiumCount}</div>
-            <div className="text-sm text-gray-600">Premium</div>
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30 shadow-sm hover:shadow-md transition-shadow">
+            <div className="text-2xl sm:text-3xl font-bold text-indigo-600 mb-1">{performanceMetrics.premiumCount}</div>
+            <div className="text-xs sm:text-sm text-gray-600">Premium</div>
           </div>
-          <div className="bg-white rounded-lg p-4 text-center">
-            <div className="text-xl font-bold text-orange-600">
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30 shadow-sm hover:shadow-md transition-shadow sm:col-span-3 lg:col-span-1">
+            <div className="text-lg sm:text-xl font-bold text-orange-600 mb-1">
               {performanceMetrics.qualityDistribution.excellent}✨{performanceMetrics.qualityDistribution.good}👍{performanceMetrics.qualityDistribution.fair}📊
             </div>
-            <div className="text-sm text-gray-600">Quality Mix</div>
+            <div className="text-xs sm:text-sm text-gray-600">Distribución de Calidad</div>
           </div>
         </div>
       </div>
 
-      {/* Results Grid */}
-      <div className={viewMode === 'enhanced' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'grid gap-3'} data-testid="influencer-results">
+      {/* Enhanced Results Grid */}
+      <div className={`${viewMode === 'enhanced' ? 'grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6' : 'space-y-4'}`} data-testid="influencer-results">
         {validResults.map((result, index) => {
           const validation = isValidInstagramHandle(result.influencer);
           
@@ -298,98 +300,115 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
             return <EnhancedInfluencerCard key={`enhanced-${result.influencer.handle}-${index}`} result={result} index={index} />;
           }
           
-          // Standard View
+          // Enhanced Standard View
           return (
-            <div key={`${result.influencer.handle}-${index}`} data-testid="influencer-card" className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 p-5">
-              {/* Header Section */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    {result.influencer.name.charAt(0)}
+            <div key={`${result.influencer.handle}-${index}`} data-testid="influencer-card" className="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200/50 p-4 sm:p-6 group hover:scale-[1.02] hover:border-blue-300/50">
+              {/* Enhanced Header Section */}
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <div className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="relative">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg">
+                      {result.influencer.name.charAt(0)}
+                    </div>
+                    {/* Verification Badge */}
+                    {result.influencer.validationStatus?.apifyVerified && (
+                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center shadow-md">
+                        <CheckCircle className="w-3 h-3 text-white" />
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-900 leading-tight">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight truncate">
                       {result.influencer.name || 'Unknown Name'}
                     </h3>
-                    <p className="text-sm text-gray-600">@{result.influencer.handle || 'unknown'}</p>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <p className="text-sm text-gray-600 truncate">@{result.influencer.handle || 'unknown'}</p>
+                      <span className="text-xs text-gray-400">•</span>
+                      <span className="text-xs text-gray-500">{result.influencer.platform || 'Unknown'}</span>
+                    </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getMatchScoreColor(result.matchScore)}`}>
-                    #{index + 1} • {(result.matchScore * 100).toFixed(0)}%
-                  </span>
+                <div className="text-right flex-shrink-0">
+                  <div className="flex flex-col items-end space-y-1">
+                    <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${getMatchScoreColor(result.matchScore)}`}>
+                      #{index + 1}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {(result.matchScore * 100).toFixed(0)}% match
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              {/* Stats Grid - Fixed Height for Consistency */}
-              <div className="grid grid-cols-4 gap-4 mb-4 py-3 bg-gray-50 rounded-lg">
-                <div className="text-center">
-                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Seguidores</p>
-                  <p className="text-base font-bold text-gray-900 mt-1">{formatNumber(result.influencer.followerCount)}</p>
+              {/* Enhanced Stats Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3 text-center border border-blue-200/50">
+                  <p className="text-xs text-blue-600 uppercase tracking-wide font-semibold">Seguidores</p>
+                  <p className="text-base sm:text-lg font-bold text-blue-900 mt-1">{formatNumber(result.influencer.followerCount)}</p>
                 </div>
                 
-                <div className="text-center">
-                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Engagement</p>
-                  <p className="text-base font-bold text-green-600 mt-1">{((result.influencer.engagementRate || 0) * 100).toFixed(1)}%</p>
+                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-3 text-center border border-green-200/50">
+                  <p className="text-xs text-green-600 uppercase tracking-wide font-semibold">Engagement</p>
+                  <p className="text-base sm:text-lg font-bold text-green-900 mt-1">{((result.influencer.engagementRate || 0) * 100).toFixed(1)}%</p>
                 </div>
                 
-                <div className="text-center">
-                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Tarifa Est.</p>
-                  <p className="text-base font-bold text-blue-600 mt-1">${(result.estimatedCost || 0).toLocaleString()}</p>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-3 text-center border border-purple-200/50">
+                  <p className="text-xs text-purple-600 uppercase tracking-wide font-semibold">Tarifa Est.</p>
+                  <p className="text-base sm:text-lg font-bold text-purple-900 mt-1">${(result.estimatedCost || 0).toLocaleString()}</p>
                 </div>
                 
-                <div className="text-center">
-                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Plataforma</p>
-                  <p className="text-sm font-medium text-gray-700 mt-1">{result.influencer.platform || 'Unknown'}</p>
+                <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-3 text-center border border-indigo-200/50">
+                  <p className="text-xs text-indigo-600 uppercase tracking-wide font-semibold">Alcance</p>
+                  <p className="text-base sm:text-lg font-bold text-indigo-900 mt-1">{formatNumber(result.potentialReach)}</p>
                 </div>
               </div>
 
-              {/* Brand Collaboration Status */}
+              {/* Enhanced Brand Collaboration Status */}
               {(result as any).brandCollaboration && (
-                <div className="mb-4">
-                  <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium ${
+                <div className="mb-4 sm:mb-6">
+                  <div className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                     (result as any).brandCollaboration.hasWorkedWith 
-                      ? 'bg-green-50 text-green-800 border border-green-200' 
-                      : 'bg-gray-50 text-gray-600 border border-gray-200'
+                      ? 'bg-green-50 text-green-800 border border-green-200 hover:bg-green-100' 
+                      : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100'
                   }`}>
                     {(result as any).brandCollaboration.hasWorkedWith ? (
                       <>
-                        <span className="text-green-600">✅</span>
-                        <span>Ha trabajado con {(result as any).brandCollaboration.brandName.toUpperCase()}</span>
-                        <span className="text-green-600 text-xs">
-                          ({(result as any).brandCollaboration.confidence}% confianza)
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <span className="flex-1">Ha trabajado con {(result as any).brandCollaboration.brandName.toUpperCase()}</span>
+                        <span className="text-green-600 text-xs bg-green-100 px-2 py-1 rounded-full">
+                          {(result as any).brandCollaboration.confidence}%
                         </span>
                       </>
                     ) : (
                       <>
-                        <span className="text-gray-400">❌</span>
-                        <span>Sin colaboraciones previas con {(result as any).brandCollaboration.brandName.toUpperCase()}</span>
+                        <XCircle className="w-4 h-4 text-gray-400" />
+                        <span className="flex-1">Sin colaboraciones previas con {(result as any).brandCollaboration.brandName.toUpperCase()}</span>
                       </>
                     )}
                   </div>
                 </div>
               )}
 
-              {/* Audience Demographics Section */}
+              {/* Enhanced Audience Demographics Section */}
               {result.influencer.audienceDemographics && (
-                <div className="mb-4">
-                  <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-3 border border-purple-200">
-                    <h4 className="text-sm font-semibold text-gray-800 mb-2 flex items-center">
+                <div className="mb-4 sm:mb-6">
+                  <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-3 sm:p-4 border border-purple-200/50">
+                    <h4 className="text-sm font-semibold text-gray-800 mb-3 flex items-center">
                       <span className="mr-2">👥</span>
                       Demografía de Audiencia
                     </h4>
                     
-                    {/* Age and Gender Distribution */}
-                    <div className="grid grid-cols-2 gap-3 mb-3">
+                    {/* Enhanced Age and Gender Distribution */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <p className="text-xs text-gray-600 mb-1">Edad Principal</p>
+                        <p className="text-xs text-gray-600 mb-2 font-medium">Edad Principal</p>
                         <div className="flex flex-wrap gap-1">
                           {Object.entries(result.influencer.audienceDemographics.ageGroups)
                             .filter(([_, percentage]) => percentage > 15)
                             .sort(([,a], [,b]) => b - a)
                             .slice(0, 2)
                             .map(([ageRange, percentage]) => (
-                              <span key={ageRange} className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
+                              <span key={ageRange} className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full font-medium">
                                 {ageRange}: {percentage}%
                               </span>
                             ))}
@@ -397,132 +416,65 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                       </div>
                       
                       <div>
-                        <p className="text-xs text-gray-600 mb-1">Género</p>
+                        <p className="text-xs text-gray-600 mb-2 font-medium">Género</p>
                         <div className="flex flex-wrap gap-1">
                           {Object.entries(result.influencer.audienceDemographics.gender)
-                            .filter(([_, percentage]) => percentage > 10)
+                            .filter(([_, percentage]) => percentage > 0)
                             .sort(([,a], [,b]) => b - a)
+                            .slice(0, 2)
                             .map(([gender, percentage]) => (
-                              <span key={gender} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                                {gender === 'male' ? 'M' : gender === 'female' ? 'F' : 'O'}: {percentage}%
+                              <span key={gender} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+                                {gender}: {percentage}%
                               </span>
                             ))}
                         </div>
                       </div>
                     </div>
-                    
-                    {/* Top Locations */}
-                    {result.influencer.audienceDemographics.topLocations && 
-                     result.influencer.audienceDemographics.topLocations.length > 0 && (
-                      <div className="mb-2">
-                        <p className="text-xs text-gray-600 mb-1">Ubicaciones Principales</p>
-                        <div className="flex flex-wrap gap-1">
-                          {result.influencer.audienceDemographics.topLocations
-                            .slice(0, 3)
-                            .map((location, idx) => (
-                              <span key={idx} className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                                📍 {location}
-                              </span>
-                            ))}
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Top Interests */}
-                    {result.influencer.audienceDemographics.interests && 
-                     result.influencer.audienceDemographics.interests.length > 0 && (
-                      <div>
-                        <p className="text-xs text-gray-600 mb-1">Intereses de Audiencia</p>
-                        <div className="flex flex-wrap gap-1">
-                          {result.influencer.audienceDemographics.interests
-                            .slice(0, 4)
-                            .map((interest, idx) => (
-                              <span key={idx} className="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
-                                {interest}
-                              </span>
-                            ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
               )}
 
-              {/* Tags Row - Fixed Height */}
-              <div className="flex flex-wrap items-center gap-2 mb-4 min-h-[2rem]">
-                {/* Niches */}
-                {(result.influencer.niche || []).slice(0, 2).map((niche, nicheIndex) => (
-                  <span 
-                    key={`${niche}-${nicheIndex}`}
-                    className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium"
-                  >
-                    {niche}
-                  </span>
-                ))}
-                
-                {/* Location */}
-                {result.influencer.location && (
-                  <span className="text-xs text-gray-600 flex items-center">
-                    📍 {result.influencer.location}
-                  </span>
-                )}
-                
-                {/* Cost Level */}
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCostLevelColor(result.influencer.costLevel || 'budget')}`}>
-                  {result.influencer.costLevel || 'Budget'}
-                </span>
-              </div>
-
-              {/* Match Reason - Fixed Height */}
-              <div className="mb-4 min-h-[2.5rem] flex items-center">
-                {(result.matchReasons || []).length > 0 && (
-                  <div className="w-full p-2 bg-green-50 rounded-md border border-green-200">
-                    <p className="text-xs text-green-700 flex items-center">
-                      <svg className="w-3 h-3 mr-1 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      {result.matchReasons[0]}
-                    </p>
+              {/* Enhanced Match Reasons Section */}
+              {result.matchReasons && result.matchReasons.length > 0 && (
+                <div className="mb-4 sm:mb-6">
+                  <h4 className="text-sm font-semibold text-gray-800 mb-3 flex items-center">
+                    <span className="mr-2">🎯</span>
+                    Por qué es una buena opción
+                  </h4>
+                  <div className="space-y-2">
+                    {result.matchReasons.slice(0, 3).map((reason, idx) => (
+                      <div key={idx} className="flex items-start space-x-2 text-sm">
+                        <span className="text-green-500 mt-0.5">✓</span>
+                        <span className="text-gray-700 flex-1">{reason}</span>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
-              {/* Action Buttons - Fixed Alignment */}
-              <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
-                {validation.isValid ? (
-                  <a
-                    href={getProfileLink(result.influencer.handle, result.influencer.name)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2.5 rounded-md font-medium hover:from-pink-600 hover:to-purple-700 transition-all text-sm flex items-center justify-center shadow-sm"
-                    title="Ver perfil de Instagram"
-                  >
-                    📸 Instagram
-                  </a>
-                ) : (
-                  <div className="flex-1">
-                    <span className="w-full bg-gray-300 text-gray-500 px-4 py-2.5 rounded-md text-sm cursor-not-allowed flex items-center justify-center" title={validation.reason}>
-                      ⚠️ Perfil No Válido
-                    </span>
-                  </div>
-                )}
-                
+              {/* Enhanced Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 border-t border-gray-200">
+                <a
+                  href={getProfileLink(result.influencer.handle, result.influencer.name)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-center py-2 sm:py-3 px-4 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 text-sm font-medium transform hover:scale-105"
+                >
+                  Ver Perfil
+                </a>
                 <a
                   href={getGoogleSearchLink(result.influencer.handle, result.influencer.name)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 bg-gray-600 text-white px-4 py-2.5 rounded-md font-medium hover:bg-gray-700 transition-colors text-sm flex items-center justify-center shadow-sm"
-                  title="Buscar en Google"
+                  className="flex-1 bg-gray-100 text-gray-700 text-center py-2 sm:py-3 px-4 rounded-lg hover:bg-gray-200 transition-all duration-200 text-sm font-medium border border-gray-300 transform hover:scale-105"
                 >
-                  🔍 Buscar
+                  Buscar más info
                 </a>
               </div>
             </div>
           );
         })}
       </div>
-
-
     </div>
   );
 };
