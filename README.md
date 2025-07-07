@@ -10,6 +10,7 @@
 ## 🚀 Latest Updates (January 2025)
 
 ### Major System Improvements
+- **✅ StarNgage Integration**: Comprehensive demographic scraper with audience insights
 - **✅ Enhanced Dropdown Search**: Complete tabbed interface with chat and structured search
 - **✅ Automatic Brand Research**: Dynamic brand investigation with real-time parameter adjustment  
 - **✅ Comprehensive Campaign Saving**: Both search types now save to campaigns automatically
@@ -33,6 +34,7 @@ LAYAI is a comprehensive AI-powered influencer marketing platform designed to st
 - **Real-time Scraping**: Live data from Instagram, TikTok, YouTube
 - **Quality Scoring**: Authenticity checks and engagement validation
 - **Demographic Data**: Age, gender, location, interests, and audience insights
+- **StarNgage Integration**: Detailed audience demographics with gender/age breakdowns
 
 #### 🎯 Advanced Matching
 - **Multi-Niche Support**: OR logic for complex searches (lifestyle + fitness + fashion)
@@ -53,7 +55,7 @@ LAYAI is a comprehensive AI-powered influencer marketing platform designed to st
 - **Backend**: Node.js with Express-like API routes
 - **Database**: Local JSON for performance + Firebase for campaigns
 - **AI Integration**: OpenAI GPT-4 for natural language processing
-- **Data Sources**: Apify, Serply, and custom web scraping
+- **Data Sources**: Apify, Serply, StarNgage, and custom web scraping
 
 ### Performance Metrics
 - **Search Speed**: 22ms average response time
@@ -173,6 +175,7 @@ FIREBASE_CLIENT_EMAIL=your_firebase_client_email
 ### Available Documentation
 - **[Technical Documentation](./TECHNICAL_DOCUMENTATION.md)**: Comprehensive system architecture
 - **[API Documentation](./API_DOCUMENTATION.md)**: Complete API reference
+- **[StarNgage Integration Guide](./STARNGAGE_INTEGRATION_GUIDE.md)**: Demographic scraping documentation
 - **[Changelog](./CHANGELOG.md)**: Detailed version history
 - **[Performance Guide](./PERFORMANCE_UX_OPTIMIZATION_SUMMARY.md)**: Optimization strategies
 
