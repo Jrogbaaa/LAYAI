@@ -314,18 +314,22 @@ function validateTikTokUsername(username: string): { isValid: boolean; errors?: 
     errors.push('Username can only contain letters, numbers, periods, and underscores');
   }
 
-  // Check for invalid start/end characters (less strict - allow more patterns)
-  if (/^[._]{2,}|[._]{2,}$/.test(username)) {
-    errors.push('Username cannot start or end with multiple periods or underscores');
+  // Check for invalid start/end characters (TikTok doesn't allow usernames starting/ending with . or _)
+  if (/^[._]|[._]$/.test(username)) {
+    errors.push('Username cannot start or end with periods or underscores');
   }
 
-  // Check for excessive consecutive special characters
-  if (/[._]{4,}/.test(username)) {
-    errors.push('Username cannot contain 4 or more consecutive periods or underscores');
+  // Check for consecutive special characters (TikTok doesn't allow consecutive . or _)
+  if (/[._]{2,}/.test(username)) {
+    errors.push('Username cannot contain consecutive periods or underscores');
   }
 
-  // Check against reserved usernames (reduced list)
-  const restrictedUsernames = ['www', 'api', 'admin', 'tiktok', 'discover', 'trending'];
+  // Check against reserved usernames
+  const restrictedUsernames = [
+    'www', 'api', 'admin', 'support', 'help', 'tiktok', 'bytedance',
+    'discover', 'trending', 'foryou', 'live', 'music', 'tag', 'share',
+    't', 'v', 'vm', 'embed', 'oembed'
+  ];
   if (restrictedUsernames.includes(username.toLowerCase())) {
     errors.push('Username is reserved and cannot be used');
   }
