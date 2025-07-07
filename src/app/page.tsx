@@ -1,24 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Chatbot } from '@/components/Chatbot';
-import { InfluencerResults } from '@/components/InfluencerResults';
+import React, { useState, useEffect } from 'react';
+import LandingPage from '@/components/LandingPage';
+import { SearchInterface } from '@/components/SearchInterface';
 import { ProposalGenerator } from '@/components/ProposalGenerator';
 import { ProposalViewer } from '@/components/ProposalViewer';
-import { FeedbackPanel } from '@/components/FeedbackPanel';
-import DiscoveryGrid from '@/components/DiscoveryGrid';
-import CampaignManager from '@/components/CampaignManager';
+import { InfluencerResults } from '@/components/InfluencerResults';
 import { EnhancedCampaignManager } from '@/components/EnhancedCampaignManager';
 import NotesManager from '@/components/NotesManager';
-import LandingPage from '@/components/LandingPage';
-
+import Sidebar, { PageView } from '@/components/Sidebar';
+import EnhancedFeedbackPanel from '@/components/EnhancedFeedbackPanel';
 import { MatchResult } from '@/types/influencer';
 import { CampaignProposal } from '@/types/campaign';
 import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
 import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/newExportUtils';
 import { generateSessionId } from '@/lib/database';
-import Sidebar, { PageView } from '@/components/Sidebar';
-import EnhancedFeedbackPanel from '@/components/EnhancedFeedbackPanel';
 import { campaignService } from '@/lib/enhancedCampaignService';
 
 type ExtendedPageView = PageView | 'landing' | 'chat' | 'campaigns' | 'proposal';
@@ -136,6 +132,9 @@ export default function Home() {
           // Enhanced search API returns data in .data property
           const results = searchData.data?.premiumResults || searchData.premiumResults || [];
           const convertedResults = convertToMatchResults(results);
+          console.log('🔍 Raw search response:', searchData);
+          console.log('🔍 Extracted results:', results);
+          console.log('🔍 Converted results:', convertedResults);
           console.log('Search results received:', {
             premiumResults: results.length,
             discoveryResults: searchData.data?.discoveryResults?.length || 0,
@@ -169,32 +168,62 @@ export default function Home() {
             });
             setShowAllResults(false); // Reset expanded view for new search
             
-            // 📚 Automatically save search to campaigns (only for user queries, not partial results)
-            if (!isPartialResultsMessage && !isStructuredSearchMessage && message.trim().length > 0) {
-            try {
-              const brandName = extractBrandFromMessage(message);
-              const searchParams = data.data; // Enhanced search parameters
-              const allResults = [...convertedResults, ...discoveryResults];
-              
+            // 📚 Automatically save search to campaigns (for both chat and dropdown searches)
+            if (!isPartialResultsMessage && message.trim().length > 0) {
+              try {
+                let brandName: string;
+                let searchQuery: string;
+                
+                // Handle structured search (dropdown) vs chat search
+                if (isStructuredSearchMessage) {
+                  // Extract brand name from structured search parameters
+                  const structuredParams = JSON.parse(message.replace('STRUCTURED_SEARCH:', ''));
+                  brandName = structuredParams.brandName || 'Unknown Brand';
+                  
+                  // Create a descriptive query for dropdown searches
+                  const filters = [];
+                  if (structuredParams.gender && structuredParams.gender !== 'any') filters.push(`género: ${structuredParams.gender}`);
+                  if (structuredParams.ageRange && structuredParams.ageRange !== 'any') filters.push(`edad: ${structuredParams.ageRange}`);
+                  if (structuredParams.location) filters.push(`ubicación: ${structuredParams.location}`);
+                  if (structuredParams.niche && structuredParams.niche.length > 0) filters.push(`nichos: ${structuredParams.niche.join(', ')}`);
+                  if (structuredParams.platforms && structuredParams.platforms.length > 0) filters.push(`plataformas: ${structuredParams.platforms.join(', ')}`);
+                  if (structuredParams.minFollowers && structuredParams.maxFollowers) {
+                    filters.push(`seguidores: ${structuredParams.minFollowers.toLocaleString()}-${structuredParams.maxFollowers.toLocaleString()}`);
+                  }
+                  
+                  searchQuery = `Búsqueda con filtros para ${brandName}${filters.length > 0 ? ` (${filters.join(', ')})` : ''}`;
+                  
+                  console.log(`📋 Dropdown search detected - Brand: ${brandName}, Query: ${searchQuery}`);
+                } else {
+                  // Regular chat search
+                  brandName = extractBrandFromMessage(message);
+                  searchQuery = message;
+                  
+                  console.log(`💬 Chat search detected - Brand: ${brandName}, Query: ${searchQuery}`);
+                }
+                
+                const searchParams = data.data; // Enhanced search parameters
+                const allResults = [...convertedResults, ...discoveryResults];
+                
                 // Additional validation to prevent saving invalid data
                 if (brandName && !brandName.includes('{') && !brandName.includes('PARTIAL_RESULTS') && brandName.length < 100) {
-              const saveResult = await campaignService.saveSearchResults(
-                message,
-                brandName,
-                allResults,
-                searchParams
-              );
-              
-              console.log(`📚 Search automatically saved: ${saveResult.action} for ${brandName}`, saveResult);
+                  const saveResult = await campaignService.saveSearchResults(
+                    searchQuery,
+                    brandName,
+                    allResults,
+                    searchParams
+                  );
+                  
+                  console.log(`📚 Search automatically saved: ${saveResult.action} for ${brandName}`, saveResult);
                 } else {
                   console.log('📚 Skipped saving search due to invalid brand name:', brandName);
                 }
-            } catch (error) {
-              console.error('Error saving search to campaigns:', error);
-              // Non-blocking error - search results still work
+              } catch (error) {
+                console.error('Error saving search to campaigns:', error);
+                // Non-blocking error - search results still work
               }
             } else {
-              console.log('📚 Skipped saving search (partial results or structured message)');
+              console.log('📚 Skipped saving search (partial results message)');
             }
           }
           
@@ -415,26 +444,14 @@ export default function Home() {
         <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 min-h-0">
           {currentView === 'search' && (
             <>
-              {/* Header */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-8 mb-4 lg:mb-6">
-                <div className="text-center mb-6 lg:mb-8">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <span className="text-xl sm:text-2xl">🤖</span>
-                  </div>
-                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 lg:mb-3">
-                    Asistente de IA para Influencers
-                  </h1>
-                  <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto">
-                    Encuentra los creadores perfectos para tus campañas
-                  </p>
-                </div>
-
-                {/* Chatbot */}
-                <Chatbot 
+              {/* New Integrated Search Interface */}
+              <div className="mb-4 lg:mb-6">
+                <SearchInterface 
                   onSendMessage={handleSendMessage}
                   onPDFAnalyzed={setPdfAnalysisContext}
+                  isLoading={isLoading}
                 />
-                    </div>
+              </div>
                     
               {/* Results */}
               {searchResults && (

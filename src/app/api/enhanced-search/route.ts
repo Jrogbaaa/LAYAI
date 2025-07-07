@@ -217,15 +217,21 @@ function generateRealtimeMatchReasons(influencer: any, params: ApifySearchParams
 }
 
 function extractBrandFromQuery(searchParams: ApifySearchParams): string | null {
-  // Extract brand from the search query
+  // FIRST: Check brandName parameter if provided (priority for dropdown searches)
+  if (searchParams.brandName) {
+    return searchParams.brandName.toLowerCase();
+  }
+
+  // SECOND: Extract brand from the search query
   const query = searchParams.userQuery?.toLowerCase() || '';
   
   // Common brand patterns in Spanish searches
   const brandPatterns = [
+    /marca\s+(\w+)/i,          // "marca Nike", "marca Adidas" (for dropdown searches)
     /para\s+(\w+)/i,           // "para IKEA", "para Nike"
+    /compatible[s]?\s+con\s+(\w+)/i,  // "compatibles con Nike"
     /con\s+(\w+)/i,            // "con Zara", "con Adidas" 
     /de\s+(\w+)/i,             // "de H&M", "de Mango"
-    /compatible[s]?\s+con\s+(\w+)/i,  // "compatibles con Nike"
     /\b(ikea|nike|adidas|zara|mango|h&m|inditex|bershka|stradivarius|pull&bear|massimo|dutti|shein|amazon|apple|samsung|coca|cola|pepsi|mcdonalds|burger|king|kfc|netflix|spotify|vodafone|movistar|orange|banco|santander|bbva|ing|openbank)\b/i
   ];
 
@@ -234,11 +240,6 @@ function extractBrandFromQuery(searchParams: ApifySearchParams): string | null {
     if (match && match[1]) {
       return match[1].toLowerCase();
     }
-  }
-
-  // Also check brandName if provided
-  if (searchParams.brandName) {
-    return searchParams.brandName.toLowerCase();
   }
 
   return null;
@@ -586,92 +587,122 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
       console.log('📍 No vetted influencers found, proceeding with other sources');
     }
     
-    // 2. Only search Apify API if we need more results (conditional real-time search)
+    // 2. Always try real-time search in parallel (non-blocking)
     const databaseResultsCount = vettedResults.influencers.length;
-    const targetResults = searchParams.maxResults || 20;
-    const shouldDoRealtimeSearch = databaseResultsCount < Math.max(5, targetResults * 0.3); // Only if we have fewer than 30% of target or less than 5 results
-    
-    if (shouldDoRealtimeSearch) {
-      console.log(`🌐 Database found ${databaseResultsCount} results, supplementing with real-time search...`);
-    try {
-        // Add timeout protection for real-time search
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Real-time search timeout')), 30000) // 30 second timeout
-        );
-        
-        const searchPromise = searchInfluencersWithApify({
+    console.log(`🌐 Database found ${databaseResultsCount} results, starting real-time search in parallel...`);
+
+    // Start real-time search but don't wait for it
+    let realtimeResults: any[] = [];
+    const realtimeSearchPromise = (async () => {
+      try {
+        const apifyInfluencers = await searchInfluencersWithApify({
           ...searchParams,
-          maxResults: Math.min(10, targetResults - databaseResultsCount) // Limit real-time results
+          maxResults: 25 // Increased from 10 to 25 for more results
         });
         
-        const apifyInfluencers = await Promise.race([searchPromise, timeoutPromise]) as any[];
-      
-      if (apifyInfluencers && apifyInfluencers.length > 0) {
-        // Convert ScrapedInfluencer[] to MatchResult[] format
-        const convertedApify = apifyInfluencers.map(influencer => ({
-          influencer: {
-            id: influencer.username,
-            name: influencer.fullName || influencer.username,
-            handle: influencer.username,
-            platform: influencer.platform as 'Instagram' | 'TikTok' | 'YouTube' | 'Twitter' | 'Multi-Platform',
-            followerCount: influencer.followers,
-            engagementRate: influencer.engagementRate / 100,
-            ageRange: '25-34' as const,
-            gender: detectInfluencerGender(influencer),
-            location: influencer.location || 'Unknown',
-            niche: [influencer.category || 'Lifestyle'],
-            contentStyle: ['Posts'] as const,
-            pastCollaborations: [],
-            averageRate: Math.floor(influencer.followers / 100) || 500,
-            costLevel: 'Mid-Range' as const,
-            audienceDemographics: {
-              ageGroups: {
-                '13-17': 5,
-                '18-24': 30,
-                '25-34': 40,
-                '35-44': 20,
-                '45-54': 4,
-                '55+': 1,
+        if (apifyInfluencers && apifyInfluencers.length > 0) {
+          // Convert ScrapedInfluencer[] to MatchResult[] format
+          realtimeResults = apifyInfluencers.map(influencer => ({
+            influencer: {
+              id: influencer.username,
+              name: influencer.fullName || influencer.username,
+              handle: influencer.username,
+              platform: influencer.platform as 'Instagram' | 'TikTok' | 'YouTube' | 'Twitter' | 'Multi-Platform',
+              followerCount: influencer.followers,
+              engagementRate: influencer.engagementRate / 100,
+              ageRange: '25-34' as const,
+              gender: detectInfluencerGender(influencer),
+              location: influencer.location || 'Unknown',
+              niche: [influencer.category || 'Lifestyle'],
+              contentStyle: ['Posts'] as const,
+              pastCollaborations: [],
+              averageRate: Math.floor(influencer.followers / 100) || 500,
+              costLevel: 'Mid-Range' as const,
+              audienceDemographics: {
+                ageGroups: {
+                  '13-17': 5,
+                  '18-24': 30,
+                  '25-34': 40,
+                  '35-44': 20,
+                  '45-54': 4,
+                  '55+': 1,
+                },
+                gender: {
+                  male: 45,
+                  female: 52,
+                  other: 3,
+                },
+                topLocations: [influencer.location || 'Unknown'],
+                interests: [influencer.category || 'Lifestyle'],
               },
-              gender: {
-                male: 45,
-                female: 52,
-                other: 3,
+              recentPosts: [],
+              contactInfo: {
+                email: influencer.email,
+                preferredContact: 'Email' as const,
               },
-              topLocations: [influencer.location || 'Unknown'],
-              interests: [influencer.category || 'Lifestyle'],
+              isActive: true,
+              lastUpdated: new Date(),
             },
-            recentPosts: [],
-            contactInfo: {
-              email: influencer.email,
-              preferredContact: 'Email' as const,
-            },
-            isActive: true,
-            lastUpdated: new Date(),
-          },
-          matchScore: vettedResults.influencers.length > 0 ? 
-            (influencer.brandCompatibilityScore || 75) / 100 * 0.8 : // Lower score if we have vetted results
-            (influencer.brandCompatibilityScore || 75) / 100, // Higher score if no vetted results
-          matchReasons: generateRealtimeMatchReasons(influencer, searchParams),
-          estimatedCost: Math.floor(influencer.followers / 100) || 500,
-          similarPastCampaigns: [],
-          potentialReach: Math.round(influencer.followers * (influencer.engagementRate / 100)),
-          recommendations: ['Influencer encontrado mediante búsqueda en tiempo real'],
-        }));
-        
-        allResults.push(...convertedApify);
-        totalFound += apifyInfluencers.length;
-        searchSources.push('Búsqueda en tiempo real');
-        
-        console.log(`✅ Found ${apifyInfluencers.length} Apify results`);
-      } else {
-        console.log('⚠️ No Apify results found');
+            matchScore: (influencer.brandCompatibilityScore || 75) / 100,
+            matchReasons: generateRealtimeMatchReasons(influencer, searchParams),
+            estimatedCost: Math.floor(influencer.followers / 100) || 500,
+            similarPastCampaigns: [],
+            potentialReach: Math.round(influencer.followers * (influencer.engagementRate / 100)),
+            recommendations: ['Influencer encontrado mediante búsqueda en tiempo real'],
+          }));
+          
+          console.log(`✅ Real-time search found ${realtimeResults.length} results`);
+        }
+      } catch (error) {
+        console.warn('⚠️ Real-time search failed:', error);
       }
+    })();
+
+    // Wait up to 10 seconds for real-time results, then proceed
+    try {
+      await Promise.race([
+        realtimeSearchPromise,
+        new Promise(resolve => setTimeout(resolve, 10000)) // 10 second max wait
+      ]);
     } catch (error) {
-        console.warn('⚠️ Real-time search failed or timed out:', error);
+      console.log('⏰ Proceeding without waiting for real-time search completion');
+    }
+
+    // Combine all available results
+    if (realtimeResults.length > 0) {
+      allResults.push(...realtimeResults);
+      totalFound += realtimeResults.length;
+      searchSources.push('Búsqueda en tiempo real');
+    }
+
+    // 🆘 FALLBACK: If we have 0 results, try broader search criteria
+    if (allResults.length === 0) {
+      console.log('🔄 No results found, trying broader search criteria...');
+      
+      // Try broader follower range and relaxed criteria
+      const broaderParams = {
+        ...searchParams,
+        minFollowers: 1000, // Lower minimum
+        maxFollowers: 5000000, // Much higher maximum
+        ageRange: undefined, // Remove age restriction
+        gender: undefined, // Remove gender restriction
+        strictLocationMatch: false, // Relax location matching
+        niches: ['lifestyle', 'fitness'], // Add broader niches
+      };
+      
+      console.log('🔍 Searching with broader criteria:', broaderParams);
+      const broadVettedResults = await searchVettedInfluencers(broaderParams);
+      
+      if (broadVettedResults.influencers.length > 0) {
+        const convertedBroadVetted = broadVettedResults.influencers.slice(0, 20).map(inf => 
+          convertVettedToMatchResult(inf, searchParams)
+        );
+        allResults.push(...convertedBroadVetted);
+        totalFound += convertedBroadVetted.length;
+        searchSources.push('Base de datos (criterios ampliados)');
+        
+        console.log(`✅ Found ${convertedBroadVetted.length} results with broader criteria`);
       }
-    } else {
-      console.log(`✅ Database provided sufficient results (${databaseResultsCount}/${targetResults}), skipping real-time search`);
     }
     
     // Remove duplicates based on handle/username
@@ -775,7 +806,10 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
             enabled: true
           } : null
         },
-        recommendations: generateRecommendations(resultsWithCollaboration, searchParams),
+        recommendations: generateRecommendations(resultsWithCollaboration, {
+          ...searchParams,
+          searchSources
+        }),
         searchStrategy: searchSources.length > 1 ? 
           'hybrid_search' : 
           searchSources.includes('Base de datos verificada') ? 'vetted_only' : 'realtime_only'
@@ -845,7 +879,15 @@ function generateRecommendations(results: any[], searchParams: any): string[] {
   if (results.length === 0) {
     recommendations.push('Intenta ampliar los criterios de búsqueda');
     recommendations.push('Considera buscar en plataformas adicionales');
+    recommendations.push('Prueba con rangos de seguidores más amplios');
     return recommendations;
+  }
+  
+  // Check if we used broader criteria
+  const usedBroaderCriteria = searchParams.searchSources?.includes('Base de datos (criterios ampliados)');
+  if (usedBroaderCriteria) {
+    recommendations.push('⚠️ Se usaron criterios ampliados para encontrar más resultados');
+    recommendations.push('💡 Para resultados más específicos, intenta ajustar los filtros');
   }
   
   if (results.length < 5) {

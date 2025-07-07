@@ -66,72 +66,41 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
       return { isValid: false, reason: 'Handle no disponible' };
     }
     
-    // Enhanced invalid patterns detection
+    // RELAXED invalid patterns - only reject obvious spam/invalid handles
     const invalidPatterns = [
-      // Known problematic patterns from recent searches
-      /techblockproject/i,
+      // Email domains
       /gmail\.com/i,
       /yahoo\.com/i,
       /hotmail\.com/i,
-      /[./]/,
+      /@.*\./,  // Email-like patterns
+      
+      // URLs and domains
+      /www\./i,
+      /http/i,
+      /\.(com|net|org|gov|edu)$/i,
+      
+      // Obvious invalid content
       /undefined/i,
       /null/i,
       /error/i,
-      /test/i,
-      /example/i,
-      /sample/i,
-      /^[a-z]{1,2}$/,
+      /\s/,      // Spaces
+      /[<>]/,    // Angle brackets
+      
+      // Only reject handles that are ALL numbers (not mixed)
       /^[\d]+$/,
-      /\s/,
-      /[<>]/,
-      /www\./i,
-      /http/i,
-      /\.com/i,
-      /\.net/i,
-      /\.org/i,
       
-      // Enhanced pattern detection for common issues
-      /reserved/i,
-      /global_mrm/i,
-      /worldarchitecturedesign/i,
-      /studiomcgee/i,
-      /westwingcom/i,
-      /pullandbear/i,
-      /patrikssontalent/i,
+      // Only reject very short handles (1-2 chars)
+      /^[a-z]{1,2}$/,
       
-      // Invalid username ending patterns - but allow single trailing underscore (common on Instagram)
-      /^[._]/,  // Starts with period or underscore
-      /\.$/, // Ends with period (but allow underscore)
-      /[._]{2,}/, // Consecutive periods/underscores
-      
-      // Additional spam/invalid patterns
+      // Obvious spam patterns
       /^(spam|bot|fake|clone|temp|tmp|guest|admin|support|help)\d*$/i,
       /^(user|profile|account|test|demo|sample)\d*$/i,
-      
-      // Domain-like patterns (but allow country codes in travel accounts)
-      /\.(com|net|org|gov|edu)$/i, // Only reject obvious domains, allow country codes
-      
-      // Email-like patterns
-      /@.*\./,
-      
-      // Generic fitness/business account patterns
-      /^fitness(park|gym|center|studio)/i,
-      /^gym\w+official/i,
-      /official\w+$/i,
-      /\d{5,}/,  // Long sequences of numbers
     ];
     
-    // Must be reasonable length and contain valid characters
+    // Basic validation - much more permissive
     const isValidLength = handle.length >= 3 && handle.length <= 30;
     const hasValidChars = /^[a-zA-Z0-9._]+$/.test(handle);
-    const noConsecutiveDots = !handle.includes('..');
-    const notStartsWithDot = !handle.startsWith('.');
-    const notEndsWithDot = !handle.endsWith('.');
-    const notStartsWithUnderscore = !handle.startsWith('_');
-    // Allow handles ending with underscore (common on Instagram)
-    const validUnderscoreUsage = true; // We'll check this via patterns instead
     const notAllNumbers = !/^\d+$/.test(handle);
-    const notTooManyNumbers = !(/\d{4,}/.test(handle)); // No more than 3 consecutive numbers
     
     const hasInvalidPattern = invalidPatterns.some(pattern => pattern.test(handle));
     
@@ -147,13 +116,8 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
       return { isValid: false, reason: 'Caracteres no válidos en el handle' };
     }
     
-    if (!noConsecutiveDots || !notStartsWithDot || !notEndsWithDot || 
-        !notStartsWithUnderscore || !validUnderscoreUsage) {
-      return { isValid: false, reason: 'Formato de handle inválido (puntos/guiones bajos)' };
-    }
-    
-    if (!notAllNumbers || !notTooManyNumbers) {
-      return { isValid: false, reason: 'Demasiados números en el handle' };
+    if (!notAllNumbers) {
+      return { isValid: false, reason: 'Handle no puede ser solo números' };
     }
     
     return { isValid: true };
@@ -401,6 +365,84 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                         <span className="text-gray-400">❌</span>
                         <span>Sin colaboraciones previas con {(result as any).brandCollaboration.brandName.toUpperCase()}</span>
                       </>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Audience Demographics Section */}
+              {result.influencer.audienceDemographics && (
+                <div className="mb-4">
+                  <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-3 border border-purple-200">
+                    <h4 className="text-sm font-semibold text-gray-800 mb-2 flex items-center">
+                      <span className="mr-2">👥</span>
+                      Demografía de Audiencia
+                    </h4>
+                    
+                    {/* Age and Gender Distribution */}
+                    <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div>
+                        <p className="text-xs text-gray-600 mb-1">Edad Principal</p>
+                        <div className="flex flex-wrap gap-1">
+                          {Object.entries(result.influencer.audienceDemographics.ageGroups)
+                            .filter(([_, percentage]) => percentage > 15)
+                            .sort(([,a], [,b]) => b - a)
+                            .slice(0, 2)
+                            .map(([ageRange, percentage]) => (
+                              <span key={ageRange} className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
+                                {ageRange}: {percentage}%
+                              </span>
+                            ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-xs text-gray-600 mb-1">Género</p>
+                        <div className="flex flex-wrap gap-1">
+                          {Object.entries(result.influencer.audienceDemographics.gender)
+                            .filter(([_, percentage]) => percentage > 10)
+                            .sort(([,a], [,b]) => b - a)
+                            .map(([gender, percentage]) => (
+                              <span key={gender} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                {gender === 'male' ? 'M' : gender === 'female' ? 'F' : 'O'}: {percentage}%
+                              </span>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Top Locations */}
+                    {result.influencer.audienceDemographics.topLocations && 
+                     result.influencer.audienceDemographics.topLocations.length > 0 && (
+                      <div className="mb-2">
+                        <p className="text-xs text-gray-600 mb-1">Ubicaciones Principales</p>
+                        <div className="flex flex-wrap gap-1">
+                          {result.influencer.audienceDemographics.topLocations
+                            .slice(0, 3)
+                            .map((location, idx) => (
+                              <span key={idx} className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                                📍 {location}
+                              </span>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Top Interests */}
+                    {result.influencer.audienceDemographics.interests && 
+                     result.influencer.audienceDemographics.interests.length > 0 && (
+                      <div>
+                        <p className="text-xs text-gray-600 mb-1">Intereses de Audiencia</p>
+                        <div className="flex flex-wrap gap-1">
+                          {result.influencer.audienceDemographics.interests
+                            .slice(0, 4)
+                            .map((interest, idx) => (
+                              <span key={idx} className="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
+                                {interest}
+                              </span>
+                            ))}
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
