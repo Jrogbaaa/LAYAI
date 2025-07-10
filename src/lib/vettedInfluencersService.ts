@@ -106,20 +106,129 @@ function loadSpanishInfluencers(): ProcessedInfluencer[] {
 
 // Convert processed influencer to vetted influencer format
 function convertToVettedInfluencer(processed: ProcessedInfluencer): VettedInfluencer {
-  // Estimate age range based on follower count and engagement
+  // Enhanced age range estimation
   const estimateAgeRange = (followers: number, engagement: number): '13-17' | '18-24' | '25-34' | '35-44' | '45-54' | '55+' => {
-    if (followers > 10000000) {
-      return '25-34'; // Mega influencers tend to be in prime age
-    } else if (followers > 1000000) {
-      return engagement > 0.05 ? '18-24' : '25-34'; // High engagement = younger audience
-    } else if (followers > 100000) {
-      return engagement > 0.08 ? '18-24' : '25-34';
-    } else {
-      return engagement > 0.10 ? '18-24' : '25-34';
-    }
+    if (followers < 10000) return '18-24';
+    if (followers < 100000) return '25-34';
+    if (followers < 500000) return '25-34';
+    if (followers < 1000000) return '35-44';
+    if (followers < 5000000) return '35-44';
+    return '45-54';
   };
 
   const ageRange = estimateAgeRange(processed.followerCount, processed.engagementRate);
+
+  // Generate diverse, realistic demographics based on profile characteristics
+  const generateRealisticDemographics = (profile: ProcessedInfluencer, ageRange: string) => {
+    const isArt = profile.niche.some(n => n.toLowerCase().includes('art'));
+    const isLifestyle = profile.niche.some(n => n.toLowerCase().includes('lifestyle'));
+    const isFitness = profile.niche.some(n => n.toLowerCase().includes('fitness'));
+    const isFood = profile.niche.some(n => n.toLowerCase().includes('food'));
+    const isTravel = profile.niche.some(n => n.toLowerCase().includes('travel'));
+    const isBeauty = profile.niche.some(n => n.toLowerCase().includes('beauty'));
+    const isFashion = profile.niche.some(n => n.toLowerCase().includes('fashion'));
+    const isTech = profile.niche.some(n => n.toLowerCase().includes('tech'));
+    const isMusic = profile.niche.some(n => n.toLowerCase().includes('music'));
+    const isGaming = profile.niche.some(n => n.toLowerCase().includes('gaming'));
+    const isEducation = profile.niche.some(n => n.toLowerCase().includes('education'));
+    const isMale = profile.gender === 'Male';
+    const followerCount = profile.followerCount;
+    
+    // Generate realistic age distribution based on niche and demographics
+    let ageGroups = {
+      '13-17': 5,
+      '18-24': 30,
+      '25-34': 35,
+      '35-44': 20,
+      '45-54': 8,
+      '55+': 2
+    };
+    
+    // Adjust age groups based on niche
+    if (isGaming || isMusic) {
+      ageGroups = { '13-17': 12, '18-24': 45, '25-34': 28, '35-44': 12, '45-54': 2, '55+': 1 };
+    } else if (isBeauty || isFashion) {
+      ageGroups = { '13-17': 8, '18-24': 42, '25-34': 35, '35-44': 12, '45-54': 2, '55+': 1 };
+    } else if (isEducation || isTech) {
+      ageGroups = { '13-17': 3, '18-24': 25, '25-34': 45, '35-44': 20, '45-54': 5, '55+': 2 };
+    } else if (isTravel) {
+      ageGroups = { '13-17': 2, '18-24': 35, '25-34': 40, '35-44': 18, '45-54': 4, '55+': 1 };
+    } else if (isFitness) {
+      ageGroups = { '13-17': 5, '18-24': 38, '25-34': 42, '35-44': 12, '45-54': 2, '55+': 1 };
+    } else if (isFood) {
+      ageGroups = { '13-17': 3, '18-24': 28, '25-34': 38, '35-44': 25, '45-54': 5, '55+': 1 };
+    } else if (isArt) {
+      ageGroups = { '13-17': 8, '18-24': 32, '25-34': 35, '35-44': 20, '45-54': 4, '55+': 1 };
+    }
+    
+    // Generate realistic gender distribution
+    let genderDistribution = {
+      male: 45,
+      female: 52,
+      other: 3
+    };
+    
+    // Adjust gender based on niche and influencer gender
+    if (isMale) {
+      if (isGaming || isTech) {
+        genderDistribution = { male: 75, female: 23, other: 2 };
+      } else if (isFitness) {
+        genderDistribution = { male: 55, female: 43, other: 2 };
+      } else if (isMusic) {
+        genderDistribution = { male: 62, female: 36, other: 2 };
+      } else {
+        genderDistribution = { male: 48, female: 49, other: 3 };
+      }
+    } else {
+      if (isBeauty || isFashion) {
+        genderDistribution = { male: 18, female: 80, other: 2 };
+      } else if (isLifestyle) {
+        genderDistribution = { male: 25, female: 72, other: 3 };
+      } else if (isFood) {
+        genderDistribution = { male: 35, female: 63, other: 2 };
+      } else {
+        genderDistribution = { male: 38, female: 59, other: 3 };
+      }
+    }
+    
+    // Generate realistic Spanish locations based on follower count
+    let topLocations = ['Madrid', 'Barcelona', 'Valencia'];
+    if (followerCount > 1000000) {
+      topLocations = ['Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Bilbao'];
+    } else if (followerCount > 500000) {
+      topLocations = ['Madrid', 'Barcelona', 'Valencia', 'Málaga'];
+    } else if (followerCount > 100000) {
+      topLocations = ['Madrid', 'Barcelona', 'Valencia'];
+    } else {
+      // Smaller influencers might have more localized audiences
+      const localCities = ['Zaragoza', 'Murcia', 'Palma', 'Las Palmas', 'Córdoba', 'Alicante'];
+      topLocations = [
+        'Madrid', 'Barcelona', 
+        localCities[Math.floor(Math.random() * localCities.length)]
+      ];
+    }
+    
+    // Generate realistic interests based on niche
+    const interests = [...profile.niche];
+    if (isLifestyle) interests.push('Travel', 'Food', 'Fashion');
+    if (isBeauty) interests.push('Skincare', 'Makeup', 'Fashion');
+    if (isFitness) interests.push('Health', 'Nutrition', 'Wellness');
+    if (isFood) interests.push('Cooking', 'Restaurants', 'Travel');
+    if (isTravel) interests.push('Photography', 'Adventure', 'Culture');
+    if (isArt) interests.push('Creativity', 'Design', 'Culture');
+    if (isMusic) interests.push('Concerts', 'Entertainment', 'Culture');
+    if (isGaming) interests.push('Technology', 'Entertainment', 'Streaming');
+    if (isTech) interests.push('Innovation', 'Startups', 'Education');
+    
+    return {
+      ageGroups,
+      gender: genderDistribution,
+      topLocations,
+      interests: Array.from(new Set(interests)).slice(0, 4) // Limit to 4 interests
+    };
+  };
+
+  const demographics = generateRealisticDemographics(processed, ageRange);
 
   return {
     id: processed.id,
@@ -138,23 +247,7 @@ function convertToVettedInfluencer(processed: ProcessedInfluencer): VettedInflue
     costLevel: processed.followerCount > 5000000 ? 'Premium' : 
                processed.followerCount > 1000000 ? 'High-End' : 
                processed.followerCount > 100000 ? 'Mid-Range' : 'Budget-Friendly',
-    audienceDemographics: {
-      ageGroups: {
-        '13-17': ageRange === '18-24' ? 15 : 5,
-        '18-24': ageRange === '18-24' ? 45 : 25,
-        '25-34': ageRange === '25-34' ? 40 : 30,
-        '35-44': ageRange === '35-44' ? 35 : 20,
-        '45-54': 10,
-        '55+': 5,
-      },
-      gender: {
-        male: processed.gender === 'Male' ? 60 : processed.gender === 'Female' ? 35 : 50,
-        female: processed.gender === 'Female' ? 65 : processed.gender === 'Male' ? 40 : 47,
-        other: 3,
-      },
-      topLocations: ['Spain', 'Madrid', 'Barcelona'],
-      interests: processed.niche,
-    },
+    audienceDemographics: demographics,
     recentPosts: [],
     contactInfo: {
       email: null,

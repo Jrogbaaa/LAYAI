@@ -27,7 +27,7 @@ OPENAI_API_KEY=your_openai_key (optional)
 
 **Endpoint:** `POST /api/enhanced-search`
 
-**Description:** Advanced influencer search with Spanish location detection, age estimation, and real StarNgage audience demographics integration (v2.7.0).
+**Description:** Advanced influencer search with Spanish location detection, age estimation, and re-enabled StarNgage audience demographics integration with improved rate limiting (v2.8.0).
 
 #### Request Body
 

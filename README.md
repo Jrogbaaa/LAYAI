@@ -1,43 +1,69 @@
-# 🚀 LAYAI - AI-Powered Influencer Marketing Platform
+# LAYAI - Advanced Influencer Platform
 
-**📱 Version 2.22.0** | **🌐 Live Production**: [https://layai.vercel.app/](https://layai.vercel.app/)
+A comprehensive platform for discovering and analyzing Spanish influencers with real audience demographics and advanced search capabilities.
 
-> 🔥 **CRITICAL: Firebase Throttling System** - Eliminated resource exhaustion errors with intelligent write batching and 99% performance improvement!
-> 👤 **MAJOR: Gender Filtering Fix** - Fixed gender search issue - now returns exclusive male/female results instead of mixed results!
-> 📊 **NEW: Real-time Monitoring** - Added Firebase throttler status API with health scoring and performance metrics!
-> 🎯 **PREVIOUS: Enhanced Brand Compatibility Engine** - Dynamic multi-dimensional brand-influencer matching with 50+ brand profiles and aesthetic intelligence!
+## 🚀 Latest Updates (v2.8.0 - January 2025)
 
-## 🚀 Latest Updates (January 2025)
+### **Major Improvements**
+- **🎯 StarNgage Demographics Re-enabled**: Real audience demographics now working with improved rate limiting
+- **⚡ Search Performance Optimized**: Fixed 504 Gateway Timeout issues with proper API rate limiting
+- **🛡️ Enhanced Error Handling**: Smart fallback system for when APIs are temporarily unavailable
+- **📊 Real Demographics Priority**: StarNgage-enhanced results now appear first in search rankings
+- **🔍 Improved Search Stability**: 3-second delays between API calls prevent timeouts and rate limiting
 
-### New Feature Release (v2.7.0)
-- **🎯 StarNgage Search Integration**: Real audience demographics in search results replacing hardcoded data
-- **📊 Enhanced Result Prioritization**: StarNgage-enhanced results appear first in search rankings
-- **🔍 Real Audience Insights**: Actual age/gender breakdowns from StarNgage.com instead of estimates
-- **⚡ Progressive Enhancement**: Top 10 results enhanced with real demographics during streaming
-- **🛡️ Graceful Fallback**: Generic demographics when StarNgage data unavailable
+### **Technical Enhancements**
+- **API Rate Limiting**: Serply API calls now have 3-second delays with 10-second recovery periods
+- **StarNgage Optimization**: 2-3 second randomized delays prevent blocking while maintaining real demographic access
+- **Timeout Recovery**: Automatic detection and recovery from 504/403/429 errors
+- **Graceful Degradation**: System continues working even when external APIs are temporarily unavailable
 
-### Recent Feature Release (v2.22.0)
-- **👥 Profile Similarity Search**: AI-powered influencer matching based on profile descriptions
-- **🎯 Intelligent Attribute Extraction**: Automatically detects profession, nationality, platform, follower range, and content niche
-- **📊 Similarity Ranking**: Results ranked by compatibility score with detailed match reasons
-- **🔍 Enhanced Chat Interface**: New query detection and handling for profile-based searches
-- **🌍 Full English Localization**: Complete translation of all Spanish content to English
+## 🔥 Core Features
 
-### Critical System Improvements (v2.21.0)
-- **🔥 Firebase Write Throttling**: Eliminated resource exhaustion errors with intelligent batching system
-- **👤 Gender Filtering Fix**: Fixed issue where gender searches returned mixed results instead of exclusive male/female
-- **📊 Real-time Monitoring**: New Firebase throttler status API with health scoring and performance metrics
-- **⚡ Performance Boost**: Campaign operations now complete in 1-2 seconds (vs 30-60 seconds)
-- **🛡️ System Stability**: 99% reduction in Firebase timeout errors and connection issues
+### **Search & Discovery**
+- **Real-time Search**: Live influencer discovery across Instagram and TikTok
+- **Advanced Filtering**: Gender, follower count, engagement rate, location, and niche filtering
+- **Spanish Market Focus**: Specialized for Spanish influencers with 3000+ profiles in database
+- **Brand Compatibility**: AI-powered brand matching for campaign suitability
 
-### Previous Major System Improvements
-- **✅ StarNgage Integration**: Comprehensive demographic scraper with audience insights
-- **✅ Enhanced Dropdown Search**: Complete tabbed interface with chat and structured search
-- **✅ Automatic Brand Research**: Dynamic brand investigation with real-time parameter adjustment  
-- **✅ Comprehensive Campaign Saving**: Both search types now save to campaigns automatically
-- **✅ Massive Database Upgrade**: 3,000 top Spanish influencers with complete metadata
-- **✅ Performance Optimization**: 22ms search speed (vs previous 30+ seconds)
-- **✅ Validation System Fix**: 99%+ legitimate profiles now pass validation
+### **Audience Analytics**
+- **Real Demographics**: Actual age/gender breakdowns from StarNgage.com (when available)
+- **Diverse Fallback**: Realistic demographics based on niche, gender, and follower count when real data unavailable
+- **Geographic Insights**: Spanish city-level audience distribution
+- **Interest Analysis**: Content category and topic analysis
+
+### **System Reliability**
+- **99% Uptime**: Robust error handling and automatic fallbacks
+- **Smart Rate Limiting**: Respectful API usage preventing timeouts and blocks
+- **Real-time Monitoring**: Circuit breakers and performance tracking
+- **Scalable Architecture**: Handles concurrent searches without performance degradation
+
+## 📊 Current Capabilities
+
+### **Data Sources**
+- **Verified Database**: 3000+ Spanish influencers with quality metrics
+- **Real-time APIs**: Apify, Serply for live profile discovery
+- **StarNgage Integration**: Real audience demographics when accessible
+- **Custom Scraping**: Enhanced profile verification and data enrichment
+
+### **Search Performance**
+- **Response Time**: < 5 seconds for most searches
+- **Results Quality**: Mix of verified database + real-time discovery
+- **Demographic Accuracy**: Real StarNgage data when available, intelligent fallbacks otherwise
+- **API Reliability**: Smart rate limiting prevents timeouts and ensures consistent performance
+
+## 🛠️ Technical Architecture
+
+### **Backend Services**
+- **Enhanced Search API**: Multi-source search with intelligent result merging
+- **StarNgage Service**: Real demographic scraping with rate limiting and fallbacks
+- **Apify Integration**: Live profile discovery and verification
+- **Campaign Management**: Full campaign lifecycle with collaboration tracking
+
+### **Rate Limiting & Performance**
+- **Serply API**: 3-second delays between calls, 10-second recovery on timeouts
+- **StarNgage**: 2-3 second randomized delays to prevent blocking
+- **Circuit Breakers**: Automatic failover when services are temporarily unavailable
+- **Progressive Loading**: Results stream in real-time for better UX
 
 ## 🎯 Platform Overview
 

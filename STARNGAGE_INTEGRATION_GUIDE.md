@@ -1,26 +1,35 @@
 # StarNgage Integration Guide
 
+*Last Updated: January 2025 (v2.8.0)*
+
 ## Overview
 
-The LAYAI platform now includes a comprehensive StarNgage scraper that can extract detailed demographic data from influencer profiles. This integration provides valuable audience insights including gender demographics, age groups, top locations, and engagement metrics.
+The LAYAI platform includes a comprehensive StarNgage scraper that can extract detailed demographic data from influencer profiles. This integration provides valuable audience insights including gender demographics, age groups, top locations, and engagement metrics.
 
-## 🎯 **NEW: Search Results Integration**
+## 🚀 **MAJOR UPDATE: StarNgage Re-enabled (v2.8.0)**
 
-As of v2.7.0, StarNgage demographics are now automatically integrated into all search results, replacing hardcoded demographic data with real audience insights from StarNgage.com.
+StarNgage demographics have been **re-enabled** with significantly improved rate limiting and error handling after being temporarily disabled due to API blocking issues.
+
+### Key Improvements in v2.8.0
+- **✅ Re-enabled Real Demographics**: StarNgage integration now working with improved anti-blocking measures
+- **🛡️ Smart Rate Limiting**: 2-3 second randomized delays between requests prevent API blocking
+- **⚡ Enhanced Error Recovery**: Automatic fallback to diverse demographics when StarNgage is temporarily unavailable
+- **🔄 Improved Success Rate**: Better handling of various StarNgage URL patterns and response structures
+- **📊 Graceful Degradation**: System continues working even when StarNgage blocks requests
 
 ### Search Integration Features
-- **Real Audience Demographics**: Top search results now include actual age/gender breakdowns from StarNgage
+- **Real Audience Demographics**: Actual age/gender breakdowns from StarNgage.com when accessible
 - **Enhanced Result Prioritization**: StarNgage-enhanced results appear first in search rankings
 - **Progressive Enhancement**: Top 10 results (regular search) / Top 5 results (progressive search) enhanced with real demographics
-- **Graceful Fallback**: Generic demographics when StarNgage data unavailable
-- **Enhanced Match Reasons**: "Enhanced with real audience demographics" indicator
+- **Intelligent Fallback**: Diverse, realistic demographics based on niche/gender/followers when StarNgage unavailable
+- **Enhanced Match Reasons**: "Enhanced with real audience demographics from StarNgage" indicator
 
 ### Implementation Details
 - Automatically called during Enhanced Search API (`/api/enhanced-search`)
-- Batch processing to avoid StarNgage rate limits
-- Priority sorting for enhanced results
-- Comprehensive error handling with fallback to generic demographics
-- Real engagement metrics (avgLikes, avgComments) from StarNgage
+- **NEW**: 2-3 second randomized delays to prevent rate limiting and blocking
+- Priority sorting for enhanced results with StarNgage data first
+- Comprehensive error handling with intelligent fallback system
+- Real engagement metrics (avgLikes, avgComments) from StarNgage when available
 
 ## Features
 

@@ -103,7 +103,7 @@ export const SearchInterface: React.FC<SearchInterfaceProps> = ({
             ) : (
                 <p className="text-xs text-gray-600">
                   🎯 Structured search with specific filters
-                </p>
+              </p>
             )}
             </div>
           </div>

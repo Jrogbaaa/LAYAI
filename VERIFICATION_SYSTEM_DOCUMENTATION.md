@@ -152,17 +152,21 @@ const nicheKeywords = {
 
 ## Rate Limiting & Best Practices
 
-### Rate Limiting
-- 2-second delay between requests per platform
-- Batch processing (5 profiles at a time)
-- 3-second delays between batches
-- Maximum 50 profiles per API call
+### Enhanced Rate Limiting (v2.8.0)
+- **Serply API**: 3-second delays between consecutive calls, 10-second recovery on timeouts
+- **StarNgage**: 2-3 second randomized delays to prevent blocking
+- **Apify**: 2-second delays between requests per platform
+- **Batch processing**: 5 profiles at a time with intelligent scheduling
+- **Error recovery**: Automatic extended delays for 504/429/403 errors
+- **Maximum limits**: 50 profiles per API call with timeout protection
 
 ### Respectful Scraping
-- Built-in delays and throttling
-- Error handling with exponential backoff
-- Graceful degradation to basic verification
-- API key rotation support
+- **Smart delays**: Randomized timing to avoid detection patterns
+- **Error handling**: Comprehensive retry logic with exponential backoff
+- **Graceful degradation**: Fallback to basic verification when APIs unavailable
+- **API key rotation**: Support for multiple API keys and rotation
+- **Timeout management**: Intelligent timeout handling prevents infinite loading
+- **Rate limit detection**: Automatic detection and recovery from rate limiting
 
 ### Security
 - Environment variable API keys
@@ -298,12 +302,61 @@ The system provides intelligent recommendations based on verification results:
 - **Cost**: Apify API costs ($0.25-0.50 per 1000 operations)
 - **Use case**: Final candidate selection
 
+## StarNgage Demographics Integration (v2.8.0)
+
+### Re-enabled Real Demographics
+The verification system now includes re-enabled StarNgage demographics enhancement with improved reliability:
+
+#### Enhanced Demographics Verification
+- **Real Audience Data**: Actual age/gender breakdowns from StarNgage.com when accessible
+- **Smart Rate Limiting**: 2-3 second randomized delays prevent API blocking
+- **Intelligent Fallback**: Diverse demographics based on niche/gender/followers when StarNgage unavailable
+- **Error Recovery**: Automatic fallback to diverse demographics on 403/timeout errors
+
+#### Implementation
+```typescript
+// Enhanced demographic verification with StarNgage
+async function enhanceWithStarngageDemographics(profile: any): Promise<any> {
+  try {
+    // Attempt to get real StarNgage demographics
+    const starngageData = await starngageService.enhanceInfluencerWithDemographics(profile.username);
+    
+    if (starngageData && starngageData.demographics) {
+      console.log(`✅ Enhanced ${profile.username} with real StarNgage demographics`);
+      return {
+        ...profile,
+        demographics: starngageData.demographics,
+        starngageEnhanced: true,
+        dataSource: 'starngage_real'
+      };
+    }
+  } catch (error) {
+    console.log(`⚠️ StarNgage enhancement failed for ${profile.username} - using fallback`);
+  }
+  
+  // Fallback to diverse demographics
+  return {
+    ...profile,
+    demographics: generateDiverseDemographics(profile),
+    starngageEnhanced: false,
+    dataSource: 'diverse_fallback'
+  };
+}
+```
+
+#### Benefits for Verification
+- **Higher Accuracy**: Real demographic data improves verification confidence scores
+- **Better Matching**: Actual audience data provides more precise demographic alignment
+- **Reliability**: Fallback system ensures consistent results even during API issues
+- **Prioritization**: StarNgage-enhanced profiles receive higher priority in results
+
 ## Configuration
 
 ### Environment Variables
 ```bash
 APIFY_API_TOKEN=your_apify_token
 SERPLY_API_KEY=your_serply_key
+STARNGAGE_ENABLED=true
 ```
 
 ### Apify Actors Used

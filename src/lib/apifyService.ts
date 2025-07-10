@@ -253,10 +253,20 @@ async function discoverInfluencerProfiles(params: ApifySearchParams): Promise<{u
           
           console.log(`Found ${urls.length} profile URLs for query: "${query}"`);
           
-          // Add delay to be respectful to search APIs
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          // 🛡️ CRITICAL: Add proper rate limiting to prevent API timeouts
+          // Increase delay from 1s to 3s to be more respectful to Serply API
+          console.log('⏱️ Waiting 3 seconds before next search to prevent rate limiting...');
+          await new Promise(resolve => setTimeout(resolve, 3000));
         } catch (searchError) {
           console.error(`Search failed for query "${query}":`, searchError);
+          
+          // If we get a timeout or rate limit error, wait longer before next request
+          const errorMessage = searchError instanceof Error ? searchError.message : String(searchError);
+          if (errorMessage.includes('timeout') || errorMessage.includes('429') || errorMessage.includes('504')) {
+            console.log('🚫 API timeout/rate limit detected - waiting 10 seconds before retry...');
+            await new Promise(resolve => setTimeout(resolve, 10000));
+          }
+          
           // Continue with next query
         }
       }
@@ -265,6 +275,13 @@ async function discoverInfluencerProfiles(params: ApifySearchParams): Promise<{u
     // Enhanced deduplication before returning
     let uniqueUrls = deduplicateProfiles(profileUrls);
     
+    // 🛡️ CRITICAL: Limit profile discovery to prevent excessive scraping
+    const MAX_PROFILES_TO_DISCOVER = 15; // Aggressive limit to prevent UI freezes
+    if (uniqueUrls.length > MAX_PROFILES_TO_DISCOVER) {
+      console.log(`🛡️ Limiting profile discovery from ${uniqueUrls.length} to ${MAX_PROFILES_TO_DISCOVER} profiles to prevent UI overload`);
+      uniqueUrls = uniqueUrls.slice(0, MAX_PROFILES_TO_DISCOVER);
+    }
+    
     // NEW: If we found very few results, add strategic fallback searches
     if (uniqueUrls.length < 3) {
       console.log(`⚠️  Found only ${uniqueUrls.length} profiles. Adding strategic fallback searches...`);
@@ -272,6 +289,11 @@ async function discoverInfluencerProfiles(params: ApifySearchParams): Promise<{u
       const fallbackUrls = await performStrategicFallbackSearch(params);
       uniqueUrls.push(...fallbackUrls);
       uniqueUrls = deduplicateProfiles(uniqueUrls);
+      
+      // Apply limit again after fallback
+      if (uniqueUrls.length > MAX_PROFILES_TO_DISCOVER) {
+        uniqueUrls = uniqueUrls.slice(0, MAX_PROFILES_TO_DISCOVER);
+      }
     }
     
     console.log(`🔍 Profile discovery summary:`);
@@ -557,33 +579,33 @@ async function performWebSearch(query: string, platform: string): Promise<any[]>
     const mergedResults: any[] = [];
     let totalResults = 0;
     
-         // Priority: SerpApi results first (highest quality)
-     const serpApiResults = allResults.find(r => r.source === 'serpapi');
-     if (serpApiResults && serpApiResults.results.length > 0) {
-       mergedResults.push(...serpApiResults.results.map(result => ({ ...result, source: 'serpapi', priority: 1 })));
-       totalResults += serpApiResults.results.length;
-       console.log(`✅ SerpApi: ${serpApiResults.results.length} results (high priority)`);
-     }
-     
-     // Secondary: Serply results (good quality)
-     const serplyResults = allResults.find(r => r.source === 'serply');
-     if (serplyResults && serplyResults.results.length > 0) {
-       mergedResults.push(...serplyResults.results.map(result => ({ ...result, source: 'serply', priority: 2 })));
-       totalResults += serplyResults.results.length;
-       console.log(`✅ Serply: ${serplyResults.results.length} results (medium priority)`);
-     }
+    // Priority: SerpApi results first (highest quality)
+    const serpApiResults = allResults.find(r => r.source === 'serpapi');
+    if (serpApiResults && serpApiResults.results.length > 0) {
+      mergedResults.push(...serpApiResults.results);
+      totalResults += serpApiResults.results.length;
+      console.log(`✅ SerpApi: ${serpApiResults.results.length} results (high priority)`);
+    }
     
-    // Remove duplicates based on URL
-    const uniqueResults = mergedResults.filter((result, index, array) => {
-      const url = result.link || result.url;
-      return array.findIndex(r => (r.link || r.url) === url) === index;
-    });
+    // Secondary: Serply results
+    const serplyResults = allResults.find(r => r.source === 'serply');
+    if (serplyResults && serplyResults.results.length > 0) {
+      mergedResults.push(...serplyResults.results);
+      totalResults += serplyResults.results.length;
+      console.log(`✅ Serply: ${serplyResults.results.length} results (medium priority)`);
+    }
     
-    console.log(`🎯 Parallel search completed: ${totalResults} total, ${uniqueResults.length} unique results`);
+    console.log(`🎯 Parallel search completed: ${totalResults} total, ${mergedResults.length} unique results`);
+    
+    // Deduplicate by URL
+    const uniqueResults = mergedResults.filter((result, index, arr) => 
+      arr.findIndex(r => r.link === result.link) === index
+    );
+    
     return uniqueResults;
     
   } catch (error) {
-    console.error('❌ Error in parallel web search:', error);
+    console.error('❌ Web search error:', error);
     return [];
   }
 }
@@ -2367,68 +2389,104 @@ function calculateUsernameQualityScore(username: string): number {
 export async function searchInfluencersWithTwoTierDiscovery(params: ApifySearchParams): Promise<SearchResults> {
   console.log('🚀 Starting two-tier influencer discovery with params:', params);
   
-  try {
-    // Phase 1: Discover influencer profiles through web search
-    console.log('🔍 Phase 1: Web search discovery');
-    const profileUrls = await discoverInfluencerProfiles(params);
-    console.log(`🔍 Total profiles discovered: ${profileUrls.length}`);
+  // 🛡️ CRITICAL: Add timeout to prevent infinite searches
+  const SEARCH_TIMEOUT = 30000; // 30 seconds maximum
+  
+  const searchPromise = async (): Promise<SearchResults> => {
+    try {
+      // Phase 1: Discover influencer profiles through web search
+      console.log('🔍 Phase 1: Web search discovery');
+      const profileUrls = await discoverInfluencerProfiles(params);
+      console.log(`🔍 Total profiles discovered: ${profileUrls.length}`);
 
-    // Phase 2: Apply heuristic validation without scraping
-    console.log('🔬 Phase 2: Heuristic validation');
-    const validatedProfiles = validateProfilesHeuristically(profileUrls, params);
-    console.log(`✅ Profiles passing heuristic validation: ${validatedProfiles.length}/${profileUrls.length}`);
+      // Phase 2: Apply heuristic validation without scraping
+      console.log('🔬 Phase 2: Heuristic validation');
+      const validatedProfiles = validateProfilesHeuristically(profileUrls, params);
+      console.log(`✅ Profiles passing heuristic validation: ${validatedProfiles.length}/${profileUrls.length}`);
 
-    // Phase 3: Create discovery results from validated profiles
-    console.log('🔄 Creating discovery results from', validatedProfiles.length, 'validated profiles...');
-    const discoveryResults = createDiscoveryResults(validatedProfiles, params);
-    console.log(`📋 Discovery Results: ${discoveryResults.length} profiles from validated search`);
+      // Phase 3: Create discovery results from validated profiles
+      console.log('🔄 Creating discovery results from', validatedProfiles.length, 'validated profiles...');
+      const discoveryResults = createDiscoveryResults(validatedProfiles, params);
+      console.log(`📋 Discovery Results: ${discoveryResults.length} profiles from validated search`);
 
-    // Phase 4: Enhanced verification (temporarily disabled due to API limits)
-    console.log('🚫 Apify verification temporarily disabled - using discovery results only');
-    const verifiedResults: ScrapedInfluencer[] = [];
+      // Phase 4: Enhanced verification (temporarily disabled due to API limits)
+      console.log('🚫 Apify verification temporarily disabled - using discovery results only');
+      const verifiedResults: ScrapedInfluencer[] = [];
 
-    const totalResults = verifiedResults.length + discoveryResults.length;
-    console.log(`🎯 Two-tier results: ${verifiedResults.length} premium + ${discoveryResults.length} discovery = ${totalResults} total influencers`);
+      const totalResults = verifiedResults.length + discoveryResults.length;
+      console.log(`🎯 Two-tier results: ${verifiedResults.length} premium + ${discoveryResults.length} discovery = ${totalResults} total influencers`);
 
-    // If no results found, provide helpful guidance
-    if (totalResults === 0) {
-      console.log('❌ No influencers found. This might be due to:');
-      console.log('   1. Serply API key issues (check your .env.local file)');
-      console.log('   2. Network connectivity problems');
-      console.log('   3. Very specific search criteria');
-      console.log('💡 Try broadening your search terms or check your API configuration.');
+      // If no results found, provide helpful guidance
+      if (totalResults === 0) {
+        console.log('❌ No influencers found. This might be due to:');
+        console.log('   1. Serply API key issues (check your .env.local file)');
+        console.log('   2. Network connectivity problems');
+        console.log('   3. Very specific search criteria');
+        console.log('💡 Try broadening your search terms or check your API configuration.');
 
-      // Create a helpful discovery result when search fails
-      const helpfulResult: BasicInfluencerProfile = {
-        username: 'search_guidance',
-        fullName: 'Search Configuration Needed',
+        // Create a helpful discovery result when search fails
+        const helpfulResult: BasicInfluencerProfile = {
+          username: 'search_guidance',
+          fullName: 'Search Configuration Needed',
+          followers: 0,
+          platform: params.platforms[0] || 'Instagram',
+          niche: (params.niches && params.niches.length > 0) ? params.niches[0] : 'lifestyle',
+          profileUrl: '#',
+          source: 'verified-discovery' as const
+        };
+        
+        return {
+          premiumResults: [],
+          discoveryResults: [helpfulResult],
+          totalFound: 0
+        };
+      }
+
+      return {
+        premiumResults: verifiedResults,
+        discoveryResults: discoveryResults,
+        totalFound: totalResults
+      };
+
+    } catch (error) {
+      console.error('❌ Error in two-tier discovery:', error);
+      
+      // Return helpful error information instead of empty results
+      const errorResult: BasicInfluencerProfile = {
+        username: 'error_occurred',
+        fullName: 'Search Error - Please Try Again',
         followers: 0,
         platform: params.platforms[0] || 'Instagram',
-        niche: (params.niches && params.niches.length > 0) ? params.niches[0] : 'lifestyle',
+        niche: 'system',
         profileUrl: '#',
         source: 'verified-discovery' as const
       };
       
       return {
         premiumResults: [],
-        discoveryResults: [helpfulResult],
+        discoveryResults: [errorResult],
         totalFound: 0
       };
     }
+  };
 
-    return {
-      premiumResults: verifiedResults,
-      discoveryResults: discoveryResults,
-      totalFound: totalResults
-    };
-
-    } catch (error) {
-    console.error('❌ Error in two-tier discovery:', error);
+  try {
+    // Run search with timeout
+    const result = await Promise.race([
+      searchPromise(),
+      new Promise<SearchResults>((_, reject) => 
+        setTimeout(() => reject(new Error('Search timeout')), SEARCH_TIMEOUT)
+      )
+    ]);
     
-    // Return helpful error information instead of empty results
-    const errorResult: BasicInfluencerProfile = {
-      username: 'error_occurred',
-      fullName: 'Search Error - Please Try Again',
+    return result;
+  } catch (error) {
+    console.error('🛡️ Search timed out or failed:', error);
+    
+    // Return timeout error result
+    const timeoutResult: BasicInfluencerProfile = {
+      username: 'search_timeout',
+      fullName: 'Search Timed Out - Please Try Again',
       followers: 0,
       platform: params.platforms[0] || 'Instagram',
       niche: 'system',
@@ -2438,7 +2496,7 @@ export async function searchInfluencersWithTwoTierDiscovery(params: ApifySearchP
     
     return {
       premiumResults: [],
-      discoveryResults: [errorResult],
+      discoveryResults: [timeoutResult],
       totalFound: 0
     };
   }
