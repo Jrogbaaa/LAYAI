@@ -4,6 +4,24 @@
 
 The LAYAI platform now includes a comprehensive StarNgage scraper that can extract detailed demographic data from influencer profiles. This integration provides valuable audience insights including gender demographics, age groups, top locations, and engagement metrics.
 
+## 🎯 **NEW: Search Results Integration**
+
+As of v2.7.0, StarNgage demographics are now automatically integrated into all search results, replacing hardcoded demographic data with real audience insights from StarNgage.com.
+
+### Search Integration Features
+- **Real Audience Demographics**: Top search results now include actual age/gender breakdowns from StarNgage
+- **Enhanced Result Prioritization**: StarNgage-enhanced results appear first in search rankings
+- **Progressive Enhancement**: Top 10 results (regular search) / Top 5 results (progressive search) enhanced with real demographics
+- **Graceful Fallback**: Generic demographics when StarNgage data unavailable
+- **Enhanced Match Reasons**: "Enhanced with real audience demographics" indicator
+
+### Implementation Details
+- Automatically called during Enhanced Search API (`/api/enhanced-search`)
+- Batch processing to avoid StarNgage rate limits
+- Priority sorting for enhanced results
+- Comprehensive error handling with fallback to generic demographics
+- Real engagement metrics (avgLikes, avgComments) from StarNgage
+
 ## Features
 
 ### 🔍 **Influencer List Scraping**

@@ -27,7 +27,7 @@ OPENAI_API_KEY=your_openai_key (optional)
 
 **Endpoint:** `POST /api/enhanced-search`
 
-**Description:** Advanced influencer search with Spanish location detection and age estimation capabilities.
+**Description:** Advanced influencer search with Spanish location detection, age estimation, and real StarNgage audience demographics integration (v2.7.0).
 
 #### Request Body
 
@@ -75,6 +75,7 @@ OPENAI_API_KEY=your_openai_key (optional)
     totalFound: number;
     spanishValidated: number;
     ageEstimated: number;
+    starngageEnhanced: number;    // NEW: Number of results with real demographics
     averageConfidence: number;
     processingTime: number;
     searchCriteria: object;
@@ -82,6 +83,15 @@ OPENAI_API_KEY=your_openai_key (optional)
   recommendations: string[];
 }
 ```
+
+#### StarNgage Integration (v2.7.0)
+**NEW**: Top search results now include real audience demographics from StarNgage.com:
+
+- **Enhanced Result Prioritization**: StarNgage-enhanced results appear first
+- **Real Demographics**: Actual age/gender breakdowns replace estimates
+- **Top 10 Enhancement**: Regular search enhances top 10 results with real data
+- **Progressive Enhancement**: Streaming search enhances top 5 results
+- **Graceful Fallback**: Generic demographics when StarNgage unavailable
 
 #### Example Response
 
@@ -116,7 +126,23 @@ OPENAI_API_KEY=your_openai_key (optional)
       "enhancementDetails": {
         "spanishDetected": true,
         "ageEstimated": true,
+        "starngageEnhanced": true,
         "confidenceScore": 91
+      },
+      "audienceDemographics": {
+        "ageGroups": {
+          "18-24": 35,
+          "25-34": 42,
+          "35-44": 15,
+          "45-54": 8
+        },
+        "gender": {
+          "male": 23,
+          "female": 74,
+          "other": 3
+        },
+        "topLocations": ["Madrid", "Barcelona", "Valencia"],
+        "interests": ["Fashion", "Travel", "Food"]
       }
     }
   ],
@@ -124,6 +150,7 @@ OPENAI_API_KEY=your_openai_key (optional)
     "totalFound": 15,
     "spanishValidated": 12,
     "ageEstimated": 8,
+    "starngageEnhanced": 10,
     "averageConfidence": 78,
     "processingTime": 2340,
     "searchCriteria": {

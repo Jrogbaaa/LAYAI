@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { campaignService } from '@/lib/enhancedCampaignService';
 import { EnhancedCampaign, SavedSearch, SavedInfluencer } from '@/types/campaign';
+import { useLanguage } from '@/lib/languageContext';
 
 export const EnhancedCampaignManager: React.FC = () => {
+  const { t } = useLanguage();
   const [campaigns, setCampaigns] = useState<EnhancedCampaign[]>([]);
   const [selectedCampaigns, setSelectedCampaigns] = useState<string[]>([]);
   const [editingCell, setEditingCell] = useState<{campaignId: string, field: string} | null>(null);
@@ -128,7 +130,7 @@ export const EnhancedCampaignManager: React.FC = () => {
   };
 
   const deleteCampaign = async (campaignId: string) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar esta campaña?')) return;
+    if (!confirm(t('campaign.delete.confirm'))) return;
 
     try {
       const response = await fetch('/api/database/campaigns', {
@@ -471,7 +473,7 @@ export const EnhancedCampaignManager: React.FC = () => {
         <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando campañas...</p>
+          <p className="text-gray-600">{t('campaign.loading')}</p>
         </div>
       </div>
       )}
@@ -483,15 +485,15 @@ export const EnhancedCampaignManager: React.FC = () => {
       <div className="mb-6">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">📊 Gestión de Campañas</h1>
-            <p className="text-gray-600 mt-1">Gestiona todas tus campañas, búsquedas guardadas e influencers</p>
+                      <h1 className="text-2xl font-bold text-gray-900">📊 {t('campaigns.title')}</h1>
+          <p className="text-gray-600 mt-1">{t('campaigns.subtitle')}</p>
           </div>
           <button
             onClick={createCampaign}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
           >
             <span>+</span>
-            <span>Nueva Campaña</span>
+                          <span>{t('campaigns.new.campaign')}</span>
           </button>
         </div>
 
@@ -499,25 +501,25 @@ export const EnhancedCampaignManager: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
             <div className="text-2xl font-bold text-blue-600">{campaigns.length}</div>
-            <div className="text-sm text-blue-700">Total Campañas</div>
+                          <div className="text-sm text-blue-700">{t('campaigns.stats.total')}</div>
           </div>
           <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
             <div className="text-2xl font-bold text-green-600">
               {campaigns.reduce((sum, c) => sum + (c.savedSearches?.length || 0), 0)}
             </div>
-            <div className="text-sm text-green-700">Búsquedas Guardadas</div>
+                          <div className="text-sm text-green-700">{t('campaigns.stats.searches')}</div>
           </div>
           <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
             <div className="text-2xl font-bold text-purple-600">
               {campaigns.reduce((sum, c) => sum + (c.savedInfluencers?.length || 0), 0)}
             </div>
-            <div className="text-sm text-purple-700">Influencers Guardados</div>
+                          <div className="text-sm text-purple-700">{t('campaigns.stats.influencers')}</div>
           </div>
           <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
             <div className="text-2xl font-bold text-orange-600">
               {campaigns.filter(c => c.status === 'Active').length}
             </div>
-            <div className="text-sm text-orange-700">Campañas Activas</div>
+                          <div className="text-sm text-orange-700">{t('campaigns.stats.active')}</div>
           </div>
         </div>
       </div>
@@ -543,34 +545,34 @@ export const EnhancedCampaignManager: React.FC = () => {
                   />
                 </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-32">
-                   Campaña
+                   {t('campaign.table.campaign')}
                  </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20">
-                   Propietario
+                   {t('campaign.table.owner')}
                  </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-24">
-                  Estado
+                  {t('campaign.table.status')}
                 </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20">
-                  Prioridad
+                  {t('campaign.table.priority')}
                 </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-28">
-                  Cronograma
+                  {t('campaign.table.timeline')}
                 </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-24">
-                  Presupuesto
+                  {t('campaign.table.budget')}
                 </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20 text-center">
-                  Búsquedas
+                  {t('campaign.table.searches')}
                 </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-20 text-center">
-                  Influencers
+                  {t('campaign.table.influencers')}
                 </th>
                 <th className="text-left px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide w-12 text-center">
-                  Notas
+                  {t('campaign.table.notes')}
                 </th>
                 <th className="w-12 px-2 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide text-center">
-                  Acciones
+                  {t('campaign.table.actions')}
                 </th>
               </tr>
             </thead>

@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       userQuery = '',
       specificHandle,
       verified = false,
-      maxResults = 50,
+      maxResults = 30, // Reduced from 50 to prevent UI overload
       campaignId,
       campaignStatus,
       brandName

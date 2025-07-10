@@ -3,6 +3,7 @@
 import { MatchResult, Influencer } from '@/types/influencer';
 import React, { useState, useMemo } from 'react';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { useLanguage } from '@/lib/languageContext';
 
 interface InfluencerResultsProps {
   results: MatchResult[];
@@ -49,6 +50,7 @@ interface MatchResultWithVerification extends MatchResult {
 
 export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results }) => {
   const [viewMode, setViewMode] = useState<'standard' | 'enhanced'>('standard');
+  const { t } = useLanguage();
   
   // Define validation function before using it
   const isValidInstagramHandle = (influencer: any): { isValid: boolean; reason?: string } => {
@@ -229,10 +231,10 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 space-y-4 sm:space-y-0">
           <div>
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-              {validResults.length} Coincidencia{validResults.length !== 1 ? 's' : ''} Perfecta{validResults.length !== 1 ? 's' : ''} ✨
+              {validResults.length} Perfect Match{validResults.length !== 1 ? 'es' : ''} ✨
             </h2>
             <p className="text-gray-600 text-sm sm:text-base">
-              Clasificados por puntuación de compatibilidad y rendimiento
+              Ranked by compatibility score and performance
             </p>
           </div>
           
@@ -245,7 +247,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                   ? 'bg-blue-600 text-white shadow-md' 
                   : 'text-gray-600 hover:bg-gray-100/80'
               }`}
-              aria-label="Vista estándar"
+              aria-label="Standard view"
             >
               📋 <span className="hidden sm:inline">Standard</span>
             </button>
@@ -256,7 +258,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                   ? 'bg-purple-600 text-white shadow-md' 
                   : 'text-gray-600 hover:bg-gray-100/80'
               }`}
-              aria-label="Vista mejorada"
+              aria-label="Enhanced view"
             >
               ⭐ <span className="hidden sm:inline">Enhanced</span>
             </button>
@@ -267,15 +269,15 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
           <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30 shadow-sm hover:shadow-md transition-shadow">
             <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-1">{performanceMetrics.avgMatchScore}%</div>
-            <div className="text-xs sm:text-sm text-gray-600">Puntuación Promedio</div>
+            <div className="text-xs sm:text-sm text-gray-600">Average Score</div>
           </div>
           <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30 shadow-sm hover:shadow-md transition-shadow">
             <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-1">{performanceMetrics.avgEngagement}%</div>
-            <div className="text-xs sm:text-sm text-gray-600">Engagement Promedio</div>
+            <div className="text-xs sm:text-sm text-gray-600">Average Engagement</div>
           </div>
           <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30 shadow-sm hover:shadow-md transition-shadow">
             <div className="text-2xl sm:text-3xl font-bold text-purple-600 mb-1">{performanceMetrics.verifiedCount}</div>
-            <div className="text-xs sm:text-sm text-gray-600">Verificados</div>
+            <div className="text-xs sm:text-sm text-gray-600">Verified</div>
           </div>
           <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/30 shadow-sm hover:shadow-md transition-shadow">
             <div className="text-2xl sm:text-3xl font-bold text-indigo-600 mb-1">{performanceMetrics.premiumCount}</div>
@@ -285,7 +287,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
             <div className="text-lg sm:text-xl font-bold text-orange-600 mb-1">
               {performanceMetrics.qualityDistribution.excellent}✨{performanceMetrics.qualityDistribution.good}👍{performanceMetrics.qualityDistribution.fair}📊
             </div>
-            <div className="text-xs sm:text-sm text-gray-600">Distribución de Calidad</div>
+            <div className="text-xs sm:text-sm text-gray-600">Quality Distribution</div>
           </div>
         </div>
       </div>
@@ -308,7 +310,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                 <div className="flex items-center space-x-3 sm:space-x-4">
                   <div className="relative">
                     <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg">
-                      {result.influencer.name.charAt(0)}
+                    {result.influencer.name.charAt(0)}
                     </div>
                     {/* Verification Badge */}
                     {result.influencer.validationStatus?.apifyVerified && (
@@ -335,7 +337,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                     </span>
                     <span className="text-xs text-gray-500">
                       {(result.matchScore * 100).toFixed(0)}% match
-                    </span>
+                  </span>
                   </div>
                 </div>
               </div>
@@ -343,7 +345,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
               {/* Enhanced Stats Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3 text-center border border-blue-200/50">
-                  <p className="text-xs text-blue-600 uppercase tracking-wide font-semibold">Seguidores</p>
+                  <p className="text-xs text-blue-600 uppercase tracking-wide font-semibold">Followers</p>
                   <p className="text-base sm:text-lg font-bold text-blue-900 mt-1">{formatNumber(result.influencer.followerCount)}</p>
                 </div>
                 
@@ -353,7 +355,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                 </div>
                 
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-3 text-center border border-purple-200/50">
-                  <p className="text-xs text-purple-600 uppercase tracking-wide font-semibold">Tarifa Est.</p>
+                  <p className="text-xs text-purple-600 uppercase tracking-wide font-semibold">Est. Rate</p>
                   <p className="text-base sm:text-lg font-bold text-purple-900 mt-1">${(result.estimatedCost || 0).toLocaleString()}</p>
                 </div>
                 
@@ -395,13 +397,13 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                   <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-3 sm:p-4 border border-purple-200/50">
                     <h4 className="text-sm font-semibold text-gray-800 mb-3 flex items-center">
                       <span className="mr-2">👥</span>
-                      Demografía de Audiencia
+                      {t('audienceDemographics')}
                     </h4>
                     
                     {/* Enhanced Age and Gender Distribution */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <p className="text-xs text-gray-600 mb-2 font-medium">Edad Principal</p>
+                        <p className="text-xs text-gray-600 mb-2 font-medium">{t('mainAge')}</p>
                         <div className="flex flex-wrap gap-1">
                           {Object.entries(result.influencer.audienceDemographics.ageGroups)
                             .filter(([_, percentage]) => percentage > 15)
@@ -416,7 +418,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                       </div>
                       
                       <div>
-                        <p className="text-xs text-gray-600 mb-2 font-medium">Género</p>
+                        <p className="text-xs text-gray-600 mb-2 font-medium">{t('gender')}</p>
                         <div className="flex flex-wrap gap-1">
                           {Object.entries(result.influencer.audienceDemographics.gender)
                             .filter(([_, percentage]) => percentage > 0)
@@ -430,16 +432,16 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              )}
-
+                        </div>
+                      </div>
+                    )}
+                    
               {/* Enhanced Match Reasons Section */}
               {result.matchReasons && result.matchReasons.length > 0 && (
                 <div className="mb-4 sm:mb-6">
                   <h4 className="text-sm font-semibold text-gray-800 mb-3 flex items-center">
                     <span className="mr-2">🎯</span>
-                    Por qué es una buena opción
+                    {t('whyGoodMatch')}
                   </h4>
                   <div className="space-y-2">
                     {result.matchReasons.slice(0, 3).map((reason, idx) => (
@@ -454,13 +456,13 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
 
               {/* Enhanced Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 border-t border-gray-200">
-                <a
-                  href={getProfileLink(result.influencer.handle, result.influencer.name)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  <a
+                    href={getProfileLink(result.influencer.handle, result.influencer.name)}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-center py-2 sm:py-3 px-4 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 text-sm font-medium transform hover:scale-105"
                 >
-                  Ver Perfil
+                  {t('viewProfile')}
                 </a>
                 <a
                   href={getGoogleSearchLink(result.influencer.handle, result.influencer.name)}
@@ -468,7 +470,7 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                   rel="noopener noreferrer"
                   className="flex-1 bg-gray-100 text-gray-700 text-center py-2 sm:py-3 px-4 rounded-lg hover:bg-gray-200 transition-all duration-200 text-sm font-medium border border-gray-300 transform hover:scale-105"
                 >
-                  Buscar más info
+                  {t('searchMoreInfo')}
                 </a>
               </div>
             </div>

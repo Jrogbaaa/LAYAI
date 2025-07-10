@@ -16,6 +16,8 @@ import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
 import { exportHibikiStyleCSV, exportOrangeStyleCSV } from '@/lib/newExportUtils';
 import { generateSessionId } from '@/lib/database';
 import { campaignService } from '@/lib/enhancedCampaignService';
+import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
+import { useLanguage } from '@/lib/languageContext';
 
 type ExtendedPageView = PageView | 'landing' | 'chat' | 'campaigns' | 'proposal';
 
@@ -26,6 +28,7 @@ interface SearchResults {
 }
 
 export default function Home() {
+  const { t } = useLanguage();
   const [currentView, setCurrentView] = useState<ExtendedPageView>('landing');
   const [searchResults, setSearchResults] = useState<SearchResults | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -466,7 +469,7 @@ export default function Home() {
         return <LandingPage onGetStarted={handleGetStarted} />;
     }
 
-    return (
+        return (
       <div className="flex-1 flex flex-col lg:flex-row bg-gradient-to-br from-gray-50 to-gray-100 min-h-0">
         {/* Main Content */}
         <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 min-h-0 space-y-6">
@@ -479,8 +482,8 @@ export default function Home() {
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 animate-pulse">
                     <span className="text-2xl">🤖</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Buscando influencers...</h3>
-                  <p className="text-sm text-gray-600 mb-4">Analizando perfiles y verificando compatibilidad</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('search.loading')}</h3>
+                  <p className="text-sm text-gray-600 mb-4">{t('search.loading.desc')}</p>
                   <div className="flex space-x-1 justify-center">
                     <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
                     <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
@@ -513,17 +516,17 @@ export default function Home() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 space-y-4 sm:space-y-0">
                       <div>
                         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
-                          📊 Resultados de Búsqueda
+                      📊 Resultados de Búsqueda
                           <span className="ml-3 text-base font-normal bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
                             {searchResults.premiumResults.length}
                           </span>
-                        </h2>
+                    </h2>
                         <p className="text-sm sm:text-base text-gray-600">
                           {searchResults.premiumResults.length} influencers perfectos encontrados
-                          {searchResults.totalFound > searchResults.premiumResults.length && 
+                      {searchResults.totalFound > searchResults.premiumResults.length && 
                             ` de ${searchResults.totalFound} total disponibles`
-                          }
-                        </p>
+                      }
+                    </p>
                       </div>
                       
                       {/* Action Buttons */}
@@ -585,10 +588,10 @@ export default function Home() {
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 sm:p-8 transition-all duration-500 ease-out">
               <div className="mb-6">
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
-                  📄 Generador de Propuestas
+                  📄 {t('proposal.title')}
                 </h2>
                 <p className="text-gray-600">
-                  Crea propuestas profesionales para tus campañas de influencer marketing
+                  {t('proposal.subtitle')}
                 </p>
               </div>
               
@@ -603,42 +606,42 @@ export default function Home() {
                   matchResults={searchResults?.premiumResults || []}
                   onProposalGenerated={handleProposalGenerated}
                 />
-              )}
-            </div>
-          )}
+                    )}
+                  </div>
+                )}
 
           {currentView === 'campaigns' && (
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 sm:p-8 transition-all duration-500 ease-out">
               <div className="mb-6">
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
-                  🎯 Gestión de Campañas
+                  🎯 {t('campaigns.title')}
                 </h2>
                 <p className="text-gray-600">
-                  Administra y monitorea tus campañas de influencer marketing
+                  {t('campaigns.subtitle')}
                 </p>
               </div>
               
               <EnhancedCampaignManager />
-            </div>
-          )}
+                  </div>
+                )}
 
           {currentView === 'notes' && (
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden transition-all duration-500 ease-out h-full">
               <div className="p-6 border-b border-gray-200/50">
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
-                  📝 Notas y Recordatorios
+                  📝 {t('notes.title')}
                 </h2>
                 <p className="text-gray-600">
-                  Gestiona tus notas, ideas y recordatorios de campañas
+                  {t('notes.subtitle')}
                 </p>
               </div>
               
               <div className="h-full">
-                <NotesManager />
+              <NotesManager />
               </div>
-            </div>
-          )}
-        </div>
+              </div>
+            )}
+          </div>
 
         {/* Enhanced Feedback Panel - Desktop Only */}
         {currentSearchId && (
@@ -646,30 +649,33 @@ export default function Home() {
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 h-full overflow-hidden">
               <div className="p-6 border-b border-gray-200/50">
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                  📊 Análisis de Búsqueda
+                  📊 Search Analysis
                 </h3>
                 <p className="text-sm text-gray-600">
-                  Feedback y métricas en tiempo real
+                  Real-time feedback and metrics
                 </p>
               </div>
               
               <div className="flex-1 overflow-hidden">
-                <EnhancedFeedbackPanel 
-                  searchId={currentSearchId}
-                  sessionId={sessionId}
-                  searchQuery="Recent search"
-                  resultCount={searchResults?.premiumResults.length || 0}
-                />
+              <EnhancedFeedbackPanel 
+                searchId={currentSearchId}
+                sessionId={sessionId}
+                searchQuery="Recent search"
+                resultCount={searchResults?.premiumResults.length || 0}
+              />
               </div>
             </div>
           </div>
         )}
-      </div>
-    );
+          </div>
+        );
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Language Switcher - Always visible */}
+      <LanguageSwitcher position="top-right" />
+      
       {currentView === 'landing' ? (
         // Landing page without sidebar
         renderContent()

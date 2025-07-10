@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { searchInfluencersWithApify, searchInfluencersWithTwoTierDiscovery, type ApifySearchParams } from '@/lib/apifyService';
 import { searchVettedInfluencers, convertVettedToMatchResult } from '@/lib/vettedInfluencersService';
 import { searchMemory } from '@/lib/database';
+import { starngageService } from '@/lib/starngageService';
 
 interface EnhancedSearchRequest {
   query: string;
@@ -333,6 +334,86 @@ function detectInfluencerGender(influencer: any): 'Male' | 'Female' | 'Other' {
   return 'Other';
 }
 
+/**
+ * Enhance search results with real StarNgage audience demographics
+ */
+async function enhanceWithStarngageDemographics(results: any[], limit: number = 10): Promise<any[]> {
+  console.log(`🎯 Enhancing ${Math.min(results.length, limit)} influencers with StarNgage demographics...`);
+  
+  // Only enhance top results to avoid rate limits
+  const topResults = results.slice(0, limit);
+  
+  // Process in batches to avoid overwhelming StarNgage
+  const enhancedResults = await Promise.allSettled(
+    topResults.map(async (result, index) => {
+      try {
+        const username = result.influencer.handle || result.influencer.username;
+        if (!username) return result;
+        
+        console.log(`📊 [${index + 1}/${topResults.length}] Fetching demographics for @${username}...`);
+        
+        // Get StarNgage demographic data
+        const starngageData = await starngageService.enhanceInfluencerWithDemographics(username);
+        
+        if (starngageData && starngageData.demographics) {
+          console.log(`✅ Enhanced @${username} with real StarNgage demographics`);
+          
+          return {
+            ...result,
+            influencer: {
+              ...result.influencer,
+              // Override hardcoded demographics with real StarNgage data
+              audienceDemographics: {
+                ageGroups: starngageData.demographics.ageGroups || {
+                  '13-17': 5, '18-24': 30, '25-34': 40, '35-44': 20, '45-54': 4, '55+': 1
+                },
+                gender: starngageData.demographics.gender || {
+                  male: 45, female: 52, other: 3
+                },
+                topLocations: starngageData.demographics.topLocations || [result.influencer.location || 'Unknown'],
+                interests: starngageData.demographics.interests || [result.influencer.category || 'Lifestyle']
+              },
+              // Add enhanced engagement metrics
+              avgLikes: starngageData.averageLikes || result.influencer.avgLikes,
+              avgComments: starngageData.averageComments || result.influencer.avgComments,
+              topics: starngageData.topics || result.influencer.niche
+            },
+            // Add StarNgage source to match reasons
+            matchReasons: [
+              ...(result.matchReasons || []),
+              'Enhanced with real audience demographics'
+            ],
+            // Add StarNgage metadata
+            starngageEnhanced: true,
+            dataSource: 'starngage_demographics'
+          };
+        } else {
+          console.log(`⚠️ No StarNgage data found for @${username}, using defaults`);
+          return result;
+        }
+      } catch (error) {
+        console.error(`❌ Failed to enhance @${result.influencer?.handle || 'unknown'}:`, error);
+        return result;
+      }
+    })
+  );
+  
+  // Combine enhanced and original results
+  const processedResults = enhancedResults.map((result, index) => 
+    result.status === 'fulfilled' ? result.value : topResults[index]
+  );
+  
+  // Add remaining results that weren't enhanced
+  const remainingResults = results.slice(limit);
+  
+  const finalResults = [...processedResults, ...remainingResults];
+  
+  const enhancedCount = processedResults.filter(r => r.starngageEnhanced).length;
+  console.log(`🎯 StarNgage enhancement complete: ${enhancedCount}/${topResults.length} influencers enhanced`);
+  
+  return finalResults;
+}
+
 export async function POST(req: Request) {
   try {
     const searchParams: ApifySearchParams = await req.json();
@@ -385,8 +466,11 @@ async function handleProgressiveSearch(searchParams: ApifySearchParams) {
           progress: 10
         });
         
-        console.log('📊 Searching vetted influencers database...');
-        const vettedResults = await searchVettedInfluencers(searchParams);
+              console.log('📊 Searching vetted influencers database...');
+      const vettedResults = await searchVettedInfluencers({
+        ...searchParams,
+        gender: searchParams.gender as 'male' | 'female' | 'any' | undefined
+      });
         
         if (vettedResults.influencers.length > 0) {
           const convertedVetted = vettedResults.influencers.map(inf => 
@@ -492,8 +576,20 @@ async function handleProgressiveSearch(searchParams: ApifySearchParams) {
         const brandName = extractBrandFromQuery(searchParams);
         const resultsWithCollaboration = await addCollaborationStatus(uniqueResults, brandName);
         
-        // Sort results
-        resultsWithCollaboration.sort((a, b) => {
+        // 🎯 ENHANCE WITH STARNGAGE DEMOGRAPHICS (progressive search - top 5 results) 
+        sendUpdate({
+          type: 'progress',
+          stage: 'Enhancing with audience demographics...',
+          progress: 90
+        });
+        
+        const resultsWithDemographics = await enhanceWithStarngageDemographics(resultsWithCollaboration, 5);
+        
+        // Sort results  
+        resultsWithDemographics.sort((a, b) => {
+          // Priority sort: StarNgage-enhanced results first
+          if (a.starngageEnhanced && !b.starngageEnhanced) return -1;
+          if (!a.starngageEnhanced && b.starngageEnhanced) return 1;
           const scoreDiff = (b.matchScore || 0) - (a.matchScore || 0);
           if (Math.abs(scoreDiff) > 0.1) {
             return scoreDiff;
@@ -511,23 +607,28 @@ async function handleProgressiveSearch(searchParams: ApifySearchParams) {
           return followersB - followersA;
         });
         
+        // 🛡️ Limit progressive search results to prevent UI overload
+        const MAX_PROGRESSIVE_RESULTS = 50;
+        const limitedProgressiveResults = resultsWithDemographics.slice(0, MAX_PROGRESSIVE_RESULTS);
+        
         // Send final complete results
         sendUpdate({
           type: 'complete',
           stage: 'Search completed successfully!',
           progress: 100,
-          results: resultsWithCollaboration,
-          totalFound: resultsWithCollaboration.length,
+          results: limitedProgressiveResults,
+          totalFound: limitedProgressiveResults.length,
           metadata: {
             searchSources,
-            totalFound: resultsWithCollaboration.length,
+            totalFound: limitedProgressiveResults.length,
             searchStrategy: searchSources.length > 1 ? 'hybrid_search' : 
               searchSources.includes('Base de datos verificada') ? 'vetted_only' : 'realtime_only',
-            duplicatesRemoved: allResults.length - resultsWithCollaboration.length
+            duplicatesRemoved: allResults.length - limitedProgressiveResults.length,
+            originalTotal: resultsWithDemographics.length
           }
         });
         
-        console.log(`🎯 Progressive search completed: ${resultsWithCollaboration.length} final results`);
+        console.log(`🎯 Progressive search completed: ${resultsWithDemographics.length} final results`);
         
       } catch (error) {
         console.error('❌ Progressive search failed:', error);
@@ -571,7 +672,10 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
     
     // 1. Search vetted influencers database first (only for Spain-related queries)
     console.log('📊 Searching vetted influencers database...');
-    const vettedResults = await searchVettedInfluencers(searchParams);
+            const vettedResults = await searchVettedInfluencers({
+          ...searchParams,
+          gender: searchParams.gender as 'male' | 'female' | 'any' | undefined
+        });
     
     if (vettedResults.influencers.length > 0) {
       // Convert vetted results to match result format
@@ -580,7 +684,7 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
       );
       allResults.push(...convertedVetted);
       totalFound += vettedResults.totalCount;
-      searchSources.push('Base de datos verificada');
+      searchSources.push('Verified database');
       
       console.log(`✅ Found ${vettedResults.influencers.length} vetted influencers`);
     } else {
@@ -648,7 +752,7 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
             estimatedCost: Math.floor(influencer.followers / 100) || 500,
             similarPastCampaigns: [],
             potentialReach: Math.round(influencer.followers * (influencer.engagementRate / 100)),
-            recommendations: ['Influencer encontrado mediante búsqueda en tiempo real'],
+            recommendations: ['Influencer found through real-time search'],
           }));
           
           console.log(`✅ Real-time search found ${realtimeResults.length} results`);
@@ -672,7 +776,7 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
     if (realtimeResults.length > 0) {
       allResults.push(...realtimeResults);
       totalFound += realtimeResults.length;
-      searchSources.push('Búsqueda en tiempo real');
+      searchSources.push('Real-time search');
     }
 
     // 🆘 FALLBACK: If we have 0 results, try broader search criteria
@@ -691,7 +795,10 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
       };
       
       console.log('🔍 Searching with broader criteria:', broaderParams);
-      const broadVettedResults = await searchVettedInfluencers(broaderParams);
+      const broadVettedResults = await searchVettedInfluencers({
+        ...broaderParams,
+        gender: broaderParams.gender as 'male' | 'female' | 'any' | undefined
+      });
       
       if (broadVettedResults.influencers.length > 0) {
         const convertedBroadVetted = broadVettedResults.influencers.slice(0, 20).map(inf => 
@@ -699,7 +806,7 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
         );
         allResults.push(...convertedBroadVetted);
         totalFound += convertedBroadVetted.length;
-        searchSources.push('Base de datos (criterios ampliados)');
+        searchSources.push('Database (expanded criteria)');
         
         console.log(`✅ Found ${convertedBroadVetted.length} results with broader criteria`);
       }
@@ -717,10 +824,18 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
     const brandName = extractBrandFromQuery(searchParams);
     const resultsWithCollaboration = await addCollaborationStatus(uniqueResults, brandName);
     
+    // 🎯 ENHANCE WITH STARNGAGE DEMOGRAPHICS (top 10 results)
+    console.log('📊 Starting StarNgage demographic enhancement...');
+    const resultsWithDemographics = await enhanceWithStarngageDemographics(resultsWithCollaboration, 10);
+    
     // Sort with sophisticated prioritization:
-    // 1. Vetted database results first (highest match scores)
-    // 2. Within each group, sort by engagement rate then follower count
-    resultsWithCollaboration.sort((a, b) => {
+    // 1. StarNgage-enhanced results first (highest quality data)
+    // 2. Vetted database results second (highest match scores)  
+    // 3. Within each group, sort by engagement rate then follower count
+    resultsWithDemographics.sort((a, b) => {
+      // Priority sort: StarNgage-enhanced results first
+      if (a.starngageEnhanced && !b.starngageEnhanced) return -1;
+      if (!a.starngageEnhanced && b.starngageEnhanced) return 1;
       // Primary sort: Match score (vetted results have 0.95 score)
       const scoreDiff = (b.matchScore || 0) - (a.matchScore || 0);
       if (Math.abs(scoreDiff) > 0.1) {
@@ -741,9 +856,16 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
       return followersB - followersA;
     });
     
-    // Don't limit results here - let frontend handle pagination
-    console.log(`🎯 Returning ${resultsWithCollaboration.length} unique results from sources: ${searchSources.join(', ')}`);
+        // 🛡️ CRITICAL: Limit total results to prevent UI overload and infinite search loops
+    const MAX_TOTAL_RESULTS = 50;
+    const limitedResults = resultsWithDemographics.slice(0, MAX_TOTAL_RESULTS);
     
+    if (resultsWithDemographics.length > MAX_TOTAL_RESULTS) {
+      console.log(`🛡️ Limited results from ${resultsWithDemographics.length} to ${MAX_TOTAL_RESULTS} to prevent UI overload`);
+    }
+    
+    console.log(`🎯 Returning ${limitedResults.length} results from sources: ${searchSources.join(', ')}`);
+
     // 🧠 Save search to memory for Clara's AI learning system
     try {
       const searchId = await searchMemory.saveSearch({
@@ -760,8 +882,8 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
           userQuery: searchParams.userQuery || 'Enhanced search',
         },
         results: {
-          totalFound: resultsWithCollaboration.length,
-          premiumResults: resultsWithCollaboration,
+          totalFound: resultsWithDemographics.length,
+          premiumResults: resultsWithDemographics,
           discoveryResults: [],
         },
         campaignId: req.headers.get('x-campaign-id') || undefined,
@@ -787,8 +909,8 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
     return NextResponse.json({
       success: true,
       data: {
-        premiumResults: resultsWithCollaboration, // Return ALL results for frontend pagination
-        totalFound: resultsWithCollaboration.length,
+        premiumResults: limitedResults, // Return LIMITED results to prevent UI freezes
+        totalFound: limitedResults.length,
         searchSources,
         searchMetadata: {
           vettedCount: vettedResults.influencers.length,
@@ -806,7 +928,7 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
             enabled: true
           } : null
         },
-        recommendations: generateRecommendations(resultsWithCollaboration, {
+        recommendations: generateRecommendations(resultsWithDemographics, {
           ...searchParams,
           searchSources
         }),

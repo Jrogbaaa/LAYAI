@@ -2646,6 +2646,55 @@ interface EnhancedSearchResponse {
 }
 ```
 
+### StarNgage Integration (v2.7.0)
+**NEW**: Real audience demographics automatically integrated into search results.
+
+```typescript
+// Enhanced search results now include StarNgage demographics
+interface EnhancedSearchResult {
+  influencer: InfluencerProfile;
+  matchScore: number;
+  matchReasons: string[];
+  starngageEnhanced?: boolean;  // NEW: StarNgage enhancement flag
+  audienceDemographics: {
+    // Real demographics from StarNgage when available
+    ageGroups: { [key: string]: number };
+    gender: { male: number; female: number };
+    topLocations: string[];
+    interests: string[];
+  };
+}
+
+// Implementation details
+const enhanceWithStarngageDemographics = async (results: MatchResult[]) => {
+  // Enhance top 10 results (regular) or top 5 (progressive) with real demographics
+  const enhancedResults = await Promise.all(
+    results.slice(0, isProgressive ? 5 : 10).map(async (result) => {
+      const starngageData = await starngageService.getInfluencerDemographics(
+        result.influencer.username
+      );
+      
+      if (starngageData) {
+        return {
+          ...result,
+          starngageEnhanced: true,
+          audienceDemographics: starngageData.demographics,
+          matchReasons: [...result.matchReasons, 'Enhanced with real audience demographics']
+        };
+      }
+      return result;
+    })
+  );
+  
+  // Sort enhanced results first
+  return enhancedResults.sort((a, b) => {
+    if (a.starngageEnhanced && !b.starngageEnhanced) return -1;
+    if (!a.starngageEnhanced && b.starngageEnhanced) return 1;
+    return 0;
+  });
+};
+```
+
 ### Campaign Management API
 ```typescript
 // POST /api/database/campaigns

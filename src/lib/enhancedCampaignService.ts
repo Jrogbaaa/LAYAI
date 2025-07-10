@@ -68,14 +68,22 @@ export class EnhancedCampaignService {
           action = 'added_to_existing';
           console.log(`📚 Adding search to existing ${brandName} campaign: ${campaignId}`);
           
-          // 🚀 AUTO-SAVE INFLUENCERS to existing campaign (avoid duplicates)
-          if (autoSaveInfluencers && results.length > 0) {
-            console.log(`🤖 Auto-saving ${results.length} influencers to existing campaign ${campaignId}`);
+          // 🚀 AUTO-SAVE INFLUENCERS to existing campaign (avoid duplicates) - TEMPORARILY DISABLED
+          if (false && autoSaveInfluencers && results.length > 0) {
+            // 🛡️ SAFETY LIMIT: Prevent UI freeze by limiting auto-saves
+            const SAFE_AUTO_SAVE_LIMIT = 10;
+            const resultsToSave = results.slice(0, SAFE_AUTO_SAVE_LIMIT);
+            
+            console.log(`🤖 Auto-saving ${resultsToSave.length} of ${results.length} influencers to existing campaign ${campaignId}`);
+            if (results.length > SAFE_AUTO_SAVE_LIMIT) {
+              console.log(`🛡️ Limited to ${SAFE_AUTO_SAVE_LIMIT} saves to prevent system overload. Additional ${results.length - SAFE_AUTO_SAVE_LIMIT} results available in search.`);
+            }
             
             const existingInfluencers = await this.getSavedInfluencers(campaignId);
             let newInfluencersCount = 0;
+            let errorCount = 0;
             
-            for (const result of results) {
+            for (const result of resultsToSave) {
               try {
                 // Check if influencer is already saved to avoid duplicates
                 const alreadySaved = existingInfluencers.some(
@@ -90,13 +98,26 @@ export class EnhancedCampaignService {
                     ['auto-saved', 'search-result']
                   );
                   newInfluencersCount++;
+                  
+                  // Rate limiting: Small delay between saves
+                  await new Promise(resolve => setTimeout(resolve, 100));
                 }
               } catch (error) {
                 console.error(`Failed to auto-save influencer ${result.influencer.name}:`, error);
+                errorCount++;
+                
+                // Stop auto-saving if too many errors occur
+                if (errorCount >= 3) {
+                  console.warn(`🚨 Too many errors (${errorCount}). Stopping auto-save to prevent system issues.`);
+                  break;
+                }
               }
             }
             
             console.log(`✅ Added ${newInfluencersCount} new influencers to existing ${brandName} campaign`);
+            if (errorCount > 0) {
+              console.warn(`⚠️ ${errorCount} influencers failed to save due to errors`);
+            }
             action = 'added_search_with_influencers';
           }
         } else if (userChoice === 'new_campaign' || userChoice === undefined) {
@@ -105,11 +126,21 @@ export class EnhancedCampaignService {
           action = 'created_new_campaign';
           console.log(`🆕 Created new ${brandName} campaign: ${campaignId}`);
           
-          // 🚀 AUTO-SAVE ALL INFLUENCERS to the newly created campaign
-          if (autoSaveInfluencers && results.length > 0) {
-            console.log(`🤖 Auto-saving ${results.length} influencers to new campaign ${campaignId}`);
+          // 🚀 AUTO-SAVE ALL INFLUENCERS to the newly created campaign - TEMPORARILY DISABLED
+          if (false && autoSaveInfluencers && results.length > 0) {
+            // 🛡️ SAFETY LIMIT: Prevent UI freeze by limiting auto-saves
+            const SAFE_AUTO_SAVE_LIMIT = 10;
+            const resultsToSave = results.slice(0, SAFE_AUTO_SAVE_LIMIT);
             
-            for (const result of results) {
+            console.log(`🤖 Auto-saving ${resultsToSave.length} of ${results.length} influencers to new campaign ${campaignId}`);
+            if (results.length > SAFE_AUTO_SAVE_LIMIT) {
+              console.log(`🛡️ Limited to ${SAFE_AUTO_SAVE_LIMIT} saves to prevent system overload. Additional ${results.length - SAFE_AUTO_SAVE_LIMIT} results available in search.`);
+            }
+            
+            let savedCount = 0;
+            let errorCount = 0;
+            
+            for (const result of resultsToSave) {
               try {
                 await this.saveInfluencerToCampaign(
                   campaignId,
@@ -117,13 +148,26 @@ export class EnhancedCampaignService {
                   `Auto-saved from search: "${query}"`,
                   ['auto-saved', 'search-result']
                 );
+                savedCount++;
+                
+                // Rate limiting: Small delay between saves
+                await new Promise(resolve => setTimeout(resolve, 100));
               } catch (error) {
                 console.error(`Failed to auto-save influencer ${result.influencer.name}:`, error);
-                // Continue with other influencers even if one fails
+                errorCount++;
+                
+                // Stop auto-saving if too many errors occur
+                if (errorCount >= 3) {
+                  console.warn(`🚨 Too many errors (${errorCount}). Stopping auto-save to prevent system issues.`);
+                  break;
+                }
               }
             }
             
-            console.log(`✅ Auto-saved ${results.length} influencers to new ${brandName} campaign`);
+            console.log(`✅ Auto-saved ${savedCount} influencers to new ${brandName} campaign`);
+            if (errorCount > 0) {
+              console.warn(`⚠️ ${errorCount} influencers failed to save due to errors`);
+            }
             action = 'created_campaign_with_influencers';
           }
         }

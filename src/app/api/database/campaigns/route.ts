@@ -196,7 +196,35 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 });
     }
   } catch (error) {
-    console.error('Error handling campaign request:', error);
-    return NextResponse.json({ success: false, error: 'Failed to process request' }, { status: 500 });
+    console.error('🚨 Critical error in campaign API:', error);
+    
+    // Provide more specific error information for debugging
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const isFirebaseError = errorMessage.includes('PERMISSION_DENIED') || 
+                           errorMessage.includes('Firebase') ||
+                           errorMessage.includes('firestore');
+    
+    if (isFirebaseError) {
+      console.error('🔥 Firebase permission error detected. Check Firestore rules and authentication.');
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Database permission error. Please check Firebase configuration.',
+        details: errorMessage,
+        suggestion: 'Firebase Firestore rules may need updating for unauthenticated access during development'
+      }, { status: 503 }); // Service Unavailable
+    }
+    
+    // Log additional context for debugging
+    console.error('📋 Error context:', {
+      errorType: error?.constructor?.name,
+      errorCode: (error as any)?.code,
+      timestamp: new Date().toISOString()
+    });
+    
+    return NextResponse.json({ 
+      success: false, 
+      error: 'Failed to process request',
+      details: process.env.NODE_ENV === 'development' ? errorMessage : 'Internal server error'
+    }, { status: 500 });
   }
 } 

@@ -346,8 +346,8 @@ class EnhancedSearchService {
    */
   async preloadPopularSearches(): Promise<void> {
     const popularSearches = [
-      { location: 'España', platforms: ['instagram'], minFollowers: 10000 },
-      { location: 'México', platforms: ['instagram'], minFollowers: 50000 },
+      { location: 'Spain', platforms: ['instagram'], minFollowers: 10000 },
+      { location: 'Mexico', platforms: ['instagram'], minFollowers: 50000 },
       { niches: ['fitness', 'lifestyle'], platforms: ['instagram'], minFollowers: 25000 },
       { location: 'Colombia', platforms: ['instagram'], minFollowers: 10000 },
       { niches: ['beauty', 'fashion'], platforms: ['instagram'], minFollowers: 15000 }
@@ -591,7 +591,7 @@ class EnhancedSearchService {
     }
     
     return filteredProfiles;
-  }
+      }
 
   /**
    * Enhance profiles with aesthetic intelligence
@@ -615,7 +615,7 @@ class EnhancedSearchService {
         
         if (enhancedProfile.aestheticScore >= 80) {
           console.log(`🎨 Excellent aesthetic match: ${profile.username} (${enhancedProfile.aestheticScore}%)`);
-        }
+      }
       } catch (error) {
         console.error(`❌ Aesthetic enhancement error for ${profile.username}:`, error);
         enhancedProfiles.push(profile);
@@ -644,7 +644,7 @@ class EnhancedSearchService {
       try {
         const verificationRequest: ProfileVerificationRequest = {
           profileUrl: profile.url,
-          platform: profile.platform,
+        platform: profile.platform,
           searchCriteria: {
             niches: params.niches,
             location: params.location,
@@ -790,7 +790,7 @@ class EnhancedSearchService {
             niche: fallbackProfile.inferredData.niche,
             location: fallbackProfile.inferredData.location
           });
-        }
+      }
       }
     }
     
@@ -833,7 +833,7 @@ class EnhancedSearchService {
     const verified = profiles.filter(p => p.verificationResult?.verified).length;
     const highAesthetic = profiles.filter(p => (p.aestheticScore || 0) >= 80).length;
     const highQuality = profiles.filter(p => p.filteringDecision?.confidence >= 80).length;
-    
+
     return {
       totalFound: scrapingResult.totalFound,
       totalScraped: scrapingResult.totalScraped,
@@ -883,12 +883,12 @@ class EnhancedSearchService {
     } else if (avgAesthetic >= 80) {
       recommendations.push('🎨 Excellent aesthetic matching - perfect for style-specific campaigns');
     }
-    
+
     // Performance recommendations
     if (scrapingResult.resourceUsage.timeSpent > 60000) {
       recommendations.push('⏰ Consider economy mode for faster results in future searches');
     }
-    
+
     // Optimization recommendations
     if (optimization.expectedImprovement > 15) {
       recommendations.push(`💡 Query optimization available: ${optimization.optimization.join(', ')}`);
@@ -906,7 +906,7 @@ class EnhancedSearchService {
     if (fallbackProfiles.length > 0) {
       recommendations.push(`🔄 ${fallbackProfiles.length} fallback profiles included - verify manually for best results`);
     }
-    
+
     return recommendations;
   }
 

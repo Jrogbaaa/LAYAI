@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Menu, ChevronRight } from 'lucide-react';
+import { useLanguage } from '@/lib/languageContext';
 
 export type PageView = 'search' | 'generate' | 'notes' | 'campaigns';
 
@@ -10,41 +11,42 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   const menuItems = [
     {
       id: 'search' as PageView,
-      label: 'Búsqueda de Influencers',
-      shortLabel: 'Búsqueda',
+      label: t('nav.search'),
+      shortLabel: t('nav.search'),
       icon: '🔍',
-      description: 'Encuentra y descubre influencers',
+      description: t('nav.search.desc'),
       gradient: 'from-blue-500 to-blue-600',
       hoverGradient: 'from-blue-600 to-blue-700'
     },
     {
       id: 'generate' as PageView,
-      label: 'Generar Propuesta',
-      shortLabel: 'Propuestas',
+      label: t('nav.generate'),
+      shortLabel: t('nav.generate'),
       icon: '📄',
-      description: 'Crea propuestas de campaña',
+      description: t('nav.generate.desc'),
       gradient: 'from-purple-500 to-purple-600',
       hoverGradient: 'from-purple-600 to-purple-700'
     },
     {
       id: 'campaigns' as PageView,
-      label: 'Campañas',
-      shortLabel: 'Campañas',
+      label: t('nav.campaigns'),
+      shortLabel: t('nav.campaigns'),
       icon: '🎯',
-      description: 'Gestiona tus campañas',
+      description: t('nav.campaigns.desc'),
       gradient: 'from-green-500 to-green-600',
       hoverGradient: 'from-green-600 to-green-700'
     },
     {
       id: 'notes' as PageView,
-      label: 'Notas',
-      shortLabel: 'Notas',
+      label: t('nav.notes'),
+      shortLabel: t('nav.notes'),
       icon: '📝',
-      description: 'Gestiona tus notas',
+      description: t('nav.notes.desc'),
       gradient: 'from-orange-500 to-orange-600',
       hoverGradient: 'from-orange-600 to-orange-700'
     }
@@ -64,8 +66,8 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
             <span className="text-lg">🚀</span>
           </div>
           <div>
-            <h1 className="text-lg font-bold text-gray-900">LAYAI</h1>
-            <p className="text-xs text-gray-500">AI Marketing</p>
+          <h1 className="text-lg font-bold text-gray-900">LAYAI</h1>
+            <p className="text-xs text-gray-500">{t('main.platform')}</p>
           </div>
         </div>
         
@@ -74,11 +76,11 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
           className="p-2 rounded-xl bg-gray-100/80 backdrop-blur-sm hover:bg-gray-200/80 transition-all duration-200 transform hover:scale-105 active:scale-95"
           aria-label="Toggle menu"
         >
-          {isMobileMenuOpen ? (
+            {isMobileMenuOpen ? (
             <X className="w-6 h-6 text-gray-600" />
-          ) : (
+            ) : (
             <Menu className="w-6 h-6 text-gray-600" />
-          )}
+            )}
         </button>
       </div>
 
@@ -100,44 +102,44 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/30">
                       <span className="text-2xl">🚀</span>
-                    </div>
-                    <div>
-                      <h1 className="text-xl font-bold">LAYAI</h1>
-                      <p className="text-gray-300 text-sm">Plataforma AI</p>
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold">LAYAI</h1>
+                      <p className="text-gray-300 text-sm">{t('main.platform')}</p>
                     </div>
                   </div>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                    aria-label="Cerrar menú"
+                    aria-label="Close menu"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
                 
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <p className="text-white/90 text-sm leading-relaxed">
-                    Descubre, analiza y colabora con los mejores influencers para crear campañas impactantes.
-                  </p>
+                <p className="text-white/90 text-sm leading-relaxed">
+                    {t('main.description')}
+                </p>
                 </div>
               </div>
             </div>
 
             {/* Enhanced Mobile Menu Items */}
             <nav className="p-4 space-y-2">
-              {menuItems.map((item) => {
-                const isActive = currentView === item.id;
-                
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => handleMenuItemClick(item.id)}
+                {menuItems.map((item) => {
+                  const isActive = currentView === item.id;
+                  
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => handleMenuItemClick(item.id)}
                     className={`w-full text-left p-4 rounded-xl transition-all duration-300 group relative overflow-hidden ${
-                      isActive
+                        isActive
                         ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg transform scale-[1.02]`
                         : 'text-gray-700 hover:bg-gray-50 hover:shadow-md hover:scale-[1.01]'
-                    }`}
-                  >
+                      }`}
+                    >
                     <div className="flex items-center justify-between relative z-10">
                       <div className="flex items-center space-x-3">
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
@@ -145,7 +147,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
                             ? 'bg-white/20 backdrop-blur-sm' 
                             : 'bg-gray-100 group-hover:bg-gray-200'
                         }`}>
-                          <span className="text-lg">{item.icon}</span>
+                        <span className="text-lg">{item.icon}</span>
                         </div>
                         <div>
                           <h3 className={`font-semibold transition-colors duration-300 ${
@@ -170,20 +172,20 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
                     {!isActive && (
                       <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-xl`}></div>
                     )}
-                  </button>
-                );
-              })}
+                    </button>
+                  );
+                })}
             </nav>
 
             {/* Mobile Menu Footer */}
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-gray-50 border-t border-gray-200">
               <div className="text-center">
                 <p className="text-xs text-gray-500 mb-2">
-                  Versión 2.20.0 • Marketing de Influencers
+                  {t('main.version')}
                 </p>
                 <div className="flex justify-center space-x-2">
                   <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                  <span className="text-xs text-gray-500">Sistema activo</span>
+                  <span className="text-xs text-gray-500">{t('main.status')}</span>
                 </div>
               </div>
             </div>
@@ -205,21 +207,21 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
           <div className="relative">
             <div className="flex items-center space-x-4 mb-6">
               <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/30 shadow-lg">
-                <span className="text-2xl">🚀</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold">LAYAI</h1>
-                <p className="text-gray-300 text-sm">Plataforma de Marketing de Influencers</p>
-              </div>
-            </div>
-            
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-              <p className="text-white/90 text-sm leading-relaxed">
-                Descubre, analiza y colabora con los mejores influencers para crear campañas impactantes.
-              </p>
-            </div>
+            <span className="text-2xl">🚀</span>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">LAYAI</h1>
+            <p className="text-gray-300 text-sm">{t('main.tagline')}</p>
           </div>
         </div>
+            
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+          <p className="text-white/90 text-sm leading-relaxed">
+            {t('main.description')}
+          </p>
+            </div>
+        </div>
+      </div>
 
         {/* Enhanced Navigation */}
         <nav className="flex-1 p-6 space-y-3">
@@ -235,35 +237,35 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
                     ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg transform scale-[1.02]`
                     : 'text-gray-700 hover:bg-gray-50 hover:shadow-md hover:scale-[1.01]'
                 }`}
-                aria-label={`Ir a ${item.label}`}
+                aria-label={`Go to ${item.label}`}
               >
                 <div className="flex items-center justify-between relative z-10">
                   <div className="flex items-center space-x-4">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                      isActive 
-                        ? 'bg-white/20 backdrop-blur-sm' 
-                        : 'bg-gray-100 group-hover:bg-gray-200'
-                    }`}>
+                    isActive 
+                      ? 'bg-white/20 backdrop-blur-sm' 
+                      : 'bg-gray-100 group-hover:bg-gray-200'
+                  }`}>
                       <span className="text-xl">{item.icon}</span>
-                    </div>
-                    <div className="flex-1">
+                  </div>
+                  <div className="flex-1">
                       <h3 className={`font-semibold transition-colors duration-300 ${
-                        isActive ? 'text-white' : 'text-gray-900 group-hover:text-gray-800'
-                      }`}>
-                        {item.label}
-                      </h3>
+                      isActive ? 'text-white' : 'text-gray-900 group-hover:text-gray-800'
+                    }`}>
+                      {item.label}
+                    </h3>
                       <p className={`text-sm transition-colors duration-300 ${
-                        isActive ? 'text-white/80' : 'text-gray-500 group-hover:text-gray-600'
-                      }`}>
-                        {item.description}
-                      </p>
-                    </div>
+                      isActive ? 'text-white/80' : 'text-gray-500 group-hover:text-gray-600'
+                    }`}>
+                      {item.description}
+                    </p>
+                  </div>
                   </div>
                   
                   <div className="flex items-center space-x-2">
-                    {isActive && (
-                      <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                    )}
+                  {isActive && (
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  )}
                     <ChevronRight className={`w-5 h-5 transition-all duration-300 ${
                       isActive ? 'text-white/70' : 'text-gray-400 group-hover:text-gray-600'
                     }`} />
@@ -277,21 +279,21 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
               </button>
             );
           })}
-        </nav>
+      </nav>
 
         {/* Enhanced Footer */}
         <div className="p-6 bg-gray-50 border-t border-gray-200">
           <div className="text-center">
             <p className="text-sm text-gray-600 mb-3">
-              Versión 2.20.0 • Marketing de Influencers
+              {t('main.version')}
             </p>
             <div className="flex justify-center items-center space-x-2">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              <span className="text-xs text-gray-500">Sistema activo</span>
-            </div>
+              <span className="text-xs text-gray-500">{t('main.status')}</span>
           </div>
         </div>
       </div>
+    </div>
     </>
   );
 };

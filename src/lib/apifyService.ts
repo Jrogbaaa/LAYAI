@@ -384,15 +384,15 @@ function buildFallbackQueries(params: ApifySearchParams): string[] {
     
     if (targetLocation.toLowerCase().includes('spain')) {
       // Spanish-specific searches
-      queries.push(`influencers ${mainNiche} España`);
-      queries.push(`${mainNiche} content creators España`);
+      queries.push(`influencers ${mainNiche} Spain`);
+      queries.push(`${mainNiche} content creators Spain`);
       
       if (targetGender === 'female') {
-        queries.push(`influencers femeninas ${mainNiche} España`);
-        queries.push(`mujeres ${mainNiche} influencers España`);
+        queries.push(`female ${mainNiche} influencers Spain`);
+        queries.push(`women ${mainNiche} influencers Spain`);
       } else if (targetGender === 'male') {
-        queries.push(`influencers masculinos ${mainNiche} España`);
-        queries.push(`hombres ${mainNiche} influencers España`);
+        queries.push(`male ${mainNiche} influencers Spain`);
+        queries.push(`men ${mainNiche} influencers Spain`);
       }
       
       // Brand-specific Spanish searches
@@ -3056,13 +3056,13 @@ class SearchErrorHandler {
    */
   private createUserFriendlyError(error: Error, context: Partial<ErrorContext>): Error {
     const userFriendlyMessages: Record<string, string> = {
-      'network': '🌐 Problema de conexión. Verificando servicios alternativos...',
-      'timeout': '⏱️ La búsqueda está tomando más tiempo del esperado. Intentando con servicios más rápidos...',
-      'rate_limit': '🚦 Demasiadas búsquedas simultáneas. Reintentando en unos segundos...',
-      'quota_exceeded': '📊 Límite de búsquedas alcanzado en este servicio. Usando servicios alternativos...',
-      'auth': '🔑 Problema de autenticación con el servicio. Usando servicios respaldo...',
-      'parsing': '📄 Error procesando los resultados. Intentando con formato alternativo...',
-      'unknown': '🔧 Error técnico temporal. Intentando con servicios de respaldo...'
+      'network': '🌐 Connection issue. Checking alternative services...',
+      'timeout': '⏱️ Search is taking longer than expected. Trying faster services...',
+      'rate_limit': '🚦 Too many simultaneous searches. Retrying in a few seconds...',
+      'quota_exceeded': '📊 Search limit reached on this service. Using alternative services...',
+      'auth': '🔑 Authentication issue with the service. Using backup services...',
+      'parsing': '📄 Error processing results. Trying alternative format...',
+      'unknown': '🔧 Temporary technical error. Trying backup services...'
     };
     
     const errorType = this.categorizeError(error);
@@ -3114,25 +3114,25 @@ class SearchFallbackSystem {
         name: 'primary_apis',
         operation: () => this.performParallelAPISearch(query, platform, maxResults),
         quality: 'high' as const,
-        userMessage: 'Búsqueda completada con APIs premium'
+        userMessage: 'Search completed with premium APIs'
       },
       {
         name: 'cached_results', 
         operation: () => this.searchFromCache(query, platform),
         quality: 'medium' as const,
-        userMessage: 'Resultados obtenidos desde cache inteligente'
+        userMessage: 'Results obtained from intelligent cache'
       },
       {
         name: 'single_api_fallback',
         operation: () => this.performSingleAPISearch(query, platform),
         quality: 'medium' as const,
-        userMessage: 'Búsqueda completada con API de respaldo'
+        userMessage: 'Search completed with backup API'
       },
       {
         name: 'database_only',
         operation: () => this.searchDatabaseOnly(query),
         quality: 'low' as const,
-        userMessage: 'Resultados desde base de datos local (sin búsqueda en tiempo real)'
+        userMessage: 'Results from local database (no real-time search)'
       }
     ];
     
@@ -3174,8 +3174,8 @@ class SearchFallbackSystem {
       results: [],
       source: 'none',
       quality: 'low',
-      userMessage: '❌ No fue posible completar la búsqueda en este momento. Inténtalo de nuevo en unos minutos.',
-      warnings: ['Todos los servicios de búsqueda están temporalmente no disponibles']
+      userMessage: '❌ Unable to complete search at this time. Please try again in a few minutes.',
+      warnings: ['All search services are temporarily unavailable']
     };
   }
   
@@ -3213,15 +3213,15 @@ class SearchFallbackSystem {
     const warnings: string[] = [];
     
     if (quality === 'low') {
-      warnings.push('⚠️ Búsqueda limitada a base de datos local - pueden faltar influencers recientes');
+      warnings.push('⚠️ Search limited to local database - recent influencers may be missing');
     }
     
     if (quality === 'medium' && fallbacksUsed.some(f => f.includes('cache'))) {
-      warnings.push('ℹ️ Algunos resultados pueden estar desactualizados (búsqueda desde cache)');
+      warnings.push('ℹ️ Some results may be outdated (search from cache)');
     }
     
     if (fallbacksUsed.some(f => f.includes('failed'))) {
-      warnings.push('⚠️ Algunos servicios de búsqueda no estuvieron disponibles');
+      warnings.push('⚠️ Some search services were unavailable');
     }
     
     return warnings;

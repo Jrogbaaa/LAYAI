@@ -63,29 +63,29 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
   const searchIntelligence: SearchIntelligence = {
     suggestions: [],
     searchTips: [
-      '🎯 Usa nichos específicos como "fitness femenino" o "moda urbana"',
-      '📍 Especifica ubicaciones: "influencers Madrid" o "creators México"',
-      '👥 Incluye tamaño de audiencia: "micro influencers" (10K-100K)',
-      '🏢 Menciona tu marca: "encuentra influencers para Nike"',
-      '📱 Especifica plataforma: "TikTokers España" o "YouTubers fitness"'
+      '🎯 Use specific niches like "female fitness" or "urban fashion"',
+      '📍 Specify locations: "influencers Madrid" or "creators Mexico"',
+      '👥 Include audience size: "micro influencers" (10K-100K)',
+      '🏢 Mention your brand: "find influencers for Nike"',
+      '📱 Specify platform: "TikTokers Spain" or "fitness YouTubers"'
     ],
     popularQueries: [
-      'influencers fitness España',
-      'micro influencers moda México',
+      'fitness influencers Spain',
+      'micro influencers fashion Mexico',
       'beauty creators Colombia',
       'lifestyle influencers Madrid',
       'gaming creators Argentina',
       'food bloggers Barcelona',
       'travel influencers Latam',
-      'tech reviewers España'
+      'tech reviewers Spain'
     ],
     trendingTopics: [
-      'Sostenibilidad 🌱',
-      'Fitness en casa 🏠',
-      'Cocina saludable 🥗',
-      'Moda circular ♻️',
+      'Sustainability 🌱',
+      'Home fitness 🏠',
+      'Healthy cooking 🥗',
+      'Circular fashion ♻️',
       'Tech reviews 📱',
-      'Viajes locales ✈️'
+      'Local travel ✈️'
     ]
   };
 
@@ -95,14 +95,14 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
     const lowerInput = input.toLowerCase();
 
     // Location suggestions
-    const locations = ['España', 'México', 'Colombia', 'Argentina', 'Chile', 'Perú', 'Madrid', 'Barcelona', 'Ciudad de México'];
+    const locations = ['Spain', 'Mexico', 'Colombia', 'Argentina', 'Chile', 'Peru', 'Madrid', 'Barcelona', 'Mexico City'];
     locations.forEach(location => {
       if (location.toLowerCase().includes(lowerInput) || lowerInput.includes(location.toLowerCase())) {
         suggestions.push({
           text: `influencers ${location}`,
           type: 'location',
           confidence: 0.9,
-          description: `Buscar influencers en ${location}`,
+          description: `Search influencers in ${location}`,
           icon: '📍'
         });
       }
@@ -116,7 +116,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
           text: `${niche} influencers`,
           type: 'niche',
           confidence: 0.8,
-          description: `Especialistas en ${niche}`,
+          description: `${niche} specialists`,
           icon: '🎯'
         });
       }
@@ -124,9 +124,9 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
 
     // Size-based suggestions
     const sizes = [
-      { key: 'micro', label: 'micro influencers', desc: '10K-100K seguidores' },
-      { key: 'macro', label: 'macro influencers', desc: '100K-1M seguidores' },
-      { key: 'mega', label: 'mega influencers', desc: '+1M seguidores' }
+      { key: 'micro', label: 'micro influencers', desc: '10K-100K followers' },
+      { key: 'macro', label: 'macro influencers', desc: '100K-1M followers' },
+      { key: 'mega', label: 'mega influencers', desc: '+1M followers' }
     ];
     sizes.forEach(size => {
       if (lowerInput.includes(size.key) || lowerInput.includes('influencer')) {
@@ -147,7 +147,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
           text: popular,
           type: 'popular',
           confidence: 0.9,
-          description: 'Búsqueda popular',
+          description: 'Popular search',
           icon: '🔥'
         });
       }
@@ -156,19 +156,19 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
     // Smart query refinements
     if (lowerInput.length > 4) {
       // Gender refinements
-      if (!lowerInput.includes('masculin') && !lowerInput.includes('femenin')) {
+      if (!lowerInput.includes('male') && !lowerInput.includes('female')) {
         suggestions.push({
-          text: `${input} femenino`,
+          text: `${input} female`,
           type: 'refinement',
           confidence: 0.6,
-          description: 'Filtrar por audiencia femenina',
+          description: 'Filter by female audience',
           icon: '👩'
         });
         suggestions.push({
-          text: `${input} masculino`,
+          text: `${input} male`,
           type: 'refinement',
           confidence: 0.6,
-          description: 'Filtrar por audiencia masculina',
+          description: 'Filter by male audience',
           icon: '👨'
         });
       }
@@ -179,14 +179,14 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
           text: `${input} Instagram`,
           type: 'refinement',
           confidence: 0.7,
-          description: 'Enfocado en Instagram',
+          description: 'Focused on Instagram',
           icon: '📸'
         });
         suggestions.push({
           text: `${input} TikTok`,
           type: 'refinement',
           confidence: 0.7,
-          description: 'Enfocado en TikTok',
+          description: 'Focused on TikTok',
           icon: '🎵'
         });
       }
@@ -229,7 +229,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
   // Quick search buttons for popular queries
   const QuickSearchButtons: React.FC = () => (
     <div className="flex flex-wrap gap-2 mb-4">
-      <div className="text-sm font-medium text-gray-700 mb-2 w-full">🔥 Búsquedas populares:</div>
+      <div className="text-sm font-medium text-gray-700 mb-2 w-full">🔥 Popular searches:</div>
       {searchIntelligence.popularQueries.slice(0, 4).map((popular, index) => (
         <button
           key={index}
@@ -250,7 +250,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
     <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 mb-4 border border-purple-100">
       <div className="flex items-center gap-2 mb-2">
         <span className="text-lg">💡</span>
-        <span className="font-medium text-gray-800">Tips para mejores resultados:</span>
+        <span className="font-medium text-gray-800">Search tips for better results:</span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-700">
         {searchIntelligence.searchTips.slice(0, 4).map((tip, index) => (
@@ -268,7 +268,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
     <div className="bg-white rounded-lg border border-gray-200 p-4">
       <div className="flex items-center gap-2 mb-3">
         <span className="text-lg">📈</span>
-        <span className="font-medium text-gray-800">Tendencias actuales:</span>
+        <span className="font-medium text-gray-800">Current trends:</span>
       </div>
       <div className="space-y-2">
         {searchIntelligence.trendingTopics.map((topic, index) => (
@@ -336,7 +336,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => query.length > 2 && setShowSuggestions(true)}
-            placeholder="Describe el tipo de influencer que buscas... Ej: 'fitness femenino Madrid' o 'micro influencers tecnología'"
+            placeholder="Describe the type of influencer you are looking for... e.g., 'female fitness Madrid' or 'micro influencers technology'"
             className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 text-lg"
           />
           
@@ -358,7 +358,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
           >
             <div className="p-2">
               <div className="text-xs font-medium text-gray-500 mb-2 px-2">
-                💡 Sugerencias inteligentes:
+                💡 Smart suggestions:
               </div>
               {suggestions.map((suggestion, index) => (
                 <button
@@ -409,24 +409,24 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
         <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">📊</span>
-            <span className="font-medium text-gray-800">Vista previa de búsqueda:</span>
+            <span className="font-medium text-gray-800">Search preview:</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div className="text-center">
               <div className="font-medium text-blue-600">~{Math.floor(Math.random() * 150 + 50)}</div>
-              <div className="text-gray-600">Influencers estimados</div>
+              <div className="text-gray-600">Estimated influencers</div>
             </div>
             <div className="text-center">
               <div className="font-medium text-green-600">~{Math.floor(Math.random() * 30 + 20)}%</div>
-              <div className="text-gray-600">Tasa de respuesta</div>
+              <div className="text-gray-600">Response rate</div>
             </div>
             <div className="text-center">
               <div className="font-medium text-purple-600">${Math.floor(Math.random() * 2000 + 500)}</div>
-              <div className="text-gray-600">Costo promedio</div>
+              <div className="text-gray-600">Average cost</div>
             </div>
             <div className="text-center">
-              <div className="font-medium text-orange-600">{Math.floor(Math.random() * 3 + 2)}-{Math.floor(Math.random() * 7 + 5)} días</div>
-              <div className="text-gray-600">Tiempo respuesta</div>
+              <div className="font-medium text-orange-600">{Math.floor(Math.random() * 3 + 2)}-{Math.floor(Math.random() * 7 + 5)} days</div>
+              <div className="text-gray-600">Response time</div>
             </div>
           </div>
         </div>

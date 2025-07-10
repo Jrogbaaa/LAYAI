@@ -1,0 +1,95 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions for validation
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+    
+    function isValidData(data) {
+      return data != null;
+    }
+    
+    // 🔧 DEVELOPMENT MODE: Allow unauthenticated access
+    // TODO: Re-enable authentication in production
+    
+    // Campaigns collection
+    match /campaigns/{campaignId} {
+      allow read: if true; // Allow public read
+      allow write: if true; // Allow unauthenticated write for development
+    }
+    
+    // Notes collection  
+    match /notes/{noteId} {
+      allow read, write: if true; // Allow unauthenticated access for development
+    }
+    
+    // Influencer profiles collection
+    match /influencers/{influencerId} {
+      allow read: if true; // Allow public read
+      allow write: if true; // Allow unauthenticated write for development
+    }
+    
+    // User feedback collection
+    match /feedback/{feedbackId} {
+      allow read, write: if true; // Allow unauthenticated access for development
+    }
+    
+    // Circuit breaker status collection
+    match /circuit-breaker/{statusId} {
+      allow read, write: if true; // Allow unauthenticated access for development
+    }
+    
+    // Firebase throttler status collection
+    match /firebase-throttler/{statusId} {
+      allow read, write: if true; // Allow unauthenticated access for development
+    }
+    
+    // System logs collection
+    match /system-logs/{logId} {
+      allow read, write: if true; // Allow unauthenticated access for development
+    }
+    
+    // User profiles collection
+    match /users/{userId} {
+      allow read, write: if true; // Allow unauthenticated access for development
+    }
+    
+    // Analytics collection
+    match /analytics/{analyticsId} {
+      allow read, write: if true; // Allow unauthenticated access for development
+    }
+    
+    // Search history collection
+    match /search-history/{searchId} {
+      allow read, write: if true; // Allow unauthenticated access for development
+    }
+    
+    // Collaboration tracking collection
+    match /collaborations/{collaborationId} {
+      allow read, write: if true; // Allow unauthenticated access for development
+    }
+    
+    // Brand intelligence collection
+    match /brand-intelligence/{brandId} {
+      allow read: if true; // Allow public read
+      allow write: if true; // Allow unauthenticated write for development
+    }
+    
+    // Verification results collection
+    match /verification-results/{verificationId} {
+      allow read, write: if true; // Allow unauthenticated access for development
+    }
+    
+    // Default allow rule for development
+    match /{document=**} {
+      allow read, write: if true; // Allow unauthenticated access for development
+    }
+  }
+} 

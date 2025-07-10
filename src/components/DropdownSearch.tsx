@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, Loader2, MapPin, Users, Target, Smartphone, Building2, User, Calendar } from 'lucide-react';
+import { useLanguage } from '@/lib/languageContext';
 
 interface DropdownSearchProps {
   onSearch: (searchParams: any) => void;
@@ -39,6 +40,7 @@ interface BrandInfo {
 }
 
 export const DropdownSearch: React.FC<DropdownSearchProps> = ({ onSearch, isLoading = false }) => {
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useState<SearchParams>({
     gender: 'any',
     ageRange: 'any',
@@ -61,21 +63,21 @@ export const DropdownSearch: React.FC<DropdownSearchProps> = ({ onSearch, isLoad
 
   // Gender options
   const genderOptions = [
-    { value: 'any', label: 'Cualquier género' },
-    { value: 'male', label: 'Masculino' },
-    { value: 'female', label: 'Femenino' },
-    { value: 'non-binary', label: 'No binario' }
+    { value: 'any', label: t('dropdown.gender.any') },
+    { value: 'male', label: t('dropdown.gender.male') },
+    { value: 'female', label: t('dropdown.gender.female') },
+    { value: 'non-binary', label: t('dropdown.gender.nonbinary') }
   ];
 
   // Age range options
   const ageRangeOptions = [
-    { value: 'any', label: 'Cualquier edad' },
-    { value: '13-17', label: '13-17 años' },
-    { value: '18-24', label: '18-24 años' },
-    { value: '25-34', label: '25-34 años' },
-    { value: '35-44', label: '35-44 años' },
-    { value: '45-54', label: '45-54 años' },
-    { value: '55+', label: '55+ años' }
+    { value: 'any', label: t('dropdown.age.any') },
+    { value: '13-17', label: t('dropdown.age.13-17') },
+    { value: '18-24', label: t('dropdown.age.18-24') },
+    { value: '25-34', label: t('dropdown.age.25-34') },
+    { value: '35-44', label: t('dropdown.age.35-44') },
+    { value: '45-54', label: t('dropdown.age.45-54') },
+    { value: '55+', label: t('dropdown.age.55+') }
   ];
 
   // Platform options
@@ -89,20 +91,20 @@ export const DropdownSearch: React.FC<DropdownSearchProps> = ({ onSearch, isLoad
   // Niche options
   const nicheOptions = [
     { value: 'lifestyle', label: 'Lifestyle' },
-    { value: 'fashion', label: 'Moda' },
-    { value: 'beauty', label: 'Belleza' },
-    { value: 'fitness', label: 'Fitness' },
-    { value: 'food', label: 'Comida' },
-    { value: 'travel', label: 'Viajes' },
-    { value: 'tech', label: 'Tecnología' },
-    { value: 'gaming', label: 'Gaming' },
-    { value: 'music', label: 'Música' },
-    { value: 'sports', label: 'Deportes' },
-    { value: 'business', label: 'Negocios' },
-    { value: 'entertainment', label: 'Entretenimiento' },
-    { value: 'home', label: 'Hogar' },
-    { value: 'parenting', label: 'Paternidad' },
-    { value: 'education', label: 'Educación' }
+    { value: 'fashion', label: t('dropdown.niche.fashion') },
+    { value: 'beauty', label: t('dropdown.niche.beauty') },
+    { value: 'fitness', label: t('dropdown.niche.fitness') },
+    { value: 'food', label: t('dropdown.niche.food') },
+    { value: 'travel', label: t('dropdown.niche.travel') },
+    { value: 'tech', label: t('dropdown.niche.tech') },
+    { value: 'gaming', label: t('dropdown.niche.gaming') },
+    { value: 'music', label: t('dropdown.niche.music') },
+    { value: 'sports', label: t('dropdown.niche.sports') },
+    { value: 'business', label: t('dropdown.niche.business') },
+    { value: 'entertainment', label: t('dropdown.niche.entertainment') },
+    { value: 'home', label: t('dropdown.niche.home') },
+    { value: 'parenting', label: t('dropdown.niche.parenting') },
+    { value: 'education', label: t('dropdown.niche.education') }
   ];
 
   // Location options (popular Spanish-speaking regions)
@@ -546,7 +548,7 @@ export const DropdownSearch: React.FC<DropdownSearchProps> = ({ onSearch, isLoad
           <div>
             <label htmlFor="location-select" className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
               <MapPin className="mr-2 h-4 w-4" />
-              Ubicación
+              {t('dropdown.location')}
             </label>
             <select
               id="location-select"
@@ -555,7 +557,7 @@ export const DropdownSearch: React.FC<DropdownSearchProps> = ({ onSearch, isLoad
               onChange={(e) => handleInputChange('location', e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
             >
-              <option value="">Cualquier ubicación</option>
+              <option value="">{t('dropdown.any.location')}</option>
               <option value="España">España</option>
               <option value="Madrid">Madrid</option>
               <option value="Barcelona">Barcelona</option>

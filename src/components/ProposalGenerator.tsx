@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { CampaignProposal, ProposalTalent } from '@/types/campaign';
 import { MatchResult } from '@/types/influencer';
+import { useLanguage } from '@/lib/languageContext';
 
 interface ProposalGeneratorProps {
   matchResults: MatchResult[];
@@ -18,6 +19,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
   campaignId,
   campaignStatus
 }) => {
+  const { t } = useLanguage();
   const [campaignData, setCampaignData] = useState({
     client: '',
     campaignName: '',
@@ -39,10 +41,10 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
   const [brandResearchData, setBrandResearchData] = useState<any>(null);
   const [isResearchingBrand, setIsResearchingBrand] = useState(false);
 
-  // Automatically research brand when brand name changes
+  // Automatically research brand when brand name changes - TEMPORARILY DISABLED
   useEffect(() => {
     const researchBrandAutomatically = async () => {
-      if (campaignData.brandName.trim() && campaignData.brandName.length > 2) {
+      if (false && campaignData.brandName.trim() && campaignData.brandName.length > 2) {
         setIsResearchingBrand(true);
         console.log(`🔍 Auto-researching brand: ${campaignData.brandName}`);
         
@@ -1100,10 +1102,10 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
           <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
             <div className="flex items-center space-x-3 mb-3">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-              <h3 className="font-semibold text-blue-800">Investigando Marca...</h3>
+              <h3 className="font-semibold text-blue-800">{t('proposal.researching.brand')}</h3>
             </div>
             <div className="text-blue-700 text-sm">
-              <p>Analizando información de marca para generar insights personalizados y razones específicas para cada influencer.</p>
+              <p>{t('proposal.research.analyzing')}</p>
             </div>
           </div>
         )}
@@ -1116,13 +1118,13 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-green-800">Investigación de Marca Completa ✨</h3>
+              <h3 className="font-semibold text-green-800">{t('proposal.research.complete')}</h3>
             </div>
             <div className="text-green-700 text-sm">
-              <p><strong>Industria:</strong> {brandResearchData.industry}</p>
-              <p><strong>Valores:</strong> {brandResearchData.values?.join(', ')}</p>
-              <p><strong>Audiencia Objetivo:</strong> {brandResearchData.targetAudience}</p>
-              <p className="mt-2 text-xs italic">💡 Los influencers ahora mostrarán razones personalizadas basadas en esta investigación.</p>
+              <p><strong>{t('proposal.research.industry')}</strong> {brandResearchData.industry}</p>
+              <p><strong>{t('proposal.research.values')}</strong> {brandResearchData.values?.join(', ')}</p>
+              <p><strong>{t('proposal.research.target')}</strong> {brandResearchData.targetAudience}</p>
+              <p className="mt-2 text-xs italic">{t('proposal.research.note')}</p>
             </div>
           </div>
         )}
@@ -1133,14 +1135,14 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
             <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
               <span className="text-white text-sm">📱</span>
             </div>
-            <h3 className="text-lg font-semibold text-blue-900">Agregar Influencers de Instagram</h3>
+            <h3 className="text-lg font-semibold text-blue-900">{t('proposal.add.influencers.instagram')}</h3>
           </div>
           <p className="text-blue-700 text-sm mb-4">
-            Ingresa nombres de usuario de Instagram separados por <strong>comas</strong> o <strong>nuevas líneas</strong>. Puedes incluir @ o no, nosotros lo procesaremos. Obtendremos datos en tiempo real y generaremos análisis personalizados.
+            {t('proposal.manual.description')}
           </p>
           <div className="space-y-2">
             <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded-lg">
-              💡 <strong>Ejemplos válidos:</strong> "cristiano, therock, kyliejenner" o separados por líneas o "@cristiano @therock @kyliejenner"
+              💡 <strong>{t('proposal.manual.examples')}</strong>
             </div>
             <div className="flex space-x-3">
               <textarea
@@ -1158,10 +1160,10 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                 {isProcessingManual ? (
                   <div className="flex items-center space-x-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>Procesando...</span>
+                    <span>{t('proposal.processing')}</span>
                   </div>
                 ) : (
-                  'Agregar Influencers'
+                  t('proposal.add.influencers')
                 )}
               </button>
             </div>
@@ -1171,11 +1173,14 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-bold text-gray-900">
-              Seleccionar Talentos para Propuesta ({selectedTalents.size} seleccionados)
+              {t('proposal.select.talents', { count: selectedTalents.size.toString() })}
             </h3>
             {selectedTalents.size > 0 && (
               <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
-                {selectedTalents.size} talento{selectedTalents.size !== 1 ? 's' : ''} seleccionado{selectedTalents.size !== 1 ? 's' : ''}
+                {t('proposal.talents.selected', { 
+                  count: selectedTalents.size.toString(), 
+                  plural: selectedTalents.size !== 1 ? 's' : '' 
+                })}
               </div>
             )}
           </div>
@@ -1185,8 +1190,8 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
               <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">👥</span>
               </div>
-              <h4 className="text-lg font-medium text-gray-900 mb-2">Aún no se han agregado influencers</h4>
-              <p className="text-gray-600 mb-4">Agrega nombres de usuario de Instagram arriba para ver perfiles de influencers aquí.</p>
+              <h4 className="text-lg font-medium text-gray-900 mb-2">{t('proposal.no.influencers')}</h4>
+              <p className="text-gray-600 mb-4">{t('proposal.add.usernames')}</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -1211,7 +1216,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                           <p className="text-gray-600 font-medium">@{result.influencer.handle}</p>
                           <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
                             <span className="bg-gray-100 px-3 py-1 rounded-full">
-                              {(result.influencer.followerCount || 0).toLocaleString()} seguidores
+                              {(result.influencer.followerCount || 0).toLocaleString()} {t('proposal.followers')}
                             </span>
                             <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
                               {((result.influencer.engagementRate || 0) * 100).toFixed(1)}% ER
@@ -1225,7 +1230,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                           <div className="text-2xl font-bold text-green-600">
                             €{(result.influencer.averageRate || 0).toLocaleString()}
                           </div>
-                          <div className="text-sm text-gray-500">Tarifa estimada</div>
+                          <div className="text-sm text-gray-500">{t('proposal.estimated.rate')}</div>
                         </div>
                       </div>
                       
@@ -1237,7 +1242,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
                           </span>
-                          Por Qué Es Perfecto para {campaignData.brandName || 'Esta Marca'}
+{t('proposal.perfect.for', { brand: campaignData.brandName || 'Esta Marca' })}
                           <button 
                             className="ml-2 text-xs bg-blue-200 hover:bg-blue-300 text-blue-800 px-2 py-1 rounded transition-colors"
                             onClick={() => {
@@ -1377,7 +1382,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <span>Generar Propuesta ({selectedTalents.size} talentos)</span>
+              <span>{t('proposal.generate.proposal', { count: selectedTalents.size.toString() })}</span>
             </div>
           </button>
           
@@ -1390,7 +1395,7 @@ export const ProposalGenerator: React.FC<ProposalGeneratorProps> = ({
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <span>Exportar CSV ({selectedTalents.size} talentos)</span>
+              <span>{t('proposal.export.csv', { count: selectedTalents.size.toString() })}</span>
             </div>
           </button>
         </div>

@@ -1,6 +1,6 @@
 # 🚀 LAYAI - AI-Powered Influencer Marketing Platform
 
-**📱 Version 2.21.0** | **🌐 Live Production**: [https://layai.vercel.app/](https://layai.vercel.app/)
+**📱 Version 2.22.0** | **🌐 Live Production**: [https://layai.vercel.app/](https://layai.vercel.app/)
 
 > 🔥 **CRITICAL: Firebase Throttling System** - Eliminated resource exhaustion errors with intelligent write batching and 99% performance improvement!
 > 👤 **MAJOR: Gender Filtering Fix** - Fixed gender search issue - now returns exclusive male/female results instead of mixed results!
@@ -8,6 +8,20 @@
 > 🎯 **PREVIOUS: Enhanced Brand Compatibility Engine** - Dynamic multi-dimensional brand-influencer matching with 50+ brand profiles and aesthetic intelligence!
 
 ## 🚀 Latest Updates (January 2025)
+
+### New Feature Release (v2.7.0)
+- **🎯 StarNgage Search Integration**: Real audience demographics in search results replacing hardcoded data
+- **📊 Enhanced Result Prioritization**: StarNgage-enhanced results appear first in search rankings
+- **🔍 Real Audience Insights**: Actual age/gender breakdowns from StarNgage.com instead of estimates
+- **⚡ Progressive Enhancement**: Top 10 results enhanced with real demographics during streaming
+- **🛡️ Graceful Fallback**: Generic demographics when StarNgage data unavailable
+
+### Recent Feature Release (v2.22.0)
+- **👥 Profile Similarity Search**: AI-powered influencer matching based on profile descriptions
+- **🎯 Intelligent Attribute Extraction**: Automatically detects profession, nationality, platform, follower range, and content niche
+- **📊 Similarity Ranking**: Results ranked by compatibility score with detailed match reasons
+- **🔍 Enhanced Chat Interface**: New query detection and handling for profile-based searches
+- **🌍 Full English Localization**: Complete translation of all Spanish content to English
 
 ### Critical System Improvements (v2.21.0)
 - **🔥 Firebase Write Throttling**: Eliminated resource exhaustion errors with intelligent batching system
@@ -32,16 +46,24 @@ LAYAI is a comprehensive AI-powered influencer marketing platform designed to st
 ### 🔥 Key Features
 
 #### 🤖 Dual Search Interface
-- **Chat IA**: Natural language search with PDF analysis and collaboration verification
-- **Búsqueda con Filtros**: Structured search with 8+ filter categories and automatic brand research
+- **Chat AI**: Natural language search with PDF analysis, collaboration verification, and profile similarity matching
+- **Filtered Search**: Structured search with 8+ filter categories and automatic brand research
 - **Seamless Switching**: Tabbed interface for optimal user experience
+
+#### 👥 Profile Similarity Search (NEW)
+- **AI-Powered Matching**: Find influencers similar to a provided profile description
+- **Attribute Extraction**: Automatically detects profession, nationality, platform, follower range, and content niche
+- **Intelligent Ranking**: Results ranked by similarity score with detailed match reasons
+- **Comprehensive Analysis**: Supports detailed profile descriptions with multiple characteristics
+- **Example Usage**: "Here's a profile - find me similar: Fabrizio Romano is a renowned Italian football journalist..."
 
 #### 📊 Comprehensive Database
 - **3,000 Spanish Influencers**: Complete dataset with verified profiles
 - **Real-time Scraping**: Live data from Instagram, TikTok, YouTube
 - **Quality Scoring**: Authenticity checks and engagement validation
 - **Demographic Data**: Age, gender, location, interests, and audience insights
-- **StarNgage Integration**: Detailed audience demographics with gender/age breakdowns
+- **StarNgage Integration**: Real audience demographics integrated into search results
+- **Enhanced Data Accuracy**: Actual age/gender breakdowns from StarNgage.com replacing estimates
 
 #### 🎯 Advanced Matching
 - **Multi-Niche Support**: OR logic for complex searches (lifestyle + fitness + fashion)
@@ -75,6 +97,7 @@ LAYAI is a comprehensive AI-powered influencer marketing platform designed to st
 
 ### New API Endpoints
 - **`/api/firebase-throttler-status`**: Real-time throttler monitoring and health metrics
+- **`/api/profile-similarity`**: Profile-based similarity search and matching
 - **`GET ?action=flush`**: Force flush all queued writes
 - **`GET ?action=config`**: View current throttler configuration
 - **`POST {action: 'updateConfig'}`**: Dynamic throttler parameter adjustment
@@ -98,9 +121,10 @@ LAYAI is a comprehensive AI-powered influencer marketing platform designed to st
 ## 🔍 Search Capabilities
 
 ### Chat Search Features
-- **Natural Language**: "Encuentra influencers de fitness femeninos en Madrid"
+- **Natural Language**: "Find female fitness influencers in Madrid"
 - **PDF Analysis**: Upload proposals for personalized search
-- **Collaboration Verification**: "¿Ha trabajado Cristiano con Nike?"
+- **Collaboration Verification**: "Has Cristiano worked with Nike?"
+- **Profile Similarity Search**: "Here's a profile - find me similar influencers: [description]"
 - **Follow-up Questions**: Conversational refinement
 
 ### Dropdown Search Features

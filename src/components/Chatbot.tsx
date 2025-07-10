@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Upload, FileText, X, AlertCircle, CheckCircle } from 'lucide-react';
+import { useLanguage } from '@/lib/languageContext';
 
 export interface Message {
   text: string;
@@ -131,10 +132,82 @@ function detectCollaborationQuery(message: string): { influencer: string; brand:
   return null;
 }
 
+// Function to detect profile-based similarity search queries
+function detectProfileSimilarityQuery(message: string): { profileDescription: string } | null {
+  const lowerMessage = message.toLowerCase();
+  
+  // Keywords that indicate profile similarity search
+  const similarityKeywords = [
+    'find similar', 'similar to', 'like this profile', 'profiles like', 'influencers like',
+    'similar profiles', 'find influencers similar', 'match this profile', 'similar influencer',
+    'find matches', 'similar creators', 'profiles similar', 'find similar influencers',
+    'similar to this', 'influencers similar to', 'creators similar to', 'like this influencer',
+    'find people like', 'similar people', 'profiles matching', 'matching profiles'
+  ];
+  
+  const hasProfileKeywords = similarityKeywords.some(keyword => lowerMessage.includes(keyword));
+  
+  // Profile description indicators
+  const profileIndicators = [
+    'here\'s a profile', 'heres a profile', 'profile:', 'here is a profile',
+    'this profile', 'this influencer', 'this creator', 'description:',
+    'profile description', 'influencer description', 'creator description'
+  ];
+  
+  const hasProfileIndicators = profileIndicators.some(indicator => lowerMessage.includes(indicator));
+  
+  // Detailed profile markers (indicates someone is describing an influencer in detail)
+  const detailMarkers = [
+    'followers', 'instagram', 'known for', 'famous for', 'profession:', 'nationality:',
+    'specializes in', 'expert in', 'content creator', 'social media influencer',
+    'million followers', 'k followers', 'engagement', 'brand ambassador'
+  ];
+  
+  const hasDetailMarkers = detailMarkers.filter(marker => lowerMessage.includes(marker)).length >= 2;
+  
+  // Long message with profile-like content (likely a description)
+  const isLongMessage = message.length > 200;
+  const hasProfileLikeContent = (lowerMessage.includes('influencer') || lowerMessage.includes('creator')) && 
+                                (lowerMessage.includes('followers') || lowerMessage.includes('instagram') || lowerMessage.includes('known for'));
+  
+  // Check if this looks like a profile similarity query
+  if (hasProfileKeywords || (hasProfileIndicators && hasDetailMarkers) || 
+      (isLongMessage && hasProfileLikeContent) || 
+      (hasProfileIndicators && isLongMessage)) {
+    
+    // Extract the profile description part
+    let profileDescription = message;
+    
+    // Try to extract just the profile part if there are clear markers
+    const profileMarkers = [
+      /(?:here'?s?\s+a?\s+profile[:\-\s]+)([\s\S]*)/i,
+      /(?:profile[:\-\s]+)([\s\S]*)/i,
+      /(?:find\s+similar\s+(?:to|profiles?\s+to)[:\-\s]*)([\s\S]*)/i,
+      /(?:influencer\s+description[:\-\s]+)([\s\S]*)/i,
+      /(?:this\s+(?:profile|influencer|creator)[:\-\s]*)([\s\S]*)/i
+    ];
+    
+    for (const marker of profileMarkers) {
+      const match = message.match(marker);
+      if (match && match[1] && match[1].trim().length > 50) {
+        profileDescription = match[1].trim();
+        break;
+      }
+    }
+    
+    // Ensure we have a substantial description
+    if (profileDescription.length > 50) {
+      return { profileDescription: profileDescription.trim() };
+    }
+  }
+  
+  return null;
+}
+
 // Constants for session storage
 const CHAT_MESSAGES_KEY = 'influencer_chat_messages';
 const WELCOME_MESSAGE: Message = {
-      text: "¡Hola! Soy tu asistente de IA para encontrar influencers. Puedes:\n\n🔍 Escribir tu búsqueda: 'Encuentra influencers de moda en Instagram'\n📄 Subir una propuesta PDF para búsqueda personalizada\n🤝 Preguntar sobre colaboraciones: '¿Ha trabajado Cristiano con IKEA?'\n💡 Hacer preguntas de seguimiento para refinar resultados\n\n¿Cómo te gustaría empezar?",
+      text: "Hello! I'm your AI assistant for finding influencers. You can:\n\n🔍 Write your search: 'Find fashion influencers on Instagram'\n📄 Upload a PDF proposal for personalized search\n🤝 Ask about collaborations: 'Has Cristiano worked with IKEA?'\n👥 Find similar profiles: 'Here's a profile - find me similar influencers: [description]'\n💡 Ask follow-up questions to refine results\n\nHow would you like to start?",
       sender: 'bot',
       type: 'chat',
 };
@@ -168,6 +241,7 @@ const saveMessagesToSession = (messages: Message[]) => {
 };
 
 export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<Message[]>(loadMessagesFromSession);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -312,7 +386,7 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
 
     // Add user message about PDF upload
     const userMessage: Message = {
-      text: `📄 Subí propuesta: ${file.name}`,
+      text: `📄 Uploaded proposal: ${file.name}`,
       sender: 'user',
       type: 'chat',
     };
@@ -320,7 +394,7 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
 
     // Add bot analyzing message
     const analyzingMessage: Message = {
-      text: '🤖 Analizando tu propuesta PDF... Esto puede tomar unos segundos.',
+      text: '🤖 Analyzing your PDF proposal... This may take a few seconds.',
       sender: 'bot',
       type: 'chat',
     };
@@ -343,7 +417,7 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
         setReadyToSearch(true);
         
         const analysisMessage: Message = {
-          text: `✅ ¡Análisis completado! Detecté:\n\n${formatAnalysisForDisplay(result.analysis)}\n\n💡 **Puedes hacer refinamientos ahora via chat:**\n• "Solo influencers masculinos"\n• "Enfoque en lifestyle/moda"\n• "Mínimo 100k seguidores"\n• Cualquier otra especificación\n\n🎯 Todos tus refinamientos se incluirán automáticamente cuando hagas click en "Iniciar Búsqueda"`,
+          text: `✅ Analysis completed! I detected:\n\n${formatAnalysisForDisplay(result.analysis)}\n\n💡 **You can make refinements now via chat:**\n• "Only male influencers"\n• "Focus on lifestyle/fashion"\n• "Minimum 100k followers"\n• Any other specification\n\n🎯 All your refinements will be automatically included when you click "Start Search"`,
           sender: 'bot',
           type: 'chat',
         };
@@ -404,12 +478,12 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
   const formatAnalysisForDisplay = (analysis: any): string => {
     const details = [];
     
-    if (analysis.brandName) details.push(`🏢 Marca: ${analysis.brandName}`);
-    if (analysis.platforms?.length > 0) details.push(`📱 Plataformas: ${analysis.platforms.join(', ')}`);
-    if (analysis.targetAudience?.ageRange) details.push(`👥 Edad: ${analysis.targetAudience.ageRange} años`);
-    if (analysis.targetAudience?.location) details.push(`📍 Ubicación: ${analysis.targetAudience.location}`);
+    if (analysis.brandName) details.push(`🏢 Brand: ${analysis.brandName}`);
+    if (analysis.platforms?.length > 0) details.push(`📱 Platforms: ${analysis.platforms.join(', ')}`);
+    if (analysis.targetAudience?.ageRange) details.push(`👥 Age: ${analysis.targetAudience.ageRange} years`);
+    if (analysis.targetAudience?.location) details.push(`📍 Location: ${analysis.targetAudience.location}`);
     if (analysis.budget?.min && analysis.budget?.max) {
-      details.push(`💰 Presupuesto: ${analysis.budget.min}-${analysis.budget.max} ${analysis.budget.currency || 'EUR'}`);
+      details.push(`💰 Budget: ${analysis.budget.min}-${analysis.budget.max} ${analysis.budget.currency || 'EUR'}`);
     }
 
     return details.join('\n');
@@ -499,7 +573,7 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
         const totalFound = searchData?.totalFound || 0;
         
         botResponse = {
-          text: `🎯 ¡BÚSQUEDA COMPLETADA! 🎯\n\n✅ Encontré ${totalFound} influencers perfectamente alineados con tus criterios\n\n📊 Los resultados están ordenados por compatibilidad de marca\n🔍 Revisa los perfiles a continuación para encontrar las mejores opciones\n\n💡 Todos los influencers han sido automáticamente guardados en tu campaña`,
+          text: `🎯 SEARCH COMPLETED! 🎯\n\n✅ I found ${totalFound} influencers perfectly aligned with your criteria\n\n📊 Results are sorted by brand compatibility\n🔍 Review the profiles below to find the best options\n\n💡 All influencers have been automatically saved to your campaign`,
           sender: 'bot',
           type: 'search',
         };
@@ -777,6 +851,125 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
     }
   };
 
+  const handleProfileSimilaritySearch = async (profileDescription: string) => {
+    try {
+      setIsLoading(true);
+      setSearchProgress({
+        stage: 'Analyzing profile description',
+        progress: 20,
+        details: 'Extracting key attributes from the profile...',
+        isComplete: false,
+      });
+
+      const response = await fetch('/api/profile-similarity', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          profileDescription,
+          limit: 10,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to search for similar profiles');
+      }
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Profile similarity search failed');
+      }
+
+      setSearchProgress({
+        stage: 'Processing results',
+        progress: 80,
+        details: 'Ranking profiles by similarity...',
+        isComplete: false,
+      });
+
+      // Create a comprehensive response message
+      const { results, extractedAttributes } = result.data;
+      
+      const attributesSummary = [];
+      if (extractedAttributes.profession) attributesSummary.push(`🏢 Profession: ${extractedAttributes.profession}`);
+      if (extractedAttributes.nationality) attributesSummary.push(`🌍 Nationality: ${extractedAttributes.nationality}`);
+      if (extractedAttributes.niche) attributesSummary.push(`🎯 Niches: ${extractedAttributes.niche.join(', ')}`);
+      if (extractedAttributes.platform) attributesSummary.push(`📱 Platforms: ${extractedAttributes.platform.join(', ')}`);
+      if (extractedAttributes.followerRange) {
+        const min = Math.round(extractedAttributes.followerRange.min / 1000);
+        const max = Math.round(extractedAttributes.followerRange.max / 1000);
+        attributesSummary.push(`👥 Follower range: ${min}K - ${max}K`);
+      }
+
+      const analysisMessage: Message = {
+        text: `✅ **Profile Analysis Complete!** 🎯\n\n**Extracted attributes:**\n${attributesSummary.join('\n')}\n\n**Found ${results.length} similar profiles** ranked by compatibility:\n\n🔍 **Results are displayed below** - each profile shows similarity score and match reasons.`,
+        sender: 'bot',
+        type: 'chat',
+      };
+      setMessages(prev => [...prev, analysisMessage]);
+
+      // Prepare results for display
+      const searchResults = results.map((result: any) => {
+        const profile = result.influencer || result;
+        return {
+          influencer: {
+            username: profile.username,
+            fullName: profile.fullName || profile.username,
+            followers: profile.followers || profile.followerCount,
+            platform: profile.platform || 'Instagram',
+            engagementRate: profile.engagementRate || 0,
+            biography: profile.biography || profile.bio || '',
+            profilePicUrl: profile.profilePicUrl || '',
+            verified: profile.verified || false,
+            category: profile.category || 'lifestyle',
+            location: profile.location || '',
+            avgLikes: profile.avgLikes || 0,
+            avgComments: profile.avgComments || 0,
+            collaborationRate: profile.collaborationRate || 0,
+            brandCompatibilityScore: result.similarityScore || 0,
+          },
+          matchReasons: result.matchReasons || [],
+          similarityScore: result.similarityScore || 0,
+        };
+      });
+
+      setSearchProgress({
+        stage: 'Complete',
+        progress: 100,
+        details: `Found ${searchResults.length} similar profiles`,
+        isComplete: true,
+      });
+
+      // Send to parent component for display
+      await onSendMessage(`Profile similarity search completed`, [...messages, analysisMessage]);
+      
+      // Trigger search results display
+      setTimeout(() => {
+        const searchCompleteMessage: Message = {
+          text: `🎯 **PROFILE SIMILARITY SEARCH COMPLETED!** 🎯\n\n✅ Found ${searchResults.length} profiles with similar characteristics\n\n📊 Results are ranked by compatibility score\n🔍 Review the profiles below to find the best matches\n\n💡 Each profile shows why it matched your description`,
+          sender: 'bot',
+          type: 'search',
+        };
+        setMessages(prev => [...prev, searchCompleteMessage]);
+      }, 500);
+
+    } catch (error) {
+      console.error('❌ Profile similarity search error:', error);
+      
+      const errorMessage: Message = {
+        text: `❌ **Profile similarity search failed**\n\n${error instanceof Error ? error.message : 'Unknown error'}\n\n💡 **Try:**\n• Providing more details about the influencer\n• Including follower count, platform, or profession\n• Making sure the description is at least 50 characters long`,
+        sender: 'bot',
+        type: 'chat',
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+      setSearchProgress(null);
+    }
+  };
+
   // Function to parse natural language search queries into structured parameters
   const parseSearchQuery = (query: string) => {
     const lowerQuery = query.toLowerCase();
@@ -908,13 +1101,29 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
         const { influencer, brand } = collaborationMatch;
         
         const checkingMessage: Message = {
-          text: `🔍 Revisando si ${influencer} ha trabajado con ${brand} anteriormente...`,
+          text: `🔍 Checking if ${influencer} has worked with ${brand} previously...`,
           sender: 'bot',
           type: 'chat',
         };
         setMessages(prev => [...prev, checkingMessage]);
         
         await handleCollaborationCheck(influencer, brand);
+        return;
+      }
+
+      // Check if this is a profile similarity query
+      const profileSimilarityMatch = detectProfileSimilarityQuery(messageToSend);
+      if (profileSimilarityMatch) {
+        const { profileDescription } = profileSimilarityMatch;
+        
+        const analyzingMessage: Message = {
+          text: `🔍 Analyzing the profile description to find similar influencers...`,
+          sender: 'bot',
+          type: 'chat',
+        };
+        setMessages(prev => [...prev, analyzingMessage]);
+        
+        await handleProfileSimilaritySearch(profileDescription);
         return;
       }
 
@@ -1279,7 +1488,9 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
                 {/* Estimated time remaining (only for active searches) */}
                 {!searchProgress?.isComplete && (searchProgress?.progress || 0) > 10 && (
                   <div className="text-xs text-gray-500 italic">
-                    ⏱️ Tiempo estimado: {(searchProgress?.progress || 0) < 60 ? '60-90 segundos' : '30-45 segundos'}
+                    ⏱️ {t('chat.estimated.time', { 
+                      time: (searchProgress?.progress || 0) < 60 ? t('chat.time.60-90') : t('chat.time.30-45')
+                    })}
                   </div>
                 )}
               </div>
@@ -1297,7 +1508,7 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
                   <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                   <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
-                <span className="text-xs sm:text-sm text-gray-600">Pensando...</span>
+                <span className="text-xs sm:text-sm text-gray-600">{t('chat.thinking')}</span>
               </div>
             </div>
           </div>
@@ -1308,13 +1519,13 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
       {/* Compact Suggested Prompts - Only show until first user message */}
       {messages.length <= 1 && (
         <div className="px-3 sm:px-4 py-2 bg-gray-50 border-t border-gray-200 flex-shrink-0">
-          <div className="text-xs text-gray-600 mb-1.5 font-medium">💡 Prueba estas búsquedas:</div>
+          <div className="text-xs text-gray-600 mb-1.5 font-medium">{t('chat.try.searches')}</div>
           <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1">
             {[
-              { text: "🎯 Influencers fitness Madrid", icon: "🎯" },
-              { text: "👩 Beauty +50K seguidores", icon: "👩" },
-              { text: "🔍 ¿Cristiano con IKEA?", icon: "🔍" },
-              { text: "📄 Subir PDF", icon: "📄" }
+              { text: `🎯 ${t('chat.fitness.madrid')}`, icon: "🎯" },
+              { text: `👩 ${t('chat.beauty.50k')}`, icon: "👩" },
+              { text: `🔍 ${t('chat.cristiano.ikea')}`, icon: "🔍" },
+              { text: `📄 ${t('chat.upload.pdf')}`, icon: "📄" }
             ].map((prompt, index) => (
               <button
                 key={index}
@@ -1377,7 +1588,7 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder={uploadedFile && analysisResult ? "Haz preguntas de seguimiento o refina la búsqueda..." : "Pídeme que encuentre influencers o sube un PDF..."}
+              placeholder={uploadedFile && analysisResult ? t('chat.follow.up.placeholder') : t('chat.default.placeholder')}
               className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-xs sm:text-sm bg-gray-50 focus:bg-white transition-colors touch-manipulation"
               rows={2}
               disabled={isLoading || isAnalyzing}
@@ -1389,7 +1600,7 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
             onClick={handlePDFUploadClick}
             disabled={isLoading || isAnalyzing}
             className="px-3 sm:px-4 py-2 sm:py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl touch-manipulation"
-            title="Subir propuesta PDF"
+            title={t('chat.upload.pdf.title')}
           >
             <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
@@ -1418,8 +1629,7 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
         {/* PDF Upload Hint */}
         {!uploadedFile && (
           <div className="mt-2 sm:mt-3 text-center">
-            <p className="text-xs text-gray-500">
-              💡 <strong>Nuevo:</strong> Sube una propuesta PDF para búsquedas ultra-personalizadas
+            <p className="text-xs text-gray-500" dangerouslySetInnerHTML={{ __html: t('chat.pdf.upload.hint') }}>
             </p>
           </div>
         )}
@@ -1429,7 +1639,7 @@ export function Chatbot({ onSendMessage, onPDFAnalyzed }: ChatbotProps) {
           <div className="mt-2 sm:mt-3 text-center">
             <p className="text-xs text-gray-400 flex items-center justify-center space-x-1">
               <span>💾</span>
-              <span>Tu conversación se guarda automáticamente</span>
+              <span>{t('chat.conversation.saved')}</span>
             </p>
           </div>
         )}

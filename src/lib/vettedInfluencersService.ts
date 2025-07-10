@@ -452,7 +452,7 @@ function generateVettedMatchReasons(influencer: VettedInfluencer, params: any): 
   const reasons: string[] = [];
   
   // Always include source
-  reasons.push('Base de datos verificada');
+  reasons.push('Verified database');
   
   // Niche matching
   if (params.niches && params.niches.length > 0) {
@@ -461,43 +461,43 @@ function generateVettedMatchReasons(influencer: VettedInfluencer, params: any): 
     );
     
     if (matchingNiches.length > 0) {
-      reasons.push(`Especialista en ${matchingNiches.join(', ')}`);
+      reasons.push(`${matchingNiches.join(', ')} specialist`);
     }
   }
   
   // Brand-specific matching
   if (params.brandName?.toLowerCase().includes('ikea') || params.userQuery?.toLowerCase().includes('ikea')) {
     if (influencer.niche.some(n => n.toLowerCase().includes('home') || n.toLowerCase().includes('lifestyle'))) {
-      reasons.push('Perfecto para IKEA: contenido de hogar y lifestyle');
+      reasons.push('Perfect for IKEA: home and lifestyle content');
     }
   }
   
   // Engagement analysis
   if (influencer.engagementRate > 0.05) {
-    reasons.push(`Engagement excepcional ${(influencer.engagementRate * 100).toFixed(1)}%`);
+    reasons.push(`Exceptional engagement ${(influencer.engagementRate * 100).toFixed(1)}%`);
   } else if (influencer.engagementRate > 0.03) {
-    reasons.push(`Engagement sólido ${(influencer.engagementRate * 100).toFixed(1)}%`);
+    reasons.push(`Solid engagement ${(influencer.engagementRate * 100).toFixed(1)}%`);
   }
   
   // Follower analysis
   if (influencer.followerCount > 1000000) {
-    reasons.push('Mega-influencer con alcance masivo');
+    reasons.push('Mega-influencer with massive reach');
   } else if (influencer.followerCount > 500000) {
-    reasons.push('Macro-influencer con gran alcance');
+    reasons.push('Macro-influencer with great reach');
   } else if (influencer.followerCount > 100000) {
-    reasons.push('Influencer establecido con audiencia sólida');
+    reasons.push('Established influencer with solid audience');
   } else if (influencer.followerCount > 50000) {
-    reasons.push('Micro-influencer con comunidad engaged');
+    reasons.push('Micro-influencer with engaged community');
   }
   
   // Location matching
   if (params.location && influencer.location?.toLowerCase().includes(params.location.toLowerCase())) {
-    reasons.push(`Ubicado en ${influencer.location}`);
+    reasons.push(`Located in ${influencer.location}`);
   }
   
   // Verification status
   if (influencer.verified) {
-    reasons.push('✅ Cuenta verificada');
+    reasons.push('✅ Verified account');
   }
   
   return reasons;

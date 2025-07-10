@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { MessageSquare, Sliders, Sparkles, Info, Search, Zap } from 'lucide-react';
 import { Chatbot } from './Chatbot';
 import { DropdownSearch } from './DropdownSearch';
+import { useLanguage } from '@/lib/languageContext';
 
 interface SearchInterfaceProps {
   onSendMessage: (message: string, history: any[]) => Promise<any>;
@@ -18,6 +19,7 @@ export const SearchInterface: React.FC<SearchInterfaceProps> = ({
   onPDFAnalyzed, 
   isLoading = false 
 }) => {
+  const { t } = useLanguage();
   const [activeMode, setActiveMode] = useState<SearchMode>('chat');
 
   const handleDropdownSearch = async (searchParams: any) => {
@@ -44,10 +46,10 @@ export const SearchInterface: React.FC<SearchInterfaceProps> = ({
               <span className="text-xl sm:text-2xl">🤖</span>
             </div>
             <h1 className="text-xl sm:text-2xl lg:text-2xl font-bold text-gray-900 mb-2">
-              Asistente de IA para Influencers
+              {t('ai.assistant.title')}
             </h1>
             <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
-              Encuentra los creadores perfectos para tus campañas
+              {t('ai.assistant.subtitle')}
             </p>
           </div>
 
@@ -61,7 +63,7 @@ export const SearchInterface: React.FC<SearchInterfaceProps> = ({
                     ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                 }`}
-                aria-label="Cambiar a modo Chat IA"
+                aria-label="Change to Chat IA mode"
               >
                 <MessageSquare className="mr-2 h-4 w-4" />
                 <span className="hidden sm:inline">Chat IA</span>
@@ -78,11 +80,11 @@ export const SearchInterface: React.FC<SearchInterfaceProps> = ({
                     ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-md'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                 }`}
-                aria-label="Cambiar a modo Filtros"
+                aria-label="Change to Filters mode"
               >
                 <Sliders className="mr-2 h-4 w-4" />
-                <span className="hidden sm:inline">Filtros</span>
-                <span className="sm:hidden">Filtros</span>
+                <span className="hidden sm:inline">Filters</span>
+                <span className="sm:hidden">Filters</span>
                 {activeMode === 'dropdown' && (
                   <Sparkles className="ml-2 h-3 w-3 animate-pulse" />
                 )}
@@ -94,15 +96,15 @@ export const SearchInterface: React.FC<SearchInterfaceProps> = ({
           <div className="text-center">
             <div className="inline-flex items-center bg-white/70 backdrop-blur-sm rounded-md px-3 py-1 shadow-sm border border-gray-200/50">
               <Info className="h-3 w-3 mr-2 text-gray-500" />
-              {activeMode === 'chat' ? (
+            {activeMode === 'chat' ? (
                 <p className="text-xs text-gray-600">
-                  💬 Busca con lenguaje natural, sube PDFs y verifica colaboraciones
-                </p>
-              ) : (
+                💬 Search with natural language, upload PDFs, and verify collaborations
+              </p>
+            ) : (
                 <p className="text-xs text-gray-600">
-                  🎯 Búsqueda estructurada con filtros específicos
+                  🎯 Structured search with specific filters
                 </p>
-              )}
+            )}
             </div>
           </div>
         </div>
@@ -111,7 +113,7 @@ export const SearchInterface: React.FC<SearchInterfaceProps> = ({
       {/* Enhanced Search Interface Content */}
       <div className="p-4 sm:p-6 lg:p-8">
         <div className="transition-all duration-500 ease-in-out">
-          {activeMode === 'chat' ? (
+        {activeMode === 'chat' ? (
             <div className="space-y-6">
               {/* Enhanced Chat Interface Help */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl p-4 sm:p-6 shadow-sm">
@@ -122,43 +124,43 @@ export const SearchInterface: React.FC<SearchInterfaceProps> = ({
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-blue-800 mb-3">✨ Funciones del Chat IA:</h3>
+                    <h3 className="text-sm font-semibold text-blue-800 mb-3">{t('search.chat.functions')}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-blue-700">
                       <div className="flex items-start space-x-2">
                         <Search className="h-3 w-3 mt-0.5 flex-shrink-0" />
                         <div>
-                          <strong>Búsqueda natural:</strong> "Encuentra influencers de fitness femeninos en Madrid"
+                          <strong>{t('search.natural.search')}</strong> {t('search.natural.example')}
                         </div>
                       </div>
                       <div className="flex items-start space-x-2">
                         <Info className="h-3 w-3 mt-0.5 flex-shrink-0" />
                         <div>
-                          <strong>Análisis PDF:</strong> Sube propuestas para búsqueda personalizada
+                          <strong>{t('search.pdf.analysis')}</strong> {t('search.pdf.example')}
                         </div>
                       </div>
                       <div className="flex items-start space-x-2">
                         <MessageSquare className="h-3 w-3 mt-0.5 flex-shrink-0" />
                         <div>
-                          <strong>Verificación:</strong> "¿Ha trabajado Cristiano con Nike?"
+                          <strong>{t('search.verification')}</strong> {t('search.verification.example')}
                         </div>
                       </div>
                       <div className="flex items-start space-x-2">
                         <Sparkles className="h-3 w-3 mt-0.5 flex-shrink-0" />
                         <div>
-                          <strong>Refinamiento:</strong> Haz preguntas de seguimiento
+                          <strong>{t('search.refinement')}</strong> {t('search.refinement.example')}
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
               </div>
-              
-              <Chatbot 
-                onSendMessage={onSendMessage}
-                onPDFAnalyzed={onPDFAnalyzed}
-              />
             </div>
-          ) : (
+            
+            <Chatbot 
+              onSendMessage={onSendMessage}
+              onPDFAnalyzed={onPDFAnalyzed}
+            />
+          </div>
+        ) : (
             <div className="space-y-6">
               {/* Enhanced Dropdown Interface Help */}
               <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200/50 rounded-xl p-4 sm:p-6 shadow-sm">
@@ -169,43 +171,43 @@ export const SearchInterface: React.FC<SearchInterfaceProps> = ({
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-purple-800 mb-3">🎯 Búsqueda con Filtros:</h3>
+                    <h3 className="text-sm font-semibold text-purple-800 mb-3">🎯 Search with Filters:</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-purple-700">
                       <div className="flex items-start space-x-2">
                         <Search className="h-3 w-3 mt-0.5 flex-shrink-0" />
                         <div>
-                          <strong>Investigación automática:</strong> Escribe una marca y se investigará automáticamente
+                          <strong>Automatic Research:</strong> Write a brand and it will be researched automatically
                         </div>
                       </div>
                       <div className="flex items-start space-x-2">
                         <Sliders className="h-3 w-3 mt-0.5 flex-shrink-0" />
                         <div>
-                          <strong>Filtros precisos:</strong> Género, edad, ubicación, nichos, plataformas
+                          <strong>Precise Filters:</strong> Gender, age, location, niches, platforms
                         </div>
                       </div>
                       <div className="flex items-start space-x-2">
                         <Info className="h-3 w-3 mt-0.5 flex-shrink-0" />
                         <div>
-                          <strong>Rangos personalizables:</strong> Seguidores, engagement, y más
+                          <strong>Customizable Ranges:</strong> Followers, engagement, and more
                         </div>
                       </div>
                       <div className="flex items-start space-x-2">
                         <Zap className="h-3 w-3 mt-0.5 flex-shrink-0" />
                         <div>
-                          <strong>Resultados instantáneos:</strong> Búsqueda estructurada y rápida
+                          <strong>Instant Results:</strong> Structured and quick search
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
               </div>
-
-              <DropdownSearch 
-                onSearch={handleDropdownSearch}
-                isLoading={isLoading}
-              />
             </div>
-          )}
+
+            <DropdownSearch 
+              onSearch={handleDropdownSearch}
+              isLoading={isLoading}
+            />
+          </div>
+        )}
         </div>
       </div>
 
@@ -219,7 +221,7 @@ export const SearchInterface: React.FC<SearchInterfaceProps> = ({
               </div>
             </div>
             <div>
-              <span className="font-semibold text-blue-700">Chat IA:</span> Ideal para búsquedas complejas, análisis de PDFs, verificación de colaboraciones y consultas en lenguaje natural.
+              <span className="font-semibold text-blue-700">Chat IA:</span> Ideal for complex searches, PDF analysis, collaboration verification, and natural language queries.
             </div>
           </div>
           <div className="flex items-start space-x-3 p-3 bg-white/60 backdrop-blur-sm rounded-lg border border-gray-200/50">
@@ -229,7 +231,7 @@ export const SearchInterface: React.FC<SearchInterfaceProps> = ({
               </div>
             </div>
             <div>
-              <span className="font-semibold text-purple-700">Filtros:</span> Perfecto para búsquedas rápidas y precisas con criterios específicos e investigación automática de marcas.
+              <span className="font-semibold text-purple-700">Filters:</span> Perfect for quick and precise searches with specific criteria and automatic brand research.
             </div>
           </div>
         </div>

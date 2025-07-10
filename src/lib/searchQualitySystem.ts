@@ -552,7 +552,7 @@ export class SearchQualitySystem {
     let improvement = 0;
 
     if (parameters.location && parameters.location.toLowerCase() === 'spain') {
-      if (!query.toLowerCase().includes('spanish') && !query.toLowerCase().includes('españa')) {
+      if (!query.toLowerCase().includes('spanish') && !query.toLowerCase().includes('spain')) {
         improvement = 12;
       }
     }
