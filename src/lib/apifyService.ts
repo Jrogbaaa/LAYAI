@@ -14,6 +14,116 @@ const serplyApiKey = process.env.SERPLY_API_KEY;
 // Optional SerpApi Key (new enhancement)
 const serpApiKey = process.env.SERPAPI_KEY;
 
+// ✅ ENHANCED: Global Rate Limiter for Serply API
+class SerplyRateLimiter {
+  private static instance: SerplyRateLimiter;
+  private requestQueue: Array<{
+    resolve: (value: any) => void;
+    reject: (reason: any) => void;
+    request: () => Promise<any>;
+  }> = [];
+  private isProcessing = false;
+  private lastRequestTime = 0;
+  private consecutiveErrors = 0;
+  private readonly MIN_INTERVAL = 4000; // 4 seconds between requests
+  private readonly MAX_INTERVAL = 30000; // 30 seconds max backoff
+  private readonly ERROR_BACKOFF_MULTIPLIER = 2;
+
+  public static getInstance(): SerplyRateLimiter {
+    if (!SerplyRateLimiter.instance) {
+      SerplyRateLimiter.instance = new SerplyRateLimiter();
+    }
+    return SerplyRateLimiter.instance;
+  }
+
+  async executeRequest<T>(request: () => Promise<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
+      this.requestQueue.push({ resolve, reject, request });
+      this.processQueue();
+    });
+  }
+
+  private async processQueue() {
+    if (this.isProcessing || this.requestQueue.length === 0) {
+      return;
+    }
+
+    this.isProcessing = true;
+
+    while (this.requestQueue.length > 0) {
+      const queueItem = this.requestQueue.shift()!;
+      
+      try {
+        // Calculate dynamic wait time based on errors
+        const waitTime = this.calculateWaitTime();
+        const timeSinceLastRequest = Date.now() - this.lastRequestTime;
+        
+        if (timeSinceLastRequest < waitTime) {
+          const remainingWait = waitTime - timeSinceLastRequest;
+          console.log(`⏱️  Rate limiting: waiting ${remainingWait}ms before next Serply request`);
+          await this.delay(remainingWait);
+        }
+
+        console.log(`🚀 Executing Serply request (${this.requestQueue.length} remaining in queue)`);
+        
+        const result = await queueItem.request();
+        
+        // Success - reset error count
+        this.consecutiveErrors = 0;
+        this.lastRequestTime = Date.now();
+        
+        queueItem.resolve(result);
+        
+      } catch (error) {
+        this.consecutiveErrors++;
+        this.lastRequestTime = Date.now();
+        
+        console.error(`❌ Serply request failed (error #${this.consecutiveErrors}):`, error);
+        
+        // Handle specific error types
+        if (error instanceof Error) {
+          if (error.message.includes('504') || error.message.includes('timeout')) {
+            console.log(`🚫 Gateway timeout detected - increasing backoff (${this.consecutiveErrors} consecutive errors)`);
+          } else if (error.message.includes('429')) {
+            console.log(`🚫 Rate limit exceeded - applying exponential backoff`);
+          }
+        }
+        
+        queueItem.reject(error);
+      }
+    }
+
+    this.isProcessing = false;
+  }
+
+  private calculateWaitTime(): number {
+    const baseInterval = this.MIN_INTERVAL;
+    
+    if (this.consecutiveErrors === 0) {
+      return baseInterval;
+    }
+
+    // Exponential backoff for consecutive errors
+    const backoffTime = baseInterval * Math.pow(this.ERROR_BACKOFF_MULTIPLIER, Math.min(this.consecutiveErrors, 5));
+    return Math.min(backoffTime, this.MAX_INTERVAL);
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // Public method to check current status
+  public getStatus() {
+    return {
+      queueLength: this.requestQueue.length,
+      isProcessing: this.isProcessing,
+      consecutiveErrors: this.consecutiveErrors,
+      lastRequestTime: this.lastRequestTime,
+      currentWaitTime: this.calculateWaitTime()
+    };
+  }
+}
+
 // Multi-Platform Actor Configuration (Enhanced Organization)
 const PLATFORM_ACTORS = {
   instagram: {
@@ -253,20 +363,11 @@ async function discoverInfluencerProfiles(params: ApifySearchParams): Promise<{u
           
           console.log(`Found ${urls.length} profile URLs for query: "${query}"`);
           
-          // 🛡️ CRITICAL: Add proper rate limiting to prevent API timeouts
-          // Increase delay from 1s to 3s to be more respectful to Serply API
-          console.log('⏱️ Waiting 3 seconds before next search to prevent rate limiting...');
-          await new Promise(resolve => setTimeout(resolve, 3000));
+          // ✅ ENHANCED: Rate limiting is now handled by SerplyRateLimiter
         } catch (searchError) {
           console.error(`Search failed for query "${query}":`, searchError);
           
-          // If we get a timeout or rate limit error, wait longer before next request
-          const errorMessage = searchError instanceof Error ? searchError.message : String(searchError);
-          if (errorMessage.includes('timeout') || errorMessage.includes('429') || errorMessage.includes('504')) {
-            console.log('🚫 API timeout/rate limit detected - waiting 10 seconds before retry...');
-            await new Promise(resolve => setTimeout(resolve, 10000));
-          }
-          
+          // Error handling is now managed by the rate limiter
           // Continue with next query
         }
       }
@@ -333,8 +434,7 @@ async function performStrategicFallbackSearch(params: ApifySearchParams): Promis
             console.log(`✅ Fallback found ${urls.length} URLs for: "${query}"`);
           }
           
-          // Shorter delay for fallback searches
-          await new Promise(resolve => setTimeout(resolve, 500));
+          // ✅ ENHANCED: Rate limiting is now handled by SerplyRateLimiter
         } catch (error) {
           console.log(`❌ Fallback search failed: ${query}`);
         }
@@ -611,7 +711,7 @@ async function performWebSearch(query: string, platform: string): Promise<any[]>
 }
 
 /**
- * Perform real web search using Serply with circuit breaker protection
+ * Perform real web search using Serply with enhanced rate limiting and circuit breaker protection
  */
 async function searchWithSerply(query: string, limit: number = 15): Promise<any[]> {
   console.log('🔑 Serply API Key status:', serplyApiKey ? `Present (${serplyApiKey.substring(0, 8)}...)` : 'NOT FOUND');
@@ -628,59 +728,66 @@ async function searchWithSerply(query: string, limit: number = 15): Promise<any[
     return [];
   }
 
+  // ✅ ENHANCED: Use global rate limiter for all Serply requests
+  const rateLimiter = SerplyRateLimiter.getInstance();
   const searchBreaker = getSearchApiBreaker();
 
   return await searchBreaker.executeWithTimeout(async () => {
-    // Encode the query for URL
-    const encodedQuery = encodeURIComponent(query);
-    const url = `https://api.serply.io/v1/search/q=${encodedQuery}&num=${limit}`;
-    
-    console.log(`🌐 Serply URL: ${url}`);
-    
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Api-Key': serplyApiKey,
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const errorMsg = `Serply API error: ${response.status} ${response.statusText}${errorData.message ? ` - ${errorData.message}` : ''}`;
-      console.error('❌', errorMsg);
+    // Execute request through rate limiter
+    return await rateLimiter.executeRequest(async () => {
+      // Encode the query for URL
+      const encodedQuery = encodeURIComponent(query);
+      const url = `https://api.serply.io/v1/search/q=${encodedQuery}&num=${limit}`;
       
-      // Provide specific guidance for common errors
-      if (response.status === 401) {
-        console.log('💡 This looks like an authentication error. Please check your Serply API key.');
-      } else if (response.status === 429) {
-        console.log('💡 Rate limit exceeded. Please wait before making more requests.');
-      } else if (response.status >= 500) {
-        console.log('💡 Serply server error. This is temporary, please try again later.');
+      console.log(`🌐 Serply URL: ${url}`);
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': serplyApiKey,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const errorMsg = `Serply API error: ${response.status} ${response.statusText}${errorData.message ? ` - ${errorData.message}` : ''}`;
+        console.error('❌', errorMsg);
+        
+        // Provide specific guidance for common errors
+        if (response.status === 401) {
+          console.log('💡 This looks like an authentication error. Please check your Serply API key.');
+        } else if (response.status === 429) {
+          console.log('💡 Rate limit exceeded. Please wait before making more requests.');
+        } else if (response.status >= 500) {
+          console.log('💡 Serply server error. This is temporary, please try again later.');
+        }
+        
+        throw new Error(errorMsg);
+      }
+
+      const data = await response.json();
+      
+      console.log('🔍 Raw Serply API Response Structure:');
+      console.log('Response keys:', Object.keys(data));
+      console.log('First result sample:', data.results?.[0] ? JSON.stringify(data.results[0], null, 2) : 'No results');
+      
+      if (data && Array.isArray(data.results)) {
+        console.log(`📊 Serply returned ${data.results.length} search results`);
+        return data.results;
       }
       
-      throw new Error(errorMsg);
-    }
+      console.warn('⚠️ Serply search did not return expected results array. Response:', data);
+      return [];
+    });
 
-    const data = await response.json();
-    
-    console.log('🔍 Raw Serply API Response Structure:');
-    console.log('Response keys:', Object.keys(data));
-    console.log('First result sample:', data.results?.[0] ? JSON.stringify(data.results[0], null, 2) : 'No results');
-    
-    if (data && Array.isArray(data.results)) {
-      console.log(`📊 Serply returned ${data.results.length} search results`);
-      return data.results;
+  }, 45000, // Increased timeout to account for rate limiting
+    async () => {
+      // Fallback: return empty results when circuit breaker is open
+      console.log('🔄 Circuit breaker fallback: returning empty search results');
+      return [];
     }
-    
-    console.warn('⚠️ Serply search did not return expected results array. Response:', data);
-    return [];
-
-  }, 30000, async () => {
-    // Fallback: return empty results when circuit breaker is open
-    console.log('🔄 Circuit breaker fallback: returning empty search results');
-    return [];
-  }).catch((error) => {
+  ).catch((error) => {
     if (error instanceof CircuitBreakerOpenError) {
       console.log('⚡ Serply search blocked by circuit breaker - using fallback');
       return [];
