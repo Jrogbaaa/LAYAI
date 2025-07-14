@@ -68,6 +68,12 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAuthenticated();
     }
+
+    // TEMPORARY: Enhanced Influencers - Allow writes for one-time demographic enhancement
+    // TODO: Remove this rule after demographic enhancement is complete
+    match /enhanced_influencers/{influencerId} {
+      allow read, write: if true;
+    }
     
     // Default deny: Secure by default
     match /{document=**} {

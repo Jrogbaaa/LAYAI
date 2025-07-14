@@ -1,0 +1,108 @@
+[
+  {
+    "rank": 1,
+    "id": "georginagio",
+    "name": "Georgina Rodríguez",
+    "handle": "georginagio",
+    "platform": "Instagram",
+    "followerCount": 67000000,
+    "engagementRate": 0.0165,
+    "gender": "Female",
+    "location": "Spain",
+    "niche": [
+      "Lifestyle",
+      "Fashion"
+    ],
+    "originalGenres": "BooksLifestyleModeling",
+    "country": "Spain",
+    "starngageData": {
+      "error": "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+      "starngageEnhanced": false,
+      "enhancedAt": "2025-07-14T10:21:44.812Z"
+    }
+  },
+  {
+    "rank": 2,
+    "id": "sergioramos",
+    "name": "Sergio Ramos",
+    "handle": "sergioramos",
+    "platform": "Instagram",
+    "followerCount": 64300000,
+    "engagementRate": 0.0097,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports"
+    ],
+    "originalGenres": "SportsSoccer",
+    "country": "Spain",
+    "starngageData": {
+      "error": "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+      "starngageEnhanced": false,
+      "enhancedAt": "2025-07-14T10:22:19.385Z"
+    }
+  },
+  {
+    "rank": 3,
+    "id": "garethbale11",
+    "name": "Gareth Bale",
+    "handle": "garethbale11",
+    "platform": "Instagram",
+    "followerCount": 53400000,
+    "engagementRate": 0.011899999999999999,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports"
+    ],
+    "originalGenres": "Soccer",
+    "country": "Spain",
+    "starngageData": {
+      "error": "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+      "starngageEnhanced": false,
+      "enhancedAt": "2025-07-14T10:22:52.455Z"
+    }
+  },
+  {
+    "rank": 4,
+    "id": "andresiniesta8",
+    "name": "Andres Iniesta",
+    "handle": "andresiniesta8",
+    "platform": "Instagram",
+    "followerCount": 43400000,
+    "engagementRate": 0.0028000000000000004,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports"
+    ],
+    "originalGenres": "SportsSoccer",
+    "country": "Spain",
+    "starngageData": {
+      "error": "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+      "starngageEnhanced": false,
+      "enhancedAt": "2025-07-14T10:23:27.446Z"
+    }
+  },
+  {
+    "rank": 5,
+    "id": "iscoalarcon",
+    "name": "Isco Alarcon Suarez",
+    "handle": "iscoalarcon",
+    "platform": "Instagram",
+    "followerCount": 29800000,
+    "engagementRate": 0.0095,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports"
+    ],
+    "originalGenres": "Soccer",
+    "country": "Spain",
+    "starngageData": {
+      "error": "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+      "starngageEnhanced": false,
+      "enhancedAt": "2025-07-14T10:24:00.858Z"
+    }
+  }
+]

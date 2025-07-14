@@ -1,0 +1,549 @@
+[
+  {
+    "rank": 1,
+    "id": "georginagio",
+    "name": "Georgina Rodríguez",
+    "handle": "georginagio",
+    "platform": "Instagram",
+    "followerCount": 67000000,
+    "engagementRate": 0.0165,
+    "gender": "Female",
+    "location": "Spain",
+    "niche": [
+      "Lifestyle",
+      "Fashion"
+    ],
+    "originalGenres": "BooksLifestyleModeling",
+    "country": "Spain",
+    "audienceDemographics": {
+      "gender": {
+        "female": 70,
+        "male": 30
+      },
+      "ageGroups": {
+        "13-17": 8,
+        "18-24": 45,
+        "25-34": 40,
+        "35-44": 20,
+        "45-54": 5,
+        "55+": 2
+      },
+      "topLocations": [
+        "Spain",
+        "Madrid",
+        "Barcelona",
+        "Valencia"
+      ],
+      "interests": [
+        "Lifestyle",
+        "Travel",
+        "Food",
+        "Family"
+      ]
+    },
+    "starngageData": {
+      "engagementRate": 0.5,
+      "averageLikes": 1407000,
+      "averageComments": 83750,
+      "topics": [
+        "Lifestyle",
+        "Daily Life",
+        "Personal",
+        "Fashion and Accessories"
+      ],
+      "starngageEnhanced": true,
+      "enhancedAt": "2025-07-14T10:21:01.786Z"
+    }
+  },
+  {
+    "rank": 2,
+    "id": "sergioramos",
+    "name": "Sergio Ramos",
+    "handle": "sergioramos",
+    "platform": "Instagram",
+    "followerCount": 64300000,
+    "engagementRate": 0.0097,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports"
+    ],
+    "originalGenres": "SportsSoccer",
+    "country": "Spain",
+    "audienceDemographics": {
+      "gender": {
+        "female": 21,
+        "male": 79
+      },
+      "ageGroups": {
+        "13-17": 8,
+        "18-24": 29,
+        "25-34": 44,
+        "35-44": 20,
+        "45-54": 5,
+        "55+": 2
+      },
+      "topLocations": [
+        "Spain",
+        "Madrid",
+        "Barcelona",
+        "Valencia"
+      ],
+      "interests": [
+        "Sports",
+        "Fitness",
+        "Health",
+        "Lifestyle"
+      ]
+    },
+    "starngageData": {
+      "engagementRate": 0.5,
+      "averageLikes": 1530340,
+      "averageComments": 76517,
+      "topics": [
+        "Sports",
+        "Fitness",
+        "Athletic"
+      ],
+      "starngageEnhanced": true,
+      "enhancedAt": "2025-07-14T10:21:01.787Z"
+    }
+  },
+  {
+    "rank": 3,
+    "id": "garethbale11",
+    "name": "Gareth Bale",
+    "handle": "garethbale11",
+    "platform": "Instagram",
+    "followerCount": 53400000,
+    "engagementRate": 0.011899999999999999,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports"
+    ],
+    "originalGenres": "Soccer",
+    "country": "Spain",
+    "audienceDemographics": {
+      "gender": {
+        "female": 27,
+        "male": 73
+      },
+      "ageGroups": {
+        "13-17": 8,
+        "18-24": 33,
+        "25-34": 48,
+        "35-44": 20,
+        "45-54": 5,
+        "55+": 2
+      },
+      "topLocations": [
+        "Spain",
+        "Madrid",
+        "Barcelona",
+        "Valencia"
+      ],
+      "interests": [
+        "Sports",
+        "Fitness",
+        "Health",
+        "Lifestyle"
+      ]
+    },
+    "starngageData": {
+      "engagementRate": 0.5,
+      "averageLikes": 1206840,
+      "averageComments": 65682,
+      "topics": [
+        "Sports",
+        "Fitness",
+        "Athletic"
+      ],
+      "starngageEnhanced": true,
+      "enhancedAt": "2025-07-14T10:21:01.787Z"
+    }
+  },
+  {
+    "rank": 4,
+    "id": "andresiniesta8",
+    "name": "Andres Iniesta",
+    "handle": "andresiniesta8",
+    "platform": "Instagram",
+    "followerCount": 43400000,
+    "engagementRate": 0.0028000000000000004,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports"
+    ],
+    "originalGenres": "SportsSoccer",
+    "country": "Spain",
+    "audienceDemographics": {
+      "gender": {
+        "female": 30,
+        "male": 70
+      },
+      "ageGroups": {
+        "13-17": 8,
+        "18-24": 30,
+        "25-34": 45,
+        "35-44": 20,
+        "45-54": 5,
+        "55+": 2
+      },
+      "topLocations": [
+        "Spain",
+        "Madrid",
+        "Barcelona",
+        "Valencia"
+      ],
+      "interests": [
+        "Sports",
+        "Fitness",
+        "Health",
+        "Lifestyle"
+      ]
+    },
+    "starngageData": {
+      "engagementRate": 0.5,
+      "averageLikes": 1215200,
+      "averageComments": 52080,
+      "topics": [
+        "Sports",
+        "Fitness",
+        "Athletic"
+      ],
+      "starngageEnhanced": true,
+      "enhancedAt": "2025-07-14T10:21:01.787Z"
+    }
+  },
+  {
+    "rank": 5,
+    "id": "iscoalarcon",
+    "name": "Isco Alarcon Suarez",
+    "handle": "iscoalarcon",
+    "platform": "Instagram",
+    "followerCount": 29800000,
+    "engagementRate": 0.0095,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports"
+    ],
+    "originalGenres": "Soccer",
+    "country": "Spain",
+    "audienceDemographics": {
+      "gender": {
+        "female": 24,
+        "male": 76
+      },
+      "ageGroups": {
+        "13-17": 8,
+        "18-24": 31,
+        "25-34": 46,
+        "35-44": 20,
+        "45-54": 5,
+        "55+": 2
+      },
+      "topLocations": [
+        "Spain",
+        "Madrid",
+        "Barcelona",
+        "Valencia"
+      ],
+      "interests": [
+        "Sports",
+        "Fitness",
+        "Health",
+        "Lifestyle"
+      ]
+    },
+    "starngageData": {
+      "engagementRate": 0.5,
+      "averageLikes": 631760,
+      "averageComments": 31588,
+      "topics": [
+        "Sports",
+        "Fitness",
+        "Athletic"
+      ],
+      "starngageEnhanced": true,
+      "enhancedAt": "2025-07-14T10:21:01.787Z"
+    }
+  },
+  {
+    "rank": 6,
+    "id": "alvaromorata",
+    "name": "Álvaro Morata",
+    "handle": "alvaromorata",
+    "platform": "Instagram",
+    "followerCount": 23200000,
+    "engagementRate": 0.016,
+    "gender": "Other",
+    "location": "Spain",
+    "niche": [
+      "Sports",
+      "Parenting"
+    ],
+    "originalGenres": "SportsfamilyJournalistsSoccer",
+    "country": "Spain",
+    "audienceDemographics": {
+      "gender": {
+        "female": 31,
+        "male": 69
+      },
+      "ageGroups": {
+        "13-17": 8,
+        "18-24": 29,
+        "25-34": 44,
+        "35-44": 20,
+        "45-54": 5,
+        "55+": 2
+      },
+      "topLocations": [
+        "Spain",
+        "Madrid",
+        "Barcelona",
+        "Valencia"
+      ],
+      "interests": [
+        "Sports",
+        "Fitness",
+        "Health",
+        "Lifestyle"
+      ]
+    },
+    "starngageData": {
+      "engagementRate": 0.5,
+      "averageLikes": 691360,
+      "averageComments": 27608,
+      "topics": [
+        "Sports",
+        "Fitness",
+        "Athletic",
+        "Parenting"
+      ],
+      "starngageEnhanced": true,
+      "enhancedAt": "2025-07-14T10:21:01.787Z"
+    }
+  },
+  {
+    "rank": 7,
+    "id": "lucasvazquez91",
+    "name": "Lucas Vázquez",
+    "handle": "lucasvazquez91",
+    "platform": "Instagram",
+    "followerCount": 22600000,
+    "engagementRate": 0.0154,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports"
+    ],
+    "originalGenres": "SportsSoccer",
+    "country": "Spain",
+    "audienceDemographics": {
+      "gender": {
+        "female": 36,
+        "male": 64
+      },
+      "ageGroups": {
+        "13-17": 8,
+        "18-24": 29,
+        "25-34": 44,
+        "35-44": 20,
+        "45-54": 5,
+        "55+": 2
+      },
+      "topLocations": [
+        "Spain",
+        "Madrid",
+        "Barcelona",
+        "Valencia"
+      ],
+      "interests": [
+        "Sports",
+        "Fitness",
+        "Health",
+        "Lifestyle"
+      ]
+    },
+    "starngageData": {
+      "engagementRate": 0.5,
+      "averageLikes": 605680,
+      "averageComments": 23504,
+      "topics": [
+        "Sports",
+        "Fitness",
+        "Athletic"
+      ],
+      "starngageEnhanced": true,
+      "enhancedAt": "2025-07-14T10:21:01.787Z"
+    }
+  },
+  {
+    "rank": 8,
+    "id": "3gerardpique",
+    "name": "Gerard Piqué",
+    "handle": "3gerardpique",
+    "platform": "Instagram",
+    "followerCount": 22400000,
+    "engagementRate": 0.0415,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports",
+      "Music",
+      "Entertainment"
+    ],
+    "originalGenres": "Entertainment and MusicSoccer",
+    "country": "Spain",
+    "audienceDemographics": {
+      "gender": {
+        "female": 22,
+        "male": 78
+      },
+      "ageGroups": {
+        "13-17": 8,
+        "18-24": 28,
+        "25-34": 43,
+        "35-44": 20,
+        "45-54": 5,
+        "55+": 2
+      },
+      "topLocations": [
+        "Spain",
+        "Madrid",
+        "Barcelona",
+        "Valencia"
+      ],
+      "interests": [
+        "Sports",
+        "Fitness",
+        "Health",
+        "Lifestyle"
+      ]
+    },
+    "starngageData": {
+      "engagementRate": 0.5,
+      "averageLikes": 618240,
+      "averageComments": 26432,
+      "topics": [
+        "Sports",
+        "Fitness",
+        "Athletic",
+        "Music"
+      ],
+      "starngageEnhanced": true,
+      "enhancedAt": "2025-07-14T10:21:01.787Z"
+    }
+  },
+  {
+    "rank": 9,
+    "id": "rafaelnadal",
+    "name": "Rafa Nadal",
+    "handle": "rafaelnadal",
+    "platform": "Instagram",
+    "followerCount": 21200000,
+    "engagementRate": 0.0073,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports"
+    ],
+    "originalGenres": "SportsTennis",
+    "country": "Spain",
+    "audienceDemographics": {
+      "gender": {
+        "female": 23,
+        "male": 77
+      },
+      "ageGroups": {
+        "13-17": 8,
+        "18-24": 27,
+        "25-34": 42,
+        "35-44": 20,
+        "45-54": 5,
+        "55+": 2
+      },
+      "topLocations": [
+        "Spain",
+        "Madrid",
+        "Barcelona",
+        "Valencia"
+      ],
+      "interests": [
+        "Sports",
+        "Fitness",
+        "Health",
+        "Lifestyle"
+      ]
+    },
+    "starngageData": {
+      "engagementRate": 0.5,
+      "averageLikes": 580880,
+      "averageComments": 24804,
+      "topics": [
+        "Sports",
+        "Fitness",
+        "Athletic"
+      ],
+      "starngageEnhanced": true,
+      "enhancedAt": "2025-07-14T10:21:01.787Z"
+    }
+  },
+  {
+    "rank": 10,
+    "id": "ikercasillas",
+    "name": "Iker Casillas",
+    "handle": "ikercasillas",
+    "platform": "Instagram",
+    "followerCount": 20800000,
+    "engagementRate": 0.0019,
+    "gender": "Male",
+    "location": "Spain",
+    "niche": [
+      "Sports"
+    ],
+    "originalGenres": "SportsSoccer",
+    "country": "Spain",
+    "audienceDemographics": {
+      "gender": {
+        "female": 33,
+        "male": 67
+      },
+      "ageGroups": {
+        "13-17": 8,
+        "18-24": 27,
+        "25-34": 42,
+        "35-44": 20,
+        "45-54": 5,
+        "55+": 2
+      },
+      "topLocations": [
+        "Spain",
+        "Madrid",
+        "Barcelona",
+        "Valencia"
+      ],
+      "interests": [
+        "Sports",
+        "Fitness",
+        "Health",
+        "Lifestyle"
+      ]
+    },
+    "starngageData": {
+      "engagementRate": 0.5,
+      "averageLikes": 445120,
+      "averageComments": 24336,
+      "topics": [
+        "Sports",
+        "Fitness",
+        "Athletic"
+      ],
+      "starngageEnhanced": true,
+      "enhancedAt": "2025-07-14T10:21:01.788Z"
+    }
+  }
+]

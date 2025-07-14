@@ -44,7 +44,7 @@ async function researchBrandDynamically(brandName: string): Promise<DynamicBrand
     
     const searchQuery = `${brandName} brand target audience marketing demographics`;
     
-    const response = await fetch('/api/web-search', {
+    const response = await fetch('http://localhost:3000/api/web-search', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

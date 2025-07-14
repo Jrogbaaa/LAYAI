@@ -21,7 +21,7 @@
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "axios": "^1.6.2",
-    "cheerio": "^1.0.0-rc.12",
+    "cheerio": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "eslint": "^8",

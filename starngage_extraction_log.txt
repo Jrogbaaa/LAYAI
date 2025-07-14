@@ -1,0 +1,300 @@
+[2025-07-14T10:21:14.685Z] 🚀 Starting Starngage Batch Demographics Extraction
+[2025-07-14T10:21:14.691Z] ⚙️ Configuration: {
+  "INPUT_FILE": "/Users/JackEllis/LAYAI/processed_influencers.json",
+  "OUTPUT_FILE": "/Users/JackEllis/LAYAI/processed_influencers_with_demographics.json",
+  "BACKUP_FILE": "/Users/JackEllis/LAYAI/processed_influencers_backup.json",
+  "LOG_FILE": "/Users/JackEllis/LAYAI/starngage_extraction_log.txt",
+  "PROGRESS_FILE": "/Users/JackEllis/LAYAI/starngage_progress.json",
+  "MIN_DELAY": 3000,
+  "MAX_DELAY": 5000,
+  "BATCH_SIZE": 50,
+  "PAUSE_BETWEEN_BATCHES": 30000,
+  "MAX_RETRIES": 3,
+  "RETRY_DELAY": 10000,
+  "API_BASE_URL": "http://localhost:3001",
+  "TEST_MODE": true,
+  "MAX_INFLUENCERS": 5
+}
+[2025-07-14T10:21:14.691Z] 📚 Loading influencers database...
+[2025-07-14T10:21:14.697Z] 🧪 TEST MODE: Limited to 5 influencers
+[2025-07-14T10:21:14.697Z] ✅ Loaded 5 influencers
+[2025-07-14T10:21:14.697Z] 💾 Creating backup of original data...
+[2025-07-14T10:21:14.698Z] ✅ Backup created successfully
+[2025-07-14T10:21:14.698Z] 🔄 Processing batch 1-5...
+[2025-07-14T10:21:14.698Z] 🔍 Fetching demographics for @georginagio (Georgina Rodríguez)
+[2025-07-14T10:21:14.739Z] ❌ Error fetching @georginagio: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:21:14.739Z] 🔄 Retrying @georginagio (attempt 1/3)
+[2025-07-14T10:21:14.739Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:21:24.742Z] 🔍 Fetching demographics for @georginagio (Georgina Rodríguez)
+[2025-07-14T10:21:24.765Z] ❌ Error fetching @georginagio: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:21:24.765Z] 🔄 Retrying @georginagio (attempt 2/3)
+[2025-07-14T10:21:24.765Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:21:34.766Z] 🔍 Fetching demographics for @georginagio (Georgina Rodríguez)
+[2025-07-14T10:21:34.788Z] ❌ Error fetching @georginagio: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:21:34.788Z] 🔄 Retrying @georginagio (attempt 3/3)
+[2025-07-14T10:21:34.788Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:21:44.789Z] 🔍 Fetching demographics for @georginagio (Georgina Rodríguez)
+[2025-07-14T10:21:44.811Z] ❌ Error fetching @georginagio: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:21:44.812Z] ⏳ Rate limiting delay: 4476ms
+[2025-07-14T10:21:49.290Z] 🔍 Fetching demographics for @sergioramos (Sergio Ramos)
+[2025-07-14T10:21:49.311Z] ❌ Error fetching @sergioramos: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:21:49.311Z] 🔄 Retrying @sergioramos (attempt 1/3)
+[2025-07-14T10:21:49.311Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:21:59.312Z] 🔍 Fetching demographics for @sergioramos (Sergio Ramos)
+[2025-07-14T10:21:59.336Z] ❌ Error fetching @sergioramos: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:21:59.336Z] 🔄 Retrying @sergioramos (attempt 2/3)
+[2025-07-14T10:21:59.336Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:22:09.337Z] 🔍 Fetching demographics for @sergioramos (Sergio Ramos)
+[2025-07-14T10:22:09.363Z] ❌ Error fetching @sergioramos: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:22:09.363Z] 🔄 Retrying @sergioramos (attempt 3/3)
+[2025-07-14T10:22:09.363Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:22:19.363Z] 🔍 Fetching demographics for @sergioramos (Sergio Ramos)
+[2025-07-14T10:22:19.384Z] ❌ Error fetching @sergioramos: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:22:19.385Z] ⏳ Rate limiting delay: 3004ms
+[2025-07-14T10:22:22.388Z] 🔍 Fetching demographics for @garethbale11 (Gareth Bale)
+[2025-07-14T10:22:22.407Z] ❌ Error fetching @garethbale11: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:22:22.407Z] 🔄 Retrying @garethbale11 (attempt 1/3)
+[2025-07-14T10:22:22.407Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:22:32.407Z] 🔍 Fetching demographics for @garethbale11 (Gareth Bale)
+[2025-07-14T10:22:32.420Z] ❌ Error fetching @garethbale11: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:22:32.421Z] 🔄 Retrying @garethbale11 (attempt 2/3)
+[2025-07-14T10:22:32.421Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:22:42.421Z] 🔍 Fetching demographics for @garethbale11 (Gareth Bale)
+[2025-07-14T10:22:42.439Z] ❌ Error fetching @garethbale11: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:22:42.440Z] 🔄 Retrying @garethbale11 (attempt 3/3)
+[2025-07-14T10:22:42.440Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:22:52.441Z] 🔍 Fetching demographics for @garethbale11 (Gareth Bale)
+[2025-07-14T10:22:52.454Z] ❌ Error fetching @garethbale11: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:22:52.455Z] ⏳ Rate limiting delay: 4930ms
+[2025-07-14T10:22:57.385Z] 🔍 Fetching demographics for @andresiniesta8 (Andres Iniesta)
+[2025-07-14T10:22:57.397Z] ❌ Error fetching @andresiniesta8: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:22:57.397Z] 🔄 Retrying @andresiniesta8 (attempt 1/3)
+[2025-07-14T10:22:57.397Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:23:07.399Z] 🔍 Fetching demographics for @andresiniesta8 (Andres Iniesta)
+[2025-07-14T10:23:07.415Z] ❌ Error fetching @andresiniesta8: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:23:07.416Z] 🔄 Retrying @andresiniesta8 (attempt 2/3)
+[2025-07-14T10:23:07.416Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:23:17.417Z] 🔍 Fetching demographics for @andresiniesta8 (Andres Iniesta)
+[2025-07-14T10:23:17.432Z] ❌ Error fetching @andresiniesta8: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:23:17.433Z] 🔄 Retrying @andresiniesta8 (attempt 3/3)
+[2025-07-14T10:23:17.433Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:23:27.434Z] 🔍 Fetching demographics for @andresiniesta8 (Andres Iniesta)
+[2025-07-14T10:23:27.446Z] ❌ Error fetching @andresiniesta8: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:23:27.446Z] ⏳ Rate limiting delay: 3359ms
+[2025-07-14T10:23:30.805Z] 🔍 Fetching demographics for @iscoalarcon (Isco Alarcon Suarez)
+[2025-07-14T10:23:30.813Z] ❌ Error fetching @iscoalarcon: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:23:30.813Z] 🔄 Retrying @iscoalarcon (attempt 1/3)
+[2025-07-14T10:23:30.813Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:23:40.818Z] 🔍 Fetching demographics for @iscoalarcon (Isco Alarcon Suarez)
+[2025-07-14T10:23:40.831Z] ❌ Error fetching @iscoalarcon: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:23:40.831Z] 🔄 Retrying @iscoalarcon (attempt 2/3)
+[2025-07-14T10:23:40.831Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:23:50.832Z] 🔍 Fetching demographics for @iscoalarcon (Isco Alarcon Suarez)
+[2025-07-14T10:23:50.844Z] ❌ Error fetching @iscoalarcon: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:23:50.844Z] 🔄 Retrying @iscoalarcon (attempt 3/3)
+[2025-07-14T10:23:50.844Z] ⏳ Rate limiting delay: 10000ms
+[2025-07-14T10:24:00.845Z] 🔍 Fetching demographics for @iscoalarcon (Isco Alarcon Suarez)
+[2025-07-14T10:24:00.858Z] ❌ Error fetching @iscoalarcon: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:24:00.858Z] 💾 Saving final results...
+[2025-07-14T10:24:00.859Z] ✅ Final results saved successfully
+[2025-07-14T10:24:00.859Z] 📈 Summary: 0/5 enhanced (0%)
+[2025-07-14T10:24:00.859Z] 🧹 Cleaning up...
+[2025-07-14T10:24:00.859Z] 🎉 Starngage batch extraction completed successfully!
+[2025-07-14T10:25:53.812Z] 🚀 Starting Starngage Batch Demographics Extraction with Intelligent Fallbacks
+[2025-07-14T10:25:53.817Z] ⚙️ Configuration: {
+  "INPUT_FILE": "/Users/JackEllis/LAYAI/processed_influencers.json",
+  "OUTPUT_FILE": "/Users/JackEllis/LAYAI/processed_influencers_with_demographics.json",
+  "BACKUP_FILE": "/Users/JackEllis/LAYAI/processed_influencers_backup.json",
+  "LOG_FILE": "/Users/JackEllis/LAYAI/starngage_extraction_log.txt",
+  "PROGRESS_FILE": "/Users/JackEllis/LAYAI/starngage_progress.json",
+  "MIN_DELAY": 3000,
+  "MAX_DELAY": 5000,
+  "BATCH_SIZE": 50,
+  "PAUSE_BETWEEN_BATCHES": 30000,
+  "MAX_RETRIES": 1,
+  "RETRY_DELAY": 5000,
+  "API_BASE_URL": "http://localhost:3001",
+  "TEST_MODE": false,
+  "MAX_INFLUENCERS": 50
+}
+[2025-07-14T10:25:53.817Z] 📚 Loading influencers database...
+[2025-07-14T10:25:53.824Z] ✅ Loaded 2996 influencers
+[2025-07-14T10:25:53.824Z] 💾 Creating backup of original data...
+[2025-07-14T10:25:53.825Z] ✅ Backup created successfully
+[2025-07-14T10:25:53.825Z] 🔄 Processing batch 1-50...
+[2025-07-14T10:25:53.825Z] 🔍 Attempting Starngage extraction for @georginagio
+[2025-07-14T10:25:53.859Z] ⚠️ Starngage API failed for @georginagio: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:25:53.859Z] 🧠 Generating intelligent demographics for @georginagio
+[2025-07-14T10:25:58.196Z] 🔍 Attempting Starngage extraction for @sergioramos
+[2025-07-14T10:25:58.209Z] ⚠️ Starngage API failed for @sergioramos: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:25:58.209Z] 🧠 Generating intelligent demographics for @sergioramos
+[2025-07-14T10:26:01.950Z] 🔍 Attempting Starngage extraction for @garethbale11
+[2025-07-14T10:26:01.961Z] ⚠️ Starngage API failed for @garethbale11: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:01.962Z] 🧠 Generating intelligent demographics for @garethbale11
+[2025-07-14T10:26:06.757Z] 🔍 Attempting Starngage extraction for @andresiniesta8
+[2025-07-14T10:26:06.771Z] ⚠️ Starngage API failed for @andresiniesta8: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:06.772Z] 🧠 Generating intelligent demographics for @andresiniesta8
+[2025-07-14T10:26:10.210Z] 🔍 Attempting Starngage extraction for @iscoalarcon
+[2025-07-14T10:26:10.237Z] ⚠️ Starngage API failed for @iscoalarcon: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:10.238Z] 🧠 Generating intelligent demographics for @iscoalarcon
+[2025-07-14T10:26:13.326Z] 🔍 Attempting Starngage extraction for @alvaromorata
+[2025-07-14T10:26:13.340Z] ⚠️ Starngage API failed for @alvaromorata: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:13.340Z] 🧠 Generating intelligent demographics for @alvaromorata
+[2025-07-14T10:26:17.399Z] 🔍 Attempting Starngage extraction for @lucasvazquez91
+[2025-07-14T10:26:17.415Z] ⚠️ Starngage API failed for @lucasvazquez91: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:17.415Z] 🧠 Generating intelligent demographics for @lucasvazquez91
+[2025-07-14T10:26:20.959Z] 🔍 Attempting Starngage extraction for @3gerardpique
+[2025-07-14T10:26:20.975Z] ⚠️ Starngage API failed for @3gerardpique: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:20.976Z] 🧠 Generating intelligent demographics for @3gerardpique
+[2025-07-14T10:26:24.195Z] 🔍 Attempting Starngage extraction for @rafaelnadal
+[2025-07-14T10:26:24.210Z] ⚠️ Starngage API failed for @rafaelnadal: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:24.211Z] 🧠 Generating intelligent demographics for @rafaelnadal
+[2025-07-14T10:26:28.708Z] 🔍 Attempting Starngage extraction for @ikercasillas
+[2025-07-14T10:26:28.732Z] ⚠️ Starngage API failed for @ikercasillas: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:28.732Z] 🧠 Generating intelligent demographics for @ikercasillas
+[2025-07-14T10:26:28.740Z] 💾 Saved intermediate results to /Users/JackEllis/LAYAI/processed_influencers_with_demographics_temp.json
+[2025-07-14T10:26:28.741Z] 📊 Progress: 10/2996 (0%)
+[2025-07-14T10:26:28.741Z] ✅ Real Starngage: 0 | 🧠 Intelligent Fallback: 10 | ❌ Failed: 0
+[2025-07-14T10:26:28.741Z] ⏱️ Elapsed: 1 minutes | Rate: 17.2/min
+[2025-07-14T10:26:28.741Z] 🕐 Estimated time remaining: 174 minutes
+[2025-07-14T10:26:32.684Z] 🔍 Attempting Starngage extraction for @ursulolita
+[2025-07-14T10:26:32.702Z] ⚠️ Starngage API failed for @ursulolita: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:32.702Z] 🧠 Generating intelligent demographics for @ursulolita
+[2025-07-14T10:26:36.283Z] 🔍 Attempting Starngage extraction for @enriqueiglesias
+[2025-07-14T10:26:36.298Z] ⚠️ Starngage API failed for @enriqueiglesias: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:36.298Z] 🧠 Generating intelligent demographics for @enriqueiglesias
+[2025-07-14T10:26:39.839Z] 🔍 Attempting Starngage extraction for @jordialbaoficial
+[2025-07-14T10:26:39.848Z] ⚠️ Starngage API failed for @jordialbaoficial: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:39.848Z] 🧠 Generating intelligent demographics for @jordialbaoficial
+[2025-07-14T10:26:43.519Z] 🔍 Attempting Starngage extraction for @mterstegen1
+[2025-07-14T10:26:43.535Z] ⚠️ Starngage API failed for @mterstegen1: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:43.536Z] 🧠 Generating intelligent demographics for @mterstegen1
+[2025-07-14T10:26:47.936Z] 🔍 Attempting Starngage extraction for @d_degeaofficial
+[2025-07-14T10:26:47.955Z] ⚠️ Starngage API failed for @d_degeaofficial: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:47.955Z] 🧠 Generating intelligent demographics for @d_degeaofficial
+[2025-07-14T10:26:51.497Z] 🔍 Attempting Starngage extraction for @marcoasensio10
+[2025-07-14T10:26:51.508Z] ⚠️ Starngage API failed for @marcoasensio10: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:51.508Z] 🧠 Generating intelligent demographics for @marcoasensio10
+[2025-07-14T10:26:54.960Z] 🔍 Attempting Starngage extraction for @cescf4bregas
+[2025-07-14T10:26:54.971Z] ⚠️ Starngage API failed for @cescf4bregas: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:54.971Z] 🧠 Generating intelligent demographics for @cescf4bregas
+[2025-07-14T10:26:57.986Z] 🔍 Attempting Starngage extraction for @thibautcourtois
+[2025-07-14T10:26:57.992Z] ⚠️ Starngage API failed for @thibautcourtois: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:26:57.993Z] 🧠 Generating intelligent demographics for @thibautcourtois
+[2025-07-14T10:27:01.092Z] 🔍 Attempting Starngage extraction for @nachofdez90
+[2025-07-14T10:27:01.114Z] ⚠️ Starngage API failed for @nachofdez90: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:01.114Z] 🧠 Generating intelligent demographics for @nachofdez90
+[2025-07-14T10:27:05.964Z] 🔍 Attempting Starngage extraction for @pedri
+[2025-07-14T10:27:05.981Z] ⚠️ Starngage API failed for @pedri: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:05.981Z] 🧠 Generating intelligent demographics for @pedri
+[2025-07-14T10:27:05.990Z] 💾 Saved intermediate results to /Users/JackEllis/LAYAI/processed_influencers_with_demographics_temp.json
+[2025-07-14T10:27:05.991Z] 📊 Progress: 20/2996 (1%)
+[2025-07-14T10:27:05.991Z] ✅ Real Starngage: 0 | 🧠 Intelligent Fallback: 20 | ❌ Failed: 0
+[2025-07-14T10:27:05.991Z] ⏱️ Elapsed: 1 minutes | Rate: 16.6/min
+[2025-07-14T10:27:05.991Z] 🕐 Estimated time remaining: 179 minutes
+[2025-07-14T10:27:10.698Z] 🔍 Attempting Starngage extraction for @pilarrubio
+[2025-07-14T10:27:10.723Z] ⚠️ Starngage API failed for @pilarrubio: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:10.723Z] 🧠 Generating intelligent demographics for @pilarrubio
+[2025-07-14T10:27:15.620Z] 🔍 Attempting Starngage extraction for @alvaromorte
+[2025-07-14T10:27:15.634Z] ⚠️ Starngage API failed for @alvaromorte: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:15.634Z] 🧠 Generating intelligent demographics for @alvaromorte
+[2025-07-14T10:27:19.092Z] 🔍 Attempting Starngage extraction for @carles5puyol
+[2025-07-14T10:27:19.316Z] ⚠️ Starngage API failed for @carles5puyol: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:19.316Z] 🧠 Generating intelligent demographics for @carles5puyol
+[2025-07-14T10:27:23.934Z] 🔍 Attempting Starngage extraction for @ibaillanos
+[2025-07-14T10:27:23.939Z] ⚠️ Starngage API failed for @ibaillanos: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:23.939Z] 🧠 Generating intelligent demographics for @ibaillanos
+[2025-07-14T10:27:26.989Z] 🔍 Attempting Starngage extraction for @xabialonso
+[2025-07-14T10:27:27.111Z] ⚠️ Starngage API failed for @xabialonso: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:27.112Z] 🧠 Generating intelligent demographics for @xabialonso
+[2025-07-14T10:27:30.929Z] 🔍 Attempting Starngage extraction for @ansufati
+[2025-07-14T10:27:30.972Z] ⚠️ Starngage API failed for @ansufati: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:30.972Z] 🧠 Generating intelligent demographics for @ansufati
+[2025-07-14T10:27:34.236Z] 🔍 Attempting Starngage extraction for @albafloresoficial
+[2025-07-14T10:27:34.249Z] ⚠️ Starngage API failed for @albafloresoficial: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:34.249Z] 🧠 Generating intelligent demographics for @albafloresoficial
+[2025-07-14T10:27:37.423Z] 🔍 Attempting Starngage extraction for @manurios
+[2025-07-14T10:27:37.433Z] ⚠️ Starngage API failed for @manurios: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:37.433Z] 🧠 Generating intelligent demographics for @manurios
+[2025-07-14T10:27:41.324Z] 🔍 Attempting Starngage extraction for @fcbarcelonab
+[2025-07-14T10:27:41.332Z] ⚠️ Starngage API failed for @fcbarcelonab: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:41.332Z] 🧠 Generating intelligent demographics for @fcbarcelonab
+[2025-07-14T10:27:45.105Z] 🔍 Attempting Starngage extraction for @dani.carvajal.2
+[2025-07-14T10:27:45.232Z] ⚠️ Starngage API failed for @dani.carvajal.2: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:45.232Z] 🧠 Generating intelligent demographics for @dani.carvajal.2
+[2025-07-14T10:27:45.245Z] 💾 Saved intermediate results to /Users/JackEllis/LAYAI/processed_influencers_with_demographics_temp.json
+[2025-07-14T10:27:45.245Z] 📊 Progress: 30/2996 (1%)
+[2025-07-14T10:27:45.245Z] ✅ Real Starngage: 0 | 🧠 Intelligent Fallback: 30 | ❌ Failed: 0
+[2025-07-14T10:27:45.245Z] ⏱️ Elapsed: 2 minutes | Rate: 16.2/min
+[2025-07-14T10:27:45.245Z] 🕐 Estimated time remaining: 184 minutes
+[2025-07-14T10:27:48.601Z] 🔍 Attempting Starngage extraction for @davidvilla
+[2025-07-14T10:27:48.628Z] ⚠️ Starngage API failed for @davidvilla: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:48.628Z] 🧠 Generating intelligent demographics for @davidvilla
+[2025-07-14T10:27:52.831Z] 🔍 Attempting Starngage extraction for @sergiroberto
+[2025-07-14T10:27:52.846Z] ⚠️ Starngage API failed for @sergiroberto: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:52.846Z] 🧠 Generating intelligent demographics for @sergiroberto
+[2025-07-14T10:27:57.287Z] 🔍 Attempting Starngage extraction for @fcbmasia
+[2025-07-14T10:27:57.303Z] ⚠️ Starngage API failed for @fcbmasia: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:27:57.303Z] 🧠 Generating intelligent demographics for @fcbmasia
+[2025-07-14T10:28:00.964Z] 🔍 Attempting Starngage extraction for @diego.costa
+[2025-07-14T10:28:00.986Z] ⚠️ Starngage API failed for @diego.costa: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:00.986Z] 🧠 Generating intelligent demographics for @diego.costa
+[2025-07-14T10:28:05.566Z] 🔍 Attempting Starngage extraction for @grefg_official
+[2025-07-14T10:28:05.581Z] ⚠️ Starngage API failed for @grefg_official: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:05.581Z] 🧠 Generating intelligent demographics for @grefg_official
+[2025-07-14T10:28:08.615Z] 🔍 Attempting Starngage extraction for @jordi.koalitic
+[2025-07-14T10:28:08.623Z] ⚠️ Starngage API failed for @jordi.koalitic: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:08.624Z] 🧠 Generating intelligent demographics for @jordi.koalitic
+[2025-07-14T10:28:12.947Z] 🔍 Attempting Starngage extraction for @queenbuenrostro
+[2025-07-14T10:28:12.962Z] ⚠️ Starngage API failed for @queenbuenrostro: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:12.963Z] 🧠 Generating intelligent demographics for @queenbuenrostro
+[2025-07-14T10:28:16.050Z] 🔍 Attempting Starngage extraction for @mario_houses
+[2025-07-14T10:28:16.062Z] ⚠️ Starngage API failed for @mario_houses: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:16.063Z] 🧠 Generating intelligent demographics for @mario_houses
+[2025-07-14T10:28:20.479Z] 🔍 Attempting Starngage extraction for @juanmatagarcia
+[2025-07-14T10:28:20.484Z] ⚠️ Starngage API failed for @juanmatagarcia: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:20.485Z] 🧠 Generating intelligent demographics for @juanmatagarcia
+[2025-07-14T10:28:25.371Z] 🔍 Attempting Starngage extraction for @marcmarquez93
+[2025-07-14T10:28:25.438Z] ⚠️ Starngage API failed for @marcmarquez93: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:25.438Z] 🧠 Generating intelligent demographics for @marcmarquez93
+[2025-07-14T10:28:25.452Z] 💾 Saved intermediate results to /Users/JackEllis/LAYAI/processed_influencers_with_demographics_temp.json
+[2025-07-14T10:28:25.454Z] 📊 Progress: 40/2996 (1%)
+[2025-07-14T10:28:25.454Z] ✅ Real Starngage: 0 | 🧠 Intelligent Fallback: 40 | ❌ Failed: 0
+[2025-07-14T10:28:25.454Z] ⏱️ Elapsed: 3 minutes | Rate: 15.8/min
+[2025-07-14T10:28:25.454Z] 🕐 Estimated time remaining: 187 minutes
+[2025-07-14T10:28:29.414Z] 🔍 Attempting Starngage extraction for @alejandrosanz
+[2025-07-14T10:28:29.421Z] ⚠️ Starngage API failed for @alejandrosanz: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:29.421Z] 🧠 Generating intelligent demographics for @alejandrosanz
+[2025-07-14T10:28:33.759Z] 🔍 Attempting Starngage extraction for @wolfiecindy
+[2025-07-14T10:28:33.772Z] ⚠️ Starngage API failed for @wolfiecindy: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:33.772Z] 🧠 Generating intelligent demographics for @wolfiecindy
+[2025-07-14T10:28:37.724Z] 🔍 Attempting Starngage extraction for @neivamara
+[2025-07-14T10:28:37.734Z] ⚠️ Starngage API failed for @neivamara: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:37.734Z] 🧠 Generating intelligent demographics for @neivamara
+[2025-07-14T10:28:42.339Z] 🔍 Attempting Starngage extraction for @penelopecruzoficial
+[2025-07-14T10:28:42.351Z] ⚠️ Starngage API failed for @penelopecruzoficial: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:42.351Z] 🧠 Generating intelligent demographics for @penelopecruzoficial
+[2025-07-14T10:28:47.107Z] 🔍 Attempting Starngage extraction for @staryuukiii
+[2025-07-14T10:28:47.119Z] ⚠️ Starngage API failed for @staryuukiii: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:47.119Z] 🧠 Generating intelligent demographics for @staryuukiii
+[2025-07-14T10:28:51.965Z] 🔍 Attempting Starngage extraction for @marcbartra
+[2025-07-14T10:28:51.978Z] ⚠️ Starngage API failed for @marcbartra: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:51.979Z] 🧠 Generating intelligent demographics for @marcbartra
+[2025-07-14T10:28:55.088Z] 🔍 Attempting Starngage extraction for @vegetta777
+[2025-07-14T10:28:55.099Z] ⚠️ Starngage API failed for @vegetta777: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:55.099Z] 🧠 Generating intelligent demographics for @vegetta777
+[2025-07-14T10:28:58.263Z] 🔍 Attempting Starngage extraction for @miguel_bernardeau
+[2025-07-14T10:28:58.278Z] ⚠️ Starngage API failed for @miguel_bernardeau: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:28:58.279Z] 🧠 Generating intelligent demographics for @miguel_bernardeau
+[2025-07-14T10:29:02.865Z] 🔍 Attempting Starngage extraction for @naimdarrechi
+[2025-07-14T10:29:02.885Z] ⚠️ Starngage API failed for @naimdarrechi: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:29:02.885Z] 🧠 Generating intelligent demographics for @naimdarrechi
+[2025-07-14T10:29:06.290Z] 🔍 Attempting Starngage extraction for @5sergiob
+[2025-07-14T10:29:06.300Z] ⚠️ Starngage API failed for @5sergiob: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+[2025-07-14T10:29:06.300Z] 🧠 Generating intelligent demographics for @5sergiob
+[2025-07-14T10:29:06.306Z] 💾 Saved intermediate results to /Users/JackEllis/LAYAI/processed_influencers_with_demographics_temp.json
+[2025-07-14T10:29:06.306Z] 📊 Progress: 50/2996 (2%)
+[2025-07-14T10:29:06.307Z] ✅ Real Starngage: 0 | 🧠 Intelligent Fallback: 50 | ❌ Failed: 0
+[2025-07-14T10:29:06.307Z] ⏱️ Elapsed: 3 minutes | Rate: 15.6/min
+[2025-07-14T10:29:06.307Z] 🕐 Estimated time remaining: 189 minutes
+[2025-07-14T10:29:06.307Z] ⏸️ Pausing 30 seconds between batches...
