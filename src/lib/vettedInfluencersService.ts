@@ -1,3 +1,4 @@
+import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
@@ -61,6 +62,7 @@ export interface VettedInfluencer {
 }
 
 interface SearchParams {
+  query?: string;
   location?: string;
   niches?: string[];
   brandName?: string;
@@ -269,204 +271,6 @@ function convertToVettedInfluencer(processed: ProcessedInfluencer): VettedInflue
   };
 }
 
-export async function searchVettedInfluencers(params: SearchParams): Promise<VettedSearchResult> {
-  const startTime = Date.now();
-  
-  console.log('🔍 Starting vetted influencer search with params:', {
-    location: params.location,
-    niches: params.niches,
-    brandName: params.brandName,
-    userQuery: params.userQuery,
-    gender: params.gender,
-    minFollowers: params.minFollowers,
-    maxFollowers: params.maxFollowers
-  });
-
-  try {
-    // Load the comprehensive Spanish influencers dataset
-    const processedInfluencers = loadSpanishInfluencers();
-    
-    if (processedInfluencers.length === 0) {
-      console.log('⚠️ No influencers loaded from dataset');
-      return {
-        influencers: [],
-        totalCount: 0,
-        searchSource: 'comprehensive_dataset',
-        searchMetadata: {
-          source: 'Comprehensive Spanish Dataset (Empty)',
-          searchTime: Date.now() - startTime,
-          filters: params
-        }
-      };
-    }
-
-    console.log(`📊 Found ${processedInfluencers.length} total Spanish influencers in dataset`);
-
-    // Convert to vetted influencer format
-    let influencers = processedInfluencers.map(convertToVettedInfluencer);
-    console.log(`📊 Successfully parsed ${influencers.length} influencers from dataset`);
-
-    // Apply filters
-    
-    // 1. Gender filter
-    if (params.gender && params.gender !== 'any') {
-      const targetGender = params.gender.charAt(0).toUpperCase() + params.gender.slice(1); // Capitalize
-      console.log(`👤 Filtering by gender: ${targetGender}`);
-      influencers = influencers.filter(inf => inf.gender === targetGender);
-      console.log(`📊 After gender filter: ${influencers.length} influencers`);
-    }
-
-    // 2. Niche filter
-    if (params.niches && params.niches.length > 0) {
-      console.log(`🎯 Filtering by niches: ${params.niches.join(', ')}`);
-      influencers = influencers.filter(inf => {
-        const hasMatchingNiche = params.niches!.some(searchNiche => 
-          inf.niche.some(infNiche => 
-            infNiche.toLowerCase().includes(searchNiche.toLowerCase()) ||
-            searchNiche.toLowerCase().includes(infNiche.toLowerCase())
-          )
-        );
-        return hasMatchingNiche;
-      });
-      console.log(`📊 After niche filter: ${influencers.length} influencers`);
-    }
-
-    // 3. Follower count filters
-    if (params.minFollowers !== undefined) {
-      console.log(`📊 Filtering by minFollowers: ${params.minFollowers.toLocaleString()}`);
-      influencers = influencers.filter(inf => inf.followerCount >= params.minFollowers!);
-      console.log(`📊 After minFollowers filter: ${influencers.length} influencers`);
-    }
-
-    if (params.maxFollowers !== undefined) {
-      console.log(`📊 Filtering by maxFollowers: ${params.maxFollowers.toLocaleString()}`);
-      influencers = influencers.filter(inf => inf.followerCount <= params.maxFollowers!);
-      console.log(`📊 After maxFollowers filter: ${influencers.length} influencers`);
-    }
-
-    // 4. Age range filter
-    if (params.ageRange && params.ageRange !== 'any') {
-      console.log(`📅 Filtering by age range: ${params.ageRange}`);
-      influencers = influencers.filter(inf => inf.ageRange === params.ageRange);
-      console.log(`📊 After age range filter: ${influencers.length} influencers`);
-    }
-
-    // 5. Platform filter
-    if (params.platforms && params.platforms.length > 0) {
-      console.log(`📱 Filtering by platforms: ${params.platforms.join(', ')}`);
-      influencers = influencers.filter(inf => params.platforms!.includes(inf.platform));
-      console.log(`📊 After platform filter: ${influencers.length} influencers`);
-    }
-
-    // Apply quality scoring
-    console.log('🧠 Applying quality scoring...');
-    
-    // Quality scoring based on engagement rate and follower authenticity
-    influencers = influencers.map(inf => ({
-      ...inf,
-      qualityScore: calculateQualityScore(inf)
-    }));
-
-    // Apply engagement quality filtering
-    console.log('⚡ Applying engagement quality filtering...');
-    influencers = influencers.filter(inf => {
-      if (inf.followerCount > 10000000 && inf.engagementRate < 0.002) {
-        return false; // Filter out mega accounts with suspiciously low engagement
-      }
-      if (inf.followerCount > 1000000 && inf.engagementRate < 0.001) {
-        return false; // Filter out accounts with extremely low engagement
-      }
-      return true;
-    });
-    console.log(`📊 After engagement quality filter: ${influencers.length} influencers`);
-
-    // Deduplication
-    console.log(`🔍 Starting deduplication for ${influencers.length} influencers...`);
-    const uniqueInfluencers = influencers.filter((inf, index, arr) => 
-      arr.findIndex(other => other.handle.toLowerCase() === inf.handle.toLowerCase()) === index
-    );
-    console.log(`✅ Deduplication complete: ${uniqueInfluencers.length}/${influencers.length} influencers kept`);
-
-    // Sort by quality score and engagement rate
-    uniqueInfluencers.sort((a, b) => {
-      // Primary sort: Quality score
-      const qualityDiff = (b as any).qualityScore - (a as any).qualityScore;
-      if (Math.abs(qualityDiff) > 0.1) {
-        return qualityDiff;
-      }
-      
-      // Secondary sort: Engagement rate
-      const engagementDiff = b.engagementRate - a.engagementRate;
-      if (Math.abs(engagementDiff) > 0.001) {
-        return engagementDiff;
-      }
-      
-      // Tertiary sort: Follower count
-      return b.followerCount - a.followerCount;
-    });
-
-    const searchTime = Date.now() - startTime;
-    console.log(`✅ Vetted database search complete: ${uniqueInfluencers.length} results`);
-
-    return {
-      influencers: uniqueInfluencers,
-      totalCount: uniqueInfluencers.length,
-      searchSource: 'comprehensive_dataset',
-      searchMetadata: {
-        source: 'Comprehensive Spanish Dataset (3000 influencers)',
-        searchTime,
-        filters: params
-      }
-    };
-
-  } catch (error) {
-    console.error('❌ Error in vetted influencer search:', error);
-    return {
-      influencers: [],
-      totalCount: 0,
-      searchSource: 'comprehensive_dataset',
-      searchMetadata: {
-        source: 'Error',
-        searchTime: Date.now() - startTime,
-        filters: params
-      }
-    };
-  }
-}
-
-function calculateQualityScore(influencer: VettedInfluencer): number {
-  let score = 0.5; // Base score
-
-  // Engagement rate scoring (higher is better, but not too high)
-  if (influencer.engagementRate > 0.15) {
-    score -= 0.2; // Suspiciously high engagement
-  } else if (influencer.engagementRate > 0.08) {
-    score += 0.3; // Excellent engagement
-  } else if (influencer.engagementRate > 0.05) {
-    score += 0.2; // Good engagement
-  } else if (influencer.engagementRate > 0.02) {
-    score += 0.1; // Decent engagement
-  } else {
-    score -= 0.1; // Low engagement
-  }
-
-  // Follower count scoring (sweet spot for brand partnerships)
-  if (influencer.followerCount >= 50000 && influencer.followerCount <= 500000) {
-    score += 0.2; // Ideal range for brand partnerships
-  } else if (influencer.followerCount >= 10000 && influencer.followerCount < 50000) {
-    score += 0.1; // Good micro-influencer range
-  } else if (influencer.followerCount > 1000000) {
-    score += 0.1; // Mega influencer value
-  }
-
-  // Verification bonus
-  if (influencer.verified) {
-    score += 0.1;
-  }
-
-  return Math.max(0, Math.min(1, score)); // Clamp between 0 and 1
-}
-
 export async function getInfluencerById(id: string): Promise<VettedInfluencer | null> {
   try {
     const processedInfluencers = loadSpanishInfluencers();
@@ -639,4 +443,165 @@ export function convertVettedToMatchResult(influencer: VettedInfluencer, params:
       'Datos de engagement reales y actualizados'
     ]
   };
+}
+
+// Simplified search logic, replacing the old complex system
+export async function searchVettedInfluencers(searchParams: SearchParams) {
+  try {
+    console.log('🔍 Simplified search started with params:', searchParams);
+
+    // 1. Load the entire database
+    const allInfluencers = loadSpanishInfluencers().map(convertToVettedInfluencer);
+
+    // 2. Filter based on query and basic filters
+    let filteredInfluencers = allInfluencers;
+
+    // Keyword search
+    if (searchParams.query) {
+      const queryTerms = searchParams.query.toLowerCase().split(/\s+/).filter((term: string) => term.length > 2);
+      if (queryTerms.length > 0) {
+        filteredInfluencers = filteredInfluencers.filter(inf => {
+          const influencerText = [
+            inf.name.toLowerCase(),
+            inf.handle.toLowerCase(),
+            ...(inf.niche || []).map((n: string) => n.toLowerCase())
+          ].join(' ');
+          return queryTerms.every((term: string) => influencerText.includes(term));
+        });
+      }
+    }
+    
+    // Basic filters (gender, followers)
+    if (searchParams.gender && searchParams.gender !== 'any') {
+      const targetGender = searchParams.gender.charAt(0).toUpperCase() + searchParams.gender.slice(1);
+      filteredInfluencers = filteredInfluencers.filter(inf => inf.gender === targetGender);
+    }
+    if (searchParams.minFollowers) {
+      filteredInfluencers = filteredInfluencers.filter(inf => inf.followerCount >= searchParams.minFollowers!);
+    }
+    if (searchParams.maxFollowers) {
+      filteredInfluencers = filteredInfluencers.filter(inf => inf.followerCount <= searchParams.maxFollowers!);
+    }
+
+    // 3. Sort by a simple engagement metric
+    filteredInfluencers.sort((a, b) => b.engagementRate - a.engagementRate);
+
+    // 4. Convert to MatchResult format
+    const results = filteredInfluencers.map(inf => convertVettedToMatchResult(inf, searchParams));
+    
+    const limitedResults = results.slice(0, 50);
+
+    console.log(`🎯 Returning ${limitedResults.length} relevant results.`);
+
+    return {
+      influencers: limitedResults,
+      totalCount: limitedResults.length,
+    };
+
+  } catch (error) {
+    console.error('❌ Simplified search error:', error);
+    return {
+        influencers: [],
+        totalCount: 0,
+      };
+  }
+}
+
+function calculateQualityScore(influencer: VettedInfluencer): number {
+  let score = 0.5; // Base score
+
+  // Engagement rate scoring (higher is better, but not too high)
+  if (influencer.engagementRate > 0.15) {
+    score -= 0.2; // Suspiciously high engagement
+  } else if (influencer.engagementRate > 0.08) {
+    score += 0.3; // Excellent engagement
+  } else if (influencer.engagementRate > 0.05) {
+    score += 0.2; // Good engagement
+  } else if (influencer.engagementRate > 0.02) {
+    score += 0.1; // Decent engagement
+  } else {
+    score -= 0.1; // Low engagement
+  }
+
+  // Follower count scoring (sweet spot for brand partnerships)
+  if (influencer.followerCount >= 50000 && influencer.followerCount <= 500000) {
+    score += 0.2; // Ideal range for brand partnerships
+  } else if (influencer.followerCount >= 10000 && influencer.followerCount < 50000) {
+    score += 0.1; // Good micro-influencer range
+  } else if (influencer.followerCount > 1000000) {
+    score += 0.1; // Mega influencer value
+  }
+
+  // Verification bonus
+  if (influencer.verified) {
+    score += 0.1;
+  }
+
+  return Math.max(0, Math.min(1, score)); // Clamp between 0 and 1
+}
+
+export async function handleRegularSearch(searchParams: SearchParams, req: Request) {
+  try {
+    console.log('🔍 Simplified search started with params:', searchParams);
+
+    // 1. Load the entire database
+    const allInfluencers = loadSpanishInfluencers().map(convertToVettedInfluencer);
+
+    // 2. Filter based on query and basic filters
+    let filteredInfluencers = allInfluencers;
+
+    // Keyword search
+    if (searchParams.query) {
+      const queryTerms = searchParams.query.toLowerCase().split(/\s+/).filter(term => term.length > 2);
+      if (queryTerms.length > 0) {
+        filteredInfluencers = filteredInfluencers.filter(inf => {
+          const influencerText = [
+            inf.name.toLowerCase(),
+            inf.handle.toLowerCase(),
+            ...(inf.niche || []).map(n => n.toLowerCase())
+          ].join(' ');
+          return queryTerms.every(term => influencerText.includes(term));
+        });
+      }
+    }
+    
+    // Basic filters (gender, followers)
+    if (searchParams.gender && searchParams.gender !== 'any') {
+      const targetGender = searchParams.gender.charAt(0).toUpperCase() + searchParams.gender.slice(1);
+      filteredInfluencers = filteredInfluencers.filter(inf => inf.gender === targetGender);
+    }
+    if (searchParams.minFollowers) {
+      filteredInfluencers = filteredInfluencers.filter(inf => inf.followerCount >= searchParams.minFollowers!);
+    }
+    if (searchParams.maxFollowers) {
+      filteredInfluencers = filteredInfluencers.filter(inf => inf.followerCount <= searchParams.maxFollowers!);
+    }
+
+    // 3. Sort by a simple engagement metric
+    filteredInfluencers.sort((a, b) => b.engagementRate - a.engagementRate);
+
+    // 4. Convert to MatchResult format
+    const results = filteredInfluencers.map(inf => convertVettedToMatchResult(inf, searchParams));
+    
+    const limitedResults = results.slice(0, 50);
+
+    console.log(`🎯 Returning ${limitedResults.length} relevant results.`);
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        premiumResults: limitedResults,
+        totalFound: limitedResults.length,
+        searchSources: ['Vetted Database (Simplified Search)'],
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Simplified search error:', error);
+    return NextResponse.json({
+        success: false,
+        error: 'Search failed',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }, { status: 500 });
+  }
 }

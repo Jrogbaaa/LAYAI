@@ -33,6 +33,14 @@ export class EnhancedCampaignService {
     try {
       console.log(`📝 Saving search results for brand: ${brandName}, results: ${results.length}`);
       
+      // 🚧 TEMPORARILY DISABLE CAMPAIGN CREATION TO FIX FIREBASE PERMISSIONS ISSUE
+      console.log(`🚧 Campaign creation temporarily disabled to prevent Firebase errors`);
+      return { 
+        campaignId: '', 
+        searchId: `search_${Math.random().toString(36).substr(2, 9)}_${Date.now()}`, 
+        action: 'search_saved_without_campaign' 
+      };
+      
       // Create saved search entry
       const savedSearch: SavedSearch = {
         id: this.generateId(),

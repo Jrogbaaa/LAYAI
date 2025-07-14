@@ -735,57 +735,57 @@ async function searchWithSerply(query: string, limit: number = 15): Promise<any[
   return await searchBreaker.executeWithTimeout(async () => {
     // Execute request through rate limiter
     return await rateLimiter.executeRequest(async () => {
-      // Encode the query for URL
-      const encodedQuery = encodeURIComponent(query);
-      const url = `https://api.serply.io/v1/search/q=${encodedQuery}&num=${limit}`;
-      
-      console.log(`🌐 Serply URL: ${url}`);
-      
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Api-Key': serplyApiKey,
-        },
-      });
+    // Encode the query for URL
+    const encodedQuery = encodeURIComponent(query);
+    const url = `https://api.serply.io/v1/search/q=${encodedQuery}&num=${limit}`;
+    
+    console.log(`🌐 Serply URL: ${url}`);
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Api-Key': serplyApiKey,
+      },
+    });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const errorMsg = `Serply API error: ${response.status} ${response.statusText}${errorData.message ? ` - ${errorData.message}` : ''}`;
-        console.error('❌', errorMsg);
-        
-        // Provide specific guidance for common errors
-        if (response.status === 401) {
-          console.log('💡 This looks like an authentication error. Please check your Serply API key.');
-        } else if (response.status === 429) {
-          console.log('💡 Rate limit exceeded. Please wait before making more requests.');
-        } else if (response.status >= 500) {
-          console.log('💡 Serply server error. This is temporary, please try again later.');
-        }
-        
-        throw new Error(errorMsg);
-      }
-
-      const data = await response.json();
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      const errorMsg = `Serply API error: ${response.status} ${response.statusText}${errorData.message ? ` - ${errorData.message}` : ''}`;
+      console.error('❌', errorMsg);
       
-      console.log('🔍 Raw Serply API Response Structure:');
-      console.log('Response keys:', Object.keys(data));
-      console.log('First result sample:', data.results?.[0] ? JSON.stringify(data.results[0], null, 2) : 'No results');
-      
-      if (data && Array.isArray(data.results)) {
-        console.log(`📊 Serply returned ${data.results.length} search results`);
-        return data.results;
+      // Provide specific guidance for common errors
+      if (response.status === 401) {
+        console.log('💡 This looks like an authentication error. Please check your Serply API key.');
+      } else if (response.status === 429) {
+        console.log('💡 Rate limit exceeded. Please wait before making more requests.');
+      } else if (response.status >= 500) {
+        console.log('💡 Serply server error. This is temporary, please try again later.');
       }
       
-      console.warn('⚠️ Serply search did not return expected results array. Response:', data);
-      return [];
+      throw new Error(errorMsg);
+    }
+
+    const data = await response.json();
+    
+    console.log('🔍 Raw Serply API Response Structure:');
+    console.log('Response keys:', Object.keys(data));
+    console.log('First result sample:', data.results?.[0] ? JSON.stringify(data.results[0], null, 2) : 'No results');
+    
+    if (data && Array.isArray(data.results)) {
+      console.log(`📊 Serply returned ${data.results.length} search results`);
+      return data.results;
+    }
+    
+    console.warn('⚠️ Serply search did not return expected results array. Response:', data);
+    return [];
     });
 
   }, 45000, // Increased timeout to account for rate limiting
     async () => {
-      // Fallback: return empty results when circuit breaker is open
-      console.log('🔄 Circuit breaker fallback: returning empty search results');
-      return [];
+    // Fallback: return empty results when circuit breaker is open
+    console.log('🔄 Circuit breaker fallback: returning empty search results');
+    return [];
     }
   ).catch((error) => {
     if (error instanceof CircuitBreakerOpenError) {
