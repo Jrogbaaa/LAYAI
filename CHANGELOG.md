@@ -5,6 +5,64 @@ All notable changes to LAYAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.0] - 2025-01-29
+
+### 🎯 Enhanced Brief Processing & Intelligent Matching System
+
+#### Added
+- **Universal Brief Processor** (`src/lib/briefProcessor.ts`)
+  - AI-powered extraction from text, PDF, or URL briefs
+  - Smart variable extraction: niche, geography, platform, demographics, budget, tone
+  - OpenAI GPT-4 integration with rule-based fallbacks
+  - Confidence scoring and validation system
+
+- **Enhanced Matching Engine** (`src/lib/enhancedMatchingService.ts`)
+  - 7-dimensional scoring system (brand compatibility, audience overlap, risk assessment)
+  - Intelligent explanations and actionable recommendations
+  - Performance predictions (CPM, reach, engagement estimates)
+  - Adaptive search strategies (exact, broad, discovery modes)
+
+- **Comprehensive Demographics System** (`src/lib/demographics.ts`)
+  - Research-based demographic patterns by niche (fitness→67% male, beauty→18% male)
+  - Spanish location intelligence based on follower count
+  - Realistic audience distribution modeling
+  - Pre-calculated demographics for database optimization
+
+- **Enhanced Brief Processing API** (`/api/enhanced-brief-matching`)
+  - Complete brief → matches pipeline
+  - Multi-format input support (text, PDF, URL)
+  - Integrated with existing search and campaign systems
+  - Example endpoints for testing (IKEA, Nike, discovery mode)
+
+#### Enhanced
+- **Campaign Management Integration**
+  - Brief context preservation in campaigns
+  - Enhanced campaign creation with processed briefs
+  - Multi-source result merging with confidence scoring
+
+- **Search Quality Improvements**
+  - Intelligent weighting based on brief specificity
+  - Multi-source search combining database + real-time results
+  - Smart suggestions for search optimization
+
+#### Documentation
+- **Brief Processing Guide** (`BRIEF_PROCESSING_GUIDE.md`)
+  - Comprehensive usage documentation
+  - API examples and integration patterns
+  - Scoring algorithm deep-dive
+  - Best practices for brief writing
+
+- **Updated README.md**
+  - New brief processing capabilities section
+  - Enhanced API endpoints documentation
+  - Updated core features and technical architecture
+
+#### Technical Improvements
+- Dynamic weight calculation based on search strategy
+- Multi-source result deduplication and ranking
+- Confidence-based result filtering
+- Enhanced error handling and fallback systems
+
 ## [2.9.0] - 2025-01-21
 
 ### 🧪 Major Release: Comprehensive Testing & Enhanced Search Validation
