@@ -21,6 +21,16 @@ const nextConfig = {
       };
     }
     
+    // Add fallback for Node.js modules in client build
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        os: false,
+      };
+    }
+    
     return config;
   },
 };
