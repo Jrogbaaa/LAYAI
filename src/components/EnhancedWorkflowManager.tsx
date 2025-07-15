@@ -107,11 +107,11 @@ const EnhancedWorkflowManager: React.FC<EnhancedWorkflowManagerProps> = ({
     }
   };
 
-  const handleInfluencerSelection = (influencer: MatchResult, selected: boolean) => {
+  const handleInfluencerSelection = (matchResult: MatchResult, selected: boolean) => {
     if (selected) {
-      setSelectedInfluencers(prev => [...prev, influencer]);
+      setSelectedInfluencers((prev: MatchResult[]) => [...prev, matchResult]);
     } else {
-      setSelectedInfluencers(prev => prev.filter(inf => inf.id !== influencer.id));
+      setSelectedInfluencers((prev: MatchResult[]) => prev.filter(inf => inf.influencer.id !== matchResult.influencer.id));
     }
   };
 
@@ -162,38 +162,43 @@ const EnhancedWorkflowManager: React.FC<EnhancedWorkflowManagerProps> = ({
   };
 
   const renderStepContent = () => {
-    const step = workflowSteps[currentStep];
+    const currentStepData = workflowSteps[currentStep];
     
-    switch (step.id) {
+    switch (currentStepData.id) {
       case 'search':
         return (
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">Search Results</h3>
-              <span className="text-sm text-gray-500">
-                {searchResults.length} influencers found
-              </span>
-            </div>
+            <h3 className="text-lg font-semibold text-gray-900">Search Results</h3>
             {searchResults.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
-                {searchResults.slice(0, 10).map((influencer, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold">
-                          {influencer.name?.charAt(0) || '?'}
-                        </span>
+              <div className="space-y-3">
+                <div className="text-sm text-gray-600">
+                  Found {searchResults.length} influencer{searchResults.length !== 1 ? 's' : ''} matching your criteria
+                </div>
+                <div className="grid gap-3 max-h-64 overflow-y-auto">
+                  {searchResults.slice(0, 5).map((result) => (
+                    <div key={result.influencer.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex-1">
+                        <div className="font-medium text-gray-900">
+                          @{result.influencer.handle || 'Unknown'}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {result.influencer.followerCount.toLocaleString()} followers
+                          {result.influencer.engagementRate && 
+                            ` • ${(result.influencer.engagementRate * 100).toFixed(1)}% engagement`
+                          }
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-medium text-gray-900">{influencer.name || influencer.username || 'Unknown'}</h4>
-                        <p className="text-sm text-gray-500">@{influencer.handle || influencer.username || 'unknown'}</p>
+                      <div className="text-sm text-blue-600 bg-blue-50 rounded px-2 py-1">
+                        Score: {(result.matchScore * 100).toFixed(0)}%
                       </div>
                     </div>
-                    <div className="mt-2 text-sm text-gray-600">
-                      {influencer.followers?.toLocaleString()} followers • {influencer.engagement?.toFixed(1)}% engagement
+                  ))}
+                  {searchResults.length > 5 && (
+                    <div className="text-sm text-gray-500 text-center">
+                      ...and {searchResults.length - 5} more results
                     </div>
-                  </div>
-                ))}
+                  )}
+                </div>
               </div>
             ) : (
               <div className="text-center py-8 text-gray-500">
@@ -206,38 +211,49 @@ const EnhancedWorkflowManager: React.FC<EnhancedWorkflowManagerProps> = ({
       case 'selection':
         return (
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">Select Influencers</h3>
-              <span className="text-sm text-gray-500">
-                {selectedInfluencers.length} selected
-              </span>
+            <h3 className="text-lg font-semibold text-gray-900">Select Influencers</h3>
+            <div className="text-sm text-gray-600 mb-4">
+              Choose the best influencers for your campaign ({selectedInfluencers.length} selected)
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
-              {searchResults.map((influencer, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors">
+            <div className="grid gap-3 max-h-96 overflow-y-auto">
+              {searchResults.map((matchResult) => (
+                <div key={matchResult.influencer.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
                   <div className="flex items-center space-x-3">
                     <input
                       type="checkbox"
-                      checked={selectedInfluencers.some(inf => inf.id === influencer.id)}
-                      onChange={(e) => handleInfluencerSelection(influencer, e.target.checked)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={selectedInfluencers.some(selected => selected.influencer.id === matchResult.influencer.id)}
+                      onChange={(e) => handleInfluencerSelection(matchResult, e.target.checked)}
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
-                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold">
-                        {influencer.name?.charAt(0) || '?'}
-                      </span>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900">{influencer.name || influencer.username || 'Unknown'}</h4>
-                      <p className="text-sm text-gray-500">@{influencer.handle || influencer.username || 'unknown'}</p>
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-900">
+                        @{matchResult.influencer.handle || 'Unknown'}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {matchResult.influencer.followerCount.toLocaleString()} followers
+                        {matchResult.influencer.engagementRate && 
+                          ` • ${(matchResult.influencer.engagementRate * 100).toFixed(1)}% engagement`
+                        }
+                      </div>
+                      {matchResult.influencer.location && (
+                        <div className="text-xs text-gray-500">📍 {matchResult.influencer.location}</div>
+                      )}
                     </div>
                   </div>
-                  <div className="mt-2 text-sm text-gray-600">
-                    {influencer.followers?.toLocaleString()} followers • {influencer.engagement?.toFixed(1)}% engagement
+                  <div className="text-right">
+                    <div className="text-sm text-blue-600 bg-blue-50 rounded px-2 py-1">
+                      Score: {(matchResult.matchScore * 100).toFixed(0)}%
+                    </div>
+                    {matchResult.estimatedCost && (
+                      <div className="text-xs text-gray-500 mt-1">
+                        Est: ${matchResult.estimatedCost.toLocaleString()}
+                      </div>
+                    )}
                   </div>
-                  {influencer.matchReason && (
+
+                  {matchResult.matchReasons && matchResult.matchReasons.length > 0 && (
                     <div className="mt-2 text-xs text-blue-600 bg-blue-50 rounded p-2">
-                      {influencer.matchReason}
+                      {matchResult.matchReasons[0]}
                     </div>
                   )}
                 </div>
@@ -287,64 +303,153 @@ const EnhancedWorkflowManager: React.FC<EnhancedWorkflowManagerProps> = ({
 
       case 'optimization':
         return (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900">Campaign Optimization</h3>
             {workflowData.prediction ? (
               <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <h4 className="font-medium text-gray-900 mb-2">Budget Optimization</h4>
-                    <div className="text-sm text-gray-600">
-                      <p>Recommended: ${workflowData.prediction.optimizationSuggestions?.budget?.recommended?.toLocaleString() || 'N/A'}</p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {workflowData.prediction.optimizationSuggestions?.budget?.reasoning || 'No recommendations available'}
-                      </p>
+                {/* Budget Optimization */}
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6">
+                  <h4 className="font-semibold text-gray-900 mb-4">💰 Budget Optimization</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <div className="text-sm text-gray-600 mb-2">Current Budget</div>
+                      <div className="text-2xl font-bold text-gray-900">
+                        ${(workflowData.prediction.estimatedMetrics?.totalCost || currentCampaign?.budget || 25000).toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <div className="text-sm text-gray-600 mb-2">Optimized Budget</div>
+                      <div className="text-2xl font-bold text-green-600">
+                        ${workflowData.prediction.optimizationSuggestions?.budget?.recommended?.toLocaleString() || 'N/A'}
+                      </div>
+                      <div className="text-xs text-green-600 mt-1">
+                        {workflowData.prediction.optimizationSuggestions?.budget?.savings && 
+                          `Save $${workflowData.prediction.optimizationSuggestions.budget.savings.toLocaleString()}`
+                        }
+                      </div>
                     </div>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <h4 className="font-medium text-gray-900 mb-2">Timeline Optimization</h4>
-                    <div className="text-sm text-gray-600">
-                      <p>Recommended: {workflowData.prediction.optimizationSuggestions?.timeline?.recommended || 'N/A'} days</p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {workflowData.prediction.optimizationSuggestions?.timeline?.reasoning || 'No recommendations available'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <h4 className="font-medium text-gray-900 mb-2">Influencer Mix</h4>
-                    <div className="text-sm text-gray-600">
-                      <p>{workflowData.prediction.optimizationSuggestions?.influencerMix?.recommended || 'N/A'}</p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {workflowData.prediction.optimizationSuggestions?.influencerMix?.reasoning || 'No recommendations available'}
-                      </p>
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                    <div className="text-sm text-blue-800">
+                      💡 <strong>Recommendation:</strong> {workflowData.prediction.optimizationSuggestions?.budget?.reasoning || 'Distribute budget across mix of micro and nano influencers for optimal ROI'}
                     </div>
                   </div>
                 </div>
-                
-                <div className="bg-white border border-gray-200 rounded-lg p-3">
-                  <h4 className="font-medium text-gray-900 mb-3">Key Recommendations</h4>
-                  <div className="space-y-2">
-                    {workflowData.prediction.recommendations?.map((rec: any, index: number) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <div className={`px-2 py-1 rounded text-xs font-medium ${
-                          rec.priority === 'high' ? 'bg-red-100 text-red-600' :
-                          rec.priority === 'medium' ? 'bg-yellow-100 text-yellow-600' :
-                          'bg-green-100 text-green-600'
-                        }`}>
-                          {rec.priority.toUpperCase()}
+
+                {/* Timeline Optimization */}
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6">
+                  <h4 className="font-semibold text-gray-900 mb-4">⏰ Timeline Optimization</h4>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-white rounded-lg p-4 shadow-sm text-center">
+                      <div className="text-sm text-gray-600 mb-2">Launch Phase</div>
+                      <div className="text-lg font-bold text-gray-900">Days 1-7</div>
+                      <div className="text-xs text-gray-500">Initial outreach & content creation</div>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm text-center">
+                      <div className="text-sm text-gray-600 mb-2">Peak Phase</div>
+                      <div className="text-lg font-bold text-gray-900">Days 8-21</div>
+                      <div className="text-xs text-gray-500">Content publishing & engagement</div>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm text-center">
+                      <div className="text-sm text-gray-600 mb-2">Conversion Phase</div>
+                      <div className="text-lg font-bold text-gray-900">Days 22-30</div>
+                      <div className="text-xs text-gray-500">Drive conversions & measure ROI</div>
+                    </div>
+                  </div>
+                  <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                    <div className="text-sm text-green-800">
+                      💡 <strong>Optimal Duration:</strong> {workflowData.prediction.optimizationSuggestions?.timeline?.recommended || '30'} days for maximum engagement and conversion tracking
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content Optimization */}
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6">
+                  <h4 className="font-semibold text-gray-900 mb-4">🎨 Content Strategy</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <div className="text-sm text-gray-600 mb-2">Content Mix</div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>Video Content</span>
+                          <span className="font-medium">60%</span>
                         </div>
-                        <div>
-                          <div className="font-medium text-gray-900">{rec.category}</div>
-                          <div className="text-sm text-gray-600">{rec.suggestion}</div>
+                        <div className="flex justify-between text-sm">
+                          <span>Image Posts</span>
+                          <span className="font-medium">25%</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>Stories</span>
+                          <span className="font-medium">15%</span>
                         </div>
                       </div>
-                    ))}
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <div className="text-sm text-gray-600 mb-2">Posting Schedule</div>
+                      <div className="space-y-2">
+                        <div className="text-sm">📅 Mon/Wed/Fri optimal</div>
+                        <div className="text-sm">🕕 6-8 PM peak engagement</div>
+                        <div className="text-sm">📱 Stories daily</div>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <div className="text-sm text-gray-600 mb-2">Key Messages</div>
+                      <div className="space-y-1">
+                        <div className="text-xs bg-purple-100 text-purple-800 rounded px-2 py-1">Authenticity</div>
+                        <div className="text-xs bg-pink-100 text-pink-800 rounded px-2 py-1">Lifestyle Integration</div>
+                        <div className="text-xs bg-blue-100 text-blue-800 rounded px-2 py-1">Community Focus</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Performance Tracking */}
+                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-6">
+                  <h4 className="font-semibold text-gray-900 mb-4">📊 Performance Tracking Setup</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <h5 className="font-medium text-gray-800">Key Metrics to Track</h5>
+                      <div className="space-y-2">
+                        {[
+                          { metric: 'Reach & Impressions', target: `${workflowData.prediction.estimatedMetrics?.reach?.toLocaleString() || '500K'}+ reach` },
+                          { metric: 'Engagement Rate', target: `${workflowData.prediction.estimatedMetrics?.engagementRate || '4.2'}%+ average` },
+                          { metric: 'Conversions', target: `${workflowData.prediction.estimatedMetrics?.conversions || '150'}+ conversions` },
+                          { metric: 'ROI', target: `${workflowData.prediction.estimatedMetrics?.roi || '3.1'}x return` }
+                        ].map((item, index) => (
+                          <div key={index} className="flex justify-between items-center p-2 bg-white rounded">
+                            <span className="text-sm font-medium">{item.metric}</span>
+                            <span className="text-sm text-green-600">{item.target}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <h5 className="font-medium text-gray-800">Monitoring Schedule</h5>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center space-x-2">
+                          <input type="checkbox" className="w-4 h-4 text-blue-600 rounded" defaultChecked />
+                          <span>Daily engagement monitoring</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <input type="checkbox" className="w-4 h-4 text-blue-600 rounded" defaultChecked />
+                          <span>Weekly performance reports</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <input type="checkbox" className="w-4 h-4 text-blue-600 rounded" defaultChecked />
+                          <span>Mid-campaign optimization</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <input type="checkbox" className="w-4 h-4 text-blue-600 rounded" defaultChecked />
+                          <span>Final ROI analysis</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="text-center py-8 text-gray-500">
-                Please complete the prediction step first.
+                Please complete the performance prediction step first.
               </div>
             )}
           </div>
@@ -352,51 +457,121 @@ const EnhancedWorkflowManager: React.FC<EnhancedWorkflowManagerProps> = ({
 
       case 'approval':
         return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Final Approval</h3>
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h4 className="font-medium text-gray-900 mb-4">Campaign Summary</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <div className="text-sm text-gray-600 mb-2">Selected Influencers</div>
-                  <div className="text-lg font-bold text-gray-900">{selectedInfluencers.length}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-600 mb-2">Predicted Success Score</div>
-                  <div className="text-lg font-bold text-gray-900">
-                    {workflowData.prediction ? 
-                      `${(workflowData.prediction.overallScore * 100).toFixed(1)}%` : 
-                      'N/A'
-                    }
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900">📋 Final Campaign Review</h3>
+            
+            {/* Campaign Summary */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6">
+              <h4 className="font-semibold text-gray-900 mb-4">Campaign Summary</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-sm text-gray-600 mb-1">Selected Influencers</div>
+                  <div className="text-2xl font-bold text-blue-600">{selectedInfluencers.length}</div>
+                  <div className="text-xs text-gray-500">
+                    Total Reach: {selectedInfluencers.reduce((sum, inf) => sum + (inf.influencer.followerCount || inf.influencer.followers || 0), 0).toLocaleString()}
                   </div>
                 </div>
-                <div>
-                  <div className="text-sm text-gray-600 mb-2">Estimated Reach</div>
-                  <div className="text-lg font-bold text-gray-900">
-                    {workflowData.prediction ? 
-                      workflowData.prediction.estimatedMetrics.reach.toLocaleString() : 
-                      'N/A'
-                    }
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-sm text-gray-600 mb-1">Estimated Budget</div>
+                  <div className="text-2xl font-bold text-green-600">
+                    ${workflowData.prediction?.optimizationSuggestions?.budget?.recommended?.toLocaleString() || (currentCampaign?.budget || 25000).toLocaleString()}
                   </div>
+                  <div className="text-xs text-gray-500">Optimized allocation</div>
                 </div>
-                <div>
-                  <div className="text-sm text-gray-600 mb-2">Estimated ROI</div>
-                  <div className="text-lg font-bold text-gray-900">
-                    {workflowData.prediction ? 
-                      `${workflowData.prediction.estimatedMetrics.roi.toFixed(1)}x` : 
-                      'N/A'
-                    }
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-sm text-gray-600 mb-1">Expected ROI</div>
+                  <div className="text-2xl font-bold text-purple-600">
+                    {workflowData.prediction?.estimatedMetrics?.roi || '3.1'}x
                   </div>
+                  <div className="text-xs text-gray-500">Return on investment</div>
                 </div>
               </div>
-              
-              <div className="mt-6 flex justify-center">
-                <button
-                  onClick={handleWorkflowComplete}
-                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-                >
-                  ✅ Approve Campaign
-                </button>
+            </div>
+
+            {/* Selected Influencers Review */}
+            <div className="bg-white border rounded-lg p-6">
+              <h4 className="font-semibold text-gray-900 mb-4">Selected Influencer Review</h4>
+              <div className="space-y-3 max-h-64 overflow-y-auto">
+                {selectedInfluencers.map((influencer, index) => (
+                  <div key={influencer.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-medium text-sm">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <div className="font-medium">@{influencer.influencer.handle || influencer.influencer.username}</div>
+                        <div className="text-sm text-gray-600">
+                          {(influencer.influencer.followerCount || influencer.influencer.followers || 0).toLocaleString()} followers
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-medium text-green-600">
+                        Compatibility: {workflowData.compatibility?.[influencer.id]?.overall ? (workflowData.compatibility[influencer.id].overall * 100).toFixed(0) : '85'}%
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        Est. Cost: ${influencer.influencer.estimatedCost?.toLocaleString() || '2,500'}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Final Checklist */}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+              <h4 className="font-semibold text-green-800 mb-4">✅ Pre-Launch Checklist</h4>
+              <div className="space-y-3">
+                {[
+                  { item: 'Influencers selected and contacted', status: true },
+                  { item: 'Content guidelines and brand kit shared', status: true },
+                  { item: 'Posting schedule and deadlines confirmed', status: true },
+                  { item: 'Tracking codes and analytics setup', status: true },
+                  { item: 'Legal agreements and contracts signed', status: false },
+                  { item: 'Budget allocation and payment terms confirmed', status: false },
+                ].map((checkItem, index) => (
+                  <div key={index} className="flex items-center space-x-3">
+                    <input 
+                      type="checkbox" 
+                      checked={checkItem.status}
+                      className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                      readOnly
+                    />
+                    <span className={`text-sm ${checkItem.status ? 'text-green-700' : 'text-gray-600'}`}>
+                      {checkItem.item}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Approval Actions */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button
+                onClick={handleWorkflowComplete}
+                className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center justify-center space-x-2"
+              >
+                <span>✅</span>
+                <span>Approve & Launch Campaign</span>
+              </button>
+              <button
+                onClick={() => setCurrentStep(currentStep - 1)}
+                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+              >
+                🔙 Review Previous Step
+              </button>
+            </div>
+
+            {/* Campaign Launch Information */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="text-sm text-blue-800">
+                <strong>🚀 What happens after approval?</strong>
+                <ul className="mt-2 space-y-1 list-disc list-inside">
+                  <li>Influencer outreach and contract finalization</li>
+                  <li>Content creation and approval workflow activation</li>
+                  <li>Real-time performance monitoring begins</li>
+                  <li>Weekly optimization reports and recommendations</li>
+                </ul>
               </div>
             </div>
           </div>
