@@ -78,10 +78,12 @@ const EnhancedBrandCompatibilityEngine: React.FC<EnhancedBrandCompatibilityEngin
     const scores: { [key: string]: BrandCompatibilityScore } = {};
 
     for (const matchResult of influencers) {
-      // Extract influencer data from MatchResult
+      // Extract influencer data from MatchResult with comprehensive field mapping
       const influencer = matchResult.influencer || matchResult;
       const score = await calculateIndividualCompatibility(influencer, brand);
-      scores[influencer.id || influencer.handle] = score;
+      // Use consistent key generation for score storage
+      const scoreKey = influencer.id || influencer.handle || influencer.username || influencer.user_name || influencer.instagram_username || influencer.tiktok_username || `influencer_${Date.now()}`;
+      scores[scoreKey] = score;
     }
 
     setCompatibilityScores(scores);
@@ -416,10 +418,17 @@ const EnhancedBrandCompatibilityEngine: React.FC<EnhancedBrandCompatibilityEngin
         {/* Compatibility Results */}
         <div className="space-y-2">
           {influencers.map((matchResult, index) => {
-            // Extract influencer data from MatchResult
+            // Extract influencer data from MatchResult with comprehensive field mapping
             const influencer = matchResult.influencer || matchResult;
-            const score = compatibilityScores[influencer.id || influencer.handle];
+            // Use consistent key generation for score lookup
+            const scoreKey = influencer.id || influencer.handle || influencer.username || influencer.user_name || influencer.instagram_username || influencer.tiktok_username || `influencer_${Date.now()}`;
+            const score = compatibilityScores[scoreKey];
             if (!score) return null;
+
+            // Comprehensive field mapping for different data structures
+            const displayName = influencer.name || influencer.fullName || influencer.displayName || influencer.username || 'Unknown';
+            const handleName = influencer.handle || influencer.username || influencer.user_name || influencer.instagram_username || influencer.tiktok_username || 'unknown';
+            const firstLetter = displayName.charAt(0).toUpperCase() || '?';
 
             return (
               <div key={index} className="border border-gray-200 rounded-lg p-2">
@@ -427,12 +436,12 @@ const EnhancedBrandCompatibilityEngine: React.FC<EnhancedBrandCompatibilityEngin
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
                       <span className="text-white font-bold">
-                        {influencer.name?.charAt(0) || '?'}
+                        {firstLetter}
                       </span>
                     </div>
                     <div>
-                      <h4 className="font-medium text-gray-900">{influencer.name || influencer.username || 'Unknown'}</h4>
-                      <p className="text-sm text-gray-500">@{influencer.handle || influencer.username || 'unknown'}</p>
+                      <h4 className="font-medium text-gray-900">{displayName}</h4>
+                      <p className="text-sm text-gray-500">@{handleName}</p>
                     </div>
                   </div>
                   <div className="text-right">

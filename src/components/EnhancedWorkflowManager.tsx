@@ -185,8 +185,8 @@ const EnhancedWorkflowManager: React.FC<EnhancedWorkflowManagerProps> = ({
                         </span>
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900">{influencer.name}</h4>
-                        <p className="text-sm text-gray-500">@{influencer.handle}</p>
+                        <h4 className="font-medium text-gray-900">{influencer.name || influencer.username || 'Unknown'}</h4>
+                        <p className="text-sm text-gray-500">@{influencer.handle || influencer.username || 'unknown'}</p>
                       </div>
                     </div>
                     <div className="mt-2 text-sm text-gray-600">
@@ -228,8 +228,8 @@ const EnhancedWorkflowManager: React.FC<EnhancedWorkflowManagerProps> = ({
                       </span>
                     </div>
                     <div>
-                      <h4 className="font-medium text-gray-900">{influencer.name}</h4>
-                      <p className="text-sm text-gray-500">@{influencer.handle}</p>
+                      <h4 className="font-medium text-gray-900">{influencer.name || influencer.username || 'Unknown'}</h4>
+                      <p className="text-sm text-gray-500">@{influencer.handle || influencer.username || 'unknown'}</p>
                     </div>
                   </div>
                   <div className="mt-2 text-sm text-gray-600">
