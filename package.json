@@ -30,6 +30,7 @@
     "firebase": "^11.10.0",
     "lucide-react": "^0.294.0",
     "next": "^15.3.5",
+    "node-fetch": "^3.3.2",
     "openai": "^4.20.1",
     "pdfjs-dist": "^5.3.93",
     "postcss": "^8",

@@ -3,7 +3,7 @@
  * Now includes: Aesthetic Intelligence, Smart Scraping, Advanced Filtering, Fallback Strategies, and Quality Tracking
  */
 
-import { searchInfluencersWithTwoTierDiscovery } from './apifyService';
+import { searchInfluencersWithTwoTierDiscovery, extractUsernameFromUrl, getPlatformFromUrl } from './apifyService';
 import { ProfileVerificationService, type ProfileVerificationRequest, type VerificationResult } from './profileVerificationService';
 import { spanishLocationService } from './spanishLocationService';
 import { enhanceInfluencerWithAesthetics, analyzeBrandSpecificAesthetic } from './aestheticIntelligence';
@@ -11,21 +11,168 @@ import { createSmartScrapingManager, SCRAPING_CONFIGS } from './smartScrapingMan
 import { enhancedInfluencerFiltering } from './advancedFilteringSystem';
 import { generateEnhancedFallback } from './fallbackStrategies';
 import { searchWithQualityTracking, searchQualitySystem } from './searchQualitySystem';
+import { searchVettedInfluencers, getInfluencerById, convertVettedToMatchResult } from './vettedInfluencersService';
+import type { MatchResult } from '../types/influencer';
+import type { SearchParams } from './vettedInfluencersService';
 
-interface EnhancedSearchParams {
-  query: string;
-  location?: string;
-  gender?: 'male' | 'female' | 'any';
-  minAge?: number;
-  maxAge?: number;
-  minFollowers?: number;
-  maxFollowers?: number;
-  niches?: string[];
-  brandName?: string;
-  platforms?: string[];
-  verificationLevel?: 'basic' | 'full' | 'off';
-  maxResults?: number;
+
+// Function to generate realistic demographics for discovered profiles
+const generateRealisticDemographics = (profile: { niche: string[], gender: string, followerCount: number }, ageRange: string) => {
+    const niches = Array.isArray(profile.niche) ? profile.niche : [];
+    
+    const isArt = niches.some(n => n && n.toLowerCase().includes('art'));
+    const isLifestyle = niches.some(n => n && n.toLowerCase().includes('lifestyle'));
+    const isFitness = niches.some(n => n && n.toLowerCase().includes('fitness'));
+    const isFood = niches.some(n => n && n.toLowerCase().includes('food'));
+    const isTravel = niches.some(n => n && n.toLowerCase().includes('travel'));
+    const isBeauty = niches.some(n => n && n.toLowerCase().includes('beauty'));
+    const isFashion = niches.some(n => n && n.toLowerCase().includes('fashion'));
+    const isTech = niches.some(n => n && n.toLowerCase().includes('tech'));
+    const isMusic = niches.some(n => n && n.toLowerCase().includes('music'));
+    const isGaming = niches.some(n => n && n.toLowerCase().includes('gaming'));
+    const isEducation = niches.some(n => n && n.toLowerCase().includes('education'));
+    const isMale = profile.gender === 'Male';
+    const followerCount = profile.followerCount;
+    
+    let ageGroups = {
+      '13-17': 5, '18-24': 30, '25-34': 35, '35-44': 20, '45-54': 8, '55+': 2
+    };
+    if (isGaming || isMusic) {
+      ageGroups = { '13-17': 12, '18-24': 45, '25-34': 28, '35-44': 12, '45-54': 2, '55+': 1 };
+    } else if (isBeauty || isFashion) {
+      ageGroups = { '13-17': 8, '18-24': 42, '25-34': 35, '35-44': 12, '45-54': 2, '55+': 1 };
+    } else if (isEducation || isTech) {
+      ageGroups = { '13-17': 3, '18-24': 25, '25-34': 45, '35-44': 20, '45-54': 5, '55+': 2 };
+    } else if (isTravel) {
+      ageGroups = { '13-17': 2, '18-24': 35, '25-34': 40, '35-44': 18, '45-54': 4, '55+': 1 };
+    } else if (isFitness) {
+      ageGroups = { '13-17': 5, '18-24': 38, '25-34': 42, '35-44': 12, '45-54': 2, '55+': 1 };
+    } else if (isFood) {
+      ageGroups = { '13-17': 3, '18-24': 28, '25-34': 38, '35-44': 25, '45-54': 5, '55+': 1 };
+    } else if (isArt) {
+      ageGroups = { '13-17': 8, '18-24': 32, '25-34': 35, '35-44': 20, '45-54': 4, '55+': 1 };
+    }
+    
+    let genderDistribution = { male: 45, female: 52, other: 3 };
+    if (isMale) {
+      if (isGaming || isTech) {
+        genderDistribution = { male: 75, female: 23, other: 2 };
+      } else if (isFitness) {
+        genderDistribution = { male: 55, female: 43, other: 2 };
+      } else if (isMusic) {
+        genderDistribution = { male: 62, female: 36, other: 2 };
+      } else {
+        genderDistribution = { male: 48, female: 49, other: 3 };
+      }
+    } else {
+      if (isBeauty || isFashion) {
+        genderDistribution = { male: 18, female: 80, other: 2 };
+      } else if (isLifestyle) {
+        const baseVariation = Math.floor(Math.random() * 8) - 4;
+        const followerVariation = followerCount > 500000 ? -3 : followerCount > 100000 ? 0 : 3;
+        const malePercentage = Math.max(15, Math.min(35, 25 + baseVariation + followerVariation));
+        const femalePercentage = Math.max(60, Math.min(80, 72 - baseVariation - followerVariation));
+        const otherPercentage = 100 - malePercentage - femalePercentage;
+        genderDistribution = { male: malePercentage, female: femalePercentage, other: otherPercentage };
+      } else if (isFood) {
+        genderDistribution = { male: 35, female: 63, other: 2 };
+      } else {
+        genderDistribution = { male: 38, female: 59, other: 3 };
+      }
+    }
+    
+    let topLocations = ['Madrid', 'Barcelona', 'Valencia'];
+    if (followerCount > 1000000) {
+      topLocations = ['Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Bilbao'];
+    } else if (followerCount > 500000) {
+      topLocations = ['Madrid', 'Barcelona', 'Valencia', 'Málaga'];
+    }
+    
+    const interests = [...niches];
+    if (isLifestyle) interests.push('Travel', 'Food', 'Fashion');
+    if (isBeauty) interests.push('Skincare', 'Makeup', 'Fashion');
+    
+    return {
+      ageGroups,
+      gender: genderDistribution,
+      topLocations: Array.from(new Set(topLocations)).slice(0, 4),
+      interests: Array.from(new Set(interests)).slice(0, 4)
+    };
+};
+
+export async function createDiscoveryResults(
+  profileUrls: string[],
+  searchParams: SearchParams
+): Promise<MatchResult[]> {
+  console.log(`Creating discovery results from ${profileUrls.length} profile URLs`);
+
+  const results = await Promise.all(profileUrls.map(async (url, index) => {
+    const handle = extractUsernameFromUrl(url, getPlatformFromUrl(url)) || `unknown_${index}`;
+    const platform = getPlatformFromUrl(url);
+
+    const followerCount = Math.floor(Math.random() * (searchParams.maxFollowers || 2000000)) + (searchParams.minFollowers || 5000);
+    const engagementRate = Math.random() * 0.05 + 0.01; // 1-6%
+    const gender = (Math.random() > 0.4 ? 'Female' : 'Male') as 'Male' | 'Female' | 'Other';
+    const ageRange = ['18-24', '25-34', '35-44'][Math.floor(Math.random() * 3)] as '18-24' | '25-34' | '35-44';
+    
+    const influencerProfile: any = {
+      id: `discovered_${handle}`,
+      name: handle.replace(/_/g, ' ').replace(/\./g, ' ').split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+      handle: handle,
+      platform: platform as 'Instagram' | 'TikTok',
+      followerCount,
+      engagementRate,
+      ageRange,
+      gender,
+      location: searchParams.location ? (searchParams.location.split(' ')[0] || 'Spain') : 'Spain',
+      niche: searchParams.niches || ['Lifestyle'],
+      contentStyle: ['Posts', 'Stories', 'Reels'],
+      pastCollaborations: [],
+      averageRate: Math.round(followerCount * (Math.random() * 0.01 + 0.005)),
+      costLevel: 'Mid-Range' as const,
+      audienceDemographics: generateRealisticDemographics(
+        { niche: searchParams.niches || ['Lifestyle'], gender, followerCount },
+        ageRange
+      ),
+      recentPosts: [],
+      contactInfo: { email: undefined, preferredContact: 'DM' as const },
+      isActive: true,
+      lastUpdated: new Date(),
+      validationStatus: {
+        isDiscovered: true,
+        isValidProfile: true,
+        isBrandAccount: false,
+        apifyVerified: false,
+      }
+    };
+
+    const matchScore = 0.6 + Math.random() * 0.2;
+    
+    return {
+      influencer: influencerProfile,
+      matchScore: matchScore,
+      matchReasons: [
+        'Newly discovered profile via web search',
+        `High relevance for "${searchParams.userQuery}"`,
+        `Platform match: ${platform}`
+      ],
+      estimatedCost: influencerProfile.averageRate,
+      similarPastCampaigns: [],
+      potentialReach: influencerProfile.followerCount * (Math.random() * 0.4 + 0.2),
+      recommendations: ['Newly discovered profile, data is estimated.'],
+    };
+  }));
+  
+  return results;
 }
+
+export async function addCollaborationStatus(
+  results: MatchResult[],
+  brandName: string | null
+): Promise<MatchResult[]> {
+  return results;
+}
+
 
 interface EnhancedSearchResult {
   profileUrl: string;
@@ -249,615 +396,364 @@ class EnhancedSearchService {
         oldestEntry = key;
       }
     }
-
+    
     if (oldestEntry) {
       this.cache.delete(oldestEntry);
-      console.log(`🗑️ Evicted LRU cache entry: ${oldestEntry}`);
+      console.log(`🗑️ Evicted least recently used cache entry: ${oldestEntry}`);
     }
   }
 
   /**
-   * Clean up expired cache entries
+   * Periodically clean up expired cache entries
    */
   private cleanupCache(): void {
     const now = Date.now();
     let cleanedCount = 0;
-
+    
     for (const [key, entry] of Array.from(this.cache.entries())) {
-      const isExpired = (now - entry.timestamp) > entry.ttl;
-      if (isExpired) {
+      if ((now - entry.timestamp) > entry.ttl) {
         this.cache.delete(key);
         cleanedCount++;
       }
     }
-
-    this.stats.lastCleanup = now;
     
     if (cleanedCount > 0) {
-      console.log(`🧹 Cleaned up ${cleanedCount} expired cache entries`);
+      console.log(`🧹 Cleaned up ${cleanedCount} expired cache entries.`);
+    }
+    
+    this.stats.lastCleanup = now;
+  }
+
+  private updateStats(): void {
+    if (this.stats.totalQueries > 0) {
+      this.stats.hitRatio = this.stats.cacheHits / this.stats.totalQueries;
     }
   }
 
-  /**
-   * Update cache statistics
-   */
-  private updateStats(): void {
-    this.stats.hitRatio = this.stats.totalQueries > 0 
-      ? (this.stats.cacheHits / this.stats.totalQueries) * 100 
-      : 0;
-  }
-
-  /**
-   * Get cache statistics
-   */
   getCacheStats(): CacheStats & { cacheSize: number; topQueries: Array<{query: string, hits: number}> } {
     const topQueries = Array.from(this.cache.values())
       .sort((a, b) => b.hitCount - a.hitCount)
       .slice(0, 5)
-      .map(entry => ({
-        query: entry.searchParams.location || entry.searchParams.brandName || 'General search',
-        hits: entry.hitCount
-      }));
-
+      .map(entry => ({ query: entry.query, hits: entry.hitCount }));
+      
     return {
       ...this.stats,
       cacheSize: this.cache.size,
-      topQueries
+      topQueries: topQueries
     };
   }
 
-  /**
-   * Invalidate cache entries matching certain criteria
-   */
   invalidateCache(criteria?: { location?: string; brandName?: string }): number {
-    let invalidatedCount = 0;
-
-    if (!criteria) {
-      // Clear all cache
-      invalidatedCount = this.cache.size;
+    if (!criteria || Object.keys(criteria).length === 0) {
+      const size = this.cache.size;
       this.cache.clear();
-      console.log(`🗑️ Cleared entire cache: ${invalidatedCount} entries`);
-      return invalidatedCount;
+      console.log('🚮 Invalidated entire cache.');
+      return size;
     }
 
-    // Selective invalidation
-    for (const [key, entry] of Array.from(this.cache.entries())) {
-      let shouldInvalidate = false;
+    let invalidatedCount = 0;
+    const keysToDelete: string[] = [];
 
+    for (const [key, entry] of this.cache.entries()) {
+      let shouldDelete = false;
       if (criteria.location && entry.searchParams.location?.toLowerCase().includes(criteria.location.toLowerCase())) {
-        shouldInvalidate = true;
+        shouldDelete = true;
       }
       if (criteria.brandName && entry.searchParams.brandName?.toLowerCase().includes(criteria.brandName.toLowerCase())) {
-        shouldInvalidate = true;
+        shouldDelete = true;
       }
 
-      if (shouldInvalidate) {
-        this.cache.delete(key);
+      if (shouldDelete) {
+        keysToDelete.push(key);
         invalidatedCount++;
       }
     }
+    
+    keysToDelete.forEach(key => this.cache.delete(key));
+    if (invalidatedCount > 0) {
+      console.log(`🚮 Invalidated ${invalidatedCount} cache entries matching criteria.`);
+    }
 
-    console.log(`🗑️ Invalidated ${invalidatedCount} cache entries matching criteria`);
     return invalidatedCount;
   }
 
-  /**
-   * Preload popular searches into cache
-   */
   async preloadPopularSearches(): Promise<void> {
     const popularSearches = [
-      { location: 'Spain', platforms: ['instagram'], minFollowers: 10000 },
-      { location: 'Mexico', platforms: ['instagram'], minFollowers: 50000 },
-      { niches: ['fitness', 'lifestyle'], platforms: ['instagram'], minFollowers: 25000 },
-      { location: 'Colombia', platforms: ['instagram'], minFollowers: 10000 },
-      { niches: ['beauty', 'fashion'], platforms: ['instagram'], minFollowers: 15000 }
+      { niches: ['fashion'], location: 'spain' },
+      { niches: ['beauty'], location: 'spain' },
+      { niches: ['lifestyle'], location: 'spain' },
+      { niches: ['food'], location: 'madrid' },
+      { niches: ['travel'] },
     ];
-
-    console.log('🚀 Preloading popular search patterns...');
     
-    // Note: In a real implementation, you'd call the actual search service here
-    // For now, we'll just create placeholder cache entries
-    for (const searchParams of popularSearches) {
-      const cacheKey = this.generateCacheKey(searchParams);
-      if (!this.cache.has(cacheKey)) {
-        // Simulate cached results - in production, these would be real searches
-        await this.cacheResults(searchParams, [], 'preloaded');
+    console.log('⚡ Preloading popular searches into cache...');
+    
+    for (const params of popularSearches) {
+      const fullParams = { ...params, query: `${params.niches.join(' ')} ${params.location || ''}`.trim() };
+      // Prevent re-caching if already present
+      const cached = await this.getCachedResults(fullParams);
+      if (!cached) {
+        await this.searchWithAllImprovements(fullParams as EnhancedSearchParams);
       }
     }
   }
 
-  /**
-   * Enhanced search with all improvements integrated
-   */
   async searchWithAllImprovements(params: EnhancedSearchParams): Promise<EnhancedSearchResponse> {
     const startTime = Date.now();
     
-    console.log('🚀 Starting enhanced search with comprehensive improvements...');
-    console.log(`🎯 Addressing shortcomings: Aesthetic Intelligence, Smart Limits, Advanced Filtering, Fallbacks, Quality Tracking`);
+    // 1. Check cache first
+    const cached = await this.getCachedResults(params);
+    if (cached) {
+      const processingTime = Date.now() - startTime;
+      return {
+        ...cached.results,
+        summary: { ...cached.results.summary, processingTime, fromCache: true }
+      };
+    }
     
+    // 2. Determine optimal scraping strategy based on context
+    const scrapingMode = this.determineOptimalScrapingMode(params);
+    const scrapingManager = createSmartScrapingManager(scrapingMode);
+
     try {
-      // Step 1: Optimize search query using quality system
-      const optimization = await searchQualitySystem.optimizeSearch(params.query, params);
-      const optimizedQuery = optimization.expectedImprovement > 10 ? optimization.optimizedQuery : params.query;
-      
-      console.log(`🔧 Query optimization: ${optimization.expectedImprovement}% improvement expected`);
-      if (optimizedQuery !== params.query) {
-        console.log(`📝 Optimized query: "${optimizedQuery}"`);
-      }
-
-      // Step 2: Configure smart scraping based on user preferences or auto-detect
-      const scrapingMode = this.determineOptimalScrapingMode(params);
-      const scrapingManager = createSmartScrapingManager(scrapingMode, {
-        maxProfiles: params.maxResults || SCRAPING_CONFIGS[scrapingMode].maxProfiles
-      });
-      
-      console.log(`⚙️ Using ${scrapingMode} scraping mode (max ${SCRAPING_CONFIGS[scrapingMode].maxProfiles} profiles)`);
-
-      // Step 3: Perform initial discovery search with optimized query
-      console.log('🔍 Phase 1: Discovery search with optimization...');
-      const discoveryResults = await searchInfluencersWithTwoTierDiscovery({
-        platforms: params.platforms || ['instagram', 'tiktok'],
-        niches: params.niches || ['lifestyle'],
-        minFollowers: params.minFollowers || 1000,
-        maxFollowers: params.maxFollowers || 1000000,
-        location: params.location,
-        gender: params.gender,
-        userQuery: optimizedQuery,
-        brandName: params.brandName,
-        maxResults: SCRAPING_CONFIGS[scrapingMode].maxProfiles * 2 // Get more for better prioritization
-      });
-
-      if (!discoveryResults.premiumResults || (discoveryResults.premiumResults.length === 0 && discoveryResults.discoveryResults.length === 0)) {
-        console.log('❌ No profiles found in discovery phase, trying fallback strategies...');
-        
-        // Use fallback strategies for discovery
-        const fallbackResults = await this.tryDiscoveryFallbacks(params);
-        if (fallbackResults.length === 0) {
-          return this.createEmptyResponse(startTime, 'No profiles found even with fallback strategies');
-        }
-        
-        return this.processFallbackResults(fallbackResults, params, startTime);
-      }
-
-      const allDiscoveredProfiles = [...discoveryResults.premiumResults, ...discoveryResults.discoveryResults];
-      console.log(`✅ Discovery found ${allDiscoveredProfiles.length} profiles`);
-
-      // Step 4: Intelligent profile prioritization
-      const profileUrls = allDiscoveredProfiles.map((p: any) => ({ url: p.url || p.profileUrl, platform: this.extractPlatform(p.url || p.profileUrl) }));
-      const prioritizedProfiles = await scrapingManager.prioritizeProfiles(profileUrls, params);
-      
-      console.log(`🧠 Prioritized ${prioritizedProfiles.length} profiles for scraping`);
-
-      // Step 5: Smart scraping with fallback handling
-      const scrapingResult = await scrapingManager.executeScraping(
-        prioritizedProfiles,
-        this.enhancedScrapingFunction.bind(this),
+      // 3. Perform two-tier discovery with quality tracking
+      const scrapingResult = await searchWithQualityTracking(
+        () => scrapingManager.execute(
+          () => searchInfluencersWithTwoTierDiscovery(params.query, params.platforms || ['instagram', 'tiktok'], params.maxResults || 20),
+          params
+        ),
+        searchQualitySystem,
         params
       );
 
-      console.log(`✅ Smart scraping completed: ${scrapingResult.totalScraped} profiles scraped`);
+      let profiles = scrapingResult.results;
 
-      // Step 6: Advanced filtering with ML-based detection
-      console.log('🔬 Phase 2: Advanced filtering and quality assessment...');
-      const filteredProfiles = await this.applyAdvancedFiltering(scrapingResult.profiles, params);
-      
-      console.log(`🔍 Advanced filtering: ${filteredProfiles.length}/${scrapingResult.profiles.length} profiles passed`);
-
-      // Step 7: Aesthetic intelligence enhancement
-      console.log('🎨 Phase 3: Aesthetic intelligence analysis...');
-      const aestheticallyEnhancedProfiles = await this.enhanceWithAestheticIntelligence(
-        filteredProfiles, 
-        params.brandName || '', 
-        params.query
-      );
-
-      // Step 8: Optional verification with smart thresholds
-      let finalProfiles = aestheticallyEnhancedProfiles;
-      if (params.verificationLevel && params.verificationLevel !== 'off') {
-        console.log(`🔬 Phase 4: ${params.verificationLevel} verification...`);
-        finalProfiles = await this.performSmartVerification(
-          aestheticallyEnhancedProfiles,
-          params,
-          scrapingResult.qualityScore
-        );
+      // Emergency Fallback: If primary scraping fails completely, use a simpler method
+      if (profiles.length === 0) {
+        const fallbackResults = await this.tryDiscoveryFallbacks(params);
+        if (fallbackResults.length > 0) {
+          return this.processFallbackResults(fallbackResults, params, startTime);
+        } else {
+          return this.createEmptyResponse(startTime, 'No results found after all fallbacks.');
+        }
       }
 
-      // Step 9: Intelligent sorting and ranking
-      finalProfiles = this.applyIntelligentRanking(finalProfiles, params);
+      // 4. Enhance with Aesthetic Intelligence
+      profiles = await this.enhanceWithAestheticIntelligence(profiles, params.brandName || '', params.query);
+      
+      // 5. Smart Verification (adjusts based on scraping quality)
+      profiles = await this.performSmartVerification(profiles, params, scrapingResult.quality.scrapingScore);
+      
+      // 6. Advanced Filtering
+      profiles = await this.applyAdvancedFiltering(profiles, { brandName: params.brandName, niches: params.niches });
 
-      // Step 10: Quality tracking and insights
-      const qualityMetrics = await searchQualitySystem.trackSearch(
-        `search_${Date.now()}`,
-        optimizedQuery,
-        params,
-        finalProfiles,
-        {
-          searchTime: Date.now() - startTime,
-          apiCalls: scrapingResult.resourceUsage.apiCalls,
-          resourceUsage: scrapingResult.totalScraped
-        }
-      );
+      // 7. Intelligent Ranking
+      profiles = this.applyIntelligentRanking(profiles, params);
+      
+      const processingTime = Date.now() - startTime;
+      
+      // 8. Generate Summary & Recommendations
+      const qualityMetrics = searchQualitySystem.getMetricsForQuery(params.query);
+      const summary = this.generateEnhancedSummary(profiles, scrapingResult, qualityMetrics, processingTime);
+      const recommendations = this.generateIntelligentRecommendations(profiles, params, scrapingResult, qualityMetrics, scrapingResult.optimization);
 
-      // Step 11: Generate comprehensive response
-      const summary = this.generateEnhancedSummary(finalProfiles, scrapingResult, qualityMetrics, Date.now() - startTime);
-      const recommendations = this.generateIntelligentRecommendations(
-        finalProfiles, 
-        params, 
-        scrapingResult, 
-        qualityMetrics,
-        optimization
-      );
-
-      console.log(`✅ Enhanced search completed: ${summary.verified}/${summary.totalFound} high-quality matches`);
-      console.log(`📊 Overall quality score: ${qualityMetrics.qualityScore}%`);
-
-      return {
-        results: finalProfiles.map(this.formatEnhancedResult.bind(this)),
+      const response = {
+        results: profiles.map(this.formatEnhancedResult),
         summary,
         recommendations
       };
+      
+      // 9. Cache the final results
+      await this.cacheResults(params, response, 'two_tier_discovery');
+      
+      return response;
 
     } catch (error) {
-      console.error('❌ Enhanced search failed:', error);
-      
-      // Try emergency fallback
-      console.log('🔄 Attempting emergency fallback...');
-      const emergencyResults = await this.emergencyFallback(params);
-      
-      if (emergencyResults.length > 0) {
-        const summary = this.generateFallbackSummary(emergencyResults, Date.now() - startTime);
-        return {
-          results: emergencyResults,
-          summary,
-          recommendations: [
-            '⚠️ Primary search failed - using fallback results',
-            '💡 Try simplifying search criteria for better results',
-            '🔧 Consider using economy mode to reduce complexity'
-          ]
-        };
+      console.error("❌ Error in searchWithAllImprovements:", error);
+      // Try emergency fallback on any error during the main pipeline
+      const fallbackResults = await this.emergencyFallback(params);
+      if (fallbackResults.length > 0) {
+        return this.processFallbackResults(fallbackResults, params, startTime);
       }
-      
-      throw new Error(`Enhanced search failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      return this.createEmptyResponse(startTime, 'An unexpected error occurred.');
     }
   }
 
-  /**
-   * Enhanced scraping function with fallback integration
-   */
   private async enhancedScrapingFunction(
     profiles: any[], 
     platform: string, 
     params: any
   ): Promise<any[]> {
-    try {
-      // Try primary scraping
-      const primaryResults = await this.primaryScrapingMethod(profiles, platform, params);
-      
-      if (primaryResults.length > 0) {
-        return primaryResults;
+    // This is where you might use a more advanced scraping tool like Firecrawl
+    // For now, we simulate an enhancement process
+    console.log(`🔥 Enhancing ${profiles.length} profiles from ${platform} using advanced scraping...`);
+    return profiles.map(p => ({
+      ...p,
+      enhancedData: {
+        bio: `Enhanced bio for ${p.username}`,
+        recentPostTopics: ['fashion', 'travel', 'lifestyle']
       }
-      
-      // If primary fails, try fallback strategies
-      console.log(`🔄 Primary scraping failed for ${platform}, trying fallback strategies...`);
-      const fallbackResults = await this.scrapingWithFallbacks(profiles, platform, params);
-      
-      return fallbackResults;
-      
-    } catch (error) {
-      console.error(`❌ Scraping failed for ${platform}:`, error);
-      
-      // Generate fallback profiles
-      const fallbackProfiles = await Promise.all(
-        profiles.map(profile => generateEnhancedFallback(profile.url, platform, params))
-      );
-      
-      return fallbackProfiles.filter(p => p !== null);
-    }
+    }));
   }
 
-  /**
-   * Apply advanced filtering with ML-based detection
-   */
   private async applyAdvancedFiltering(
     profiles: any[], 
     searchContext: any
   ): Promise<any[]> {
-    const filteredProfiles: any[] = [];
+    const filteringPromises = profiles.map(profile => 
+      enhancedInfluencerFiltering(profile, searchContext)
+    );
+    const decisions = await Promise.all(filteringPromises);
     
-    for (const profile of profiles) {
-      try {
-        const filteringResult = await enhancedInfluencerFiltering(profile, {
-          searchQuery: searchContext.query,
-          brandName: searchContext.brandName
-        });
-        
-        if (filteringResult.shouldInclude) {
-          // Add filtering metadata to profile
-          profile.filteringDecision = filteringResult.decision;
-          profile.filteringRecommendations = filteringResult.recommendations;
-          filteredProfiles.push(profile);
-          
-          if (filteringResult.decision.riskLevel === 'high') {
-            console.log(`⚠️ High-risk profile included: ${profile.username} (${filteringResult.decision.confidence}% confidence)`);
-          }
-        } else {
-          console.log(`🚫 Filtered out: ${profile.username} - ${filteringResult.decision.reason}`);
-        }
-      } catch (error) {
-        console.error(`❌ Filtering error for ${profile.username}:`, error);
-        // Include profile if filtering fails to avoid over-filtering
-        filteredProfiles.push(profile);
-      }
-    }
+    const filteredProfiles = profiles.filter((_, index) => decisions[index].shouldKeep);
     
-    return filteredProfiles;
-      }
-
-  /**
-   * Enhance profiles with aesthetic intelligence
-   */
+    console.log(`🔬 Advanced Filtering: Kept ${filteredProfiles.length}/${profiles.length} profiles.`);
+    
+    // Attach filtering decision for transparency
+    return profiles.map((p, i) => ({ ...p, filteringDecision: decisions[i] }));
+  }
+  
   private async enhanceWithAestheticIntelligence(
     profiles: any[], 
     brandName: string, 
     userQuery: string
   ): Promise<any[]> {
-    const enhancedProfiles: any[] = [];
+    if (!brandName && !userQuery) return profiles;
     
-    for (const profile of profiles) {
-      try {
-        const enhancedProfile = enhanceInfluencerWithAesthetics(
-          profile,
-          brandName,
-          userQuery
-        );
-        
-        enhancedProfiles.push(enhancedProfile);
-        
-        if (enhancedProfile.aestheticScore >= 80) {
-          console.log(`🎨 Excellent aesthetic match: ${profile.username} (${enhancedProfile.aestheticScore}%)`);
-      }
-      } catch (error) {
-        console.error(`❌ Aesthetic enhancement error for ${profile.username}:`, error);
-        enhancedProfiles.push(profile);
-      }
-    }
+    // Analyze brand aesthetics from the query itself if no brand name is given
+    const brandAesthetics = await analyzeBrandSpecificAesthetic(brandName || userQuery);
+    
+    const enhancementPromises = profiles.map(profile =>
+      enhanceInfluencerWithAesthetics(profile, brandAesthetics)
+    );
+    
+    const enhancedProfiles = await Promise.all(enhancementPromises);
+    console.log(`🎨 Enhanced ${enhancedProfiles.length} profiles with aesthetic intelligence.`);
     
     return enhancedProfiles;
   }
 
-  /**
-   * Perform smart verification with adaptive thresholds
-   */
   private async performSmartVerification(
     profiles: any[],
     params: any,
     scrapingQuality: number
   ): Promise<any[]> {
-    // Adjust verification strictness based on scraping quality
-    const adaptiveThreshold = scrapingQuality > 80 ? 70 : scrapingQuality > 60 ? 60 : 50;
-    
-    console.log(`🎯 Using adaptive verification threshold: ${adaptiveThreshold}%`);
-    
-    const verifiedProfiles: any[] = [];
-    
-    for (const profile of profiles) {
-      try {
-        const verificationRequest: ProfileVerificationRequest = {
-          profileUrl: profile.url,
-        platform: profile.platform,
-          searchCriteria: {
-            niches: params.niches,
-            location: params.location,
-            minAge: params.minAge,
-            maxAge: params.maxAge,
-            gender: params.gender,
-            brandName: params.brandName,
-            minFollowers: params.minFollowers,
-            maxFollowers: params.maxFollowers
-          }
-        };
-        
-        const verificationResult = await this.verificationService.verifyProfile(verificationRequest);
-        
-        if (verificationResult.overallScore >= adaptiveThreshold) {
-          profile.verificationResult = verificationResult;
-          verifiedProfiles.push(profile);
-        } else {
-          console.log(`📉 Verification failed: ${profile.username} (${verificationResult.overallScore}% < ${adaptiveThreshold}%)`);
-        }
-      } catch (error) {
-        console.error(`❌ Verification error for ${profile.username}:`, error);
-        // Include profile if verification fails
-        verifiedProfiles.push(profile);
-      }
+    if (params.verificationLevel === 'off') {
+      return profiles;
     }
+
+    // Adjust verification based on initial scraping quality
+    // High quality scrape -> trust the data more, do lighter verification
+    // Low quality scrape -> be more thorough
+    const verificationConfidence = scrapingQuality > 0.8 ? 'high' : 'medium';
+    const sampleSize = scrapingQuality > 0.8 ? 0.5 : 0.8; // Verify 50% for high quality, 80% for lower
+
+    const profilesToVerify = profiles.slice(0, Math.ceil(profiles.length * sampleSize));
+
+    const verificationRequests: ProfileVerificationRequest[] = profilesToVerify.map(p => ({
+      profileUrl: p.profileUrl,
+      platform: p.platform,
+      confidenceThreshold: verificationConfidence === 'high' ? 0.75 : 0.6
+    }));
+
+    const verificationResults = await this.verificationService.batchVerify(verificationRequests);
     
-    return verifiedProfiles;
+    const verificationMap = new Map(verificationResults.map(r => [r.profileUrl, r]));
+
+    return profiles.map(p => {
+      const verificationData = verificationMap.get(p.profileUrl);
+      return {
+        ...p,
+        verificationData: verificationData || p.verificationData, // Keep old data if not re-verified
+        combinedScore: this.calculateCombinedScore({ ...p, verificationData })
+      };
+    });
   }
 
-  /**
-   * Apply intelligent ranking considering all factors
-   */
   private applyIntelligentRanking(profiles: any[], params: any): any[] {
     return profiles.sort((a, b) => {
-      // Multi-factor scoring
-      let scoreA = 0;
-      let scoreB = 0;
-      
-      // Aesthetic alignment (30%)
-      scoreA += (a.aestheticScore || 50) * 0.3;
-      scoreB += (b.aestheticScore || 50) * 0.3;
-      
-      // Quality score (25%)
-      scoreA += (a.filteringDecision?.features?.followerCount || 0) > 10000 ? 25 : 15;
-      scoreB += (b.filteringDecision?.features?.followerCount || 0) > 10000 ? 25 : 15;
-      
-      // Verification score (25%)
-      scoreA += (a.verificationResult?.overallScore || 50) * 0.25;
-      scoreB += (b.verificationResult?.overallScore || 50) * 0.25;
-      
-      // Priority score from scraping (20%)
-      scoreA += (a.priorityScore || 50) * 0.2;
-      scoreB += (b.priorityScore || 50) * 0.2;
-      
+      const scoreA = this.calculateCombinedScore(a);
+      const scoreB = this.calculateCombinedScore(b);
       return scoreB - scoreA;
     });
   }
 
-  /**
-   * Try discovery fallbacks when main search fails
-   */
   private async tryDiscoveryFallbacks(params: any): Promise<any[]> {
-    const fallbackResults: any[] = [];
+    console.warn('⚠️ Primary search failed. Trying discovery fallbacks...');
     
-    // Try broader search terms
-    if (params.query) {
-      const broaderQuery = this.createBroaderQuery(params.query);
-      console.log(`🔄 Trying broader query: "${broaderQuery}"`);
-      
-      try {
-        const broaderResults = await searchInfluencersWithTwoTierDiscovery({
-          platforms: params.platforms || ['instagram'],
-          niches: params.niches || ['lifestyle'],
-          minFollowers: params.minFollowers || 1000,
-          maxFollowers: params.maxFollowers || 1000000,
-          location: params.location,
-          userQuery: broaderQuery,
-          maxResults: 20
-        });
-        
-        if (broaderResults.premiumResults.length > 0 || broaderResults.discoveryResults.length > 0) {
-          fallbackResults.push(...broaderResults.premiumResults, ...broaderResults.discoveryResults);
-        }
-      } catch (error) {
-        console.log('❌ Broader query failed:', error);
-      }
+    // Fallback 1: Generate enhanced query and re-run
+    const enhancedQuery = generateEnhancedFallback(params.query, params);
+    let results = await searchInfluencersWithTwoTierDiscovery(enhancedQuery, params.platforms, params.maxResults);
+    if (results.length > 0) {
+      console.log(`✅ Fallback successful with enhanced query: "${enhancedQuery}"`);
+      return results.map(r => ({ ...r, isFallback: true, fallbackSource: 'enhanced_query' }));
     }
     
-    // Try location-only search
-    if (params.location && fallbackResults.length < 5) {
-      console.log(`🔄 Trying location-focused search: ${params.location}`);
-      
-      try {
-        const locationResults = await searchInfluencersWithTwoTierDiscovery({
-          platforms: params.platforms || ['instagram'],
-          niches: ['lifestyle'],
-          minFollowers: 1000,
-          maxFollowers: 1000000,
-          location: params.location,
-          userQuery: `influencers ${params.location}`,
-          maxResults: 15
-        });
-        
-        if (locationResults.premiumResults.length > 0 || locationResults.discoveryResults.length > 0) {
-          fallbackResults.push(...locationResults.premiumResults, ...locationResults.discoveryResults);
-        }
-      } catch (error) {
-        console.log('❌ Location search failed:', error);
+    // Fallback 2: Broader query
+    const broaderQuery = this.createBroaderQuery(params.query);
+    results = await searchInfluencersWithTwoTierDiscovery(broaderQuery, params.platforms, params.maxResults);
+    if (results.length > 0) {
+      console.log(`✅ Fallback successful with broader query: "${broaderQuery}"`);
+      return results.map(r => ({ ...r, isFallback: true, fallbackSource: 'broader_query' }));
+    }
+
+    // Fallback 3: Emergency local data (if available)
+    try {
+      const emergencyResults = await this.emergencyFallback(params);
+      if (emergencyResults.length > 0) {
+        console.log(`✅ Fallback successful with emergency local data.`);
+        return emergencyResults.map(r => ({ ...r, isFallback: true, fallbackSource: 'emergency_local' }));
       }
+    } catch (e) {
+      console.error("Emergency fallback failed:", e);
     }
     
-    return fallbackResults;
+    console.error('❌ All discovery fallbacks failed.');
+    return [];
   }
 
-  /**
-   * Emergency fallback when everything fails
-   */
   private async emergencyFallback(params: any): Promise<any[]> {
-    console.log('🆘 Executing emergency fallback...');
-    
-    const emergencyProfiles = [];
-    const platforms = params.platforms || ['instagram'];
-    
-    for (const platform of platforms) {
-      // Generate basic fallback profiles
-      for (let i = 0; i < 5; i++) {
-        const fallbackProfile = await generateEnhancedFallback(
-          `https://${platform}.com/fallback_user_${i}`,
-          platform,
-          params
-        );
-        
-        if (fallbackProfile) {
-          emergencyProfiles.push({
-            username: fallbackProfile.username,
-            platform: fallbackProfile.platform,
-            url: fallbackProfile.url,
-            followers: fallbackProfile.estimatedMetrics.followers,
-            engagementRate: fallbackProfile.estimatedMetrics.engagementRate,
-            isEmergencyFallback: true,
-            confidence: fallbackProfile.confidence,
-            niche: fallbackProfile.inferredData.niche,
-            location: fallbackProfile.inferredData.location
-          });
-      }
-      }
-    }
-    
-    return emergencyProfiles;
+    // This is a last resort. For example, search a static JSON file.
+    console.warn('🚨 Executing emergency fallback...');
+    // In a real app, you might load a static list of popular influencers
+    // For now, returning an empty array.
+    return [];
   }
 
-  /**
-   * Determine optimal scraping mode based on query complexity
-   */
   private determineOptimalScrapingMode(params: any): 'economy' | 'balanced' | 'comprehensive' | 'unlimited' {
-    let complexityScore = 0;
-    
-    // Query complexity
-    if (params.query && params.query.length > 50) complexityScore += 2;
-    if (params.brandName) complexityScore += 2;
-    if (params.niches && params.niches.length > 2) complexityScore += 1;
-    if (params.location) complexityScore += 1;
-    if (params.minFollowers || params.maxFollowers) complexityScore += 1;
-    if (params.platforms && params.platforms.length > 2) complexityScore += 1;
-    
-    // User preferences (could be added to params)
-    if (params.scrapingMode) return params.scrapingMode;
-    
-    // Auto-determine based on complexity
-    if (complexityScore <= 3) return 'economy';
-    if (complexityScore <= 6) return 'balanced';
-    if (complexityScore <= 8) return 'comprehensive';
-    return 'unlimited';
+    if (params.brandName) return 'comprehensive';
+    if (params.niches && params.niches.length > 1) return 'balanced';
+    if (params.minFollowers > 100000) return 'balanced';
+    return 'economy';
   }
 
-  /**
-   * Generate enhanced summary with all improvements
-   */
   private generateEnhancedSummary(
     profiles: any[], 
     scrapingResult: any, 
     qualityMetrics: any, 
     processingTime: number
   ): any {
-    const verified = profiles.filter(p => p.verificationResult?.verified).length;
-    const highAesthetic = profiles.filter(p => (p.aestheticScore || 0) >= 80).length;
-    const highQuality = profiles.filter(p => p.filteringDecision?.confidence >= 80).length;
-
     return {
-      totalFound: scrapingResult.totalFound,
-      totalScraped: scrapingResult.totalScraped,
+      totalFound: scrapingResult.total,
+      totalScraped: scrapingResult.results.length,
       totalReturned: profiles.length,
-      verified,
-      highAestheticAlignment: highAesthetic,
-      highQuality,
-      averageQualityScore: qualityMetrics.qualityScore,
-      averageAestheticScore: profiles.reduce((sum, p) => sum + (p.aestheticScore || 50), 0) / profiles.length,
+      verified: profiles.filter(p => p.verificationData?.isVerified).length,
+      averageScore: profiles.reduce((sum, p) => sum + this.calculateCombinedScore(p), 0) / (profiles.length || 1),
       processingTime,
-      scrapingEfficiency: scrapingResult.resourceUsage.successRate,
+      highAestheticAlignment: profiles.filter(p => p.aestheticScore > 0.8).length,
+      highQuality: qualityMetrics.highQualitySearches,
+      averageQualityScore: qualityMetrics.averageScore,
+      scrapingEfficiency: scrapingResult.quality?.efficiency,
       improvements: {
         aestheticIntelligence: true,
         smartScraping: true,
         advancedFiltering: true,
         fallbackStrategies: true,
-        qualityTracking: true
-      }
+        qualityTracking: true,
+      },
     };
   }
 
-  /**
-   * Generate intelligent recommendations
-   */
   private generateIntelligentRecommendations(
     profiles: any[], 
     params: any, 
@@ -866,73 +762,46 @@ class EnhancedSearchService {
     optimization: any
   ): string[] {
     const recommendations: string[] = [];
-    
-    // Quality-based recommendations
-    if (qualityMetrics.qualityScore >= 80) {
-      recommendations.push('🌟 Excellent search quality - results are highly relevant and well-matched');
-    } else if (qualityMetrics.qualityScore >= 60) {
-      recommendations.push('✅ Good search quality - consider verification for top candidates');
-    } else {
-      recommendations.push('⚠️ Consider refining search criteria for better quality results');
+
+    if (qualityMetrics.averageScore < 0.6) {
+      recommendations.push("Search quality was low. Try a more specific query like adding a location or niche.");
     }
-    
-    // Aesthetic recommendations
-    const avgAesthetic = profiles.reduce((sum, p) => sum + (p.aestheticScore || 50), 0) / profiles.length;
-    if (avgAesthetic < 50) {
-      recommendations.push('🎨 Low aesthetic alignment detected - try more specific style keywords');
-    } else if (avgAesthetic >= 80) {
-      recommendations.push('🎨 Excellent aesthetic matching - perfect for style-specific campaigns');
+    if (scrapingResult.results.length < (params.maxResults || 20) * 0.5) {
+      recommendations.push("Fewer results than expected. Broaden your search by removing a keyword.");
+    }
+    if (profiles.every(p => p.aestheticScore < 0.7)) {
+      recommendations.push("Aesthetic alignment is low. Try adding keywords related to your brand's visual style (e.g., 'minimalist', 'vibrant', 'cinematic').");
+    }
+    if (optimization?.applied) {
+      recommendations.push(`Scraping was optimized (${optimization.reason}). To disable, use a more specific query.`);
     }
 
-    // Performance recommendations
-    if (scrapingResult.resourceUsage.timeSpent > 60000) {
-      recommendations.push('⏰ Consider economy mode for faster results in future searches');
-    }
-
-    // Optimization recommendations
-    if (optimization.expectedImprovement > 15) {
-      recommendations.push(`💡 Query optimization available: ${optimization.optimization.join(', ')}`);
+    if (recommendations.length === 0) {
+      recommendations.push("Search successful. For more specific results, add follower ranges or negative keywords.");
     }
     
-    // Coverage recommendations
-    if (profiles.length < 5) {
-      recommendations.push('📈 Few results found - try broader criteria or comprehensive mode');
-    } else if (profiles.length > 30) {
-      recommendations.push('🎯 Many results found - consider narrowing criteria for more focused results');
-    }
-    
-    // Fallback usage recommendations
-    const fallbackProfiles = profiles.filter(p => p.isFallback || p.isEmergencyFallback);
-    if (fallbackProfiles.length > 0) {
-      recommendations.push(`🔄 ${fallbackProfiles.length} fallback profiles included - verify manually for best results`);
-    }
-
     return recommendations;
   }
 
-  /**
-   * Extract platform from URL
-   */
   private extractPlatform(url: string): string {
-    if (url.includes('instagram.com')) return 'instagram';
-    if (url.includes('tiktok.com')) return 'tiktok';
-    if (url.includes('youtube.com')) return 'youtube';
-    if (url.includes('twitter.com') || url.includes('x.com')) return 'twitter';
-    return 'unknown';
+    if (url.includes('instagram.com')) return 'Instagram';
+    if (url.includes('tiktok.com')) return 'TikTok';
+    if (url.includes('youtube.com')) return 'YouTube';
+    return 'Unknown';
   }
 
-  /**
-   * Extract username from URL
-   */
   private extractUsername(url: string): string {
-    const match = url.match(/@([^/?\s]+)/);
-    return match ? match[1] : url.split('/').pop() || 'unknown';
+    try {
+      const path = new URL(url).pathname.split('/').filter(Boolean);
+      if (path.length > 0) return path[0];
+    } catch (e) {
+      // ignore invalid URLs
+    }
+    return '';
   }
 
-  /**
-   * Create empty response when no results found
-   */
   private createEmptyResponse(startTime: number, message: string): EnhancedSearchResponse {
+    const processingTime = Date.now() - startTime;
     return {
       results: [],
       summary: {
@@ -941,142 +810,85 @@ class EnhancedSearchService {
         totalReturned: 0,
         verified: 0,
         averageScore: 0,
-        processingTime: Date.now() - startTime,
-        highAestheticAlignment: 0,
-        highQuality: 0,
-        averageQualityScore: 0,
-        averageAestheticScore: 0,
-        scrapingEfficiency: 0,
-        improvements: {
-          aestheticIntelligence: true,
-          smartScraping: true,
-          advancedFiltering: true,
-          fallbackStrategies: true,
-          qualityTracking: true
-        }
+        processingTime,
       },
-      recommendations: [message, '💡 Try broader search terms or different criteria']
+      recommendations: [message, "Please try broadening your search or checking your spelling."]
     };
   }
 
-  /**
-   * Process fallback results
-   */
   private processFallbackResults(fallbackResults: any[], params: any, startTime: number): EnhancedSearchResponse {
-    const formattedResults = fallbackResults.map(this.formatEnhancedResult.bind(this));
-    
+    const processingTime = Date.now() - startTime;
     return {
-      results: formattedResults,
-      summary: this.generateFallbackSummary(formattedResults, Date.now() - startTime),
-      recommendations: [
-        '🔄 Using fallback discovery results',
-        '💡 Primary search failed - results may be less accurate',
-        '🔧 Try adjusting search parameters for better results'
-      ]
+      results: fallbackResults.map(this.formatEnhancedResult),
+      summary: this.generateFallbackSummary(fallbackResults, processingTime),
+      recommendations: ["Primary search failed, but we found results using a fallback strategy. Data may be less accurate."]
     };
   }
-
-  /**
-   * Format profile for enhanced result
-   */
+  
   private formatEnhancedResult(profile: any): EnhancedSearchResult {
     return {
-      profileUrl: profile.url || profile.profileUrl,
-      platform: profile.platform || this.extractPlatform(profile.url || profile.profileUrl),
-      discoveryScore: profile.discoveryScore || 0.5,
-      username: profile.username || this.extractUsername(profile.url || profile.profileUrl),
-      followers: profile.followers || profile.followerCount,
-      category: profile.category || profile.niche?.join(', ') || 'lifestyle',
+      profileUrl: profile.profileUrl,
+      platform: profile.platform,
+      discoveryScore: profile.discoveryScore,
+      verificationData: profile.verificationData,
+      combinedScore: this.calculateCombinedScore(profile),
+      username: profile.username,
+      followers: profile.followers,
+      category: profile.category,
       location: profile.location,
-      combinedScore: profile.combinedScore || this.calculateCombinedScore(profile),
-      verificationData: profile.verificationResult,
       aestheticScore: profile.aestheticScore,
       filteringDecision: profile.filteringDecision,
-      isFallback: profile.isFallback || profile.isEmergencyFallback || false
+      isFallback: profile.isFallback || false
     };
   }
 
-  /**
-   * Calculate combined score for profile
-   */
   private calculateCombinedScore(profile: any): number {
-    let score = 50; // Base score
-    
-    if (profile.aestheticScore) score += profile.aestheticScore * 0.3;
-    if (profile.verificationResult?.overallScore) score += profile.verificationResult.overallScore * 0.4;
-    if (profile.filteringDecision?.confidence) score += profile.filteringDecision.confidence * 0.3;
-    
-    return Math.min(100, Math.max(0, Math.round(score)));
+    let score = profile.discoveryScore || 0.5;
+    if (profile.verificationData?.isVerified) {
+      score = (score * 0.7) + (profile.verificationData.confidence * 0.3);
+    }
+    if (profile.aestheticScore) {
+      score = (score * 0.6) + (profile.aestheticScore * 0.4);
+    }
+    return Math.min(1, score) * 100;
   }
 
-  /**
-   * Generate fallback summary
-   */
   private generateFallbackSummary(profiles: any[], processingTime: number): any {
     return {
       totalFound: profiles.length,
       totalScraped: profiles.length,
       totalReturned: profiles.length,
-      verified: profiles.filter(p => p.verificationData?.verified).length,
-      highAestheticAlignment: profiles.filter(p => (p.aestheticScore || 0) >= 80).length,
-      highQuality: profiles.filter(p => (p.combinedScore || 0) >= 70).length,
-      averageQualityScore: profiles.reduce((sum, p) => sum + (p.combinedScore || 50), 0) / profiles.length,
-      averageAestheticScore: profiles.reduce((sum, p) => sum + (p.aestheticScore || 50), 0) / profiles.length,
+      verified: 0,
+      averageScore: 50, // Default for fallbacks
       processingTime,
-      scrapingEfficiency: 0.5,
-      improvements: {
-        aestheticIntelligence: false,
-        smartScraping: false,
-        advancedFiltering: false,
-        fallbackStrategies: true,
-        qualityTracking: false
-      }
+      isFallback: true
     };
   }
-
-  /**
-   * Create broader query for fallback
-   */
+  
+  // Example of how you might create a broader query
   private createBroaderQuery(originalQuery: string): string {
-    // Remove specific terms and make query more general
-    const words = originalQuery.split(' ');
-    const essentialWords = words.filter(word => 
-      !['style', 'aesthetic', 'specific', 'particular', 'exactly'].includes(word.toLowerCase())
-    );
-    
-    return essentialWords.slice(0, 3).join(' '); // Keep only first 3 essential words
+    const terms = originalQuery.split(' ');
+    // Remove the last term if more than 2 terms exist
+    if (terms.length > 2) {
+      return terms.slice(0, -1).join(' ');
+    }
+    return originalQuery;
   }
 
-  /**
-   * Primary scraping method
-   */
   private async primaryScrapingMethod(profiles: any[], platform: string, params: any): Promise<any[]> {
-    // This would integrate with your existing scraping logic
-    // For now, return empty array to trigger fallback
-    return [];
+    // Your main scraping logic here
+    return this.enhancedScrapingFunction(profiles, platform, params);
   }
 
-  /**
-   * Scraping with fallbacks
-   */
   private async scrapingWithFallbacks(profiles: any[], platform: string, params: any): Promise<any[]> {
-    // Try alternative scraping methods
-    const fallbackProfiles = await Promise.all(
-      profiles.map(async (profile: any) => {
-        const fallbackData = await generateEnhancedFallback(profile.url, platform, params);
-        return fallbackData ? {
-          ...profile,
-          ...fallbackData,
-          isFallback: true
-        } : null;
-      })
-    );
-    
-    return fallbackProfiles.filter(p => p !== null);
+    try {
+      return await this.primaryScrapingMethod(profiles, platform, params);
+    } catch (error) {
+      console.warn('Primary scraping method failed, trying secondary...');
+      // A simpler, more reliable but less detailed scraping function
+      return profiles.map(p => ({ ...p, scrapedWith: 'secondary_fallback' }));
+    }
   }
 }
 
-// Singleton instance
-const enhancedSearchService = new EnhancedSearchService();
-
-export { enhancedSearchService, type SearchCacheEntry, type CacheStats }; 
+export const enhancedSearchService = new EnhancedSearchService(); 

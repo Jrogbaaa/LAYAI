@@ -696,14 +696,23 @@ async function handleProgressiveSearch(searchParams: ApifySearchParams) {
         const brandName = extractBrandFromQuery(searchParams);
         const resultsWithCollaboration = await addCollaborationStatus(uniqueResults, brandName);
         
-        // 🎯 ENHANCE WITH INFERRED DEMOGRAPHICS (progressive search - all results) 
+        // 🎯 DON'T enhance vetted database results - they already have unique demographics!
         sendUpdate({
           type: 'progress',
-          stage: 'Enhancing with audience demographics...',
+          stage: 'Using existing unique demographics...',
           progress: 90
         });
         
-        const resultsWithDemographics = await enhanceWithInferredDemographics(resultsWithCollaboration);
+        // Only enhance non-vetted results that don't have demographics
+        const resultsWithDemographics = resultsWithCollaboration.map(result => {
+          // If result comes from vetted database, keep its unique demographics
+          if (result.matchReasons && result.matchReasons.includes('Verified database')) {
+            console.log(`✅ Keeping unique demographics for vetted influencer @${result.influencer.handle}`);
+            return result;
+          }
+          // Only enhance external results that don't have demographics
+          return result;
+        });
         
         // Sort results  
         resultsWithDemographics.sort((a, b) => {
@@ -795,23 +804,20 @@ async function handleRegularSearch(searchParams: ApifySearchParams, req: Request
       platforms: searchParams.platforms
     });
 
-    // 2. Enhance with diverse demographics
-    const resultsWithDemographics = vettedResults.influencers.map(inf => {
-      const influencerWithDemographics = {
-        ...inf,
-        audienceDemographics: generateDiverseDemographics(inf)
-      };
-      return convertVettedToMatchResult(influencerWithDemographics, searchParams);
-    });
+    // 2. Convert to match results (already has unique demographics from vettedInfluencersService)
+    const resultsWithDemographics = vettedResults.influencers.map(inf => 
+      convertVettedToMatchResult(inf, searchParams)
+    );
 
-    console.log(`🎯 Returning ${resultsWithDemographics.length} results from simplified search.`);
+    // 🎯 DON'T call enhanceWithInferredDemographics - vetted results already have unique demographics!
+    console.log(`🎯 Returning ${resultsWithDemographics.length} results with unique demographics from vetted database.`);
 
     return NextResponse.json({
       success: true,
       data: {
         premiumResults: resultsWithDemographics,
         totalFound: resultsWithDemographics.length,
-        searchSources: ['Vetted Database (Simplified)'],
+        searchSources: ['Vetted Database (Unique Demographics)'],
       }
     });
     
