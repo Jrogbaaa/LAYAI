@@ -29,6 +29,9 @@ jest.mock('next/router', () => ({
   },
 }));
 
+// Mock console.log to reduce test noise
+global.console.log = jest.fn();
+
 // Mock environment variables
 process.env.NEXT_PUBLIC_FIREBASE_API_KEY = 'test-api-key';
 process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = 'test-auth-domain.firebaseapp.com';

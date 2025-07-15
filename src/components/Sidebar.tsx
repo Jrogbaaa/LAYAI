@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Menu, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/lib/languageContext';
 
-export type PageView = 'search' | 'generate' | 'notes' | 'campaigns';
+export type PageView = 'search' | 'generate' | 'notes' | 'campaigns' | 'analytics' | 'compatibility';
 
 interface SidebarProps {
   currentView: PageView;
@@ -11,7 +11,26 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hasSearchData, setHasSearchData] = useState(false);
   const { t } = useLanguage();
+
+  // Check if we have search data for analytics/compatibility
+  useEffect(() => {
+    const checkSearchData = () => {
+      try {
+        const searchData = localStorage.getItem('recentSearchResults');
+        setHasSearchData(!!searchData && JSON.parse(searchData).length > 0);
+      } catch {
+        setHasSearchData(false);
+      }
+    };
+    
+    checkSearchData();
+    
+    // Check periodically for updates
+    const interval = setInterval(checkSearchData, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const menuItems = [
     {
@@ -49,6 +68,26 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
       description: t('nav.notes.desc'),
       gradient: 'from-orange-500 to-orange-600',
       hoverGradient: 'from-orange-600 to-orange-700'
+    },
+    {
+      id: 'analytics' as PageView,
+      label: 'Analytics',
+      shortLabel: 'Analytics',
+      icon: '📊',
+      description: 'Audience insights and performance analytics',
+      gradient: 'from-indigo-500 to-indigo-600',
+      hoverGradient: 'from-indigo-600 to-indigo-700',
+      hasData: hasSearchData
+    },
+    {
+      id: 'compatibility' as PageView,
+      label: 'Brand Compatibility',
+      shortLabel: 'Compatibility',
+      icon: '🎯',
+      description: 'AI-powered brand-influencer matching',
+      gradient: 'from-pink-500 to-rose-600',
+      hoverGradient: 'from-pink-600 to-rose-700',
+      hasData: hasSearchData
     }
   ];
 

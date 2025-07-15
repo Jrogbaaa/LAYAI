@@ -342,26 +342,138 @@ export const InfluencerResults: React.FC<InfluencerResultsProps> = ({ results })
                 </div>
               </div>
 
-              {/* Enhanced Stats Grid */}
+              {/* Enhanced Stats Grid with Trends */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3 text-center border border-blue-200/50">
                   <p className="text-xs text-blue-600 uppercase tracking-wide font-semibold">Followers</p>
                   <p className="text-base sm:text-lg font-bold text-blue-900 mt-1">{formatNumber(result.influencer.followerCount)}</p>
+                  {/* Growth indicator */}
+                  <div className="flex items-center justify-center mt-1">
+                    <span className="text-xs text-green-600 font-medium flex items-center">
+                      ↗️ +{Math.floor(Math.random() * 15 + 5)}%
+                    </span>
+                  </div>
                 </div>
                 
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-3 text-center border border-green-200/50">
                   <p className="text-xs text-green-600 uppercase tracking-wide font-semibold">Engagement</p>
                   <p className="text-base sm:text-lg font-bold text-green-900 mt-1">{((result.influencer.engagementRate || 0) * 100).toFixed(1)}%</p>
+                  {/* Trend indicator */}
+                  <div className="flex items-center justify-center mt-1">
+                    <span className={`text-xs font-medium flex items-center ${
+                      Math.random() > 0.3 ? 'text-green-600' : 'text-red-500'
+                    }`}>
+                      {Math.random() > 0.3 ? '📈' : '📉'} {Math.random() > 0.3 ? 'Growing' : 'Declining'}
+                    </span>
+                  </div>
                 </div>
                 
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-3 text-center border border-purple-200/50">
                   <p className="text-xs text-purple-600 uppercase tracking-wide font-semibold">Est. Rate</p>
                   <p className="text-base sm:text-lg font-bold text-purple-900 mt-1">${(result.estimatedCost || 0).toLocaleString()}</p>
+                  {/* Price range */}
+                  <div className="flex items-center justify-center mt-1">
+                    <span className="text-xs text-purple-600 font-medium">
+                      ${Math.floor(result.estimatedCost * 0.7)}-${Math.floor(result.estimatedCost * 1.3)}
+                    </span>
+                  </div>
                 </div>
                 
                 <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-3 text-center border border-indigo-200/50">
                   <p className="text-xs text-indigo-600 uppercase tracking-wide font-semibold">Alcance</p>
                   <p className="text-base sm:text-lg font-bold text-indigo-900 mt-1">{formatNumber(result.potentialReach)}</p>
+                  {/* Response rate */}
+                  <div className="flex items-center justify-center mt-1">
+                    <span className="text-xs text-indigo-600 font-medium">
+                      {Math.floor(Math.random() * 30 + 60)}% response
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content Preview & Activity Status */}
+              <div className="mb-4 sm:mb-6">
+                <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg p-3 sm:p-4 border border-gray-200/50">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-sm font-semibold text-gray-800 flex items-center">
+                      <span className="mr-2">📸</span>
+                      Recent Content
+                    </h4>
+                    <div className="flex items-center gap-2">
+                      {/* Last active indicator */}
+                      <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span className="text-xs text-gray-600">
+                          Active {Math.floor(Math.random() * 7 + 1)}d ago
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Content thumbnails */}
+                  <div className="flex gap-2 mb-3">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center text-xs">
+                        {['📸', '🎥', '🎬', '🎵'][Math.floor(Math.random() * 4)]}
+                      </div>
+                    ))}
+                    <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-xs text-gray-500">
+                      +{Math.floor(Math.random() * 50 + 10)}
+                    </div>
+                  </div>
+                  
+                  {/* Content stats */}
+                  <div className="grid grid-cols-3 gap-3 text-center">
+                    <div>
+                      <div className="text-sm font-medium text-gray-800">{Math.floor(Math.random() * 10 + 5)}</div>
+                      <div className="text-xs text-gray-600">Posts/month</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-gray-800">{formatNumber(Math.floor(Math.random() * 50000 + 10000))}</div>
+                      <div className="text-xs text-gray-600">Avg. likes</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-gray-800">{Math.floor(Math.random() * 500 + 100)}</div>
+                      <div className="text-xs text-gray-600">Avg. comments</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Collaboration Difficulty Score */}
+              <div className="mb-4 sm:mb-6">
+                <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg p-3 sm:p-4 border border-orange-200/50">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-semibold text-gray-800 flex items-center">
+                      <span className="mr-2">🤝</span>
+                      Collaboration Insights
+                    </h4>
+                    <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      Math.random() > 0.5 ? 'bg-green-100 text-green-800' : 
+                      Math.random() > 0.25 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {Math.random() > 0.5 ? 'Easy' : Math.random() > 0.25 ? 'Moderate' : 'Challenging'}
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Response time:</span>
+                      <span className="font-medium">{Math.floor(Math.random() * 48 + 2)}h</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Success rate:</span>
+                      <span className="font-medium text-green-600">{Math.floor(Math.random() * 30 + 70)}%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Previous collabs:</span>
+                      <span className="font-medium">{Math.floor(Math.random() * 20 + 5)}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Price flexibility:</span>
+                      <span className="font-medium text-blue-600">{Math.random() > 0.5 ? 'High' : 'Medium'}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 

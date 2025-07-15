@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { navigateToSearch, getChatInput, getSendButton, waitForSearchResults } from './test-utils';
 
 test.describe('2Good Proposal Generation Workflow', () => {
   test('should complete full workflow: search → results → proposal generation', async ({ page }) => {
@@ -7,7 +8,7 @@ test.describe('2Good Proposal Generation Workflow', () => {
     // Step 1: Navigate to chat interface
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    await page.click('text=Comenzar Búsqueda');
+    await navigateToSearch(page);
     await page.waitForTimeout(3000);
     
     // Step 2: Use chat to search for 2Good brand

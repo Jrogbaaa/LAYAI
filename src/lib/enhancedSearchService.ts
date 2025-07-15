@@ -396,7 +396,7 @@ class EnhancedSearchService {
         oldestEntry = key;
       }
     }
-    
+
     if (oldestEntry) {
       this.cache.delete(oldestEntry);
       console.log(`🗑️ Evicted least recently used cache entry: ${oldestEntry}`);
@@ -409,7 +409,7 @@ class EnhancedSearchService {
   private cleanupCache(): void {
     const now = Date.now();
     let cleanedCount = 0;
-    
+
     for (const [key, entry] of Array.from(this.cache.entries())) {
       if ((now - entry.timestamp) > entry.ttl) {
         this.cache.delete(key);
@@ -427,7 +427,7 @@ class EnhancedSearchService {
   private updateStats(): void {
     if (this.stats.totalQueries > 0) {
       this.stats.hitRatio = this.stats.cacheHits / this.stats.totalQueries;
-    }
+  }
   }
 
   getCacheStats(): CacheStats & { cacheSize: number; topQueries: Array<{query: string, hits: number}> } {
@@ -435,7 +435,7 @@ class EnhancedSearchService {
       .sort((a, b) => b.hitCount - a.hitCount)
       .slice(0, 5)
       .map(entry => ({ query: entry.query, hits: entry.hitCount }));
-      
+
     return {
       ...this.stats,
       cacheSize: this.cache.size,
@@ -468,7 +468,7 @@ class EnhancedSearchService {
         invalidatedCount++;
       }
     }
-    
+
     keysToDelete.forEach(key => this.cache.delete(key));
     if (invalidatedCount > 0) {
       console.log(`🚮 Invalidated ${invalidatedCount} cache entries matching criteria.`);
@@ -485,7 +485,7 @@ class EnhancedSearchService {
       { niches: ['food'], location: 'madrid' },
       { niches: ['travel'] },
     ];
-    
+
     console.log('⚡ Preloading popular searches into cache...');
     
     for (const params of popularSearches) {
@@ -509,10 +509,10 @@ class EnhancedSearchService {
         ...cached.results,
         summary: { ...cached.results.summary, processingTime, fromCache: true }
       };
-    }
-    
+      }
+
     // 2. Determine optimal scraping strategy based on context
-    const scrapingMode = this.determineOptimalScrapingMode(params);
+      const scrapingMode = this.determineOptimalScrapingMode(params);
     const scrapingManager = createSmartScrapingManager(scrapingMode);
 
     try {
@@ -532,7 +532,7 @@ class EnhancedSearchService {
       if (profiles.length === 0) {
         const fallbackResults = await this.tryDiscoveryFallbacks(params);
         if (fallbackResults.length > 0) {
-          return this.processFallbackResults(fallbackResults, params, startTime);
+        return this.processFallbackResults(fallbackResults, params, startTime);
         } else {
           return this.createEmptyResponse(startTime, 'No results found after all fallbacks.');
         }
@@ -540,10 +540,10 @@ class EnhancedSearchService {
 
       // 4. Enhance with Aesthetic Intelligence
       profiles = await this.enhanceWithAestheticIntelligence(profiles, params.brandName || '', params.query);
-      
+
       // 5. Smart Verification (adjusts based on scraping quality)
       profiles = await this.performSmartVerification(profiles, params, scrapingResult.quality.scrapingScore);
-      
+
       // 6. Advanced Filtering
       profiles = await this.applyAdvancedFiltering(profiles, { brandName: params.brandName, niches: params.niches });
 
@@ -562,7 +562,7 @@ class EnhancedSearchService {
         summary,
         recommendations
       };
-      
+
       // 9. Cache the final results
       await this.cacheResults(params, response, 'two_tier_discovery');
       
@@ -655,7 +655,7 @@ class EnhancedSearchService {
       platform: p.platform,
       confidenceThreshold: verificationConfidence === 'high' ? 0.75 : 0.6
     }));
-
+        
     const verificationResults = await this.verificationService.batchVerify(verificationRequests);
     
     const verificationMap = new Map(verificationResults.map(r => [r.profileUrl, r]));
@@ -703,10 +703,10 @@ class EnhancedSearchService {
       if (emergencyResults.length > 0) {
         console.log(`✅ Fallback successful with emergency local data.`);
         return emergencyResults.map(r => ({ ...r, isFallback: true, fallbackSource: 'emergency_local' }));
-      }
+        }
     } catch (e) {
       console.error("Emergency fallback failed:", e);
-    }
+      }
     
     console.error('❌ All discovery fallbacks failed.');
     return [];
@@ -762,7 +762,7 @@ class EnhancedSearchService {
     optimization: any
   ): string[] {
     const recommendations: string[] = [];
-
+    
     if (qualityMetrics.averageScore < 0.6) {
       recommendations.push("Search quality was low. Try a more specific query like adding a location or niche.");
     }
@@ -779,7 +779,7 @@ class EnhancedSearchService {
     if (recommendations.length === 0) {
       recommendations.push("Search successful. For more specific results, add follower ranges or negative keywords.");
     }
-    
+
     return recommendations;
   }
 
@@ -824,7 +824,7 @@ class EnhancedSearchService {
       recommendations: ["Primary search failed, but we found results using a fallback strategy. Data may be less accurate."]
     };
   }
-  
+
   private formatEnhancedResult(profile: any): EnhancedSearchResult {
     return {
       profileUrl: profile.profileUrl,
@@ -864,7 +864,7 @@ class EnhancedSearchService {
       isFallback: true
     };
   }
-  
+
   // Example of how you might create a broader query
   private createBroaderQuery(originalQuery: string): string {
     const terms = originalQuery.split(' ');
@@ -887,8 +887,8 @@ class EnhancedSearchService {
       console.warn('Primary scraping method failed, trying secondary...');
       // A simpler, more reliable but less detailed scraping function
       return profiles.map(p => ({ ...p, scrapedWith: 'secondary_fallback' }));
-    }
   }
+}
 }
 
 export const enhancedSearchService = new EnhancedSearchService(); 

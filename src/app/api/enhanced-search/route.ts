@@ -569,8 +569,13 @@ async function handleProgressiveSearch(searchParams: ApifySearchParams) {
   const stream = new ReadableStream({
     async start(controller) {
       const sendUpdate = (update: ProgressiveSearchUpdate) => {
-        const data = `data: ${JSON.stringify(update)}\n\n`;
-        controller.enqueue(encoder.encode(data));
+        try {
+          const data = `data: ${JSON.stringify(update)}\n\n`;
+          controller.enqueue(encoder.encode(data));
+        } catch (error) {
+          // Controller is closed, ignore update
+          console.warn('Controller closed, skipping update:', error);
+        }
       };
       
       try {

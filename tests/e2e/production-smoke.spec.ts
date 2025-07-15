@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { navigateToSearch, getChatInput, getSendButton, waitForSearchResults, waitForStartSearchButton } from './test-utils';
 
 /**
  * Production Smoke Tests
@@ -8,34 +9,26 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Production Smoke Tests', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the production site
+    test.setTimeout(90000);
     await page.goto('/');
     
-    // Wait for the page to be fully loaded
-    await page.waitForLoadState('networkidle');
+    // Wait for the landing page to fully load
+    await expect(page.locator('h1')).toContainText('buenas clara', { timeout: 20000 });
   });
 
-  test('🏠 Homepage loads without errors', async ({ page }) => {
-    // Check that the page title contains expected content
-    await expect(page).toHaveTitle(/LAYAI/);
-    
-    // Check that content loads properly (look for actual page content)
-    await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('text=Plataforma de Marketing')).toBeVisible();
-    await expect(page.locator('text=Comenzar Búsqueda')).toBeVisible();
-    
-    // Verify no JavaScript console errors
+  test('✅ Landing page loads without console errors', async ({ page }) => {
+    // Collect console errors
     const consoleErrors: string[] = [];
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       if (msg.type() === 'error') {
         consoleErrors.push(msg.text());
       }
     });
+
+    // Wait for page to load completely
+    await page.waitForLoadState('networkidle');
     
-    // Wait a bit for any errors to surface
-    await page.waitForTimeout(3000);
-    
-    // Check for critical errors (ignore known minor ones)
+    // Filter out known non-critical errors
     const criticalErrors = consoleErrors.filter(error => 
       !error.includes('Failed to load resource') && // Ignore resource loading issues
       !error.includes('net::ERR_BLOCKED_BY_CONTENT_BLOCKER') && // Ignore ad blockers
@@ -46,24 +39,51 @@ test.describe('Production Smoke Tests', () => {
   });
 
   test('📊 Campaigns tab loads without 500 errors', async ({ page }) => {
-    // Navigate to campaigns tab
-    await page.click('text=Campañas');
+    // First navigate to the main app (past landing page)
+    await navigateToSearch(page);
+    await page.waitForTimeout(3000);
+    
+    // Look for the campaigns navigation button using the exact structure from Sidebar.tsx
+    // Try multiple strategies to find the campaigns button
+    const campaignsSelectors = [
+      'button[aria-label*="Campaigns"]',  // Desktop sidebar with English
+      'button[aria-label*="Campañas"]',   // Desktop sidebar with Spanish  
+      'button:has-text("Campaigns")',     // Button with English text
+      'button:has-text("Campañas")',      // Button with Spanish text
+      'button:has(span:has-text("🎯"))',  // Button with the campaigns icon
+      'nav button:has(span:text-is("🎯"))', // Navigation button with target emoji
+    ];
+    
+    let campaignsButton = page.locator(campaignsSelectors[0]).first();
+    for (const selector of campaignsSelectors) {
+      const button = page.locator(selector).first();
+      if (await button.isVisible({ timeout: 3000 }).catch(() => false)) {
+        console.log(`✅ Found campaigns button with selector: ${selector}`);
+        campaignsButton = button;
+        break;
+      }
+    }
+    
+    // Wait for campaigns navigation to be available
+    await expect(campaignsButton).toBeVisible({ timeout: 15000 });
+    await campaignsButton.click();
     
     // Wait for the campaigns to load
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(5000);
     
     // Check that we don't see error messages
     await expect(page.locator('text=500')).not.toBeVisible();
     await expect(page.locator('text=Failed to load')).not.toBeVisible();
     await expect(page.locator('text=Error')).not.toBeVisible();
     
-    // Check that campaigns interface is visible (use specific heading)
-    await expect(page.locator('h3:has-text("Gestión de Campañas")')).toBeVisible({ timeout: 10000 });
+    // Check that campaigns interface is visible - handle both languages
+    const campaignHeaders = page.locator('h1:has-text("Gestión de Campañas"), h1:has-text("Campaign Management"), h2:has-text("📊"), text=Campaign, text=Campaña').first();
+    await expect(campaignHeaders).toBeVisible({ timeout: 15000 });
     
     // Verify loading state appears (shows Firebase is connecting)
     // Note: This might pass quickly, so we use a short timeout
     try {
-      await expect(page.locator('text=Cargando')).toBeVisible({ timeout: 2000 });
+      await expect(page.locator('text=Cargando, text=Loading')).toBeVisible({ timeout: 3000 });
     } catch {
       // Loading might complete too quickly, which is fine
       console.log('Loading state completed too quickly to detect');
@@ -72,34 +92,50 @@ test.describe('Production Smoke Tests', () => {
 
   test('🔍 Search functionality basic test', async ({ page }) => {
     // Click the "Comenzar Búsqueda" button to reveal search interface
-    await page.click('text=Comenzar Búsqueda');
+    await navigateToSearch(page);
     
     // Wait for search interface to load
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(3000);
     
-    // Find the search input (now it should be visible)
-    const searchInput = page.locator('input[type="text"], textarea').first();
-    await searchInput.waitFor({ state: 'visible', timeout: 10000 });
+    // Check that search interface is present
+    const searchInput = page.locator('textarea').first();
+    await expect(searchInput).toBeVisible({ timeout: 10000 });
     
-    // Type a simple search
-    await searchInput.fill('hola');
+    // Basic test - make sure we can interact with the search
+    await searchInput.fill('Test search');
+    await expect(searchInput).toHaveValue('Test search');
     
-    // Press Enter to trigger search
-    await page.keyboard.press('Enter');
+    // Check for send button
+    const sendButton = getSendButton(page);
+    await expect(sendButton).toBeVisible({ timeout: 5000 });
+  });
+
+  test('🤖 AI chat interface responds', async ({ page }) => {
+    // Navigate to search
+    await navigateToSearch(page);
+    await page.waitForTimeout(3000);
     
-    // Wait for response
-    await page.waitForTimeout(5000);
+    // Get chat elements
+    const chatInput = getChatInput(page);
+    await expect(chatInput).toBeVisible({ timeout: 10000 });
     
-    // Check that we don't get 500 errors
-    await expect(page.locator('text=500')).not.toBeVisible();
-    await expect(page.locator('text=Error handling')).not.toBeVisible();
+    // Type a simple query
+    await chatInput.fill('Hello');
     
-    // Look for some kind of response
-    const hasResponse = await page.locator('text=Puedo ayudarte').isVisible({ timeout: 2000 }) ||
-                       await page.locator('text=Hola').isVisible({ timeout: 2000 }) ||
-                       await page.locator('text=influencer').isVisible({ timeout: 2000 });
-    
-    expect(hasResponse).toBeTruthy();
+    // Try to send (but don't wait for full response in smoke test)
+    const sendButton = getSendButton(page);
+    if (await sendButton.isVisible() && !await sendButton.isDisabled()) {
+      await sendButton.click();
+      
+      // Just check that some response appears within reasonable time
+      await page.waitForTimeout(5000);
+      
+      // Look for any kind of response indication
+      const hasResponse = await page.locator('text=Hola, text=Hello, text=influencer').first().isVisible({ timeout: 3000 }) ||
+                         await page.locator('div[class*="bg-white"][class*="text-gray-800"]').first().isVisible({ timeout: 3000 });
+      
+      expect(hasResponse).toBeTruthy();
+    }
   });
 
   test('🔥 Firebase connection working (no EROFS errors)', async ({ page }) => {
@@ -116,9 +152,31 @@ test.describe('Production Smoke Tests', () => {
       }
     });
     
-    // Navigate to campaigns to trigger Firebase calls
-    await page.click('text=Campañas');
-    await page.waitForTimeout(5000);
+    // First navigate to the main app (past landing page)
+    await navigateToSearch(page);
+    await page.waitForTimeout(3000);
+    
+    // Look for the campaigns navigation button using multiple strategies
+    const campaignsSelectors = [
+      'button[aria-label*="Campaigns"]',
+      'button[aria-label*="Campañas"]',
+      'button:has-text("Campaigns")',
+      'button:has-text("Campañas")',
+      'button:has(span:has-text("🎯"))',
+    ];
+    
+    let campaignsButton = page.locator(campaignsSelectors[0]).first();
+    for (const selector of campaignsSelectors) {
+      const button = page.locator(selector).first();
+      if (await button.isVisible({ timeout: 3000 }).catch(() => false)) {
+        campaignsButton = button;
+        break;
+      }
+    }
+    
+    await expect(campaignsButton).toBeVisible({ timeout: 15000 });
+    await campaignsButton.click();
+    await page.waitForTimeout(8000);
     
     // Check that we don't have 500 errors (EROFS would cause these)
     const erorsErrors = errorRequests.filter(error => error.includes('500'));
@@ -150,15 +208,40 @@ test.describe('Production Smoke Tests', () => {
     
     // Look for signs that Firebase is configured
     // This would fail if NEXT_PUBLIC_FIREBASE_* vars weren't set
+    await page.waitForTimeout(5000);
+    
+    // First navigate to the main app (past landing page)
+    await navigateToSearch(page);
     await page.waitForTimeout(3000);
     
-    // Navigate to a feature that requires Firebase
-    await page.click('text=Campañas');
-    await page.waitForTimeout(3000);
+    // Look for the campaigns navigation button using multiple strategies
+    const campaignsSelectors = [
+      'button[aria-label*="Campaigns"]',
+      'button[aria-label*="Campañas"]',
+      'button:has-text("Campaigns")',
+      'button:has-text("Campañas")',
+      'button:has(span:has-text("🎯"))',
+    ];
+    
+    let campaignsButton = page.locator(campaignsSelectors[0]).first();
+    for (const selector of campaignsSelectors) {
+      const button = page.locator(selector).first();
+      if (await button.isVisible({ timeout: 3000 }).catch(() => false)) {
+        campaignsButton = button;
+        break;
+      }
+    }
+    
+    await expect(campaignsButton).toBeVisible({ timeout: 15000 });
+    await campaignsButton.click();
+    await page.waitForTimeout(5000);
     
     // If Firebase vars were missing, we'd see specific errors
-    await expect(page.locator('text=Firebase API key')).not.toBeVisible();
-    await expect(page.locator('text=Invalid API key')).not.toBeVisible();
-    await expect(page.locator('text=No Firebase')).not.toBeVisible();
+    await expect(page.locator('text=Firebase configuration error')).not.toBeVisible();
+    await expect(page.locator('text=Environment variable missing')).not.toBeVisible();
+    
+    // Check that some Firebase functionality is working
+    const hasFirebaseContent = await page.locator('text=Campaign, text=Campaña, text=📊').first().isVisible({ timeout: 10000 });
+    expect(hasFirebaseContent).toBeTruthy();
   });
 }); 

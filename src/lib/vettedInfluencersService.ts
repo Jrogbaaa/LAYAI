@@ -397,15 +397,15 @@ export async function searchVettedInfluencers(searchParams: SearchParams) {
         );
              });
        console.log(`🎯 After niche filter: ${filteredInfluencers.length} influencers`);
-     }
-     if (searchParams.minFollowers) {
-       filteredInfluencers = filteredInfluencers.filter(inf => inf.followerCount >= searchParams.minFollowers!);
+    }
+    if (searchParams.minFollowers) {
+      filteredInfluencers = filteredInfluencers.filter(inf => inf.followerCount >= searchParams.minFollowers!);
        console.log(`📈 After minFollowers filter (${searchParams.minFollowers}): ${filteredInfluencers.length} influencers`);
-     }
-     if (searchParams.maxFollowers) {
-       filteredInfluencers = filteredInfluencers.filter(inf => inf.followerCount <= searchParams.maxFollowers!);
+    }
+    if (searchParams.maxFollowers) {
+      filteredInfluencers = filteredInfluencers.filter(inf => inf.followerCount <= searchParams.maxFollowers!);
        console.log(`📉 After maxFollowers filter (${searchParams.maxFollowers}): ${filteredInfluencers.length} influencers`);
-     }
+    }
 
     // 3. Sort by a simple engagement metric
     filteredInfluencers.sort((a, b) => b.engagementRate - a.engagementRate);

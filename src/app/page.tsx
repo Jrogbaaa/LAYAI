@@ -10,6 +10,9 @@ import { EnhancedCampaignManager } from '@/components/EnhancedCampaignManager';
 import NotesManager from '@/components/NotesManager';
 import Sidebar, { PageView } from '@/components/Sidebar';
 import EnhancedFeedbackPanel from '@/components/EnhancedFeedbackPanel';
+import AudienceAnalyticsDashboard from '@/components/AudienceAnalyticsDashboard';
+import EnhancedWorkflowManager from '@/components/EnhancedWorkflowManager';
+import EnhancedBrandCompatibilityEngine from '@/components/EnhancedBrandCompatibilityEngine';
 import { MatchResult } from '@/types/influencer';
 import { CampaignProposal } from '@/types/campaign';
 import { exportProposalToCSV, exportProposalToPDF } from '@/utils/exportUtils';
@@ -19,7 +22,7 @@ import { campaignService } from '@/lib/enhancedCampaignService';
 import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 import { useLanguage } from '@/lib/languageContext';
 
-type ExtendedPageView = PageView | 'landing' | 'chat' | 'campaigns' | 'proposal';
+type ExtendedPageView = PageView | 'landing' | 'chat' | 'campaigns' | 'proposal' | 'analytics' | 'compatibility';
 
 interface SearchResults {
   premiumResults: MatchResult[];
@@ -38,6 +41,7 @@ export default function Home() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showAllResults, setShowAllResults] = useState(false);
   const [pdfAnalysisContext, setPdfAnalysisContext] = useState<any>(null);
+  const [showWorkflowManager, setShowWorkflowManager] = useState(false);
   
   // Ref for auto-scrolling to results
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -182,21 +186,33 @@ export default function Home() {
               (result: any) => !existingDiscoveryUrls.has(result.handle)
             );
             
-            setSearchResults({
+            const updatedResults = {
               premiumResults: [...searchResults.premiumResults, ...convertedResults, ...newDiscoveryResults],
               discoveryResults: discoveryResults,
               totalFound: searchData.data?.totalFound || searchData.totalFound || 0
-            });
+            };
+            setSearchResults(updatedResults);
+            
+            // Save to localStorage for analytics dashboard
+            if (updatedResults.premiumResults && updatedResults.premiumResults.length > 0) {
+              localStorage.setItem('recentSearchResults', JSON.stringify(updatedResults.premiumResults));
+            }
             
             console.log(`🔄 Follow-up search: Added ${newDiscoveryResults.length} new discovery results`);
           } else {
             // First search - set results normally
             const discoveryResults = searchData.data?.discoveryResults || searchData.discoveryResults || [];
-            setSearchResults({
+            const newResults = {
               premiumResults: convertedResults,
               discoveryResults: discoveryResults,
               totalFound: searchData.data?.totalFound || searchData.totalFound || 0
-            });
+            };
+            setSearchResults(newResults);
+            
+            // Save to localStorage for analytics dashboard
+            if (newResults.premiumResults && newResults.premiumResults.length > 0) {
+              localStorage.setItem('recentSearchResults', JSON.stringify(newResults.premiumResults));
+            }
             setShowAllResults(false); // Reset expanded view for new search
             
             // 📚 Automatically save search to campaigns (for both chat and dropdown searches)
@@ -472,7 +488,7 @@ export default function Home() {
         return (
       <div className="flex-1 flex flex-col lg:flex-row bg-gradient-to-br from-gray-50 to-gray-100 min-h-0">
         {/* Main Content */}
-        <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 min-h-0 space-y-6">
+        <div className="flex-1 flex flex-col p-3 sm:p-4 lg:p-6 min-h-0 space-y-4">
           
           {/* Loading Overlay */}
           {isLoading && (
@@ -509,13 +525,13 @@ export default function Home() {
               {searchResults && (
                 <div 
                   ref={resultsRef}
-                  className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 sm:p-8 transition-all duration-500 ease-out transform hover:shadow-2xl"
+                  className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-4 sm:p-6 transition-all duration-500 ease-out transform hover:shadow-2xl"
                 >
                   {/* Enhanced Results Header */}
-                  <div className="mb-8">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 space-y-4 sm:space-y-0">
+                  <div className="mb-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 space-y-3 sm:space-y-0">
                       <div>
-                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 flex items-center">
                       📊 Resultados de Búsqueda
                           <span className="ml-3 text-base font-normal bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
                             {searchResults.premiumResults.length}
@@ -538,20 +554,39 @@ export default function Home() {
                           Limpiar resultados
                         </button>
                         {searchResults.premiumResults.length > 0 && (
-                          <button
-                            onClick={() => handleGenerateProposal(searchResults.premiumResults)}
-                            className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-md"
-                          >
-                            Generar propuesta
-                          </button>
+                          <div className="flex space-x-3">
+                            <button
+                              onClick={() => setShowWorkflowManager(!showWorkflowManager)}
+                              className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-blue-600 rounded-lg hover:from-green-700 hover:to-blue-700 transition-all duration-200 transform hover:scale-105 shadow-md"
+                            >
+                              🚀 Enhanced Workflow
+                            </button>
+                            <button
+                              onClick={() => handleGenerateProposal(searchResults.premiumResults)}
+                              className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-md"
+                            >
+                              Generar propuesta
+                            </button>
+                          </div>
                         )}
                       </div>
                     </div>
                   </div>
                   
-                  <InfluencerResults 
-                    results={searchResults.premiumResults}
-                  />
+                  {showWorkflowManager ? (
+                    <EnhancedWorkflowManager 
+                      searchResults={searchResults.premiumResults}
+                      currentCampaign={currentProposal}
+                      onWorkflowComplete={(data) => {
+                        console.log('Workflow completed:', data);
+                        setShowWorkflowManager(false);
+                      }}
+                    />
+                  ) : (
+                    <InfluencerResults 
+                      results={searchResults.premiumResults}
+                    />
+                  )}
                 </div>
               )}
 
@@ -587,7 +622,7 @@ export default function Home() {
           {currentView === 'generate' && (
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 sm:p-8 transition-all duration-500 ease-out">
               <div className="mb-6">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 flex items-center">
                   📄 {t('proposal.title')}
                 </h2>
                 <p className="text-gray-600">
@@ -613,7 +648,7 @@ export default function Home() {
           {currentView === 'campaigns' && (
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-6 sm:p-8 transition-all duration-500 ease-out">
               <div className="mb-6">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 flex items-center">
                   🎯 {t('campaigns.title')}
                 </h2>
                 <p className="text-gray-600">
@@ -625,10 +660,27 @@ export default function Home() {
                   </div>
                 )}
 
+          {currentView === 'analytics' && (
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden transition-all duration-500 ease-out">
+              <AudienceAnalyticsDashboard />
+            </div>
+          )}
+
+          {currentView === 'compatibility' && (
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden transition-all duration-500 ease-out">
+              <EnhancedBrandCompatibilityEngine 
+                influencers={searchResults?.premiumResults || []}
+                onCompatibilityUpdate={(results) => {
+                  console.log('Compatibility results:', results);
+                }}
+              />
+            </div>
+          )}
+
           {currentView === 'notes' && (
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden transition-all duration-500 ease-out h-full">
               <div className="p-6 border-b border-gray-200/50">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 flex items-center">
                   📝 {t('notes.title')}
                 </h2>
                 <p className="text-gray-600">

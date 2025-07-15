@@ -18,6 +18,18 @@ export interface Influencer {
   contactInfo: ContactInfo;
   isActive: boolean;
   lastUpdated: Date;
+  // Enhanced fields for better filtering
+  lastActiveDate?: Date;
+  verificationLevel?: 'none' | 'basic' | 'verified' | 'premium';
+  collaborationHistory?: 'never' | 'occasional' | 'frequent';
+  contentTypes?: ('photo' | 'video' | 'story' | 'reel' | 'carousel')[];
+  responsiveness?: 'low' | 'medium' | 'high';
+  priceEstimate?: {
+    post: number;
+    story: number;
+    reel: number;
+  };
+  
   // Validation status from Apify backend
   validationStatus?: {
     isValidProfile: boolean;
@@ -144,4 +156,16 @@ export interface MatchCriteria {
   location?: string[];
   excludeInfluencers?: string[];
   brandQuery?: string;
+  
+  // Enhanced search criteria
+  verificationStatus?: boolean;
+  lastActive?: '7d' | '30d' | '90d' | 'any';
+  contentTypes?: ('photo' | 'video' | 'story' | 'reel' | 'carousel')[];
+  collaborationHistory?: 'never' | 'occasional' | 'frequent' | 'any';
+  responsiveness?: 'low' | 'medium' | 'high' | 'any';
+  priceRange?: {
+    min: number;
+    max: number;
+    contentType: 'post' | 'story' | 'reel';
+  };
 } 

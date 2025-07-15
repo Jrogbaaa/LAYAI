@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { campaignService } from '@/lib/enhancedCampaignService';
 import { EnhancedCampaign, SavedSearch, SavedInfluencer } from '@/types/campaign';
 import { useLanguage } from '@/lib/languageContext';
+import CampaignPerformancePredictionPanel from './CampaignPerformancePredictionPanel';
 
 export const EnhancedCampaignManager: React.FC = () => {
   const { t } = useLanguage();
@@ -16,6 +17,7 @@ export const EnhancedCampaignManager: React.FC = () => {
   const [showNotesModal, setShowNotesModal] = useState<{campaignId: string, notes: string} | null>(null);
   const [showSearchesModal, setShowSearchesModal] = useState<{campaignId: string, searches: SavedSearch[]} | null>(null);
   const [showInfluencersModal, setShowInfluencersModal] = useState<{campaignId: string, influencers: SavedInfluencer[]} | null>(null);
+  const [showPredictionModal, setShowPredictionModal] = useState<{campaignId: string, influencers: SavedInfluencer[]} | null>(null);
 
   // 🔥 NEW: Add request deduplication to prevent API spam
   const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(false);
@@ -654,31 +656,45 @@ export const EnhancedCampaignManager: React.FC = () => {
                     </button>
                   </td>
                   <td className="px-2 py-3 text-center">
-                    <button
-                          onClick={async () => {
-                            try {
-                              const response = await fetch('/api/database/campaigns', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                  action: 'delete',
-                                  campaignId: campaign.id
-                                })
-                              });
-                              
-                              const data = await response.json();
-                              if (data.success) {
-                                setCampaigns(prev => prev.filter(c => c.id !== campaign.id));
+                    <div className="flex items-center justify-center space-x-2">
+                      {campaign.savedInfluencers && campaign.savedInfluencers.length > 0 && (
+                        <button
+                          onClick={() => setShowPredictionModal({
+                            campaignId: campaign.id,
+                            influencers: campaign.savedInfluencers
+                          })}
+                          className="text-gray-400 hover:text-blue-600 transition-colors"
+                          title="Predicción de rendimiento"
+                        >
+                          🎯
+                        </button>
+                      )}
+                      <button
+                            onClick={async () => {
+                              try {
+                                const response = await fetch('/api/database/campaigns', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({
+                                    action: 'delete',
+                                    campaignId: campaign.id
+                                  })
+                                });
+                                
+                                const data = await response.json();
+                                if (data.success) {
+                                  setCampaigns(prev => prev.filter(c => c.id !== campaign.id));
+                                }
+                              } catch (error) {
+                                console.error('Error deleting campaign:', error);
                               }
-                            } catch (error) {
-                              console.error('Error deleting campaign:', error);
-                            }
-                          }}
-                          className="text-gray-400 hover:text-red-600 transition-colors"
-                      title="Eliminar campaña"
-                    >
-                      🗑️
-                    </button>
+                            }}
+                            className="text-gray-400 hover:text-red-600 transition-colors"
+                        title="Eliminar campaña"
+                      >
+                        🗑️
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -972,6 +988,44 @@ export const EnhancedCampaignManager: React.FC = () => {
                   Cerrar
                 </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Performance Prediction Modal */}
+      {showPredictionModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  🎯 Predicción de Rendimiento - {campaigns.find(c => c.id === showPredictionModal.campaignId)?.name}
+                </h3>
+                <button
+                  onClick={() => setShowPredictionModal(null)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <CampaignPerformancePredictionPanel
+                influencers={showPredictionModal.influencers.map(si => si.influencerData)}
+                campaignData={campaigns.find(c => c.id === showPredictionModal.campaignId)}
+                onPredictionUpdate={(prediction) => {
+                  console.log('Prediction updated:', prediction);
+                }}
+              />
+              
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setShowPredictionModal(null)}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  Cerrar
+                </button>
               </div>
             </div>
           </div>
