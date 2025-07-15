@@ -316,7 +316,7 @@ export default function Home() {
           pastCollaborations: [],
           averageRate: 1000,
           costLevel: 'Mid-Range' as 'Budget' | 'Mid-Range' | 'Premium' | 'Celebrity',
-          audienceDemographics: {
+          audienceDemographics: influencer.audienceDemographics || {
             ageGroups: {
               '13-17': 0,
               '18-24': 30,
@@ -373,7 +373,7 @@ export default function Home() {
         pastCollaborations: [],
         averageRate: Math.floor(profile.followers / 50) || 1000,
         costLevel: 'Mid-Range' as 'Budget' | 'Mid-Range' | 'Premium' | 'Celebrity',
-        audienceDemographics: {
+        audienceDemographics: profile.audienceDemographics || {
           ageGroups: {
             '13-17': 5,
             '18-24': 35,
