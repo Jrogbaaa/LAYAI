@@ -77,8 +77,22 @@ const AudienceAnalyticsDashboard: React.FC = () => {
       setError(null);
 
       // Load recent search results and apply advanced filtering
-      const response = await fetch('/api/campaign-insights');
+      const response = await fetch('/api/campaign-insights', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+      }
+
       const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to load campaign insights');
+      }
 
       if (data.success) {
         // Process audience data with advanced filtering
@@ -88,7 +102,8 @@ const AudienceAnalyticsDashboard: React.FC = () => {
         setError(data.error || 'Failed to load audience analytics');
       }
     } catch (err) {
-      setError('Failed to connect to analytics system');
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to connect to analytics system: ${errorMessage}`);
       console.error('Audience analytics error:', err);
     } finally {
       setIsLoading(false);
@@ -159,14 +174,14 @@ const AudienceAnalyticsDashboard: React.FC = () => {
 
     // Apply advanced filtering to each influencer
     const filteringResults = await Promise.all(
-      mockInfluencers.map(inf => filteringSystem.makeFilteringDecision(inf))
+      mockInfluencers.map((inf: any) => filteringSystem.makeFilteringDecision(inf))
     );
 
     // Calculate comprehensive metrics
     const metrics: AudienceMetrics = {
       totalInfluencers: mockInfluencers.length,
-      uniqueAudienceReach: mockInfluencers.reduce((sum, inf) => sum + inf.followers, 0),
-      averageEngagementRate: mockInfluencers.reduce((sum, inf) => sum + inf.engagement, 0) / mockInfluencers.length,
+      uniqueAudienceReach: mockInfluencers.reduce((sum: number, inf: any) => sum + inf.followers, 0),
+      averageEngagementRate: mockInfluencers.reduce((sum: number, inf: any) => sum + inf.engagement, 0) / mockInfluencers.length,
       demographicBreakdown: {
         gender: { male: 1, female: 2, other: 0 },
         ageGroups: { '18-24': 1, '25-34': 2, '35-44': 0, '45+': 0 },
