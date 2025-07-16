@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { AdvancedFilteringSystem, FilteringDecision, UserFeedback } from '@/lib/advancedFilteringSystem';
+import { useLanguage } from '@/lib/languageContext';
 import DataSourceInfo from './DataSourceInfo';
 
 interface CompetitorData {
@@ -97,6 +98,7 @@ interface FilteredAudienceData {
 }
 
 const AudienceAnalyticsDashboard: React.FC = () => {
+  const { t } = useLanguage();
   const [audienceData, setAudienceData] = useState<FilteredAudienceData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -139,7 +141,7 @@ const AudienceAnalyticsDashboard: React.FC = () => {
         throw new Error('Failed to load campaign insights');
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      const errorMessage = err instanceof Error ? err.message : t('insights.unknown.error');
       setError(`Failed to connect to analytics system: ${errorMessage}`);
       console.error('Audience analytics error:', err);
     } finally {
@@ -419,8 +421,8 @@ const AudienceAnalyticsDashboard: React.FC = () => {
           overlapPercentage,
           sharedAudience: Math.round(Math.min(influencers[i].followers, influencers[j].followers) * (overlapPercentage / 100)),
           synergy,
-          recommendation: synergy === 'high' ? 'Strong collaboration potential' : 
-                         synergy === 'medium' ? 'Moderate synergy' : 'Limited overlap benefit'
+          recommendation: synergy === 'high' ? t('insights.strong.collaboration.potential') : 
+                         synergy === 'medium' ? t('insights.moderate.synergy') : t('insights.limited.overlap.benefit')
         });
       }
     }
@@ -491,27 +493,27 @@ const AudienceAnalyticsDashboard: React.FC = () => {
   const generateAdvancedInsights = (influencers: any[], metrics: AudienceMetrics) => {
     return {
       topOpportunities: [
-        'High engagement micro-influencers present 40% better ROI',
-        'Spanish market shows 25% higher brand affinity',
-        'Video content opportunity with 60% higher viral potential',
-        'Sustainability topics trending with 85% audience interest'
+        t('insights.micro.influencers.roi'),
+        t('insights.spanish.market.affinity'),
+        t('insights.video.content.opportunity'),
+        t('insights.sustainability.trending')
       ],
       riskFactors: [
-        'Audience overlap between top influencers exceeds 30%',
-        'Platform concentration risk with 70% Instagram dependency',
-        'Seasonal engagement drop expected in Q4'
+        t('insights.audience.overlap.risk'),
+        t('insights.platform.concentration.risk'),
+        t('insights.seasonal.engagement.drop')
       ],
       optimizationSuggestions: [
-        'Diversify across TikTok and YouTube for broader reach',
-        'Focus on nano-influencers for cost efficiency',
-        'Implement cross-collaboration campaigns for synergy',
-        'Leverage peak engagement times for maximum impact'
+        t('insights.diversify.platforms'),
+        t('insights.focus.nano.influencers'),
+        t('insights.cross.collaboration.campaigns'),
+        t('insights.leverage.peak.engagement')
       ],
       budgetRecommendations: [
-        '60% budget allocation to micro-influencers recommended',
-        'Reserve 20% for trending topic activations',
-        'Allocate 15% for competitor audience capture',
-        'Keep 5% flexible for emerging opportunities'
+        t('insights.budget.micro.influencers'),
+        t('insights.reserve.trending.topics'),
+        t('insights.allocate.competitor.capture'),
+        t('insights.keep.flexible.opportunities')
       ]
     };
   };
@@ -565,13 +567,13 @@ const AudienceAnalyticsDashboard: React.FC = () => {
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-            <h3 className="text-red-800 font-semibold mb-2">Analytics System Error</h3>
+            <h3 className="text-red-800 font-semibold mb-2">{t('analytics.error.title')}</h3>
             <p className="text-red-600">{error}</p>
             <button 
               onClick={loadAudienceAnalytics}
               className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
             >
-              Retry
+              {t('analytics.retry')}
             </button>
           </div>
         </div>
@@ -594,8 +596,8 @@ const AudienceAnalyticsDashboard: React.FC = () => {
                 <span className="text-white text-lg">📊</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Advanced Audience Analytics</h1>
-                <p className="text-gray-600 text-sm">Comprehensive insights with competitor analysis & growth tracking</p>
+                <h1 className="text-xl font-bold text-gray-900">{t('analytics.title')}</h1>
+                <p className="text-gray-600 text-sm">{t('analytics.subtitle')}</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
@@ -604,16 +606,16 @@ const AudienceAnalyticsDashboard: React.FC = () => {
                 onChange={(e) => setDateRange(e.target.value as any)}
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="7d">Last 7 days</option>
-                <option value="30d">Last 30 days</option>
-                <option value="90d">Last 90 days</option>
-                <option value="1y">Last year</option>
+                <option value="7d">{t('analytics.last.7.days')}</option>
+                <option value="30d">{t('analytics.last.30.days')}</option>
+                <option value="90d">{t('analytics.last.90.days')}</option>
+                <option value="1y">{t('analytics.last.year')}</option>
               </select>
               <button 
                 onClick={loadAudienceAnalytics}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
-                🔄 Refresh
+                🔄 {t('analytics.refresh')}
               </button>
             </div>
           </div>
@@ -628,7 +630,7 @@ const AudienceAnalyticsDashboard: React.FC = () => {
               </div>
               <div>
                 <div className="text-2xl font-bold text-gray-900">{formatNumber(metrics?.totalInfluencers || 0)}</div>
-                <div className="text-sm text-gray-500">Total Influencers</div>
+                <div className="text-sm text-gray-500">{t('analytics.total.influencers')}</div>
               </div>
             </div>
           </div>
@@ -640,7 +642,7 @@ const AudienceAnalyticsDashboard: React.FC = () => {
               </div>
               <div>
                 <div className="text-2xl font-bold text-gray-900">{formatNumber(metrics?.uniqueAudienceReach || 0)}</div>
-                <div className="text-sm text-gray-500">Total Reach</div>
+                <div className="text-sm text-gray-500">{t('analytics.total.reach')}</div>
                 <div className="text-xs text-green-600">+{metrics?.audienceGrowthRate || 0}%</div>
               </div>
             </div>
@@ -653,8 +655,8 @@ const AudienceAnalyticsDashboard: React.FC = () => {
               </div>
               <div>
                 <div className="text-2xl font-bold text-gray-900">{metrics?.averageEngagementRate?.toFixed(1) || 0}%</div>
-                <div className="text-sm text-gray-500">Avg Engagement</div>
-                <div className="text-xs text-purple-600">{formatNumber(metrics?.potentialReach || 0)} potential</div>
+                <div className="text-sm text-gray-500">{t('analytics.avg.engagement')}</div>
+                <div className="text-xs text-purple-600">{formatNumber(metrics?.potentialReach || 0)} {t('analytics.potential')}</div>
               </div>
             </div>
           </div>
@@ -666,8 +668,8 @@ const AudienceAnalyticsDashboard: React.FC = () => {
               </div>
               <div>
                 <div className="text-2xl font-bold text-gray-900">{metrics?.performanceMetrics?.viralityPotential?.toFixed(1) || 0}</div>
-                <div className="text-sm text-gray-500">Virality Score</div>
-                <div className="text-xs text-orange-600">Cost efficiency: {metrics?.performanceMetrics?.costEfficiency?.toFixed(1) || 0}</div>
+                <div className="text-sm text-gray-500">{t('analytics.virality.score')}</div>
+                <div className="text-xs text-orange-600">{t('analytics.cost.efficiency')}: {metrics?.performanceMetrics?.costEfficiency?.toFixed(1) || 0}</div>
               </div>
             </div>
           </div>
@@ -679,8 +681,8 @@ const AudienceAnalyticsDashboard: React.FC = () => {
               </div>
               <div>
                 <div className="text-2xl font-bold text-gray-900">{((audienceData?.qualityScore || 0) * 100).toFixed(0)}</div>
-                <div className="text-sm text-gray-500">Quality Score</div>
-                <div className="text-xs text-gray-600">Authenticity: {metrics?.audienceQuality?.authenticity?.toFixed(0) || 0}%</div>
+                <div className="text-sm text-gray-500">{t('analytics.quality.score')}</div>
+                <div className="text-xs text-gray-600">{t('analytics.authenticity')}: {metrics?.audienceQuality?.authenticity?.toFixed(0) || 0}%</div>
               </div>
             </div>
           </div>
@@ -691,13 +693,13 @@ const AudienceAnalyticsDashboard: React.FC = () => {
           <div className="border-b border-gray-200">
             <nav className="flex space-x-8 px-6">
               {[
-                { id: 'overview', label: 'Overview', icon: '📋' },
-                { id: 'demographics', label: 'Demographics', icon: '👥' },
-                { id: 'performance', label: 'Performance', icon: '📊' },
-                { id: 'quality', label: 'Quality', icon: '⭐' },
-                { id: 'competitors', label: 'Competitors', icon: '🏆' },
-                { id: 'growth', label: 'Growth', icon: '📈' },
-                { id: 'overlaps', label: 'Overlaps', icon: '🔗' }
+                { id: 'overview', label: t('analytics.tabs.overview'), icon: '📋' },
+                { id: 'demographics', label: t('analytics.tabs.demographics'), icon: '👥' },
+                { id: 'performance', label: t('analytics.tabs.performance'), icon: '📊' },
+                { id: 'quality', label: t('analytics.tabs.quality'), icon: '⭐' },
+                { id: 'competitors', label: t('analytics.tabs.competitors'), icon: '🏆' },
+                { id: 'growth', label: t('analytics.tabs.growth'), icon: '📈' },
+                { id: 'overlaps', label: t('analytics.tabs.overlaps'), icon: '🔗' }
               ].map(tab => (
                 <button
                   key={tab.id}
@@ -723,7 +725,7 @@ const AudienceAnalyticsDashboard: React.FC = () => {
                   <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4">
                     <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                       <span className="mr-2">💡</span>
-                      Top Opportunities
+                      {t('analytics.opportunities.title')}
                     </h3>
                     <div className="space-y-2">
                       {insights?.topOpportunities?.map((opportunity, index) => (
@@ -738,7 +740,7 @@ const AudienceAnalyticsDashboard: React.FC = () => {
                   <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4">
                     <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                       <span className="mr-2">🎯</span>
-                      Optimization Suggestions
+                      {t('analytics.optimization.title')}
                     </h3>
                     <div className="space-y-2">
                       {insights?.optimizationSuggestions?.map((suggestion, index) => (
@@ -753,17 +755,17 @@ const AudienceAnalyticsDashboard: React.FC = () => {
 
                 {/* Influencer Tiers */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Influencer Distribution</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('analytics.influencer.distribution')}</h3>
                   <div className="grid grid-cols-4 gap-4">
                     {Object.entries(metrics?.influencerTiers || {}).map(([tier, count]) => (
                       <div key={tier} className="bg-gray-50 rounded-lg p-4">
                         <div className="text-2xl font-bold text-gray-900">{count}</div>
-                        <div className="text-sm text-gray-500 capitalize">{tier} Influencers</div>
+                        <div className="text-sm text-gray-500 capitalize">{t(`analytics.${tier}.influencers`)}</div>
                         <div className="text-xs text-gray-400">
-                          {tier === 'nano' && '1K-10K followers'}
-                          {tier === 'micro' && '10K-100K followers'}
-                          {tier === 'macro' && '100K-1M followers'}
-                          {tier === 'mega' && '1M+ followers'}
+                          {tier === 'nano' && `1K-10K ${t('analytics.followers')}`}
+                          {tier === 'micro' && `10K-100K ${t('analytics.followers')}`}
+                          {tier === 'macro' && `100K-1M ${t('analytics.followers')}`}
+                          {tier === 'mega' && `1M+ ${t('analytics.followers')}`}
                         </div>
                       </div>
                     ))}
@@ -772,14 +774,14 @@ const AudienceAnalyticsDashboard: React.FC = () => {
 
                 {/* Platform Distribution */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Platform Distribution</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('analytics.platform.distribution')}</h3>
                   <div className="grid grid-cols-3 gap-4">
                     {Object.entries(metrics?.platformDistribution || {}).map(([platform, count]) => (
                       <div key={platform} className="bg-gray-50 rounded-lg p-4">
                         <div className="text-xl font-bold text-gray-900">{count}</div>
                         <div className="text-sm text-gray-500 capitalize">{platform}</div>
                         <div className="text-xs text-gray-400">
-                          {Math.round((count / (metrics?.totalInfluencers || 1)) * 100)}% of portfolio
+                          {Math.round((count / (metrics?.totalInfluencers || 1)) * 100)}% {t('analytics.of.portfolio')}
                         </div>
                       </div>
                     ))}
@@ -788,7 +790,7 @@ const AudienceAnalyticsDashboard: React.FC = () => {
 
                 {/* Enhanced Trending Topics */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Trending Topics & Virality</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('analytics.trending.topics')}</h3>
                   <div className="space-y-3">
                     {metrics?.trendingTopics?.map((topic, index) => (
                       <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
@@ -799,12 +801,12 @@ const AudienceAnalyticsDashboard: React.FC = () => {
                           }`}></div>
                           <div>
                             <div className="font-medium text-gray-900">{topic.topic}</div>
-                            <div className="text-sm text-gray-500">{topic.mentions} mentions • {topic.engagement}% engagement</div>
+                            <div className="text-sm text-gray-500">{topic.mentions} {t('analytics.mentions')} • {topic.engagement}% {t('analytics.engagement')}</div>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="font-medium text-gray-900">Viral Score: {topic.viralityScore}%</div>
-                          <div className="text-sm text-green-600">+{topic.growth}% growth</div>
+                          <div className="font-medium text-gray-900">{t('analytics.viral.score')}: {topic.viralityScore}%</div>
+                          <div className="text-sm text-green-600">+{topic.growth}% {t('analytics.growth')}</div>
                         </div>
                       </div>
                     ))}
@@ -818,7 +820,7 @@ const AudienceAnalyticsDashboard: React.FC = () => {
                 {/* Gender & Age Distribution */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Gender Distribution</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('analytics.gender.distribution')}</h3>
                     <div className="space-y-3">
                       {Object.entries(metrics?.demographicBreakdown?.gender || {}).map(([gender, count]) => (
                         <div key={gender} className="flex items-center justify-between">
@@ -841,7 +843,7 @@ const AudienceAnalyticsDashboard: React.FC = () => {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Age Groups</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('analytics.age.groups')}</h3>
                     <div className="space-y-3">
                       {Object.entries(metrics?.demographicBreakdown?.ageGroups || {}).map(([age, count]) => (
                         <div key={age} className="flex items-center justify-between">
@@ -863,13 +865,13 @@ const AudienceAnalyticsDashboard: React.FC = () => {
 
                 {/* Geographic Distribution */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Geographic Distribution</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('analytics.geographic.distribution')}</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {Object.entries(metrics?.demographicBreakdown?.locations || {}).map(([location, count]) => (
                       <div key={location} className="bg-gray-50 rounded-lg p-4">
                         <div className="text-xl font-bold text-gray-900">{count}</div>
                         <div className="text-sm text-gray-500">{location}</div>
-                        <div className="text-xs text-gray-400">{Math.round((count / (metrics?.totalInfluencers || 1)) * 100)}% of audience</div>
+                        <div className="text-xs text-gray-400">{Math.round((count / (metrics?.totalInfluencers || 1)) * 100)}% {t('analytics.of.audience')}</div>
                       </div>
                     ))}
                   </div>
@@ -1145,10 +1147,10 @@ const AudienceAnalyticsDashboard: React.FC = () => {
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6">
                   <h4 className="font-semibold text-gray-900 mb-3">Overlap Optimization</h4>
                   <div className="space-y-2">
-                    <p className="text-sm text-gray-700">• High synergy pairs should collaborate for maximum impact</p>
-                    <p className="text-sm text-gray-700">• Medium overlap offers good audience expansion potential</p>
-                    <p className="text-sm text-gray-700">• Low overlap provides unique reach opportunities</p>
-                    <p className="text-sm text-gray-700">• Consider sequential campaigns to minimize audience fatigue</p>
+                    <p className="text-sm text-gray-700">• {t('insights.high.synergy.collaborate')}</p>
+                    <p className="text-sm text-gray-700">• {t('insights.medium.overlap.expansion')}</p>
+                    <p className="text-sm text-gray-700">• {t('insights.low.overlap.unique.reach')}</p>
+                    <p className="text-sm text-gray-700">• {t('insights.sequential.campaigns.fatigue')}</p>
                   </div>
                 </div>
               </div>
