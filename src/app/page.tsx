@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import LandingPage from '@/components/LandingPage';
-import { SearchInterface } from '@/components/SearchInterface';
+import { ModernSearchInterface } from '@/components/ModernSearchInterface';
 import { ProposalGenerator } from '@/components/ProposalGenerator';
 import { ProposalViewer } from '@/components/ProposalViewer';
 import { InfluencerResults } from '@/components/InfluencerResults';
@@ -512,9 +512,9 @@ export default function Home() {
 
           {currentView === 'search' && (
             <>
-              {/* Enhanced Search Interface */}
+              {/* Modern Search Interface - Chat Always Visible */}
               <div className="transform transition-all duration-500 ease-out">
-                <SearchInterface 
+                <ModernSearchInterface 
                   onSendMessage={handleSendMessage}
                   onPDFAnalyzed={setPdfAnalysisContext}
                   isLoading={isLoading}

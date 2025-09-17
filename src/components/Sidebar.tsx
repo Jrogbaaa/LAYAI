@@ -105,8 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
             <span className="text-lg">🚀</span>
           </div>
           <div>
-          <h1 className="text-lg font-bold text-gray-900">LAYAI</h1>
-            <p className="text-xs text-gray-500">{t('main.platform')}</p>
+          <h1 className="text-lg font-bold text-gray-900">LAY-AI</h1>
           </div>
         </div>
         
@@ -143,8 +142,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
                       <span className="text-2xl">🚀</span>
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold">LAYAI</h1>
-                      <p className="text-gray-300 text-sm">{t('main.platform')}</p>
+                  <h1 className="text-xl font-bold">LAY-AI</h1>
                     </div>
                   </div>
                   <button
@@ -156,11 +154,6 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
                   </button>
                 </div>
                 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <p className="text-white/90 text-sm leading-relaxed">
-                    {t('main.description')}
-                </p>
-                </div>
               </div>
             </div>
 
@@ -194,11 +187,6 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
                           }`}>
                             {item.shortLabel}
                           </h3>
-                          <p className={`text-sm transition-colors duration-300 ${
-                            isActive ? 'text-white/80' : 'text-gray-500 group-hover:text-gray-600'
-                          }`}>
-                            {item.description}
-                          </p>
                         </div>
                       </div>
                       
@@ -249,16 +237,10 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
             <span className="text-2xl">🚀</span>
           </div>
           <div>
-            <h1 className="text-2xl font-bold">LAYAI</h1>
-            <p className="text-gray-300 text-sm">{t('main.tagline')}</p>
+            <h1 className="text-2xl font-bold">LAY-AI</h1>
           </div>
         </div>
             
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-          <p className="text-white/90 text-sm leading-relaxed">
-            {t('main.description')}
-          </p>
-            </div>
         </div>
       </div>
 
@@ -293,11 +275,6 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
                     }`}>
                       {item.label}
                     </h3>
-                      <p className={`text-sm transition-colors duration-300 ${
-                      isActive ? 'text-white/80' : 'text-gray-500 group-hover:text-gray-600'
-                    }`}>
-                      {item.description}
-                    </p>
                   </div>
                   </div>
                   

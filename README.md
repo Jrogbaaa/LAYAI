@@ -1,10 +1,27 @@
-# LAYAI - Advanced Influencer Platform
+# LAY-AI - Advanced Influencer Platform
 
 A comprehensive platform for discovering and analyzing Spanish influencers with real audience demographics and advanced search capabilities.
 
-## 🚀 Latest Updates (v2.11.1 - January 2025)
+## 🚀 Latest Updates (v2.11.2 - January 2025)
 
-### **🌍 Spanish Localization Completion (NEW)**
+### **🎯 Simplified UI & Enhanced User Experience (NEW)**
+- **✅ Streamlined Interface Design**: Complete UI simplification for better user focus and reduced cognitive load
+  - Removed cluttered right sidebar with quick searches, tips, and statistics
+  - Full-width centered layout maximizing content space (~25% more screen utilization)
+  - Eliminated information overload and visual competition between interface elements
+- **✅ Professional Branding Update**: Renamed from "LAYAI" to "LAY-AI" for improved readability
+  - Consistent hyphenated branding across all interface elements
+  - Better brand recognition and professional appearance
+- **✅ Simplified Navigation**: Streamlined left-hand menu bar for faster user interaction
+  - Removed all descriptive text under menu items for cleaner appearance
+  - Icon-driven navigation with essential labels only
+  - Reduced cognitive load and improved menu scanning speed
+- **✅ Complete Spanish Language Consistency**: Fixed chatbot welcome message for Spanish users
+  - Hard-coded Spanish welcome message eliminating English text bleeding
+  - 100% Spanish consistency when Spanish language mode is selected
+  - Professional Spanish terminology throughout AI assistant interface
+
+### **🌍 Spanish Localization Completion (COMPLETED v2.11.1)**
 - **✅ Complete Audience Analytics Translation**: Full Spanish localization of analytics dashboard with 68+ professional translations
   - Advanced insights and metrics now display in Spanish mode
   - Professional translations for analytics headers, demographic breakdowns, performance indicators

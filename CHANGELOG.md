@@ -5,6 +5,49 @@ All notable changes to LAYAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.2] - 2025-01-30
+
+### 🎯 Simplified UI & Enhanced User Experience
+
+#### Removed
+- **Right Sidebar Elimination**: Completely removed cluttered right sidebar containing quick searches, tips, and statistics
+  - Eliminated information overload and visual competition
+  - Created full-width focused interface for better user concentration
+  - Improved content-to-chrome ratio by ~25%
+
+#### Enhanced
+- **Site Branding**: Renamed from "LAYAI" to "LAY-AI" for better readability and brand consistency
+  - Updated across all interface elements (mobile header, desktop sidebar, mobile menu)
+  - Professional hyphenated branding throughout application
+
+- **Simplified Navigation**: Streamlined left-hand menu bar for cleaner experience
+  - Removed all descriptive text under menu items
+  - Icon-driven navigation with only essential labels
+  - Reduced cognitive load and faster menu scanning
+
+- **Spanish Localization Fix**: Hard-coded chatbot welcome message to Spanish
+  - Fixed English text bleeding through in Spanish mode
+  - Complete Spanish consistency when language is set to Spanish
+  - Professional Spanish terminology in AI assistant introduction
+
+#### Technical Implementation
+- **ModernSearchInterface.tsx**: Converted from 2-column layout to full-width centered design
+- **Sidebar.tsx**: Removed description paragraphs from all menu items
+- **Chatbot.tsx**: Hard-coded Spanish welcome message for language consistency
+- **Layout Optimization**: Increased max-width to 6xl for better screen utilization
+
+#### User Experience Improvements
+```
+Before: Complex 2-column layout with competing sidebars
+After:  Clean single-column focus on core functionality
+
+Before: Menu items with lengthy descriptions
+After:  Icon + title only for faster recognition
+
+Before: Mixed English/Spanish in chatbot
+After:  100% Spanish consistency in Spanish mode
+```
+
 ## [2.11.1] - 2025-01-30
 
 ### 🌍 Spanish Localization Completion

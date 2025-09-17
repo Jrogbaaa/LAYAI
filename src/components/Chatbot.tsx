@@ -207,7 +207,7 @@ function detectProfileSimilarityQuery(message: string): { profileDescription: st
 // Constants for session storage
 const CHAT_MESSAGES_KEY = 'influencer_chat_messages';
 const WELCOME_MESSAGE: Message = {
-      text: "Hello! I'm your AI assistant for finding influencers. You can:\n\n🔍 Write your search: 'Find fashion influencers on Instagram'\n📄 Upload a PDF proposal for personalized search\n🤝 Ask about collaborations: 'Has Cristiano worked with IKEA?'\n👥 Find similar profiles: 'Here's a profile - find me similar influencers: [description]'\n💡 Ask follow-up questions to refine results\n\nHow would you like to start?",
+      text: "¡Hola! Soy tu asistente de IA para encontrar influencers. Puedes:\n\n🔍 Escribir tu búsqueda: 'Encuentra influencers de moda en Instagram'\n📄 Subir una propuesta PDF para búsqueda personalizada\n🤝 Preguntar sobre colaboraciones: '¿Ha trabajado Cristiano con IKEA?'\n👥 Encontrar perfiles similares: 'Aquí tienes un perfil - encuéntrame influencers similares: [descripción]'\n💡 Hacer preguntas de seguimiento para refinar resultados\n\n¿Cómo te gustaría empezar?",
       sender: 'bot',
       type: 'chat',
 };
